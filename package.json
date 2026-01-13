@@ -12,10 +12,12 @@
 		"check": "biome check"
 	},
 	"dependencies": {
+		"@lexical/react": "^0.39.0",
 		"@tailwindcss/vite": "^4.0.6",
 		"@tanstack/react-devtools": "^0.7.0",
 		"@tanstack/react-router": "^1.132.0",
 		"@tanstack/react-router-devtools": "^1.132.0",
+		"lexical": "^0.39.0",
 		"lucide-react": "^0.545.0",
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
