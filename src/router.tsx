@@ -5,10 +5,9 @@ import {
 	Outlet,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import App from "./App";
 import { Layout } from "./components/layout/Layout";
 import EditorPage from "./pages/Editor";
-
-import App from "./App";
 
 declare module "@tanstack/react-router" {
 	interface Register {
@@ -34,10 +33,8 @@ const indexRoute = createRoute({
 const editorRoute = createRoute({
 	path: "/editor",
 	getParentRoute: () => rootRoute,
-	component: () => <EditorPage />,
+	component: EditorPage,
 });
-
-// TODO:
 const routeTree = rootRoute.addChildren([indexRoute, editorRoute]);
 
 export const router = createRouter({

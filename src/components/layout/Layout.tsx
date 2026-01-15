@@ -2,18 +2,26 @@ import { AppShell, Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { ReactNode } from "react";
-import { Sidebar } from "./Sidebar";
+import { Sidebar } from "../sidebar/Sidebar";
+import { Navbar } from "../navbar/Navbar";
+import { useUserStore } from "@/store/userStore";
 
 const mobileBreakPoint = "xl";
 
-export function Layout({ children }: { children: ReactNode }) {
+interface LayoutProps {
+	children: ReactNode;
+}
+
+export function Layout({ children }: LayoutProps) {
 	const [opened, { toggle }] = useDisclosure();
 	return (
 		<AppShell
 			padding="lg"
-			header={{ height: 60 }}
+			header={{
+				height: 60,
+			}}
 			navbar={{
-				width: 300,
+				width: 240,
 				breakpoint: mobileBreakPoint,
 				collapsed: { mobile: !opened },
 			}}
@@ -25,7 +33,7 @@ export function Layout({ children }: { children: ReactNode }) {
 					hiddenFrom={mobileBreakPoint}
 					size="sm"
 				/>
-				<div>Logo</div>
+				<Navbar />
 			</AppShell.Header>
 			<AppShell.Navbar>
 				<Sidebar />
