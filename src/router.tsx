@@ -6,8 +6,9 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import App from "./App";
-import { Layout } from "./components/layout/Layout";
+import { Layout } from "./components/ui/layout/Layout";
 import EditorPage from "./pages/Editor";
+import Authentication from "./pages/Authentication";
 
 declare module "@tanstack/react-router" {
 	interface Register {
@@ -35,7 +36,25 @@ const editorRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	component: EditorPage,
 });
-const routeTree = rootRoute.addChildren([indexRoute, editorRoute]);
+
+const loginRoute = createRoute({
+	path: "/login",
+	getParentRoute: () => rootRoute,
+	component: Authentication,
+});
+
+const registrationRoute = createRoute({
+	path: "/register",
+	getParentRoute: () => rootRoute,
+	component: Authentication,
+});
+
+const routeTree = rootRoute.addChildren([
+	indexRoute,
+	editorRoute,
+	loginRoute,
+	registrationRoute,
+]);
 
 export const router = createRouter({
 	routeTree,

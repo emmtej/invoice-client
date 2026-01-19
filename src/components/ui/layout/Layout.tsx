@@ -1,10 +1,9 @@
-import { AppShell, Burger } from "@mantine/core";
+import { AppShell, Burger, Container } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { ReactNode } from "react";
-import { Sidebar } from "../sidebar/Sidebar";
 import { Navbar } from "../navbar/Navbar";
-import { useUserStore } from "@/store/userStore";
+import { Sidebar } from "../sidebar/Sidebar";
 
 const mobileBreakPoint = "xl";
 
@@ -38,7 +37,11 @@ export function Layout({ children }: LayoutProps) {
 			<AppShell.Navbar>
 				<Sidebar />
 			</AppShell.Navbar>
-			<AppShell.Main>{children}</AppShell.Main>
+			<AppShell.Main>
+				<Container fluid maw={1200}>
+					{children}
+				</Container>
+			</AppShell.Main>
 			<TanStackRouterDevtools />
 		</AppShell>
 	);
