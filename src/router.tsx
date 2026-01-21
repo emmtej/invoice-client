@@ -3,12 +3,16 @@ import {
 	createRoute,
 	createRouter,
 	Outlet,
+	redirect,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import App from "./App";
 import { Layout } from "./components/ui/layout/Layout";
-import EditorPage from "./pages/Editor";
 import Authentication from "./pages/Authentication";
+import Dashboard from "./pages/Dashboard";
+import EditorPage from "./pages/Editor";
+import { useUserStore } from "./store/userStore";
+import Profile from "./pages/Profile";
 
 declare module "@tanstack/react-router" {
 	interface Register {
@@ -49,11 +53,35 @@ const registrationRoute = createRoute({
 	component: Authentication,
 });
 
+// Protected Routes
+const authenticatedRoutes = createRoute({
+	getParentRoute: () => rootRoute,
+	id: "authenticated",
+	beforeLoad: () => {
+		if (!useUserStore.getState().user) {
+			throw redirect({ to: "/login" });
+		}
+	},
+});
+
+const dashboardRoute = createRoute({
+	getParentRoute: () => authenticatedRoutes,
+	path: "/dashboard",
+	component: Dashboard,
+});
+
+const profileRoute = createRoute({
+	getParentRoute: () => authenticatedRoutes,
+	path: "/profile",
+	component: Profile,
+});
+
 const routeTree = rootRoute.addChildren([
 	indexRoute,
 	editorRoute,
 	loginRoute,
 	registrationRoute,
+	authenticatedRoutes.addChildren([dashboardRoute, profileRoute]),
 ]);
 
 export const router = createRouter({

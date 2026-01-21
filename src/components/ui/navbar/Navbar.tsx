@@ -1,7 +1,8 @@
-import { Anchor, Button, Group } from "@mantine/core";
-
+import { Anchor, Avatar, Group, Text } from "@mantine/core";
 import { useUserStore } from "@/store/userStore";
+import { LinkButton } from "../button/ButtonLink";
 import classes from "./Navbar.module.css";
+import { Link } from "@tanstack/react-router";
 
 // TODO: Create single repo for navlinks
 const links = [
@@ -26,13 +27,24 @@ export function Navbar() {
 					<div>logo</div>
 				</Group>
 
-				<Group>
-					<Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
-						{items}
+				{user === null ? (
+					<Group gap={"xs"}>
+						<Group ml={50} gap={1} className={classes.links} visibleFrom="sm">
+							{items}
+						</Group>
+						<LinkButton to="/login" variant="default">
+							Log in
+						</LinkButton>
+						<LinkButton to="/register">Sign up</LinkButton>
 					</Group>
-					<Button variant="default">Log in</Button>
-					<Button>Sign up</Button>
-				</Group>
+				) : (
+					<Anchor component={Link} to="/profile">
+						<Avatar radius="xl" />
+						<Text>
+							{user.firstname} {user.lastname}
+						</Text>
+					</Anchor>
+				)}
 			</div>
 		</header>
 	);

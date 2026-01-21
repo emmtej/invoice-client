@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-const nameSchema = (label: string) => {
-	const errorMessage = `${label} must be between 2 and 24 characters.`;
+const nameSchema = () => {
+	const errorMessage = `Must be between 2 and 24 characters.`;
 	return z
 		.string()
 		.trim()
@@ -11,21 +11,26 @@ const nameSchema = (label: string) => {
 };
 
 const passwordSchema = () => {
-	const message = `Password must be at least 8 to 128 characters in length.`;
-	return z.string().min(8, { message: message }).max(128, { message: message });
+	const message = `Must be at least 8 to 128 characters in length.`;
+	return z
+		.string()
+		.min(8, { message: message })
+		.max(128, { message: message })
+		.regex(/[A-Z]/, "Must contain at least one uppercase letter")
+		.regex(/[0-9]/, "Must contain at least one number");
 };
 
 export const loginSchema = z.object({
-	email: z.email().trim(),
-	password: z.string(),
+	email: z.string().min(1, "Email is required.").email("Invalid email.").trim(),
+	password: z.string().min(1, "Password is required."),
 });
 
 export const registrationSchema = z
 	.object({
-		firstname: nameSchema("First name"),
-		lastname: nameSchema("Last name"),
-		email: z.email().trim(),
-		confirmEmail: z.email().trim(),
+		firstname: nameSchema(),
+		lastname: nameSchema(),
+		email: z.email({ message: "Invalid email." }).trim(),
+		confirmEmail: z.email({ message: "Invalid email." }).trim(),
 		password: passwordSchema(),
 		confirmPassword: z.string().min(1, { message: "Confirmation is required" }),
 	})

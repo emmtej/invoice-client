@@ -1,107 +1,111 @@
-import { registrationSchema } from "@/utils/validation/authentication";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Fieldset, Group, Input, PasswordInput } from "@mantine/core";
-
+import {
+	Box,
+	Button,
+	Group,
+	Input,
+	PasswordInput,
+	Text,
+	TextInput,
+} from "@mantine/core";
+import { IconAt, type ReactNode } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
+import {
+	type RegistrationSchema,
+	registrationSchema,
+} from "@/utils/validation/authentication";
+import { ErrorMessage } from "./ErrorMessage";
 
 export function Register() {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
-	} = useForm({
+		formState: { errors, isSubmitting },
+	} = useForm<RegistrationSchema>({
 		resolver: zodResolver(registrationSchema),
 	});
 
-	const onSubmit = (data) => console.log(data);
+	const onSubmit = async (data: RegistrationSchema) => {
+		setTimeout(() => {}, 2000);
+		console.log(data);
+	};
 
 	return (
-		<Fieldset>
-			<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-				<Group grow>
-					<Input.Wrapper
-						label="First Name"
-						error={
-							errors.firstname ? (
-								errors.firstname.message?.toString()
-							) : (
-								<>&nbsp;</>
-							)
-						}
-						required={true}
-					>
-						<Input type="text" placeholder="John" {...register("firstname")} />
-					</Input.Wrapper>
-					<Input.Wrapper
-						label="Last Name"
-						error={
-							errors.lastname ? (
-								errors.lastname.message?.toString()
-							) : (
-								<>&nbsp;</>
-							)
-						}
-						required={true}
-					>
-						<Input type="text" placeholder="Smith" {...register("lastname")} />
-					</Input.Wrapper>
-				</Group>
+		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+			<Group grow align="flex-start">
 				<Input.Wrapper
-					label="Email"
-					error={errors.email ? errors.email.message?.toString() : <>&nbsp;</>}
+					label="First Name"
+					error={<ErrorMessage message={errors.firstname?.message} />}
 					required={true}
 				>
-					<Input type="email" placeholder="Email" {...register("email")} />
-				</Input.Wrapper>
-				<Input.Wrapper
-					label="Confirm Email"
-					error={
-						errors.confirmEmail ? (
-							errors.confirmEmail.message?.toString()
-						) : (
-							<>&nbsp;</>
-						)
-					}
-					required={true}
-				>
-					<Input
-						type="email"
-						placeholder="Confirm Email"
-						{...register("confirmEmail")}
+					<TextInput
+						type="text"
+						placeholder="John"
+						{...register("firstname")}
 					/>
 				</Input.Wrapper>
-				<Group grow>
-					<Input.Wrapper
-						label="Password"
-						error={
-							errors.password ? (
-								errors.password.message?.toString()
-							) : (
-								<>&nbsp;</>
-							)
-						}
-						required={true}
-					>
-						<PasswordInput type="password" {...register("password")} />
-					</Input.Wrapper>
-					<Input.Wrapper
-						label="Confirm Password"
-						error={
-							errors.confirmPassword ? (
-								errors.confirmPassword.message?.toString()
-							) : (
-								<>&nbsp;</>
-							)
-						}
-						required={true}
-					>
-						<PasswordInput type="password" {...register("confirmPassword")} />
-					</Input.Wrapper>
-				</Group>
-				<Button loaderProps={{ type: "dots" }} type="submit">
-					Register
-				</Button>
-			</form>
-		</Fieldset>
+				<Input.Wrapper
+					label="Last Name"
+					error={<ErrorMessage message={errors.lastname?.message} />}
+					required={true}
+				>
+					<TextInput
+						type="text"
+						placeholder="Smith"
+						{...register("lastname")}
+					/>
+				</Input.Wrapper>
+			</Group>
+			<Input.Wrapper
+				label="Email"
+				error={<ErrorMessage message={errors.email?.message} />}
+				required={true}
+			>
+				<Input
+					type="email"
+					placeholder="Email"
+					{...register("email")}
+					leftSection={<IconAt size={16} />}
+				/>
+			</Input.Wrapper>
+			<Input.Wrapper
+				label="Confirm Email"
+				error={<ErrorMessage message={errors.confirmEmail?.message} />}
+				required={true}
+			>
+				<Input
+					type="email"
+					{...register("confirmEmail")}
+					leftSection={<IconAt size={16} />}
+				/>
+			</Input.Wrapper>
+			<Group grow>
+				<Input.Wrapper
+					label="Password"
+					error={<ErrorMessage message={errors.password?.message} />}
+					required={true}
+				>
+					<PasswordInput
+						type="password"
+						{...register("password")}
+						placeholder="Length must be 8 to 128 characters"
+					/>
+				</Input.Wrapper>
+				<Input.Wrapper
+					label="Confirm Password"
+					error={<ErrorMessage message={errors.confirmPassword?.message} />}
+					required={true}
+				>
+					<PasswordInput type="password" {...register("confirmPassword")} />
+				</Input.Wrapper>
+			</Group>
+			<Button
+				loaderProps={{ type: "dots" }}
+				type="submit"
+				loading={isSubmitting}
+			>
+				Register
+			</Button>
+		</form>
 	);
 }
