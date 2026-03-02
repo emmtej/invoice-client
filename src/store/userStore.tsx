@@ -1,5 +1,6 @@
-import { simulateLogin } from "@/mocks/Auth";
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+// import { simulateLogin } from "@/mocks/Auth";
 
 type UserRole = "ADMIN" | "USER";
 
@@ -16,22 +17,69 @@ export interface UserLoginCredentials {
 	password: string;
 }
 
+export type AuthResponse =
+	| { success: true }
+	| { success: false; message: string };
+
 interface UserState {
 	user: UserProfile | null;
-	login: (credentials: UserLoginCredentials) => Promise<boolean>;
-	setUser: (user: UserProfile | null) => void;
+	isLoading: boolean;
+	error: string | null;
+	login: (credentials: UserLoginCredentials) => Promise<AuthResponse>;
+	logout: () => void;
 }
 
-export const useUserStore = create<UserState>((set) => ({
-	user: null,
-	login: async (credentials: UserLoginCredentials): Promise<boolean> => {
-		const { status, user } = await simulateLogin(credentials);
-		console.log({ status, user });
-		if (status === 200) {
-			set({ user });
-			return true;
-		}
-		return false;
-	},
-	setUser: (user) => set({ user }),
-}));
+const LOCAL_STORAGE_KEY = "user-storage";
+const VERSION = 1;
+
+export const useUserStore = create<UserState>()(
+	persist(
+		(set, get) => ({
+			user: null,
+			isLoading: false,
+			error: null,
+
+			getIsLoggedIn: () => !!get().user,
+
+			login: async (credentials) => {
+				set({ isLoading: true, error: null });
+
+				try {
+					const { user } = await simulateLogin(credentials);
+					set({ user, isLoading: false });
+					return { success: true };
+				} catch (error) {
+					const message =
+						error instanceof Error
+							? error.message
+							: "An unknown error occurred";
+					set({ error: message, isLoading: false });
+					return { success: false, message };
+				}
+			},
+
+			logout: () => {
+				set({ user: null, error: null, isLoading: false });
+			},
+		}),
+		{
+			name: LOCAL_STORAGE_KEY,
+			version: VERSION,
+			storage: createJSONStorage(() => localStorage),
+			partialize: (state) => {
+				if (!state.user) return undefined;
+				const { email, ...safeUser } = state.user;
+				return { user: safeUser as UserProfile };
+			},
+		},
+	),
+);
+
+export const useUser = () => useUserStore((state) => state.user);
+export const useUserLoading = () => useUserStore((state) => state.isLoading);
+export const useUserError = () => useUserStore((state) => state.error);
+export const useUserActions = () =>
+	useUserStore((state) => ({
+		login: state.login,
+		logout: state.logout,
+	}));

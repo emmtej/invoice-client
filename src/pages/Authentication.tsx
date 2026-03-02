@@ -1,8 +1,8 @@
+import { Anchor, Card, Container, Divider, Title } from "@mantine/core";
+import { Link, useLocation } from "@tanstack/react-router";
 import { Login } from "@/components/auth/Login";
 import { OAuthProviders } from "@/components/auth/OAuthProviders";
 import { Register } from "@/components/auth/Register";
-import { Anchor, Card, Container, Divider, Title } from "@mantine/core";
-import { Link, useLocation } from "@tanstack/react-router";
 
 function Authentication() {
 	const { pathname } = useLocation();

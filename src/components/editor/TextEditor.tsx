@@ -5,11 +5,20 @@ import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useEffect, type ReactNode } from "react";
+import Placeholder from "@tiptap/extension-placeholder";
 
-const content =
-	'<h2 style="text-align: center;">Welcome to Mantine rich text editor</h2><p><code>RichTextEditor</code> component focuses on usability and is designed to be as simple as possible to bring a familiar editing experience to regular users. <code>RichTextEditor</code> is based on <a href="https://tiptap.dev/" rel="noopener noreferrer" target="_blank">Tiptap.dev</a> and supports all of its features:</p><ul><li>General text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strike-through</s> </li><li>Headings (h1-h6)</li><li>Sub and super scripts (<sup>&lt;sup /&gt;</sup> and <sub>&lt;sub /&gt;</sub> tags)</li><li>Ordered and bullet lists</li><li>Text align&nbsp;</li><li>And all <a href="https://tiptap.dev/extensions" target="_blank" rel="noopener noreferrer">other extensions</a></li></ul>';
+interface TextEditorProps {
+	content: string;
+	onContentChange: (html: string) => void;
+	additionalMenu?: ReactNode;
+}
 
-export function TextEditor() {
+export function TextEditor({
+	content,
+	onContentChange,
+	additionalMenu,
+}: TextEditorProps) {
 	const editor = useEditor({
 		shouldRerenderOnTransaction: true,
 		extensions: [
@@ -19,13 +28,31 @@ export function TextEditor() {
 			SubScript,
 			Highlight,
 			TextAlign.configure({ types: ["heading", "paragraph"] }),
+			Placeholder.configure({
+				placeholder: "Paste your script here or upload several to start...",
+			}),
 		],
+
+		onUpdate: ({ editor }) => {
+			const html = editor.getHTML();
+			onContentChange(html);
+		},
+		autofocus: "start",
 		content,
 	});
 
+	useEffect(() => {
+		// Waits for editor to render and sets initial content.
+		if (!editor || content === undefined) return;
+
+		if (content !== editor.getHTML()) {
+			editor.commands.setContent(content);
+		}
+	}, [content, editor]);
+
 	return (
-		<RichTextEditor editor={editor}>
-			<RichTextEditor.Toolbar sticky stickyOffset="var(--docs-header-height)">
+		<RichTextEditor editor={editor} className="flex h-full w-full flex-col">
+			<RichTextEditor.Toolbar className="flex">
 				<RichTextEditor.ControlsGroup>
 					<RichTextEditor.Bold />
 					<RichTextEditor.Italic />
@@ -34,13 +61,6 @@ export function TextEditor() {
 					<RichTextEditor.ClearFormatting />
 					<RichTextEditor.Highlight />
 					<RichTextEditor.Code />
-				</RichTextEditor.ControlsGroup>
-
-				<RichTextEditor.ControlsGroup>
-					<RichTextEditor.H1 />
-					<RichTextEditor.H2 />
-					<RichTextEditor.H3 />
-					<RichTextEditor.H4 />
 				</RichTextEditor.ControlsGroup>
 
 				<RichTextEditor.ControlsGroup>
@@ -53,24 +73,17 @@ export function TextEditor() {
 				</RichTextEditor.ControlsGroup>
 
 				<RichTextEditor.ControlsGroup>
-					<RichTextEditor.Link />
-					<RichTextEditor.Unlink />
-				</RichTextEditor.ControlsGroup>
-
-				<RichTextEditor.ControlsGroup>
-					<RichTextEditor.AlignLeft />
-					<RichTextEditor.AlignCenter />
-					<RichTextEditor.AlignJustify />
-					<RichTextEditor.AlignRight />
-				</RichTextEditor.ControlsGroup>
-
-				<RichTextEditor.ControlsGroup>
 					<RichTextEditor.Undo />
 					<RichTextEditor.Redo />
 				</RichTextEditor.ControlsGroup>
+				{/* Custom Functions */}
+				{additionalMenu && (
+					<RichTextEditor.ControlsGroup className="ml-auto">
+						{additionalMenu}
+					</RichTextEditor.ControlsGroup>
+				)}
 			</RichTextEditor.Toolbar>
-
-			<RichTextEditor.Content />
+			<RichTextEditor.Content className="overflow-y-auto flex-1" />
 		</RichTextEditor>
 	);
 }

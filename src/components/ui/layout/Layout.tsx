@@ -37,8 +37,17 @@ export function Layout({ children }: LayoutProps) {
 			<AppShell.Navbar>
 				<Sidebar />
 			</AppShell.Navbar>
-			<AppShell.Main>
-				<Container fluid maw={1200}>
+			<AppShell.Main
+				h="100dvh"
+				display="flex"
+				style={{ flexDirection: "column" }}
+			>
+				<Container
+					maw={1200}
+					flex={1}
+					w="100%"
+					style={{ display: "flex", flexDirection: "column" }}
+				>
 					{children}
 				</Container>
 			</AppShell.Main>

@@ -13,20 +13,24 @@ export function Login() {
 	const {
 		register,
 		handleSubmit,
+		setError,
 		formState: { errors, isSubmitting },
 	} = useForm<LoginSchema>({
 		resolver: zodResolver(loginSchema),
 	});
 
+	const { login } = useUserStore((store) => store);
 	const navigate = useNavigate();
 
-	const { login } = useUserStore((store) => store);
-
 	const onSubmit = async (data: LoginSchema) => {
-		const success = await login(data);
-		console.log({ success });
-		if (success) {
-			navigate({ to: "/dashboard" });
+		const result = await login(data);
+		if (result.success) {
+			await navigate({ to: "/dashboard", replace: true });
+		} else {
+			setError("root", {
+				type: "manual",
+				message: result.message,
+			});
 		}
 	};
 	return (

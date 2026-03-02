@@ -11,8 +11,8 @@ import { Layout } from "./components/ui/layout/Layout";
 import Authentication from "./pages/Authentication";
 import Dashboard from "./pages/Dashboard";
 import EditorPage from "./pages/Editor";
-import { useUserStore } from "./store/userStore";
 import Profile from "./pages/Profile";
+import { useUserStore } from "./store/userStore";
 
 declare module "@tanstack/react-router" {
 	interface Register {

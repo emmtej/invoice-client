@@ -1,3 +1,5 @@
+import Scripts from "@/components/editor/Scripts";
+
 export default function EditorPage() {
-	return <div>Thidhiasin</div>;
+	return <Scripts />;
 }

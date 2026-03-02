@@ -1,4 +1,4 @@
-import { Anchor, Avatar, Group, Text } from "@mantine/core";
+import { Anchor, Avatar, Group, Stack, Text } from "@mantine/core";
 import { useUserStore } from "@/store/userStore";
 import { LinkButton } from "../button/ButtonLink";
 import classes from "./Navbar.module.css";
@@ -20,6 +20,8 @@ export function Navbar() {
 		</Anchor>
 	));
 
+	const navAuthLinks = () => {};
+
 	return (
 		<header className={classes.header}>
 			<div className={classes.inner}>
@@ -39,10 +41,12 @@ export function Navbar() {
 					</Group>
 				) : (
 					<Anchor component={Link} to="/profile">
-						<Avatar radius="xl" />
-						<Text>
-							{user.firstname} {user.lastname}
-						</Text>
+						<Group gap={"xs"}>
+							<Avatar radius="xl" />
+							<Text>
+								{user.firstname} {user.lastname}
+							</Text>
+						</Group>
 					</Anchor>
 				)}
 			</div>
