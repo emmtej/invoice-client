@@ -1,4 +1,4 @@
-import Scripts from "@/components/editor/Scripts";
+import Scripts from "./components/Scripts";
 
 export default function EditorPage() {
 	return <Scripts />;

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { Script } from "@/types/Script";
-import { generateHtmlFromScript } from "@/utils/format/formatParsedLines";
+import { generateHtmlFromScript } from "../utils/formatParsedLines";
 
 interface ScriptStoreProps {
 	scripts: Script[];

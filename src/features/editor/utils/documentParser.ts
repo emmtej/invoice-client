@@ -1,6 +1,6 @@
-import type { DocFile } from "@/components/editor/useFileUpload";
+import type { DocFile } from "../hooks/useFileUpload";
 import type { Dialogue, ParsedLine, Script } from "@/types/Script";
-import { generateHtmlFromScript } from "../format/formatParsedLines";
+import { generateHtmlFromScript } from "./formatParsedLines";
 import { getScriptOverview } from "./scriptParser";
 
 // Groups Time -> Speaker -> Colon -> Content

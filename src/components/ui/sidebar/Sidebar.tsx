@@ -29,7 +29,7 @@ const navlinks = [
 		icon: IconFileAnalytics,
 
 		links: [
-			{ label: "Editor", link: "/script/editor" },
+			{ label: "Editor", link: "/editor" },
 			{ label: "Calculator", link: "/script/calculator" },
 		],
 	},

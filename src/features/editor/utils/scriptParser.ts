@@ -1,4 +1,4 @@
-import type { ParsedLine, Script, ScriptOverview } from "@/types/Script";
+import type { ParsedLine, ScriptOverview } from "@/types/Script";
 
 const getWordCount = (line: string) => {
 	return line.trim().split(/\s+/).length;

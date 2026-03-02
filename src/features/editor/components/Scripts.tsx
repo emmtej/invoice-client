@@ -1,9 +1,9 @@
-import { useScriptStore } from "@/store/scriptEditorStore";
-import { processDocuments } from "@/utils/parsers/documentParser";
+import { useScriptStore } from "../store/scriptEditorStore";
+import { processDocuments } from "../utils/documentParser";
 import { Button, FileButton, Flex, Tabs, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { TextEditor } from "./TextEditor";
-import { useFileUpload } from "./useFileUpload";
+import { useFileUpload } from "../hooks/useFileUpload";
 import { ScriptEditor } from "./ScriptEditor";
 
 export default function Scripts() {
@@ -60,7 +60,7 @@ export default function Scripts() {
 			<Tabs.Panel value={"add"} keepMounted={false}>
 				<TextEditor
 					content=""
-					onContentChange={(e) => console.log(e)}
+					onContentChange={() => {}}
 					additionalMenu={
 						<Flex gap={3}>
 							<Button>Add to Invoice</Button>

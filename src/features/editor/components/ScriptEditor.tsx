@@ -1,15 +1,15 @@
 import { Button, Tabs } from "@mantine/core";
-import { useScriptStore } from "@/store/scriptEditorStore";
+import { useScriptStore } from "../store/scriptEditorStore";
 import type { Script } from "@/types/Script";
 import { TextEditor } from "./TextEditor";
 import { ScriptOverview } from "./ScriptOverview";
 
-interface ScriptEditor {
+interface ScriptEditorProps {
 	script: Script;
 }
 
-export function ScriptEditor({ script }: ScriptEditor) {
-	const { updateHtml } = useScriptStore((store) => store);
+export function ScriptEditor({ script }: ScriptEditorProps) {
+	const { updateHtml, resetScript } = useScriptStore((store) => store);
 
 	return (
 		<Tabs
@@ -28,7 +28,11 @@ export function ScriptEditor({ script }: ScriptEditor) {
 					onContentChange={(newHtml) => {
 						updateHtml(script.id, newHtml);
 					}}
-					additionalMenu={<Button>aksndkn</Button>}
+					additionalMenu={
+						<Button variant="subtle" size="xs" onClick={() => resetScript(script.id)}>
+							Reset to parsed
+						</Button>
+					}
 				/>
 			</Tabs.Panel>
 			<Tabs.Panel value="overview">

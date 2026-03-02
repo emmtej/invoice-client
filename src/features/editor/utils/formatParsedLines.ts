@@ -1,4 +1,4 @@
-import type { ParsedLine } from "../parsers/documentParser";
+import type { ParsedLine } from "@/types/Script";
 
 export const generateHtmlFromScript = (lines: ParsedLine[]): string => {
 	return lines
@@ -16,7 +16,7 @@ export const generateHtmlFromScript = (lines: ParsedLine[]): string => {
 					return `<p><s>${line.source}</s></p>`;
 				default:
 					// Fallback incase incorrect parse
-					return `<p>${(line as any).source || ""}</p>`;
+					return `<p>${(line as { source?: string }).source || ""}</p>`;
 			}
 		})
 		.join("");

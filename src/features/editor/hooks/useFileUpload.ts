@@ -1,4 +1,4 @@
-import { xmlParser } from "@/utils/parsers/xmlParser";
+import { xmlParser } from "../utils/xmlParser";
 import mammoth from "mammoth";
 import { useCallback, useState } from "react";
 

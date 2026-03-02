@@ -10,7 +10,7 @@ import App from "./App";
 import { Layout } from "./components/ui/layout/Layout";
 import Authentication from "./pages/Authentication";
 import Dashboard from "./pages/Dashboard";
-import EditorPage from "./pages/Editor";
+import EditorPage from "@/features/editor";
 import Profile from "./pages/Profile";
 import { useUserStore } from "./store/userStore";
 
@@ -33,12 +33,6 @@ const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "/",
 	component: App,
-});
-
-const editorRoute = createRoute({
-	path: "/editor",
-	getParentRoute: () => rootRoute,
-	component: EditorPage,
 });
 
 const loginRoute = createRoute({
@@ -70,10 +64,23 @@ const dashboardRoute = createRoute({
 	component: Dashboard,
 });
 
+const editorRoute = createRoute({
+	getParentRoute: () => authenticatedRoutes,
+	path: "/editor",
+	component: EditorPage,
+});
+
 const profileRoute = createRoute({
 	getParentRoute: () => authenticatedRoutes,
 	path: "/profile",
 	component: Profile,
+});
+
+// Testing route for editor (no auth required)
+const testEditorRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/test/editor",
+	component: EditorPage,
 });
 
 const routeTree = rootRoute.addChildren([
@@ -81,7 +88,8 @@ const routeTree = rootRoute.addChildren([
 	editorRoute,
 	loginRoute,
 	registrationRoute,
-	authenticatedRoutes.addChildren([dashboardRoute, profileRoute]),
+	testEditorRoute,
+	authenticatedRoutes.addChildren([dashboardRoute, editorRoute, profileRoute]),
 ]);
 
 export const router = createRouter({

@@ -19,14 +19,13 @@ export function ScriptOverview({ script }: { script: Script }) {
 						</Table.Tr>
 					</Table.Thead>
 					<Table.Tbody>
-						{script.lines.map((line) => (
-							<Table.Tr key={line.id}>
+						{script.lines.map((line, index) => (
+							<Table.Tr key={`${index}-${line.type}`}>
 								<Table.Td>{line.type.toUpperCase()}</Table.Td>
 								<Table.Td>{line.source}</Table.Td>
 							</Table.Tr>
 						))}
 					</Table.Tbody>
-					{/* <Table.Caption>Scroll page to see sticky thead</Table.Caption> */}
 				</Table>
 			</div>
 		</div>
