@@ -1,4 +1,4 @@
-import { Button, Tabs } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 import { useScriptStore } from "../store/scriptEditorStore";
 import type { Script } from "@/types/Script";
 import { TextEditor } from "./TextEditor";
@@ -6,38 +6,51 @@ import { ScriptOverview } from "./ScriptOverview";
 
 interface ScriptEditorProps {
 	script: Script;
+	isEditing: boolean;
+	onStartEdit: () => void;
+	onStopEdit: () => void;
 }
 
-export function ScriptEditor({ script }: ScriptEditorProps) {
-	const { updateHtml, resetScript } = useScriptStore((store) => store);
+export function ScriptEditor({
+	script,
+	isEditing,
+	onStartEdit,
+	onStopEdit,
+}: ScriptEditorProps) {
+	const { updateHtml, resetScript, updateScriptFromHtml } = useScriptStore(
+		(store) => store,
+	);
+
+	if (!isEditing) {
+		return <ScriptOverview script={script} onEdit={onStartEdit} />;
+	}
+
+	const handleSubmit = () => {
+		updateScriptFromHtml(script.id, script.html);
+		onStopEdit();
+	};
 
 	return (
-		<Tabs
-			defaultValue={"editor"}
-			color="rgba(0, 0, 0, 1)"
-			variant="pills"
-			radius="xs"
-		>
-			<Tabs.List grow>
-				<Tabs.Tab value="editor">Editor</Tabs.Tab>
-				<Tabs.Tab value="overview">Overview</Tabs.Tab>
-			</Tabs.List>
-			<Tabs.Panel value="editor">
-				<TextEditor
-					content={script.html}
-					onContentChange={(newHtml) => {
-						updateHtml(script.id, newHtml);
-					}}
-					additionalMenu={
-						<Button variant="subtle" size="xs" onClick={() => resetScript(script.id)}>
-							Reset to parsed
-						</Button>
-					}
-				/>
-			</Tabs.Panel>
-			<Tabs.Panel value="overview">
-				<ScriptOverview script={script} />
-			</Tabs.Panel>
-		</Tabs>
+		<TextEditor
+			content={script.html}
+			onContentChange={(html) => updateHtml(script.id, html)}
+			additionalMenu={
+				<Flex gap={3}>
+					<Button variant="subtle" size="xs" onClick={onStopEdit}>
+						Back to overview
+					</Button>
+					<Button size="xs" onClick={handleSubmit}>
+						Submit
+					</Button>
+					<Button
+						variant="subtle"
+						size="xs"
+						onClick={() => resetScript(script.id)}
+					>
+						Reset to parsed
+					</Button>
+				</Flex>
+			}
+		/>
 	);
 }

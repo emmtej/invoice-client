@@ -1,7 +1,8 @@
 import type { DocFile } from "../hooks/useFileUpload";
-import type { Dialogue, ParsedLine, Script } from "@/types/Script";
+import type { Dialogue, ParsedLine, Script, ScriptOverview } from "@/types/Script";
 import { generateHtmlFromScript } from "./formatParsedLines";
 import { getScriptOverview } from "./scriptParser";
+import { xmlParser } from "./xmlParser";
 
 // Groups Time -> Speaker -> Colon -> Content
 const MAIN_PATTERN = /^(\d{1,2}:\d{2})\s+([^:]+):\s*(.*)$/;
@@ -9,6 +10,9 @@ const TIMESTAMP_START_PATTERN = /^(\d{1,2}:\d{2})\s+(.+)$/;
 const NOTES_PATTERN = /\((.*?)\)/g;
 const SPLIT_PATTERN = /(?:,|\s+(?:and|&))\s+|\//;
 const MARKER_PATTERN = /Scene|Scena|Blooper|Bloopers|Vlog|Vlogs/i;
+
+const getWordCount = (text: string) =>
+	text.trim().split(/\s+/).filter(Boolean).length;
 
 export const documentLineParser = (line: string): ParsedLine => {
 	if (!line) return { type: "invalid", source: "" };
@@ -62,6 +66,7 @@ export const documentLineParser = (line: string): ParsedLine => {
 			speakers,
 			content,
 			source: line,
+			metadata: { wordCount: getWordCount(content) },
 		};
 		if (notes) result.notes = notes;
 		return result;
@@ -87,6 +92,27 @@ export const documentLineParser = (line: string): ParsedLine => {
 
 	return { type: "invalid", source: line };
 };
+
+export function reparseHtmlToScript(html: string): {
+	lines: ParsedLine[];
+	overview: ScriptOverview;
+	html: string;
+} {
+	const doc = xmlParser(html);
+	const nodes = Array.from(doc.body.querySelectorAll("p, h3"));
+	const lines = nodes.flatMap((node) => {
+		const text = (node.textContent ?? "").trim();
+		if (!text) return [];
+		return text
+			.split("\n")
+			.map((l) => l.trim())
+			.filter(Boolean)
+			.map((line) => documentLineParser(line));
+	});
+	const overview = getScriptOverview(lines);
+	const generatedHtml = generateHtmlFromScript(lines);
+	return { lines, overview, html: generatedHtml };
+}
 
 export const processDocuments = async (
 	documents: DocFile[],

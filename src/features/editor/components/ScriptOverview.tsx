@@ -1,10 +1,20 @@
 import type { Script } from "@/types/Script";
-import { Table } from "@mantine/core";
+import { Button, Table } from "@mantine/core";
 
-export function ScriptOverview({ script }: { script: Script }) {
+interface ScriptOverviewProps {
+	script: Script;
+	onEdit?: () => void;
+}
+
+export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 	return (
 		<div className="m">
 			<div>
+				{onEdit && (
+					<Button mb="sm" onClick={onEdit}>
+						Edit
+					</Button>
+				)}
 				<Table
 					stickyHeader
 					stickyHeaderOffset={60}

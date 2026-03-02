@@ -12,6 +12,7 @@ export default function Scripts() {
 
 	// Default state - empty doc array
 	const [activeTab, setActiveTab] = useState<string>("add");
+	const [editingScriptId, setEditingScriptId] = useState<string | null>(null);
 
 	useEffect(() => {
 		if (!docFiles) return;
@@ -26,7 +27,10 @@ export default function Scripts() {
 		<Tabs
 			defaultValue={"add"}
 			value={activeTab}
-			onChange={(value) => setActiveTab(value ? value : "add")}
+			onChange={(value) => {
+				setActiveTab(value ? value : "add");
+				setEditingScriptId(null);
+			}}
 			orientation="vertical"
 		>
 			<Tabs.List>
@@ -54,7 +58,12 @@ export default function Scripts() {
 			</Tabs.List>
 			{scripts.map((script) => (
 				<Tabs.Panel key={script.id} value={script.id} keepMounted={false}>
-					<ScriptEditor script={script} />
+					<ScriptEditor
+						script={script}
+						isEditing={editingScriptId === script.id}
+						onStartEdit={() => setEditingScriptId(script.id)}
+						onStopEdit={() => setEditingScriptId(null)}
+					/>
 				</Tabs.Panel>
 			))}
 			<Tabs.Panel value={"add"} keepMounted={false}>
