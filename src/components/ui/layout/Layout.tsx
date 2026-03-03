@@ -46,7 +46,7 @@ export function Layout({ children }: LayoutProps) {
 					maw={1200}
 					flex={1}
 					w="100%"
-					style={{ display: "flex", flexDirection: "column" }}
+					style={{ display: "flex", flexDirection: "column", minHeight: 0 }}
 				>
 					{children}
 				</Container>
