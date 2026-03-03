@@ -6,9 +6,10 @@ import { TextEditor } from "./TextEditor";
 import { useFileUpload } from "../hooks/useFileUpload";
 import { ScriptEditor } from "./ScriptEditor";
 import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
+import { InvoiceSummary } from "@/features/invoice/components/InvoiceSummary";
 
 export default function Scripts() {
-	const { docFiles, handleFileChange } = useFileUpload();
+	const { docFiles, handleFileChange, reset } = useFileUpload();
 	const { scripts, setScripts } = useScriptStore((store) => store);
 
 	// Default state - empty doc array
@@ -76,9 +77,6 @@ export default function Scripts() {
 							onContentChange={() => {}}
 							additionalMenu={
 								<Flex gap="xs" align="center">
-									<Button variant="filled" size="xs">
-										Add to Invoice
-									</Button>
 									<FileButton
 										onChange={handleFileChange}
 										accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -106,9 +104,16 @@ export default function Scripts() {
 					}}
 				>
 					<Text fw={700} mb="sm" c="dimmed" tt="uppercase" fz="xs">
+						Invoice Summary
+					</Text>
+					<InvoiceSummary />
+					<Text fw={700} mb="sm" mt="lg" c="dimmed" tt="uppercase" fz="xs">
 						Documents Overview
 					</Text>
-					<UploadDocumentsOverview scripts={scripts} />
+					<UploadDocumentsOverview
+						scripts={scripts}
+						onAddedToInvoice={reset}
+					/>
 				</Box>
 			</Flex>
 		</Tabs>
