@@ -45,7 +45,17 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 				</Group>
 
 				<Group justify="space-between" mb="md" align="flex-end">
-					<Title order={4}>Line Details</Title>
+					<Text size="sm" c="dimmed">
+						Total lines: {overview.totalLines} · Words: {overview.wordCount} ·{" "}
+						<Text
+							span
+							size="sm"
+							c={overview.invalidLines.length > 0 ? "red" : "dimmed"}
+							inherit
+						>
+							Invalid: {overview.invalidLines.length}
+						</Text>
+					</Text>
 					<Select
 						placeholder="Filter by type"
 						data={availableTypes}
@@ -66,27 +76,8 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 					) : (
 						<Table
 							stickyHeader
-							stickyHeaderOffset={0}
-							striped
-							highlightOnHover
-							withTableBorder
 						>
 							<Table.Thead>
-								<Table.Tr bg="gray.0">
-									<Table.Th colSpan={2} py="sm">
-										<Text size="sm" c="dimmed">
-											Total lines: {overview.totalLines} · Words: {overview.wordCount} ·{" "}
-											<Text
-												span
-												size="sm"
-												c={overview.invalidLines.length > 0 ? "red" : "dimmed"}
-												inherit
-											>
-												Invalid: {overview.invalidLines.length}
-											</Text>
-										</Text>
-									</Table.Th>
-								</Table.Tr>
 								<Table.Tr>
 									<Table.Th w={120}>Type</Table.Th>
 									<Table.Th>Content / Source</Table.Th>
