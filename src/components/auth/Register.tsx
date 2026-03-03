@@ -1,14 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-	Box,
 	Button,
 	Group,
 	Input,
 	PasswordInput,
-	Text,
 	TextInput,
 } from "@mantine/core";
-import { IconAt, type ReactNode } from "@tabler/icons-react";
+import { IconAt } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import {
 	type RegistrationSchema,
@@ -32,7 +30,7 @@ export function Register() {
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-			<Group grow align="flex-start">
+			<Group grow align="flex-start" gap="md" mb="sm">
 				<Input.Wrapper
 					label="First Name"
 					error={<ErrorMessage message={errors.firstname?.message} />}
@@ -60,6 +58,7 @@ export function Register() {
 				label="Email"
 				error={<ErrorMessage message={errors.email?.message} />}
 				required={true}
+				mb="sm"
 			>
 				<Input
 					type="email"
@@ -72,6 +71,7 @@ export function Register() {
 				label="Confirm Email"
 				error={<ErrorMessage message={errors.confirmEmail?.message} />}
 				required={true}
+				mb="sm"
 			>
 				<Input
 					type="email"
@@ -79,7 +79,7 @@ export function Register() {
 					leftSection={<IconAt size={16} />}
 				/>
 			</Input.Wrapper>
-			<Group grow>
+			<Group grow gap="md" mb="sm">
 				<Input.Wrapper
 					label="Password"
 					error={<ErrorMessage message={errors.password?.message} />}
@@ -103,6 +103,7 @@ export function Register() {
 				loaderProps={{ type: "dots" }}
 				type="submit"
 				loading={isSubmitting}
+				variant="filled"
 			>
 				Register
 			</Button>

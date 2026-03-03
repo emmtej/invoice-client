@@ -40,11 +40,11 @@ export function ScriptEditor({
 				content={script.html}
 				onContentChange={(html) => updateHtml(script.id, html)}
 				additionalMenu={
-					<Flex gap={3}>
+					<Flex gap="sm">
 						<Button variant="subtle" size="xs" onClick={onStopEdit}>
 							Back to overview
 						</Button>
-						<Button size="xs" onClick={handleSubmit}>
+						<Button size="xs" variant="filled" onClick={handleSubmit}>
 							Submit
 						</Button>
 						<Button

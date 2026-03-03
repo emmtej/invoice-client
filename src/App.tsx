@@ -46,8 +46,8 @@ export default function App() {
 			<ThemeIcon
 				size={44}
 				radius="md"
-				variant="gradient"
-				gradient={{ deg: 133, from: "blue", to: "cyan" }}
+				variant="light"
+				color="violet"
 			>
 				<feature.icon size={26} stroke={1.5} />
 			</ThemeIcon>
@@ -61,29 +61,23 @@ export default function App() {
 	));
 
 	return (
-		<Grid className="pt-30">
+		<Grid pt="xl">
 			<Grid.Col span={{ base: 12, md: 5 }}>
-				<Title order={2}>
+				<Title order={2} mb="md">
 					A fully featured React components library for your next project
 				</Title>
-				<Text c="dimmed">
+				<Text c="dimmed" mb="lg">
 					Build fully functional accessible web applications faster than ever –
 					Mantine includes more than 120 customizable components and hooks to
 					cover you in any situation
 				</Text>
 
-				<Button
-					variant="gradient"
-					gradient={{ deg: 133, from: "blue", to: "cyan" }}
-					size="lg"
-					radius="md"
-					mt="xl"
-				>
+				<Button variant="filled" size="lg" radius="md">
 					Get started
 				</Button>
 			</Grid.Col>
 			<Grid.Col span={{ base: 12, md: 7 }}>
-				<SimpleGrid cols={{ base: 1, md: 2 }} spacing={30}>
+				<SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
 					{items}
 				</SimpleGrid>
 			</Grid.Col>

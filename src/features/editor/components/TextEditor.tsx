@@ -51,8 +51,12 @@ export function TextEditor({
 	}, [content, editor]);
 
 	return (
-		<RichTextEditor editor={editor} className="flex h-full w-full flex-col" style={{ flex: 1, minHeight: 0 }}>
-			<RichTextEditor.Toolbar className="flex">
+		<RichTextEditor
+			editor={editor}
+			className="flex h-full w-full flex-col"
+			style={{ flex: 1, minHeight: 0 }}
+		>
+			<RichTextEditor.Toolbar className="flex rich-text-editor-toolbar">
 				<RichTextEditor.ControlsGroup>
 					<RichTextEditor.Bold />
 					<RichTextEditor.Italic />
@@ -78,7 +82,7 @@ export function TextEditor({
 				</RichTextEditor.ControlsGroup>
 				{/* Custom Functions */}
 				{additionalMenu && (
-					<RichTextEditor.ControlsGroup className="ml-auto">
+					<RichTextEditor.ControlsGroup className="editor-additional-menu">
 						{additionalMenu}
 					</RichTextEditor.ControlsGroup>
 				)}

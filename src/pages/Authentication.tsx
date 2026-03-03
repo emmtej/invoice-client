@@ -1,4 +1,4 @@
-import { Anchor, Card, Container, Divider, Title } from "@mantine/core";
+import { Anchor, Card, Container, Divider, Flex, Title } from "@mantine/core";
 import { Link, useLocation } from "@tanstack/react-router";
 import { Login } from "@/components/auth/Login";
 import { OAuthProviders } from "@/components/auth/OAuthProviders";
@@ -9,20 +9,22 @@ function Authentication() {
 	const isRegistering = pathname.includes("register");
 	const activeTab = isRegistering ? <Register /> : <Login />;
 	return (
-		<Container className="flex flex-col items-center">
-			<Card className="min-h-fit w-160 max-w-160" p={50} withBorder>
+		<Container size="xs">
+			<Flex justify="center" align="center" py="xl">
+				<Card p="xl" maw={400} withBorder shadow="sm">
 				<Card.Section>
-					<Title order={2} mb={20}>
+					<Title order={2} mb="lg">
 						{isRegistering ? "Sign Up" : "Login"}
 					</Title>
 					{activeTab}
 				</Card.Section>
-				<Card.Section py="xs" mt="sm">
+				<Card.Section py="xs" mt="md">
 					<Anchor
 						component={Link}
 						to={isRegistering ? "/login" : "/register"}
 						display="block"
 						size="sm"
+						c="violet.6"
 					>
 						{isRegistering
 							? "Already have an account? Login"
@@ -32,6 +34,7 @@ function Authentication() {
 				<Divider my="md" label="Or continue with" />
 				<OAuthProviders />
 			</Card>
+			</Flex>
 		</Container>
 	);
 }

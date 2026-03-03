@@ -6,7 +6,7 @@ import {
 
 export function OAuthProviders() {
 	return (
-		<Stack>
+		<Stack gap="sm">
 			<Button
 				leftSection={<IconBrandGoogleFilled size={14} />}
 				variant="default"

@@ -3,6 +3,18 @@
 @import "@mantine/dropzone/styles.css";
 @import "@mantine/tiptap/styles.css";
 
-/* * {
-    @apply border-2
-} */
+/* Notion-like minimal editor toolbar */
+.rich-text-editor-toolbar {
+	padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+	border-bottom: 1px solid
+		light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+	gap: var(--mantine-spacing-xs);
+	align-items: center;
+}
+
+.rich-text-editor-toolbar .editor-additional-menu {
+	display: flex;
+	align-items: center;
+	gap: var(--mantine-spacing-xs);
+	margin-left: auto;
+}

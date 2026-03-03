@@ -26,18 +26,19 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 	}, [script.lines, typeFilter]);
 
 	return (
-		<Stack gap="lg" p="md" style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
-			<Paper radius="md" shadow="sm">
-				<Group justify="space-between" mb="xl">
-					<Stack gap={4}>
-						<Group gap="xs">
-							<IconFileText size={28} stroke={1.5} color="var(--mantine-color-blue-filled)" />
+		<Stack gap="lg" p="lg" style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
+			<Paper radius="md" shadow="sm" withBorder>
+				<Group justify="space-between" mb="lg">
+					<Stack gap="xs">
+						<Group gap="sm">
+							<IconFileText size={28} stroke={1.5} color="var(--mantine-color-violet-6)" />
 							<Title order={2}>{script.name}</Title>
 						</Group>
 					</Stack>
 					{onEdit && (
 						<Button
 							variant="light"
+							color="violet"
 							leftSection={<IconEdit size={16} />}
 							onClick={onEdit}
 						>
@@ -46,46 +47,46 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 					)}
 				</Group>
 
-				<SimpleGrid cols={{ base: 1, xs: 3 }} spacing="xl" mb="xl">
+				<SimpleGrid cols={{ base: 1, xs: 3 }} spacing="lg" mb="lg">
 					<Group gap="md">
-						<Paper withBorder p="xs" radius="sm" bg="var(--mantine-color-gray-0)">
+						<Paper withBorder p="md" radius="sm" bg="gray.0">
 							<IconHash size={20} stroke={1.5} color="var(--mantine-color-gray-7)" />
 						</Paper>
 						<Stack gap={0}>
 							<Text size="xs" c="dimmed" fw={600} tt="uppercase" lts={0.8}>Total Lines</Text>
-							<Text size="xl" fw={700} style={{ lineHeight: 1 }}>{overview.totalLines}</Text>
+							<Text size="xl" fw={700} lh={1}>{overview.totalLines}</Text>
 						</Stack>
 					</Group>
 
 					<Group gap="md">
-						<Paper withBorder p="xs" radius="sm" bg="var(--mantine-color-blue-0)">
-							<IconReportAnalytics size={20} stroke={1.5} color="var(--mantine-color-blue-7)" />
+						<Paper withBorder p="md" radius="sm" bg="violet.0">
+							<IconReportAnalytics size={20} stroke={1.5} color="var(--mantine-color-violet-7)" />
 						</Paper>
 						<Stack gap={0}>
 							<Text size="xs" c="dimmed" fw={600} tt="uppercase" lts={0.8}>Word Count</Text>
-							<Text size="xl" fw={700} style={{ lineHeight: 1 }}>{overview.wordCount}</Text>
+							<Text size="xl" fw={700} lh={1}>{overview.wordCount}</Text>
 						</Stack>
 					</Group>
 
 					<Group gap="md">
-						<Paper 
-							withBorder 
-							p="xs" 
-							radius="sm" 
-							bg={overview.invalidLines.length > 0 ? "var(--mantine-color-red-0)" : "var(--mantine-color-gray-0)"}
+						<Paper
+							withBorder
+							p="md"
+							radius="sm"
+							bg={overview.invalidLines.length > 0 ? "red.0" : "gray.0"}
 						>
-							<IconAlertCircle 
-								size={20} 
-								stroke={1.5} 
-								color={overview.invalidLines.length > 0 ? "var(--mantine-color-red-7)" : "var(--mantine-color-gray-7)"} 
+							<IconAlertCircle
+								size={20}
+								stroke={1.5}
+								color={overview.invalidLines.length > 0 ? "var(--mantine-color-red-7)" : "var(--mantine-color-gray-7)"}
 							/>
 						</Paper>
 						<Stack gap={0}>
 							<Text size="xs" c="dimmed" fw={600} tt="uppercase" lts={0.8}>Invalid Lines</Text>
-							<Text 
-								size="xl" 
-								fw={700} 
-								style={{ lineHeight: 1 }}
+							<Text
+								size="xl"
+								fw={700}
+								lh={1}
 								c={overview.invalidLines.length > 0 ? "red" : "inherit"}
 							>
 								{overview.invalidLines.length}
@@ -104,13 +105,7 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 						clearable
 						size="xs"
 						leftSection={<IconFilter size={14} />}
-						variant="filled"
-						styles={{
-							input: {
-								backgroundColor: "var(--mantine-color-gray-0)",
-								borderRadius: "var(--mantine-radius-sm)",
-							}
-						}}
+						variant="default"
 					/>
 				</Group>
 			</Paper>
@@ -141,7 +136,7 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 											<Table.Td>
 												<Badge
 													variant="light"
-													color={isInvalid ? "red" : "blue"}
+													color={isInvalid ? "red" : "violet"}
 													fullWidth
 												>
 													{line.type}

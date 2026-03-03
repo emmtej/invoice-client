@@ -15,7 +15,7 @@ export function Layout({ children }: LayoutProps) {
 	const [opened, { toggle }] = useDisclosure();
 	return (
 		<AppShell
-			padding="lg"
+			padding="md"
 			header={{
 				height: 60,
 			}}
@@ -44,6 +44,9 @@ export function Layout({ children }: LayoutProps) {
 			>
 				<Container
 					maw={1200}
+					size="lg"
+					py="md"
+					px="lg"
 					flex={1}
 					w="100%"
 					style={{ display: "flex", flexDirection: "column", minHeight: 0 }}

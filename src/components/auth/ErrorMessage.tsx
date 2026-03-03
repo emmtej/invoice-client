@@ -1,9 +1,9 @@
 import { Box, Text } from "@mantine/core";
 
 export const ErrorMessage = ({ message }: { message?: string }) => (
-	<Box display={"block"} className="h-8 block mt-2">
+	<Box display="block" mt="xs" style={{ minHeight: "1.25rem" }}>
 		{message ? (
-			<Text size="xs" inherit>
+			<Text size="xs" c="red">
 				{message}
 			</Text>
 		) : (

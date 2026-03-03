@@ -1,5 +1,5 @@
 import type { Script } from "@/types/Script";
-import { Badge, Divider, Group, Paper, ScrollArea, Stack, Table, Text } from "@mantine/core";
+import { Badge, Divider, Group, Paper, Stack, Table, Text } from "@mantine/core";
 import { IconFileText, IconReportAnalytics } from "@tabler/icons-react";
 
 interface UploadDocumentsOverviewProps {
@@ -20,7 +20,7 @@ export function UploadDocumentsOverview({ scripts }: UploadDocumentsOverviewProp
 	if (scripts.length === 0) {
 		return (
 			<Paper withBorder radius="md" p="md">
-				<Stack gap={6}>
+				<Stack gap="sm">
 					<Group gap="xs">
 						<IconFileText size={18} color="var(--mantine-color-gray-6)" />
 						<Text fw={700} size="sm">
@@ -36,17 +36,17 @@ export function UploadDocumentsOverview({ scripts }: UploadDocumentsOverviewProp
 	}
 
 	return (
-		<Stack gap="sm">
+		<Stack gap="md">
 			<Paper withBorder radius="md" p="md">
-				<Stack gap={8}>
+				<Stack gap="md">
 					<Group justify="space-between" align="flex-start">
-						<Group gap="xs">
-							<IconReportAnalytics size={18} color="var(--mantine-color-blue-6)" />
+						<Group gap="sm">
+							<IconReportAnalytics size={18} color="var(--mantine-color-violet-6)" />
 							<div>
-								<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts={0.5} style={{ lineHeight: 1 }}>
+								<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts={0.5} lh={1}>
 									Total billable words
 								</Text>
-								<Text size="lg" fw={800} style={{ lineHeight: 1.2 }}>
+								<Text size="lg" fw={800} lh={1.2}>
 									{totals.billableWords}
 								</Text>
 							</div>
@@ -74,37 +74,26 @@ export function UploadDocumentsOverview({ scripts }: UploadDocumentsOverviewProp
 							{totals.invalidLines}
 						</Text>
 					</Group>
-					<Table stickyHeader highlightOnHover >
+					<Table stickyHeader highlightOnHover withTableBorder>
 						<Table.Thead>
 							<Table.Tr>
 								<Table.Th>Document</Table.Th>
 								<Table.Th w={130}>Billable words</Table.Th>
 								<Table.Th w={110}>Total lines</Table.Th>
-
 							</Table.Tr>
 						</Table.Thead>
 						<Table.Tbody>
-							{scripts.map((script) =>  (
-									<Table.Tr key={script.id}>
-										<Table.Td>
-											<Text fw={700} size="sm" lineClamp={2}>
-												{script.name}
-											</Text>
-										</Table.Td>
-										<Table.Td>
-
-												{script.overview.wordCount}
-
-										</Table.Td>
-										<Table.Td>
-
-												{script.overview.totalLines}
-
-										</Table.Td>
-										
-									</Table.Tr>
-								)
-							)}
+							{scripts.map((script) => (
+								<Table.Tr key={script.id}>
+									<Table.Td>
+										<Text fw={700} size="sm" lineClamp={2}>
+											{script.name}
+										</Text>
+									</Table.Td>
+									<Table.Td>{script.overview.wordCount}</Table.Td>
+									<Table.Td>{script.overview.totalLines}</Table.Td>
+								</Table.Tr>
+							))}
 						</Table.Tbody>
 					</Table>
 				</Stack>

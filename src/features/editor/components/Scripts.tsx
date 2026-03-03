@@ -75,14 +75,20 @@ export default function Scripts() {
 							content=""
 							onContentChange={() => {}}
 							additionalMenu={
-								<Flex gap={3}>
-									<Button>Add to Invoice</Button>
+								<Flex gap="xs" align="center">
+									<Button variant="filled" size="xs">
+										Add to Invoice
+									</Button>
 									<FileButton
 										onChange={handleFileChange}
 										accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 										multiple
 									>
-										{(props) => <Button {...props}>Upload Document(s)</Button>}
+										{(props) => (
+											<Button {...props} variant="default" size="xs">
+												Upload Document(s)
+											</Button>
+										)}
 									</FileButton>
 								</Flex>
 							}
@@ -94,12 +100,12 @@ export default function Scripts() {
 				<Box
 					w={300}
 					visibleFrom="md"
-					style={(theme) => ({
-						borderLeft: `1px solid ${theme.colors.gray[3]}`,
-						paddingLeft: theme.spacing.md,
-						height: "100%",
+					pl="md"
+					h="100%"
+					style={{
+						borderLeft: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))",
 						overflowY: "auto",
-					})}
+					}}
 				>
 					<Text fw={700} mb="sm" c="dimmed" tt="uppercase" fz="xs">
 						Documents Overview

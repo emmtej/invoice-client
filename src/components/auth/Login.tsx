@@ -39,6 +39,7 @@ export function Login() {
 				label="Email"
 				error={<ErrorMessage message={errors.email?.message} />}
 				required={true}
+				mb="sm"
 			>
 				<TextInput type="email" placeholder="Email" {...register("email")} />
 			</Input.Wrapper>
@@ -47,6 +48,7 @@ export function Login() {
 				label="Password"
 				error={<ErrorMessage message={errors.password?.message} />}
 				required={true}
+				mb="sm"
 			>
 				<PasswordInput type="password" {...register("password")} />
 			</Input.Wrapper>
@@ -54,9 +56,10 @@ export function Login() {
 				component={Link}
 				to="/forgot-password"
 				size="sm"
-				ta={"right"}
-				display={"block"}
-				pb={10}
+				ta="right"
+				display="block"
+				mb="md"
+				c="violet.6"
 			>
 				Forgot Password?
 			</Anchor>
@@ -65,6 +68,7 @@ export function Login() {
 				loaderProps={{ type: "dots" }}
 				type="submit"
 				loading={isSubmitting}
+				variant="filled"
 			>
 				Login
 			</Button>

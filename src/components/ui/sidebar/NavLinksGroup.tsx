@@ -2,11 +2,13 @@ import {
 	Anchor,
 	Box,
 	Collapse,
+	Flex,
 	Group,
 	ThemeIcon,
 	UnstyledButton,
 } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
+import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import classes from "./NavLinksGroup.module.css";
 
@@ -25,27 +27,36 @@ export function LinksGroup({
 }: LinksGroupProps) {
 	const hasLinks = Array.isArray(links);
 	const [opened, setOpened] = useState(initiallyOpened || false);
+	const { pathname } = useLocation();
 
-	// Sublinks
-	const items = (hasLinks ? links : []).map((link) => (
-		<Anchor className={classes.link} href={link.link} key={link.label}>
-			{link.label}
-		</Anchor>
-	));
+	const items = (hasLinks ? links : []).map((link) => {
+		const isActive =
+			pathname === link.link || pathname.startsWith(link.link + "/");
+		return (
+			<Anchor
+				key={link.label}
+				component={Link}
+				to={link.link}
+				className={`${classes.link} ${isActive ? classes.linkActive : ""}`}
+			>
+				{link.label}
+			</Anchor>
+		);
+	});
 
 	return (
 		<>
 			<UnstyledButton
-				onClick={() => setOpened((o) => !o)}
+				onClick={() => hasLinks && setOpened((o) => !o)}
 				className={classes.control}
 			>
-				<Group justify="space-between" gap={0}>
-					<Box style={{ display: "flex", alignItems: "center" }}>
-						<ThemeIcon variant="light" size={30}>
+				<Group justify="space-between" gap="xs">
+					<Flex align="center">
+						<ThemeIcon variant="light" size={30} color="violet">
 							<Icon size={18} />
 						</ThemeIcon>
 						<Box ml="md">{label}</Box>
-					</Box>
+					</Flex>
 
 					{hasLinks && (
 						<IconChevronRight
