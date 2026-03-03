@@ -22,7 +22,11 @@ export function ScriptEditor({
 	);
 
 	if (!isEditing) {
-		return <ScriptOverview script={script} onEdit={onStartEdit} />;
+		return (
+			<Flex style={{ flex: 1, minHeight: 0 }} direction="column">
+				<ScriptOverview script={script} onEdit={onStartEdit} />
+			</Flex>
+		);
 	}
 
 	const handleSubmit = () => {
@@ -31,26 +35,28 @@ export function ScriptEditor({
 	};
 
 	return (
-		<TextEditor
-			content={script.html}
-			onContentChange={(html) => updateHtml(script.id, html)}
-			additionalMenu={
-				<Flex gap={3}>
-					<Button variant="subtle" size="xs" onClick={onStopEdit}>
-						Back to overview
-					</Button>
-					<Button size="xs" onClick={handleSubmit}>
-						Submit
-					</Button>
-					<Button
-						variant="subtle"
-						size="xs"
-						onClick={() => resetScript(script.id)}
-					>
-						Reset to parsed
-					</Button>
-				</Flex>
-			}
-		/>
+		<Flex style={{ flex: 1, minHeight: 0 }} direction="column">
+			<TextEditor
+				content={script.html}
+				onContentChange={(html) => updateHtml(script.id, html)}
+				additionalMenu={
+					<Flex gap={3}>
+						<Button variant="subtle" size="xs" onClick={onStopEdit}>
+							Back to overview
+						</Button>
+						<Button size="xs" onClick={handleSubmit}>
+							Submit
+						</Button>
+						<Button
+							variant="subtle"
+							size="xs"
+							onClick={() => resetScript(script.id)}
+						>
+							Reset to parsed
+						</Button>
+					</Flex>
+				}
+			/>
+		</Flex>
 	);
 }

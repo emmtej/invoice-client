@@ -51,7 +51,7 @@ export function TextEditor({
 	}, [content, editor]);
 
 	return (
-		<RichTextEditor editor={editor} className="flex h-full w-full flex-col">
+		<RichTextEditor editor={editor} className="flex h-full w-full flex-col" style={{ flex: 1, minHeight: 0 }}>
 			<RichTextEditor.Toolbar className="flex">
 				<RichTextEditor.ControlsGroup>
 					<RichTextEditor.Bold />

@@ -34,6 +34,7 @@ export default function Scripts() {
 			}}
 			variant="outline"
 			radius="md"
+			style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}
 		>
 			<Tabs.List mb="md">
 				{scripts.map((script) => (
@@ -48,10 +49,15 @@ export default function Scripts() {
 				</Tabs.Tab>
 			</Tabs.List>
 
-			<Flex gap="md" align="flex-start">
-				<Box style={{ flex: 1, minWidth: 0 }}>
+			<Flex gap="md" align="flex-start" style={{ flex: 1, minHeight: 0 }}>
+				<Box style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column" }}>
 					{scripts.map((script) => (
-						<Tabs.Panel key={script.id} value={script.id} keepMounted={false}>
+						<Tabs.Panel 
+							key={script.id} 
+							value={script.id} 
+							keepMounted={false}
+							style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}
+						>
 							<ScriptEditor
 								script={script}
 								isEditing={editingScriptId === script.id}
@@ -60,7 +66,11 @@ export default function Scripts() {
 							/>
 						</Tabs.Panel>
 					))}
-					<Tabs.Panel value="add" keepMounted={false}>
+					<Tabs.Panel 
+						value="add" 
+						keepMounted={false}
+						style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}
+					>
 						<TextEditor
 							content=""
 							onContentChange={() => {}}
@@ -87,9 +97,8 @@ export default function Scripts() {
 					style={(theme) => ({
 						borderLeft: `1px solid ${theme.colors.gray[3]}`,
 						paddingLeft: theme.spacing.md,
-						height: "calc(100vh - 200px)",
-						position: "sticky",
-						top: 0,
+						height: "100%",
+						overflowY: "auto",
 					})}
 				>
 					<Text fw={700} mb="sm" c="dimmed" tt="uppercase" fz="xs">

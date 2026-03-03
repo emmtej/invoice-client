@@ -26,10 +26,16 @@ export interface Action extends BaseLine {
 	notes: string[];
 }
 
+export interface DialogueMetadata {
+	wordCount: number;
+}
+
 export interface Dialogue extends BaseLine {
 	type: "dialogue";
 	content: string;
+	metadata: DialogueMetadata;
 	notes?: string[];
+
 }
 
 export interface Marker {

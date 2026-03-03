@@ -1,9 +1,5 @@
 import type { ParsedLine, ScriptOverview } from "@/types/Script";
 
-const getWordCount = (line: string) => {
-	return line.trim().split(/\s+/).length;
-};
-
 export const getScriptOverview = (lines: ParsedLine[]): ScriptOverview => {
 	const overview: ScriptOverview = {
 		validLines: [],
@@ -23,7 +19,7 @@ export const getScriptOverview = (lines: ParsedLine[]): ScriptOverview => {
 			}
 			case "dialogue": {
 				overview.validLines.push(index);
-				overview.wordCount += getWordCount(line.content);
+				overview.wordCount += line.metadata.wordCount;
 				break;
 			}
 			case "marker": {
