@@ -52,6 +52,10 @@ interface InvoiceStoreActions {
 		subitemLabel: string,
 		ratePerWord?: number
 	) => void;
+	updateItemName: (itemId: string, name: string) => void;
+	removeSubitem: (itemId: string, subitemId: string) => void;
+	removeItem: (itemId: string) => void;
+	resetInvoice: () => void;
 }
 
 type InvoiceStore = InvoiceStoreState & InvoiceStoreActions;
@@ -128,4 +132,45 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
 				},
 			};
 		}),
+
+	updateItemName: (itemId, name) =>
+		set((state) => ({
+			invoice: {
+				...state.invoice,
+				items: state.invoice.items.map((item) =>
+					item.id === itemId
+						? { ...item, name: name.trim() === "" ? item.name : name }
+						: item
+				),
+			},
+		})),
+
+	removeSubitem: (itemId, subitemId) =>
+		set((state) => {
+			const items = state.invoice.items.map((item) => {
+				if (item.id !== itemId) return item;
+				const subitems = item.subitems.filter((sub) => sub.id !== subitemId);
+				return { ...item, subitems };
+			});
+			const withoutEmptyItems = items.filter((item) => item.subitems.length > 0);
+			return {
+				invoice: { ...state.invoice, items: withoutEmptyItems },
+			};
+		}),
+
+	removeItem: (itemId) =>
+		set((state) => ({
+			invoice: {
+				...state.invoice,
+				items: state.invoice.items.filter((item) => item.id !== itemId),
+			},
+		})),
+
+	resetInvoice: () =>
+		set((state) => ({
+			invoice: {
+				...state.invoice,
+				items: [],
+			},
+		})),
 }));
