@@ -1,17 +1,20 @@
 import { Button, Flex } from "@mantine/core";
 import { useScriptStore } from "../store/scriptEditorStore";
 import type { Script } from "@/types/Script";
+import { memo, useCallback } from "react";
 import { TextEditor } from "./TextEditor";
 import { ScriptOverview } from "./ScriptOverview";
+
+const flexColumnStyle = { flex: 1, minHeight: 0 };
 
 interface ScriptEditorProps {
 	script: Script;
 	isEditing: boolean;
-	onStartEdit: () => void;
+	onStartEdit: (scriptId: string) => void;
 	onStopEdit: () => void;
 }
 
-export function ScriptEditor({
+function ScriptEditorInner({
 	script,
 	isEditing,
 	onStartEdit,
@@ -21,24 +24,39 @@ export function ScriptEditor({
 		(store) => store,
 	);
 
+	const handleContentChange = useCallback(
+		(html: string) => {
+			updateHtml(script.id, html);
+		},
+		[script.id, updateHtml],
+	);
+
+	const handleReset = useCallback(() => {
+		resetScript(script.id);
+	}, [script.id, resetScript]);
+
+	const handleSubmit = useCallback(() => {
+		updateScriptFromHtml(script.id, script.html);
+		onStopEdit();
+	}, [script.id, script.html, updateScriptFromHtml, onStopEdit]);
+
+	const handleStartEditClick = useCallback(() => {
+		onStartEdit(script.id);
+	}, [onStartEdit, script.id]);
+
 	if (!isEditing) {
 		return (
-			<Flex style={{ flex: 1, minHeight: 0 }} direction="column">
-				<ScriptOverview script={script} onEdit={onStartEdit} />
+			<Flex style={flexColumnStyle} direction="column">
+				<ScriptOverview script={script} onEdit={handleStartEditClick} />
 			</Flex>
 		);
 	}
 
-	const handleSubmit = () => {
-		updateScriptFromHtml(script.id, script.html);
-		onStopEdit();
-	};
-
 	return (
-		<Flex style={{ flex: 1, minHeight: 0 }} direction="column">
+		<Flex style={flexColumnStyle} direction="column">
 			<TextEditor
 				content={script.html}
-				onContentChange={(html) => updateHtml(script.id, html)}
+				onContentChange={handleContentChange}
 				additionalMenu={
 					<Flex gap="sm">
 						<Button variant="subtle" size="xs" onClick={onStopEdit}>
@@ -50,7 +68,7 @@ export function ScriptEditor({
 						<Button
 							variant="subtle"
 							size="xs"
-							onClick={() => resetScript(script.id)}
+							onClick={handleReset}
 						>
 							Reset to parsed
 						</Button>
@@ -60,3 +78,5 @@ export function ScriptEditor({
 		</Flex>
 	);
 }
+
+export const ScriptEditor = memo(ScriptEditorInner);

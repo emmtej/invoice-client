@@ -1,14 +1,18 @@
 import type { Script } from "@/types/Script";
 import { Badge, Box, Button, Group, Paper, ScrollArea, Select, Stack, Table, Text, Title } from "@mantine/core";
 import { IconEdit, IconFileText, IconFilter } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
+
+const stackRootStyle = { flex: 1, minHeight: 0, overflow: "hidden" as const };
+const boxFlexStyle = { flex: 1 };
+const boxScrollStyle = { flex: 1, minHeight: 0, overflow: "hidden" as const };
 
 interface ScriptOverviewProps {
 	script: Script;
 	onEdit?: () => void;
 }
 
-export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
+function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 	const { overview } = script;
 	const [typeFilter, setTypeFilter] = useState<string | null>(null);
 
@@ -26,12 +30,12 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 	}, [script.lines, typeFilter]);
 
 	return (
-		<Stack gap="lg" p="lg" style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
+		<Stack gap="lg" p="lg" style={stackRootStyle}>
 			<Paper>
 				<Group gap="md" align="center" mb="lg">
 					<IconFileText size={28} stroke={1.5} color="var(--mantine-color-violet-6)" />
 					<Title order={2}>{script.name}</Title>
-					<Box style={{ flex: 1 }} />
+					<Box style={boxFlexStyle} />
 					{onEdit && (
 						<Button
 							variant="light"
@@ -69,7 +73,7 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 				</Group>
 			</Paper>
 
-			<Box style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
+			<Box style={boxScrollStyle}>
 				<ScrollArea h="100%" scrollbars="y" type="hover">
 					{filteredLines.length === 0 ? (
 						<Text c="dimmed" ta="center" py="xl" size="sm">No lines matching the selected filter.</Text>
@@ -86,8 +90,9 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 							<Table.Tbody>
 								{filteredLines.map((line, index) => {
 									const isInvalid = line.type === "invalid" || line.type === "malformed";
+									const lineKey = line.id ?? `line-${index}-${line.type}`;
 									return (
-										<Table.Tr key={`${index}-${line.type}`}>
+										<Table.Tr key={lineKey}>
 											<Table.Td>
 												<Badge
 													variant="light"
@@ -113,3 +118,5 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 		</Stack>
 	);
 }
+
+export const ScriptOverview = memo(ScriptOverviewInner);

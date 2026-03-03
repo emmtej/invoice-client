@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Anchor, Button, Input, PasswordInput, TextInput } from "@mantine/core";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useUserStore } from "@/store/userStore";
 import {
@@ -21,9 +22,18 @@ export function Login() {
 
 	const { login } = useUserStore((store) => store);
 	const navigate = useNavigate();
+	const isMountedRef = useRef(true);
+
+	useEffect(() => {
+		isMountedRef.current = true;
+		return () => {
+			isMountedRef.current = false;
+		};
+	}, []);
 
 	const onSubmit = async (data: LoginSchema) => {
 		const result = await login(data);
+		if (!isMountedRef.current) return;
 		if (result.success) {
 			await navigate({ to: "/dashboard", replace: true });
 		} else {

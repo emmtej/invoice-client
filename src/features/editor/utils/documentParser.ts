@@ -109,9 +109,10 @@ export function reparseHtmlToScript(html: string): {
 			.filter(Boolean)
 			.map((line) => documentLineParser(line));
 	});
-	const overview = getScriptOverview(lines);
-	const generatedHtml = generateHtmlFromScript(lines);
-	return { lines, overview, html: generatedHtml };
+	const linesWithId = lines.map((line, idx) => ({ ...line, id: `line-${idx}` }));
+	const overview = getScriptOverview(linesWithId);
+	const generatedHtml = generateHtmlFromScript(linesWithId);
+	return { lines: linesWithId, overview, html: generatedHtml };
 }
 
 export const processDocuments = async (
@@ -128,13 +129,18 @@ export const processDocuments = async (
 				.map((line) => documentLineParser(line)),
 		);
 
+		const linesWithId: ParsedLine[] = parsedLines.map((line, idx) => ({
+			...line,
+			id: `${i}-${doc.name}-line-${idx}`,
+		}));
+
 		return {
 			id: `${i}-${doc.name}`,
 			name: doc.name,
 			source: doc.document,
-			lines: parsedLines,
-			overview: getScriptOverview(parsedLines),
-			html: generateHtmlFromScript(parsedLines),
+			lines: linesWithId,
+			overview: getScriptOverview(linesWithId),
+			html: generateHtmlFromScript(linesWithId),
 		};
 	});
 

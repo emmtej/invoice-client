@@ -50,6 +50,13 @@ export function TextEditor({
 		}
 	}, [content, editor]);
 
+	useEffect(() => {
+		if (!editor) return;
+		return () => {
+			editor.destroy();
+		};
+	}, [editor]);
+
 	return (
 		<RichTextEditor
 			editor={editor}

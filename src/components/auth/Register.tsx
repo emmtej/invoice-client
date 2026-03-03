@@ -24,7 +24,6 @@ export function Register() {
 	});
 
 	const onSubmit = async (data: RegistrationSchema) => {
-		setTimeout(() => {}, 2000);
 		console.log(data);
 	};
 

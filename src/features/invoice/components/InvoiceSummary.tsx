@@ -14,9 +14,17 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { memo, useCallback } from "react";
 import { useInvoiceStore } from "../store/invoiceStore";
 
-export function InvoiceSummary() {
+const borderTopStyle = { borderTop: "1px solid var(--mantine-color-default-border)" };
+const flexOneStyle = { flex: 1 };
+const itemBoxBorderStyle = {
+	border: "1px solid var(--mantine-color-default-border)",
+	borderRadius: "var(--mantine-radius-sm)",
+};
+
+function InvoiceSummaryInner() {
 	const [editModalOpened, { open: openEditModal, close: closeEditModal }] = useDisclosure(false);
 	const {
 		invoice,
@@ -31,6 +39,33 @@ export function InvoiceSummary() {
 		total: item.subitems.reduce((sum, sub) => sum + sub.amount, 0),
 	}));
 	const invoiceTotal = itemTotals.reduce((sum, { total }) => sum + total, 0);
+
+	const handleItemNameChange = useCallback(
+		(itemId: string, value: string) => updateItemName(itemId, value),
+		[updateItemName],
+	);
+	const handleItemNameBlur = useCallback(
+		(itemId: string, trimmed: string, currentName: string) => {
+			if (trimmed !== currentName) updateItemName(itemId, trimmed || currentName);
+		},
+		[updateItemName],
+	);
+	const handleRemoveItem = useCallback(
+		(itemId: string) => {
+			if (window.confirm("Remove this item and all its lines?")) removeItem(itemId);
+		},
+		[removeItem],
+	);
+	const handleRemoveSubitem = useCallback(
+		(itemId: string, subId: string) => removeSubitem(itemId, subId),
+		[removeSubitem],
+	);
+	const handleResetInvoice = useCallback(() => {
+		if (window.confirm("Clear all items from this invoice?")) {
+			resetInvoice();
+			closeEditModal();
+		}
+	}, [resetInvoice, closeEditModal]);
 
 	if (invoice.items.length === 0) {
 		return (
@@ -76,7 +111,7 @@ export function InvoiceSummary() {
 								<Stack gap={2}>
 									{item.subitems.map((sub) => (
 										<Group key={sub.id} justify="space-between" gap="xs">
-											<Text size="xs" lineClamp={1} style={{ flex: 1 }}>
+											<Text size="xs" lineClamp={1} style={flexOneStyle}>
 												{sub.label ?? sub.scriptName}
 											</Text>
 											<Text size="xs" c="dimmed">
@@ -92,7 +127,7 @@ export function InvoiceSummary() {
 						);
 					})}
 				</Stack>
-				<Text size="sm" fw={700} mt="md" pt="sm" style={{ borderTop: "1px solid var(--mantine-color-default-border)" }}>
+				<Text size="sm" fw={700} mt="md" pt="sm" style={borderTopStyle}>
 					Total: {invoiceTotal.toFixed(2)}
 				</Text>
 			</Paper>
@@ -124,41 +159,28 @@ export function InvoiceSummary() {
 										<Box
 											key={item.id}
 											p="sm"
-											style={{
-												border: "1px solid var(--mantine-color-default-border)",
-												borderRadius: "var(--mantine-radius-sm)",
-											}}
+											style={itemBoxBorderStyle}
 										>
 											<Group justify="space-between" align="center" mb="xs" gap="xs">
 												<TextInput
 													size="sm"
 													value={item.name}
 													onChange={(e) =>
-														updateItemName(item.id, e.currentTarget.value)
+														handleItemNameChange(item.id, e.currentTarget.value)
 													}
 													onBlur={(e) => {
 														const trimmed = e.currentTarget.value.trim();
-														if (trimmed !== item.name) {
-															updateItemName(item.id, trimmed || item.name);
-														}
+														handleItemNameBlur(item.id, trimmed, item.name);
 													}}
 													styles={{ input: { fontWeight: 600 } }}
-													style={{ flex: 1 }}
+													style={flexOneStyle}
 												/>
 												<Tooltip label="Remove item">
 													<ActionIcon
 														color="red"
 														variant="light"
 														size="sm"
-														onClick={() => {
-															if (
-																window.confirm(
-																	"Remove this item and all its lines?"
-																)
-															) {
-																removeItem(item.id);
-															}
-														}}
+														onClick={() => handleRemoveItem(item.id)}
 													>
 														<IconTrash size={14} />
 													</ActionIcon>
@@ -188,7 +210,7 @@ export function InvoiceSummary() {
 																		variant="subtle"
 																		size="sm"
 																		onClick={() =>
-																			removeSubitem(item.id, sub.id)
+																			handleRemoveSubitem(item.id, sub.id)
 																		}
 																	>
 																		<IconTrash size={14} />
@@ -209,20 +231,13 @@ export function InvoiceSummary() {
 						)}
 					</ScrollArea.Autosize>
 
-					<Box pt="sm" style={{ borderTop: "1px solid var(--mantine-color-default-border)" }}>
+					<Box pt="sm" style={borderTopStyle}>
 						<Group justify="space-between" align="center">
 							<Button
 								variant="light"
 								color="red"
 								size="sm"
-								onClick={() => {
-									if (
-										window.confirm("Clear all items from this invoice?")
-									) {
-										resetInvoice();
-										closeEditModal();
-									}
-								}}
+								onClick={handleResetInvoice}
 							>
 								Reset Invoice
 							</Button>
@@ -236,3 +251,5 @@ export function InvoiceSummary() {
 		</>
 	);
 }
+
+export const InvoiceSummary = memo(InvoiceSummaryInner);

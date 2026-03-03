@@ -16,9 +16,14 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBookmark, IconFileText } from "@tabler/icons-react";
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import { useSubitemPresets } from "@/features/invoice/presets/useSubitemPresets";
+
+const paperOverflowStyle = { overflow: "hidden" as const };
+const tableLayoutStyle = { tableLayout: "fixed" as const, width: "100%" };
+const numberInputFlexStyle = { flex: 1 };
+const numberInputWidthStyle = { width: 100 };
 
 interface UploadDocumentsOverviewProps {
 	scripts: Script[];
@@ -28,7 +33,7 @@ interface UploadDocumentsOverviewProps {
 
 type AddToMode = "existing" | "new";
 
-export function UploadDocumentsOverview({ scripts, onAddedToInvoice }: UploadDocumentsOverviewProps) {
+function UploadDocumentsOverviewInner({ scripts, onAddedToInvoice }: UploadDocumentsOverviewProps) {
 	const [selectedScriptIds, setSelectedScriptIds] = useState<Set<string>>(new Set());
 	const [addModalOpened, { open: openAddModal, close: closeAddModal }] = useDisclosure(false);
 	const [addMode, setAddMode] = useState<AddToMode>("new");
@@ -157,8 +162,8 @@ export function UploadDocumentsOverview({ scripts, onAddedToInvoice }: UploadDoc
 	return (
 		<>
 		<Stack gap={0}>
-			<Paper radius="md" p={0} style={{ overflow: "hidden" }}>
-				<Table stickyHeader highlightOnHover style={{ tableLayout: "fixed", width: "100%" }}>
+			<Paper radius="md" p={0} style={paperOverflowStyle}>
+				<Table stickyHeader highlightOnHover style={tableLayoutStyle}>
 					<Table.Thead>
 						<Table.Tr>
 							<Table.Th w={44}>
@@ -326,7 +331,7 @@ export function UploadDocumentsOverview({ scripts, onAddedToInvoice }: UploadDoc
 									min={0}
 									decimalScale={2}
 									step={0.5}
-									style={{ flex: 1 }}
+									style={numberInputFlexStyle}
 								/>
 								<Text size="sm" c="dimmed">per</Text>
 								<NumberInput
@@ -338,7 +343,7 @@ export function UploadDocumentsOverview({ scripts, onAddedToInvoice }: UploadDoc
 									}}
 									min={1}
 									step={1}
-									style={{ width: 100 }}
+									style={numberInputWidthStyle}
 								/>
 								<Text size="sm" c="dimmed">words</Text>
 							</Group>
@@ -394,3 +399,5 @@ export function UploadDocumentsOverview({ scripts, onAddedToInvoice }: UploadDoc
 		</>
 	);
 }
+
+export const UploadDocumentsOverview = memo(UploadDocumentsOverviewInner);

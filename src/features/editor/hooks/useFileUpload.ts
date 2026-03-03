@@ -1,6 +1,6 @@
 import { xmlParser } from "../utils/xmlParser";
 import mammoth from "mammoth";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface DocFile {
 	name: string;
@@ -19,6 +19,14 @@ export function useFileUpload(): UseFileUpload {
 	const [docFiles, setDocFiles] = useState<DocFile[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [errors, setErrors] = useState<string[]>([]);
+	const isMountedRef = useRef(true);
+
+	useEffect(() => {
+		isMountedRef.current = true;
+		return () => {
+			isMountedRef.current = false;
+		};
+	}, []);
 
 	const processFiles = useCallback(async (newFiles: File[]) => {
 		setIsLoading(true);
@@ -46,6 +54,8 @@ export function useFileUpload(): UseFileUpload {
 		});
 
 		const results = await Promise.allSettled(filePromises);
+		if (!isMountedRef.current) return;
+
 		const successfulDocs: DocFile[] = [];
 		const newErrors: string[] = [];
 

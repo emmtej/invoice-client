@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import { Link, useLocation } from "@tanstack/react-router";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import classes from "./NavLinksGroup.module.css";
 
 interface LinksGroupProps {
@@ -29,6 +29,15 @@ export function LinksGroup({
 	const [opened, setOpened] = useState(initiallyOpened || false);
 	const { pathname } = useLocation();
 
+	const handleToggle = useCallback(() => {
+		if (hasLinks) setOpened((o) => !o);
+	}, [hasLinks]);
+
+	const chevronStyle = useMemo(
+		() => ({ transform: opened ? "rotate(-90deg)" : "none" }),
+		[opened],
+	);
+
 	const items = (hasLinks ? links : []).map((link) => {
 		const isActive =
 			pathname === link.link || pathname.startsWith(link.link + "/");
@@ -47,7 +56,7 @@ export function LinksGroup({
 	return (
 		<>
 			<UnstyledButton
-				onClick={() => hasLinks && setOpened((o) => !o)}
+				onClick={handleToggle}
 				className={classes.control}
 			>
 				<Group justify="space-between" gap="xs">
@@ -63,7 +72,7 @@ export function LinksGroup({
 							className={classes.chevron}
 							stroke={1.5}
 							size={16}
-							style={{ transform: opened ? "rotate(-90deg)" : "none" }}
+							style={chevronStyle}
 						/>
 					)}
 				</Group>

@@ -19,6 +19,7 @@ export interface BaseLine {
 	timestamp: string;
 	speakers: string[];
 	source: string;
+	id?: string;
 }
 
 export interface Action extends BaseLine {
@@ -41,17 +42,20 @@ export interface Dialogue extends BaseLine {
 export interface Marker {
 	type: "marker";
 	source: string;
+	id?: string;
 }
 
 export interface Malformed {
 	type: "malformed";
 	message: string;
 	source: string;
+	id?: string;
 }
 
 export interface InvalidLine {
 	type: "invalid";
 	source: string;
+	id?: string;
 }
 
 export type ParsedLine = Dialogue | Marker | InvalidLine | Malformed | Action;

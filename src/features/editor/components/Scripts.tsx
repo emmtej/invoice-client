@@ -1,12 +1,17 @@
 import { useScriptStore } from "../store/scriptEditorStore";
 import { processDocuments } from "../utils/documentParser";
 import { Box, Button, FileButton, Flex, Tabs, Text } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TextEditor } from "./TextEditor";
 import { useFileUpload } from "../hooks/useFileUpload";
 import { ScriptEditor } from "./ScriptEditor";
 import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
 import { InvoiceSummary } from "@/features/invoice/components/InvoiceSummary";
+
+const tabsStyle = { display: "flex" as const, flexDirection: "column" as const, flex: 1, minHeight: 0 };
+const flexMainStyle = { flex: 1, minHeight: 0 };
+const panelStyle = { flex: 1, display: "flex" as const, flexDirection: "column" as const, minHeight: 0 };
+const sidebarBoxStyle = { overflowY: "auto" as const };
 
 export default function Scripts() {
 	const { docFiles, handleFileChange, reset } = useFileUpload();
@@ -18,24 +23,45 @@ export default function Scripts() {
 
 	useEffect(() => {
 		if (!docFiles) return;
-		processDocuments(docFiles).then((s) => setScripts(s));
+		let cancelled = false;
+		processDocuments(docFiles).then((s) => {
+			if (!cancelled) setScripts(s);
+		});
+		return () => {
+			cancelled = true;
+		};
 	}, [docFiles, setScripts]);
 
 	useEffect(() => {
+		const scriptIds = scripts.map((s) => s.id);
+		const currentValid = scriptIds.includes(activeTab) || activeTab === "add";
+		if (currentValid) return;
 		setActiveTab(scripts.length > 0 ? scripts[0].id : "add");
-	}, [scripts]);
+	}, [scripts, activeTab]);
+
+	const handleTabChange = useCallback((value: string | null) => {
+		setActiveTab(value ? value : "add");
+		setEditingScriptId(null);
+	}, []);
+
+	const handleStopEdit = useCallback(() => {
+		setEditingScriptId(null);
+	}, []);
+
+	const handleStartEdit = useCallback((scriptId: string) => {
+		setEditingScriptId(scriptId);
+	}, []);
+
+	const noopContentChange = useCallback(() => {}, []);
 
 	return (
 		<Tabs
 			defaultValue="add"
 			value={activeTab}
-			onChange={(value) => {
-				setActiveTab(value ? value : "add");
-				setEditingScriptId(null);
-			}}
+			onChange={handleTabChange}
 			variant="outline"
 			radius="md"
-			style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}
+			style={tabsStyle}
 		>
 			<Tabs.List mb="md">
 				{scripts.map((script) => (
@@ -50,31 +76,31 @@ export default function Scripts() {
 				</Tabs.Tab>
 			</Tabs.List>
 
-			<Flex gap="md" align="flex-start" style={{ flex: 1, minHeight: 0 }}>
+			<Flex gap="md" align="flex-start" style={flexMainStyle}>
 				<Box style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column" }}>
 					{scripts.map((script) => (
 						<Tabs.Panel 
 							key={script.id} 
 							value={script.id} 
 							keepMounted={false}
-							style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}
+							style={panelStyle}
 						>
 							<ScriptEditor
 								script={script}
 								isEditing={editingScriptId === script.id}
-								onStartEdit={() => setEditingScriptId(script.id)}
-								onStopEdit={() => setEditingScriptId(null)}
+								onStartEdit={handleStartEdit}
+								onStopEdit={handleStopEdit}
 							/>
 						</Tabs.Panel>
 					))}
 					<Tabs.Panel 
 						value="add" 
 						keepMounted={false}
-						style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}
+						style={panelStyle}
 					>
 						<TextEditor
 							content=""
-							onContentChange={() => {}}
+							onContentChange={noopContentChange}
 							additionalMenu={
 								<Flex gap="xs" align="center">
 									<FileButton
@@ -99,9 +125,7 @@ export default function Scripts() {
 					w={300}
 					visibleFrom="sm"
 					h="100%"
-					style={{
-						overflowY: "auto",
-					}}
+					style={sidebarBoxStyle}
 				>
 					<Text fw={700} mb="sm" c="dimmed" tt="uppercase" fz="xs">
 						Invoice Summary
