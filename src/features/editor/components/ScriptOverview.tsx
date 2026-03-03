@@ -31,17 +31,6 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 				<Group gap="md" align="center" mb="lg">
 					<IconFileText size={28} stroke={1.5} color="var(--mantine-color-violet-6)" />
 					<Title order={2}>{script.name}</Title>
-					<Text size="sm" c="dimmed">
-						{overview.totalLines} lines · {overview.wordCount} words ·{" "}
-						<Text
-							span
-							size="sm"
-							c={overview.invalidLines.length > 0 ? "red" : "dimmed"}
-							inherit
-						>
-							{overview.invalidLines.length} invalid
-						</Text>
-					</Text>
 					<Box style={{ flex: 1 }} />
 					{onEdit && (
 						<Button

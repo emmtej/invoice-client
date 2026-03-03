@@ -96,14 +96,12 @@ export default function Scripts() {
 					</Tabs.Panel>
 				</Box>
 
-				{/* Future Documents Overview Placeholder */}
+
 				<Box
 					w={300}
-					visibleFrom="md"
-					pl="md"
+					visibleFrom="sm"
 					h="100%"
 					style={{
-						borderLeft: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))",
 						overflowY: "auto",
 					}}
 				>

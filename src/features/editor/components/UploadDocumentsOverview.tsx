@@ -14,7 +14,7 @@ export function UploadDocumentsOverview({ scripts }: UploadDocumentsOverviewProp
 
 	if (scripts.length === 0) {
 		return (
-			<Paper withBorder radius="md" p="md">
+			<Paper pt="md">
 				<Stack gap="sm">
 					<Group gap="xs">
 						<IconFileText size={18} color="var(--mantine-color-gray-6)" />
@@ -32,19 +32,9 @@ export function UploadDocumentsOverview({ scripts }: UploadDocumentsOverviewProp
 
 	return (
 		<Stack gap={0}>
-			<Paper
-				withBorder
-				radius="md"
-				p="md"
-				style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
-			>
-				<Table stickyHeader highlightOnHover withTableBorder>
-					<Table.Thead>
-						<Table.Tr>
-							<Table.Th>Document</Table.Th>
-							<Table.Th w={130}>Billable words</Table.Th>
-						</Table.Tr>
-					</Table.Thead>
+			<Paper radius="md" p={0} style={{ overflow: "hidden" }}>
+				<Table stickyHeader highlightOnHover style={{ tableLayout: "fixed", width: "100%" }}>
+					
 					<Table.Tbody>
 						{scripts.map((script) => (
 							<Table.Tr key={script.id}>
@@ -60,17 +50,7 @@ export function UploadDocumentsOverview({ scripts }: UploadDocumentsOverviewProp
 				</Table>
 			</Paper>
 
-			<Box
-				py="sm"
-				px="md"
-				bg="gray.0"
-				style={{
-					border: "1px solid var(--mantine-color-default-border)",
-					borderTop: "none",
-					borderBottomLeftRadius: "var(--mantine-radius-md)",
-					borderBottomRightRadius: "var(--mantine-radius-md)",
-				}}
-			>
+			<Box py="sm" px="md" bg="gray.0">
 				<Group justify="space-between" align="baseline">
 					<Text size="sm" c="dimmed" fw={600} tt="uppercase" lts={0.5}>
 						Total billable words
