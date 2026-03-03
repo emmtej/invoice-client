@@ -1,6 +1,6 @@
 import type { Script } from "@/types/Script";
-import { Badge, Box, Button, Group, Paper, ScrollArea, Select, SimpleGrid, Stack, Table, Text, Title } from "@mantine/core";
-import { IconAlertCircle, IconEdit, IconFileText, IconFilter, IconHash, IconReportAnalytics } from "@tabler/icons-react";
+import { Badge, Box, Button, Group, Paper, ScrollArea, Select, Stack, Table, Text, Title } from "@mantine/core";
+import { IconEdit, IconFileText, IconFilter } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 
 interface ScriptOverviewProps {
@@ -27,14 +27,22 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 
 	return (
 		<Stack gap="lg" p="lg" style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
-			<Paper radius="md" shadow="sm" withBorder>
-				<Group justify="space-between" mb="lg">
-					<Stack gap="xs">
-						<Group gap="sm">
-							<IconFileText size={28} stroke={1.5} color="var(--mantine-color-violet-6)" />
-							<Title order={2}>{script.name}</Title>
-						</Group>
-					</Stack>
+			<Paper>
+				<Group gap="md" align="center" mb="lg">
+					<IconFileText size={28} stroke={1.5} color="var(--mantine-color-violet-6)" />
+					<Title order={2}>{script.name}</Title>
+					<Text size="sm" c="dimmed">
+						{overview.totalLines} lines · {overview.wordCount} words ·{" "}
+						<Text
+							span
+							size="sm"
+							c={overview.invalidLines.length > 0 ? "red" : "dimmed"}
+							inherit
+						>
+							{overview.invalidLines.length} invalid
+						</Text>
+					</Text>
+					<Box style={{ flex: 1 }} />
 					{onEdit && (
 						<Button
 							variant="light"
@@ -46,54 +54,6 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 						</Button>
 					)}
 				</Group>
-
-				<SimpleGrid cols={{ base: 1, xs: 3 }} spacing="lg" mb="lg">
-					<Group gap="md">
-						<Paper withBorder p="md" radius="sm" bg="gray.0">
-							<IconHash size={20} stroke={1.5} color="var(--mantine-color-gray-7)" />
-						</Paper>
-						<Stack gap={0}>
-							<Text size="xs" c="dimmed" fw={600} tt="uppercase" lts={0.8}>Total Lines</Text>
-							<Text size="xl" fw={700} lh={1}>{overview.totalLines}</Text>
-						</Stack>
-					</Group>
-
-					<Group gap="md">
-						<Paper withBorder p="md" radius="sm" bg="violet.0">
-							<IconReportAnalytics size={20} stroke={1.5} color="var(--mantine-color-violet-7)" />
-						</Paper>
-						<Stack gap={0}>
-							<Text size="xs" c="dimmed" fw={600} tt="uppercase" lts={0.8}>Word Count</Text>
-							<Text size="xl" fw={700} lh={1}>{overview.wordCount}</Text>
-						</Stack>
-					</Group>
-
-					<Group gap="md">
-						<Paper
-							withBorder
-							p="md"
-							radius="sm"
-							bg={overview.invalidLines.length > 0 ? "red.0" : "gray.0"}
-						>
-							<IconAlertCircle
-								size={20}
-								stroke={1.5}
-								color={overview.invalidLines.length > 0 ? "var(--mantine-color-red-7)" : "var(--mantine-color-gray-7)"}
-							/>
-						</Paper>
-						<Stack gap={0}>
-							<Text size="xs" c="dimmed" fw={600} tt="uppercase" lts={0.8}>Invalid Lines</Text>
-							<Text
-								size="xl"
-								fw={700}
-								lh={1}
-								c={overview.invalidLines.length > 0 ? "red" : "inherit"}
-							>
-								{overview.invalidLines.length}
-							</Text>
-						</Stack>
-					</Group>
-				</SimpleGrid>
 
 				<Group justify="space-between" mb="md" align="flex-end">
 					<Title order={4}>Line Details</Title>
@@ -123,6 +83,21 @@ export function ScriptOverview({ script, onEdit }: ScriptOverviewProps) {
 							withTableBorder
 						>
 							<Table.Thead>
+								<Table.Tr bg="gray.0">
+									<Table.Th colSpan={2} py="sm">
+										<Text size="sm" c="dimmed">
+											Total lines: {overview.totalLines} · Words: {overview.wordCount} ·{" "}
+											<Text
+												span
+												size="sm"
+												c={overview.invalidLines.length > 0 ? "red" : "dimmed"}
+												inherit
+											>
+												Invalid: {overview.invalidLines.length}
+											</Text>
+										</Text>
+									</Table.Th>
+								</Table.Tr>
 								<Table.Tr>
 									<Table.Th w={120}>Type</Table.Th>
 									<Table.Th>Content / Source</Table.Th>
