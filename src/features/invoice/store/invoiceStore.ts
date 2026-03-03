@@ -38,6 +38,7 @@ interface InvoiceStoreState {
 }
 
 interface InvoiceStoreActions {
+	addEmptyItem: (name: string) => void;
 	addSubitemsToItem: (
 		scriptIds: string[],
 		itemId: string,
@@ -152,9 +153,8 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
 				const subitems = item.subitems.filter((sub) => sub.id !== subitemId);
 				return { ...item, subitems };
 			});
-			const withoutEmptyItems = items.filter((item) => item.subitems.length > 0);
 			return {
-				invoice: { ...state.invoice, items: withoutEmptyItems },
+				invoice: { ...state.invoice, items },
 			};
 		}),
 
@@ -173,4 +173,19 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
 				items: [],
 			},
 		})),
+
+	addEmptyItem: (name) =>
+		set((state) => {
+			const newItem: InvoiceItem = {
+				id: generateId(),
+				name: name.trim() || "New item",
+				subitems: [],
+			};
+			return {
+				invoice: {
+					...state.invoice,
+					items: [...state.invoice.items, newItem],
+				},
+			};
+		}),
 }));

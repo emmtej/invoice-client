@@ -11,6 +11,7 @@ import { Layout } from "./components/ui/layout/Layout";
 import Authentication from "./pages/Authentication";
 import Dashboard from "./pages/Dashboard";
 import EditorPage from "@/features/editor";
+import { InvoicePage } from "@/features/invoice";
 import Profile from "./pages/Profile";
 import { useUserStore } from "./store/userStore";
 
@@ -83,12 +84,20 @@ const testEditorRoute = createRoute({
 	component: EditorPage,
 });
 
+// Temporary test route for invoice page – no auth; remove in prod when /invoice is added under authenticatedRoutes
+const testInvoiceRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/test/invoice",
+	component: InvoicePage,
+});
+
 const routeTree = rootRoute.addChildren([
 	indexRoute,
 	editorRoute,
 	loginRoute,
 	registrationRoute,
 	testEditorRoute,
+	testInvoiceRoute,
 	authenticatedRoutes.addChildren([dashboardRoute, editorRoute, profileRoute]),
 ]);
 
