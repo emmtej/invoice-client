@@ -25,7 +25,10 @@ export default function Scripts() {
 		if (!docFiles) return;
 		let cancelled = false;
 		processDocuments(docFiles).then((s) => {
-			if (!cancelled) setScripts(s);
+			if (!cancelled) {
+				setScripts(s);
+				if (s.length > 0) setActiveTab(s[0].id);
+			}
 		});
 		return () => {
 			cancelled = true;
