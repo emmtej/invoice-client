@@ -5,6 +5,7 @@ export type InvoiceProfile = {
 	lastName: string;
 	email: string;
 	date: string;
+	invoiceTitle: string;
 };
 
 export const profileSchema = z.object({
@@ -12,6 +13,7 @@ export const profileSchema = z.object({
 	lastName: z.string().trim().min(2, "Last name is required"),
 	email: z.email({pattern:/^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i }),
 	date: z.string().trim().min(1, "Date is required"),
+	invoiceTitle: z.string().trim().optional().default("Invoice"),
 });
 
 const PROFILE_STORAGE_KEY = "invoice_profile";
@@ -36,6 +38,7 @@ export const loadProfileFromStorage = (): InvoiceProfile | null => {
 			lastName: typeof parsed.lastName === "string" ? parsed.lastName : "",
 			email: typeof parsed.email === "string" ? parsed.email : "",
 			date: typeof parsed.date === "string" && parsed.date !== "" ? parsed.date : getTodayDateString(),
+			invoiceTitle: typeof parsed.invoiceTitle === "string" ? parsed.invoiceTitle : "Invoice",
 		};
 	} catch {
 		return null;

@@ -11,12 +11,15 @@ import {
   Text,
   TextInput,
   Tooltip,
+  Textarea,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
 import { memo, useCallback, useState } from "react";
 import { useInvoiceStore } from "../store/invoiceStore";
 import { AddDocumentsToItemModal } from "./AddDocumentsToItemModal";
+import { getTodayDateString } from "../utils/invoiceProfile";
+import type { InvoiceProfile } from "../utils/invoiceProfile";
 
 const borderTopStyle = {
   borderTop: "1px solid var(--mantine-color-default-border)",
@@ -27,11 +30,21 @@ const itemBoxBorderStyle = {
   borderRadius: "var(--mantine-radius-sm)",
 };
 
-function InvoiceSummaryInner() {
+type InvoiceSummaryProps = {
+  profile?: InvoiceProfile;
+};
+
+function InvoiceSummaryInner({ profile }: InvoiceSummaryProps) {
   const [editModalOpened, { open: openEditModal, close: closeEditModal }] =
+    useDisclosure(false);
+  const [exportModalOpened, { open: openExportModal, close: closeExportModal }] =
     useDisclosure(false);
   const [uploadModalItemId, setUploadModalItemId] = useState<string | null>(
     null,
+  );
+  const [exportPreviewText, setExportPreviewText] = useState<string>("");
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
+    "idle",
   );
   const { invoice, updateItemName, removeSubitem, removeItem, resetInvoice } =
     useInvoiceStore();
@@ -71,6 +84,57 @@ function InvoiceSummaryInner() {
     }
   }, [resetInvoice, closeEditModal]);
 
+  const handleOpenExport = useCallback(() => {
+    const fullName = [profile?.firstName, profile?.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+    const title = (profile?.invoiceTitle || "Invoice").trim();
+    const date = profile?.date || getTodayDateString();
+    const email = profile?.email ?? "";
+
+    const headerLines = [
+      [fullName, title].filter(Boolean).join(" ").trim(),
+      date,
+      "",
+    ];
+
+    const lines: string[] = [...headerLines];
+
+    invoice.items.forEach((item) => {
+      lines.push(item.name);
+      item.subitems.forEach((sub) => {
+        const labelOrScriptName = sub.label ?? sub.scriptName;
+        lines.push(
+          `${labelOrScriptName} - ${sub.wordCount} words - $${sub.amount.toFixed(2)}`,
+        );
+      });
+      lines.push("");
+    });
+
+    lines.push(`Total: $${invoiceTotal.toFixed(2)}`);
+    if (email) {
+      lines.push(`Payable to: ${email}`);
+    }
+
+    setExportPreviewText(lines.join("\n"));
+    setCopyState("idle");
+    openExportModal();
+  }, [invoice.items, invoiceTotal, openExportModal, profile]);
+
+  const handleCopyToClipboard = useCallback(async () => {
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(exportPreviewText);
+        setCopyState("copied");
+        return;
+      }
+    } catch {
+      // fall through to error state below
+    }
+    setCopyState("error");
+  }, [exportPreviewText]);
+
   if (invoice.items.length === 0) {
     return (
       <Paper pt="xl" pb="xl" radius="lg" bg="gray.0">
@@ -90,15 +154,25 @@ function InvoiceSummaryInner() {
     <>
       <Paper radius="lg" p="xl" bg="gray.0">
         <Group justify="space-between" align="center" mb="lg">
-          <Button
-            variant="subtle"
-            color="gray"
-            size="xs"
-            leftSection={<IconEdit size={14} />}
-            onClick={openEditModal}
-          >
-            Edit
-          </Button>
+          <Group gap="xs">
+            <Button
+              variant="subtle"
+              color="gray"
+              size="xs"
+              leftSection={<IconEdit size={14} />}
+              onClick={openEditModal}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="light"
+              size="xs"
+              onClick={handleOpenExport}
+              disabled={invoice.items.length === 0}
+            >
+              Export
+            </Button>
+          </Group>
         </Group>
         <Stack gap="lg">
           {invoice.items.map((item) => {
@@ -305,6 +379,42 @@ function InvoiceSummaryInner() {
               </Text>
             </Group>
           </Box>
+        </Stack>
+      </Modal>
+
+      <Modal
+        opened={exportModalOpened}
+        onClose={closeExportModal}
+        title="Export invoice"
+        size="lg"
+        centered
+      >
+        <Stack gap="md">
+          <Textarea
+            value={exportPreviewText}
+            readOnly
+            autosize
+            minRows={6}
+          />
+          <Group justify="space-between" align="center">
+            <Button onClick={handleCopyToClipboard}>
+              {copyState === "copied"
+                ? "Copied"
+                : copyState === "error"
+                  ? "Copy failed"
+                  : "Copy to clipboard"}
+            </Button>
+            {copyState === "error" && (
+              <Text size="xs" c="red">
+                Unable to access clipboard. Select the text and press Cmd/Ctrl+C.
+              </Text>
+            )}
+            {copyState === "copied" && (
+              <Text size="xs" c="teal">
+                Export text copied to clipboard.
+              </Text>
+            )}
+          </Group>
         </Stack>
       </Modal>
 

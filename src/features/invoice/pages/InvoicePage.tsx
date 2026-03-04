@@ -37,6 +37,7 @@ export default function InvoicePage() {
     lastName: "",
     email: "",
     date: getTodayDateString(),
+    invoiceTitle: "Invoice",
   }));
   const [profileSavedMessage, setProfileSavedMessage] = useState<string>("");
   const [isEditingProfile, setIsEditingProfile] = useState(true);
@@ -84,6 +85,7 @@ export default function InvoicePage() {
         lastName: "",
         email: "",
         date: getTodayDateString(),
+        invoiceTitle: "Invoice",
       },
     );
     setIsEditingProfile(false);
@@ -209,6 +211,13 @@ export default function InvoicePage() {
                 disabled={!isEditingProfile}
               />
               <TextInput
+                label="Invoice title"
+                placeholder="Invoice title"
+                value={profile.invoiceTitle}
+                onChange={handleProfileChange("invoiceTitle")}
+                disabled={!isEditingProfile}
+              />
+              <TextInput
                 label="Invoice date"
                 type="date"
                 value={profile.date}
@@ -255,7 +264,7 @@ export default function InvoicePage() {
               </Button>
             </Group>
           </Box>
-          {hasItems && <InvoiceSummary />}
+          {hasItems && <InvoiceSummary profile={profile} />}
         </Stack>
       </Box>
     </Box>
