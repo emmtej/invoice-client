@@ -1,52 +1,15 @@
 import { InvoiceSummary } from "@/features/invoice/components/InvoiceSummary";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
+import {
+	type InvoiceProfile,
+	getTodayDateString,
+	loadProfileFromStorage,
+	profileSchema,
+	saveProfileToStorage,
+} from "@/features/invoice/utils/invoiceProfile";
 import { Box, Button, Group, Stack, Text, TextInput } from "@mantine/core";
 import { IconAt, IconCalendar, IconDeviceFloppy, IconPlus, IconUser } from "@tabler/icons-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-
-type InvoiceProfile = {
-	firstName: string;
-	lastName: string;
-	email: string;
-	date: string;
-};
-
-const PROFILE_STORAGE_KEY = "invoice_profile";
-
-const getTodayDateString = () => {
-	const today = new Date();
-	const year = today.getFullYear();
-	const month = String(today.getMonth() + 1).padStart(2, "0");
-	const day = String(today.getDate()).padStart(2, "0");
-	return `${year}-${month}-${day}`;
-};
-
-const loadProfileFromStorage = (): InvoiceProfile | null => {
-	if (typeof window === "undefined") return null;
-	try {
-		const raw = window.localStorage.getItem(PROFILE_STORAGE_KEY);
-		if (!raw) return null;
-		const parsed = JSON.parse(raw) as Partial<InvoiceProfile> | null;
-		if (!parsed || typeof parsed !== "object") return null;
-		return {
-			firstName: typeof parsed.firstName === "string" ? parsed.firstName : "",
-			lastName: typeof parsed.lastName === "string" ? parsed.lastName : "",
-			email: typeof parsed.email === "string" ? parsed.email : "",
-			date: typeof parsed.date === "string" && parsed.date !== "" ? parsed.date : getTodayDateString(),
-		};
-	} catch {
-		return null;
-	}
-};
-
-const saveProfileToStorage = (profile: InvoiceProfile) => {
-	if (typeof window === "undefined") return;
-	try {
-		window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
-	} catch {
-		// Ignore storage errors to avoid breaking the UI
-	}
-};
 
 export default function InvoicePage() {
 	const { invoice, addEmptyItem } = useInvoiceStore();
@@ -78,11 +41,7 @@ export default function InvoicePage() {
 		};
 
 	const isProfileValid = useMemo(() => {
-		if (!profile.firstName.trim()) return false;
-		if (!profile.lastName.trim()) return false;
-		if (!profile.email.trim() || !profile.email.includes("@")) return false;
-		if (!profile.date.trim()) return false;
-		return true;
+		return profileSchema.safeParse(profile).success;
 	}, [profile]);
 
 	const handleSaveProfile = useCallback(() => {
