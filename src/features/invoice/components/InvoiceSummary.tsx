@@ -32,9 +32,15 @@ const itemBoxBorderStyle = {
 
 type InvoiceSummaryProps = {
   profile?: InvoiceProfile;
+  invoiceTitle?: string;
+  invoiceDate?: string;
 };
 
-function InvoiceSummaryInner({ profile }: InvoiceSummaryProps) {
+function InvoiceSummaryInner({
+  profile,
+  invoiceTitle = "Invoice",
+  invoiceDate,
+}: InvoiceSummaryProps) {
   const [editModalOpened, { open: openEditModal, close: closeEditModal }] =
     useDisclosure(false);
   const [exportModalOpened, { open: openExportModal, close: closeExportModal }] =
@@ -89,8 +95,8 @@ function InvoiceSummaryInner({ profile }: InvoiceSummaryProps) {
       .filter(Boolean)
       .join(" ")
       .trim();
-    const title = (profile?.invoiceTitle || "Invoice").trim();
-    const date = profile?.date || getTodayDateString();
+    const title = (invoiceTitle || "Invoice").trim();
+    const date = invoiceDate || getTodayDateString();
     const email = profile?.email ?? "";
 
     const headerLines = [
@@ -120,7 +126,7 @@ function InvoiceSummaryInner({ profile }: InvoiceSummaryProps) {
     setExportPreviewText(lines.join("\n"));
     setCopyState("idle");
     openExportModal();
-  }, [invoice.items, invoiceTotal, openExportModal, profile]);
+  }, [invoice.items, invoiceTotal, invoiceDate, invoiceTitle, openExportModal, profile]);
 
   const handleCopyToClipboard = useCallback(async () => {
     try {
