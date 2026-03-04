@@ -13,9 +13,10 @@ import {
 	Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
-import { memo, useCallback } from "react";
+import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
+import { memo, useCallback, useState } from "react";
 import { useInvoiceStore } from "../store/invoiceStore";
+import { AddDocumentsToItemModal } from "./AddDocumentsToItemModal";
 
 const borderTopStyle = { borderTop: "1px solid var(--mantine-color-default-border)" };
 const flexOneStyle = { flex: 1 };
@@ -26,6 +27,7 @@ const itemBoxBorderStyle = {
 
 function InvoiceSummaryInner() {
 	const [editModalOpened, { open: openEditModal, close: closeEditModal }] = useDisclosure(false);
+	const [uploadModalItemId, setUploadModalItemId] = useState<string | null>(null);
 	const {
 		invoice,
 		updateItemName,
@@ -77,7 +79,7 @@ function InvoiceSummaryInner() {
 						</Text>
 					</Group>
 					<Text size="sm" c="dimmed">
-						No items yet. Add scripts from Documents Overview.
+						No items yet. Add an item above to get started.
 					</Text>
 				</Stack>
 			</Paper>
@@ -105,9 +107,21 @@ function InvoiceSummaryInner() {
 						const itemTotal = item.subitems.reduce((sum, s) => sum + s.amount, 0);
 						return (
 							<Box key={item.id}>
-								<Text fw={600} size="xs" c="dimmed" mb={4}>
-									{item.name}
-								</Text>
+								<Group gap="xs" align="center" mb={4} wrap="nowrap">
+									<Text fw={600} size="xs" c="dimmed" style={flexOneStyle}>
+										{item.name}
+									</Text>
+									<Tooltip label="Upload documents for this item">
+										<ActionIcon
+											variant="light"
+											size="sm"
+											onClick={() => setUploadModalItemId(item.id)}
+											aria-label="Upload documents for this item"
+										>
+											<IconPlus size={14} />
+										</ActionIcon>
+									</Tooltip>
+								</Group>
 								<Stack gap={2}>
 									{item.subitems.map((sub) => (
 										<Group key={sub.id} justify="space-between" gap="xs">
@@ -149,7 +163,7 @@ function InvoiceSummaryInner() {
 					<ScrollArea.Autosize mah={400}>
 						{invoice.items.length === 0 ? (
 							<Text size="sm" c="dimmed" py="md">
-								No items. Add scripts from Documents Overview or close this modal.
+								No items. Add an item above, then use the + on each item to upload documents, or close this modal.
 							</Text>
 						) : (
 							<Stack gap="md">
@@ -175,16 +189,30 @@ function InvoiceSummaryInner() {
 													styles={{ input: { fontWeight: 600 } }}
 													style={flexOneStyle}
 												/>
-												<Tooltip label="Remove item">
-													<ActionIcon
-														color="red"
-														variant="light"
-														size="sm"
-														onClick={() => handleRemoveItem(item.id)}
-													>
-														<IconTrash size={14} />
-													</ActionIcon>
-												</Tooltip>
+												<Group gap={4}>
+													<Tooltip label="Upload documents for this item">
+														<ActionIcon
+															variant="light"
+															size="sm"
+															onClick={() => {
+																setUploadModalItemId(item.id);
+															}}
+															aria-label="Upload documents for this item"
+														>
+															<IconPlus size={14} />
+														</ActionIcon>
+													</Tooltip>
+													<Tooltip label="Remove item">
+														<ActionIcon
+															color="red"
+															variant="light"
+															size="sm"
+															onClick={() => handleRemoveItem(item.id)}
+														>
+															<IconTrash size={14} />
+														</ActionIcon>
+													</Tooltip>
+												</Group>
 											</Group>
 											<Table striped highlightOnHover withTableBorder withColumnBorders>
 												<Table.Thead>
@@ -248,6 +276,15 @@ function InvoiceSummaryInner() {
 					</Box>
 				</Stack>
 			</Modal>
+
+			{uploadModalItemId && (
+				<AddDocumentsToItemModal
+					itemId={uploadModalItemId}
+					itemName={invoice.items.find((i) => i.id === uploadModalItemId)?.name ?? ""}
+					opened={true}
+					onClose={() => setUploadModalItemId(null)}
+				/>
+			)}
 		</>
 	);
 }

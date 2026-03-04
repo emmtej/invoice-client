@@ -29,11 +29,19 @@ interface UploadDocumentsOverviewProps {
 	scripts: Script[];
 	/** Called after scripts are successfully added to the invoice. Use to e.g. clear uploaded documents. */
 	onAddedToInvoice?: () => void;
+	/** When set, only add to this invoice item; hide "Add to existing vs new" and item selector. Same form (preset, subitem label, rate) as Editor. */
+	targetItemId?: string;
+	targetItemName?: string;
 }
 
 type AddToMode = "existing" | "new";
 
-function UploadDocumentsOverviewInner({ scripts, onAddedToInvoice }: UploadDocumentsOverviewProps) {
+function UploadDocumentsOverviewInner({
+	scripts,
+	onAddedToInvoice,
+	targetItemId,
+	targetItemName,
+}: UploadDocumentsOverviewProps) {
 	const [selectedScriptIds, setSelectedScriptIds] = useState<Set<string>>(new Set());
 	const [addModalOpened, { open: openAddModal, close: closeAddModal }] = useDisclosure(false);
 	const [addMode, setAddMode] = useState<AddToMode>("new");
@@ -92,6 +100,20 @@ function UploadDocumentsOverviewInner({ scripts, onAddedToInvoice }: UploadDocum
 		const selectedScripts = scripts.filter((s) => selectedScriptIds.has(s.id));
 		if (selectedScripts.length === 0) return;
 
+		if (targetItemId) {
+			const amount = rateAmount !== "" ? Number(rateAmount) : NaN;
+			const perWords = ratePerWords !== "" ? Number(ratePerWords) : NaN;
+			const rate =
+				Number.isFinite(amount) && Number.isFinite(perWords) && perWords > 0
+					? amount / perWords
+					: undefined;
+			addSubitemsToItem(selectedIds, targetItemId, selectedScripts, subitemLabel.trim(), rate);
+			closeAddModal();
+			setSelectedScriptIds(new Set());
+			onAddedToInvoice?.();
+			return;
+		}
+
 		if (addMode === "existing" && selectedItemId) {
 			const currentInvoice = useInvoiceStore.getState().invoice;
 			const itemExists = currentInvoice.items.some((item) => item.id === selectedItemId);
@@ -121,6 +143,7 @@ function UploadDocumentsOverviewInner({ scripts, onAddedToInvoice }: UploadDocum
 	}, [
 		selectedScriptIds,
 		scripts,
+		targetItemId,
 		addMode,
 		selectedItemId,
 		newItemName,
@@ -220,7 +243,11 @@ function UploadDocumentsOverviewInner({ scripts, onAddedToInvoice }: UploadDocum
 				onClick={handleOpenAddModal}
 				disabled={!someSelected}
 			>
-				Add to Invoice
+				{targetItemId
+					? targetItemName
+						? `Add to ${targetItemName}`
+						: "Add to this item"
+					: "Add to Invoice"}
 			</Button>
 			{someSelected && (
 				<Text size="xs" c="dimmed" mt={4}>
@@ -232,11 +259,11 @@ function UploadDocumentsOverviewInner({ scripts, onAddedToInvoice }: UploadDocum
 		<Modal
 			opened={addModalOpened}
 			onClose={closeAddModal}
-			title="Add to invoice"
+			title={targetItemId ? (targetItemName ? `Add to ${targetItemName}` : "Add to this item") : "Add to invoice"}
 			centered
 		>
 			<Stack gap="md">
-				{hasItems ? (
+				{!targetItemId && hasItems ? (
 					<Radio.Group
 						value={addMode}
 						onChange={(v) => setAddMode(v as AddToMode)}
@@ -247,13 +274,13 @@ function UploadDocumentsOverviewInner({ scripts, onAddedToInvoice }: UploadDocum
 							<Radio value="new" label="New invoice item" />
 						</Stack>
 					</Radio.Group>
-				) : (
+				) : !targetItemId && !hasItems ? (
 					<Text size="sm" c="dimmed">
 						No invoice items yet. Create a new item for the selected scripts.
 					</Text>
-				)}
+				) : null}
 
-				{addMode === "existing" && hasItems && (
+				{!targetItemId && addMode === "existing" && hasItems && (
 					<Select
 						label="Invoice item"
 						value={selectedItemId}
@@ -269,7 +296,7 @@ function UploadDocumentsOverviewInner({ scripts, onAddedToInvoice }: UploadDocum
 					/>
 				)}
 
-				{addMode === "new" && (
+				{!targetItemId && addMode === "new" && (
 					<TextInput
 						label="New item name"
 						placeholder="e.g. Episode 1"
@@ -388,10 +415,18 @@ function UploadDocumentsOverviewInner({ scripts, onAddedToInvoice }: UploadDocum
 						onClick={handleAddToInvoice}
 						disabled={
 							!subitemLabel.trim() ||
-							(addMode === "existing" ? !selectedItemId : !newItemName.trim())
+							(targetItemId
+								? false
+								: addMode === "existing"
+									? !selectedItemId
+									: !newItemName.trim())
 						}
 					>
-						Add to invoice
+						{targetItemId
+							? targetItemName
+								? `Add to ${targetItemName}`
+								: "Add to this item"
+							: "Add to invoice"}
 					</Button>
 				</Group>
 			</Stack>
