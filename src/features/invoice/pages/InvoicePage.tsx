@@ -235,14 +235,14 @@ export default function InvoicePage() {
             />
             <Group align="flex-end" gap="lg">
               <TextInput
-                label="Item name(s)"
+                label="Add Invoice Item(s)"
                 placeholder="e.g. Episode 1, Episode 2, Episode 3"
-                description="Separate multiple names with a comma to add several items at once."
+                description="Separate multiple items with a comma to add several items at once."
                 value={newItemName}
                 onChange={(e) => setNewItemName(e.currentTarget.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
                 style={{ flex: 1 }}
-                size="md"
+                size="sm"
               />
               <Button
                 leftSection={<IconPlus size={16} />}
