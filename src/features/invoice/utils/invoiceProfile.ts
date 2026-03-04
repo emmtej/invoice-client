@@ -10,7 +10,7 @@ export type InvoiceProfile = {
 export const profileSchema = z.object({
 	firstName: z.string().trim().min(2, "First name is required"),
 	lastName: z.string().trim().min(2, "Last name is required"),
-	email: z.string().email("Invalid email address"),
+	email: z.email("Invalid email address"),
 	date: z.string().trim().min(1, "Date is required"),
 });
 
