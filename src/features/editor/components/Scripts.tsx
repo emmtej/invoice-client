@@ -1,7 +1,8 @@
 import { Box, Button, FileButton, Flex, Tabs, Text } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
-import { InvoiceSummary } from "@/features/invoice/summary";
 import { loadInvoiceDefaults } from "@/features/invoice/details";
+import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
+import { InvoiceSummary } from "@/features/invoice/summary";
 import { useFileUpload } from "../hooks/useFileUpload";
 import { useScriptStore } from "../store/scriptEditorStore";
 import { processDocuments } from "../utils/documentParser";
@@ -27,6 +28,7 @@ const sidebarBoxStyle = { overflowY: "auto" as const };
 export default function Scripts() {
 	const { docFiles, handleFileChange, reset } = useFileUpload();
 	const { scripts, setScripts } = useScriptStore((store) => store);
+	const { invoice } = useInvoiceStore();
 
 	// Default state - empty doc array
 	const [activeTab, setActiveTab] = useState<string>("add");
@@ -68,6 +70,10 @@ export default function Scripts() {
 
 	const noopContentChange = useCallback(() => {}, []);
 
+	const hasScripts = scripts.length > 0;
+	const hasInvoiceItems = invoice.items.length > 0;
+	const showSidebar = hasScripts || hasInvoiceItems;
+
 	return (
 		<Tabs
 			defaultValue="add"
@@ -90,7 +96,7 @@ export default function Scripts() {
 				</Tabs.Tab>
 			</Tabs.List>
 
-			<Flex gap="md" align="flex-start" style={flexMainStyle}>
+			<Flex gap={showSidebar ? "md" : 0} align="flex-start" style={flexMainStyle}>
 				<Box
 					style={{
 						flex: 1,
@@ -138,19 +144,30 @@ export default function Scripts() {
 					</Tabs.Panel>
 				</Box>
 
-				<Box w={300} visibleFrom="sm" h="100%" style={sidebarBoxStyle}>
-					<Text fw={700} mb="sm" c="dimmed" tt="uppercase" fz="xs">
-						Invoice Summary
-					</Text>
-					<InvoiceSummary 
-						invoiceTitle={loadInvoiceDefaults().invoiceTitle}
-						invoiceDate={loadInvoiceDefaults().invoiceDate}
-					/>
-					<Text fw={700} mb="sm" mt="lg" c="dimmed" tt="uppercase" fz="xs">
-						Documents Overview
-					</Text>
-					<UploadDocumentsOverview scripts={scripts} onAddedToInvoice={reset} />
-				</Box>
+				{showSidebar && (
+					<Box w={300} visibleFrom="sm" h="100%" style={sidebarBoxStyle}>
+						{hasScripts && (
+							<Box mb="xl">
+								<Text fw={700} mb="sm" mt="lg" c="dimmed" tt="uppercase" fz="xs">
+									Documents Overview
+								</Text>
+								<UploadDocumentsOverview scripts={scripts} onAddedToInvoice={reset} />
+							</Box>
+						)}
+
+						{hasInvoiceItems && (
+							<Box>
+								<Text fw={700} mb="sm" c="dimmed" tt="uppercase" fz="xs">
+									Invoice Summary
+								</Text>
+								<InvoiceSummary
+									invoiceTitle={loadInvoiceDefaults().invoiceTitle}
+									invoiceDate={loadInvoiceDefaults().invoiceDate}
+								/>
+							</Box>
+						)}
+					</Box>
+				)}
 			</Flex>
 		</Tabs>
 	);
