@@ -15,6 +15,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
 import { Fragment, memo, useCallback, useState } from "react";
 import { AddDocumentsToItemModal } from "../items";
+import { EditValueModal } from "../components";
 import { getTodayDateString, type InvoiceProfile } from "../profile";
 import { useInvoiceStore } from "../store/invoiceStore";
 
@@ -45,6 +46,22 @@ export const InvoiceSummary = memo(
 			name: string;
 		} | null>(null);
 
+		const [editModalConfig, setEditModalConfig] = useState<{
+			opened: boolean;
+			title: string;
+			label: string;
+			inputType: "text" | "number";
+			initialValue: string | number;
+			onConfirm: (val: string | number) => void;
+		}>({
+			opened: false,
+			title: "",
+			label: "",
+			inputType: "text",
+			initialValue: "",
+			onConfirm: () => {},
+		});
+
 		const handleOpenUpload = useCallback(
 			(id: string, name: string) => {
 				setActiveItemId({ id, name });
@@ -53,6 +70,10 @@ export const InvoiceSummary = memo(
 			[open],
 		);
 
+		const closeEditModal = () => {
+			setEditModalConfig((prev) => ({ ...prev, opened: false }));
+		};
+
 		const items = invoice.items;
 		const totalAmount = items.reduce((sum, item) => {
 			const itemTotal = item.subitems.reduce((s, sub) => s + sub.amount, 0);
@@ -60,10 +81,14 @@ export const InvoiceSummary = memo(
 		}, 0);
 
 		const handleUpdateItemName = (itemId: string, currentName: string) => {
-			const newName = prompt("Enter new item name:", currentName);
-			if (newName !== null) {
-				updateItemName(itemId, newName);
-			}
+			setEditModalConfig({
+				opened: true,
+				title: "Edit Item Name",
+				label: "New item name:",
+				inputType: "text",
+				initialValue: currentName,
+				onConfirm: (val) => updateItemName(itemId, val as string),
+			});
 		};
 
 		const handleUpdateSubitemLabel = (
@@ -71,10 +96,14 @@ export const InvoiceSummary = memo(
 			subitemId: string,
 			currentLabel: string,
 		) => {
-			const newLabel = prompt("Enter new label:", currentLabel);
-			if (newLabel !== null) {
-				updateSubitemLabel(itemId, subitemId, newLabel);
-			}
+			setEditModalConfig({
+				opened: true,
+				title: "Edit Label",
+				label: "New label:",
+				inputType: "text",
+				initialValue: currentLabel,
+				onConfirm: (val) => updateSubitemLabel(itemId, subitemId, val as string),
+			});
 		};
 
 		const handleUpdateSubitemRate = (
@@ -82,13 +111,14 @@ export const InvoiceSummary = memo(
 			subitemId: string,
 			currentRate: number,
 		) => {
-			const newRate = prompt("Enter new rate per word:", currentRate.toString());
-			if (newRate !== null) {
-				const val = Number.parseFloat(newRate);
-				if (!Number.isNaN(val)) {
-					updateSubitemRate(itemId, subitemId, val);
-				}
-			}
+			setEditModalConfig({
+				opened: true,
+				title: "Edit Rate",
+				label: "New rate per word ($):",
+				inputType: "number",
+				initialValue: currentRate,
+				onConfirm: (val) => updateSubitemRate(itemId, subitemId, Number(val)),
+			});
 		};
 
 		return (
@@ -284,6 +314,16 @@ export const InvoiceSummary = memo(
 						onClose={close}
 					/>
 				)}
+
+				<EditValueModal
+					opened={editModalConfig.opened}
+					onClose={closeEditModal}
+					onConfirm={editModalConfig.onConfirm}
+					initialValue={editModalConfig.initialValue}
+					title={editModalConfig.title}
+					label={editModalConfig.label}
+					inputType={editModalConfig.inputType}
+				/>
 			</Box>
 		);
 	},

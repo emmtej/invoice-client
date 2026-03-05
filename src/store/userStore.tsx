@@ -33,6 +33,22 @@ interface UserState {
 const LOCAL_STORAGE_KEY = "user-storage";
 const VERSION = 1;
 
+const simulateLogin = async (credentials: UserLoginCredentials) => {
+	await new Promise((resolve) => setTimeout(resolve, 1000));
+	if (credentials.email === "test@example.com") {
+		return {
+			user: {
+				firstname: "John",
+				lastname: "Doe",
+				email: credentials.email,
+				role: "USER" as UserRole,
+				profileImgUrl: "",
+			},
+		};
+	}
+	throw new Error("Invalid credentials");
+};
+
 export const useUserStore = create<UserState>()(
 	persist(
 		(set, get) => ({
