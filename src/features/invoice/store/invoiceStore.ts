@@ -58,7 +58,11 @@ interface InvoiceStoreActions {
 	) => void;
 	updateItemName: (itemId: string, name: string) => void;
 	updateSubitemRate: (itemId: string, subitemId: string, rate: number) => void;
-	updateSubitemLabel: (itemId: string, subitemId: string, label: string) => void;
+	updateSubitemLabel: (
+		itemId: string,
+		subitemId: string,
+		label: string,
+	) => void;
 	removeSubitem: (itemId: string, subitemId: string) => void;
 	removeItem: (itemId: string) => void;
 	resetInvoice: () => void;
@@ -170,7 +174,11 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
 								...item,
 								subitems: item.subitems.map((sub) =>
 									sub.id === subitemId
-										? { ...sub, ratePerWord: rate, amount: sub.wordCount * rate }
+										? {
+												...sub,
+												ratePerWord: rate,
+												amount: sub.wordCount * rate,
+											}
 										: sub,
 								),
 							}

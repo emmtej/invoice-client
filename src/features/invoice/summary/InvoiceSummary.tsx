@@ -102,7 +102,8 @@ export const InvoiceSummary = memo(
 				label: "New label:",
 				inputType: "text",
 				initialValue: currentLabel,
-				onConfirm: (val) => updateSubitemLabel(itemId, subitemId, val as string),
+				onConfirm: (val) =>
+					updateSubitemLabel(itemId, subitemId, val as string),
 			});
 		};
 
@@ -183,7 +184,9 @@ export const InvoiceSummary = memo(
 														<ActionIcon
 															size="xs"
 															variant="subtle"
-															onClick={() => handleUpdateItemName(item.id, item.name)}
+															onClick={() =>
+																handleUpdateItemName(item.id, item.name)
+															}
 														>
 															<IconEdit size={12} />
 														</ActionIcon>
@@ -197,7 +200,9 @@ export const InvoiceSummary = memo(
 														<ActionIcon
 															variant="light"
 															color="blue"
-															onClick={() => handleOpenUpload(item.id, item.name)}
+															onClick={() =>
+																handleOpenUpload(item.id, item.name)
+															}
 														>
 															<IconPlus size={16} />
 														</ActionIcon>
@@ -217,7 +222,9 @@ export const InvoiceSummary = memo(
 
 										{item.subitems.map((sub) => (
 											<Table.Tr key={sub.id}>
-												<Table.Td style={{ paddingLeft: "var(--mantine-spacing-lg)" }}>
+												<Table.Td
+													style={{ paddingLeft: "var(--mantine-spacing-lg)" }}
+												>
 													<Group gap={4} wrap="nowrap">
 														<Text size="sm">{sub.label || sub.scriptName}</Text>
 														<ActionIcon
@@ -236,7 +243,9 @@ export const InvoiceSummary = memo(
 													</Group>
 												</Table.Td>
 												<Table.Td style={{ textAlign: "right" }}>
-													<Text size="sm">{sub.wordCount.toLocaleString()}</Text>
+													<Text size="sm">
+														{sub.wordCount.toLocaleString()}
+													</Text>
 												</Table.Td>
 												<Table.Td style={{ textAlign: "right" }}>
 													<Group gap={4} justify="flex-end" wrap="nowrap">

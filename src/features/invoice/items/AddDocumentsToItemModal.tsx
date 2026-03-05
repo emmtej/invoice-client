@@ -18,7 +18,8 @@ export function AddDocumentsToItemModal({
 	opened,
 	onClose,
 }: AddDocumentsToItemModalProps) {
-	const { docFiles, handleFileChange, isLoading, errors, reset } = useFileUpload();
+	const { docFiles, handleFileChange, isLoading, errors, reset } =
+		useFileUpload();
 	const [scripts, setScripts] = useState<Script[]>([]);
 	const [processingError, setProcessingError] = useState<string | null>(null);
 
