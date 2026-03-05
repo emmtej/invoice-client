@@ -24,7 +24,10 @@ export interface Invoice {
 }
 
 function generateId(): string {
-	return crypto.randomUUID();
+	if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+		return crypto.randomUUID();
+	}
+	return `id_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
 export interface ScriptForInvoice {
@@ -54,6 +57,8 @@ interface InvoiceStoreActions {
 		ratePerWord?: number,
 	) => void;
 	updateItemName: (itemId: string, name: string) => void;
+	updateSubitemRate: (itemId: string, subitemId: string, rate: number) => void;
+	updateSubitemLabel: (itemId: string, subitemId: string, label: string) => void;
 	removeSubitem: (itemId: string, subitemId: string) => void;
 	removeItem: (itemId: string) => void;
 	resetInvoice: () => void;
@@ -150,6 +155,42 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
 				items: state.invoice.items.map((item) =>
 					item.id === itemId
 						? { ...item, name: name.trim() === "" ? item.name : name }
+						: item,
+				),
+			},
+		})),
+
+	updateSubitemRate: (itemId, subitemId, rate) =>
+		set((state) => ({
+			invoice: {
+				...state.invoice,
+				items: state.invoice.items.map((item) =>
+					item.id === itemId
+						? {
+								...item,
+								subitems: item.subitems.map((sub) =>
+									sub.id === subitemId
+										? { ...sub, ratePerWord: rate, amount: sub.wordCount * rate }
+										: sub,
+								),
+							}
+						: item,
+				),
+			},
+		})),
+
+	updateSubitemLabel: (itemId, subitemId, label) =>
+		set((state) => ({
+			invoice: {
+				...state.invoice,
+				items: state.invoice.items.map((item) =>
+					item.id === itemId
+						? {
+								...item,
+								subitems: item.subitems.map((sub) =>
+									sub.id === subitemId ? { ...sub, label } : sub,
+								),
+							}
 						: item,
 				),
 			},

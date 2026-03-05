@@ -76,8 +76,8 @@ export function AddDocumentsToItemModal({
 				)}
 				{errors.length > 0 && (
 					<Box>
-						{errors.map((err, i) => (
-							<Text key={i} size="sm" c="red">
+						{errors.map((err) => (
+							<Text key={err} size="sm" c="red">
 								{err}
 							</Text>
 						))}

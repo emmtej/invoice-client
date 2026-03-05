@@ -1,6 +1,6 @@
 import { Group, Paper, Stack, Text } from "@mantine/core";
 import { IconAt, IconUser } from "@tabler/icons-react";
-import type { InvoiceProfile } from "../utils/invoiceProfile";
+import type { InvoiceProfile } from "./invoiceProfile";
 
 type ActiveProfileDisplayProps = {
 	profile: InvoiceProfile;

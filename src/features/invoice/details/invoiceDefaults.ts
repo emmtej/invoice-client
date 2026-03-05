@@ -1,4 +1,4 @@
-import { getTodayDateString } from "./invoiceProfile";
+import { getTodayDateString } from "../profile";
 
 export type InvoiceDefaults = {
 	invoiceTitle: string;

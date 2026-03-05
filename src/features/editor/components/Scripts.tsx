@@ -1,6 +1,7 @@
 import { Box, Button, FileButton, Flex, Tabs, Text } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
-import { InvoiceSummary } from "@/features/invoice/components/InvoiceSummary";
+import { InvoiceSummary } from "@/features/invoice/summary";
+import { loadInvoiceDefaults } from "@/features/invoice/details";
 import { useFileUpload } from "../hooks/useFileUpload";
 import { useScriptStore } from "../store/scriptEditorStore";
 import { processDocuments } from "../utils/documentParser";
@@ -141,7 +142,10 @@ export default function Scripts() {
 					<Text fw={700} mb="sm" c="dimmed" tt="uppercase" fz="xs">
 						Invoice Summary
 					</Text>
-					<InvoiceSummary />
+					<InvoiceSummary 
+						invoiceTitle={loadInvoiceDefaults().invoiceTitle}
+						invoiceDate={loadInvoiceDefaults().invoiceDate}
+					/>
 					<Text fw={700} mb="sm" mt="lg" c="dimmed" tt="uppercase" fz="xs">
 						Documents Overview
 					</Text>
