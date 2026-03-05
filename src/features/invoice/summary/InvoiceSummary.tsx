@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
-import { memo, useCallback, useState } from "react";
+import { Fragment, memo, useCallback, useState } from "react";
 import { AddDocumentsToItemModal } from "../items";
 import { getTodayDateString, type InvoiceProfile } from "../profile";
 import { useInvoiceStore } from "../store/invoiceStore";
@@ -143,114 +143,31 @@ export const InvoiceSummary = memo(
 								</Table.Tr>
 							</Table.Thead>
 							<Table.Tbody>
-								{items.map((item) => {
-									const itemWordCount = item.subitems.reduce(
-										(s, sub) => s + sub.wordCount,
-										0,
-									);
-									const itemAmount = item.subitems.reduce(
-										(s, sub) => s + sub.amount,
-										0,
-									);
-
-									return (
-										<Table.Tr key={item.id}>
+								{items.map((item) => (
+									<Fragment key={item.id}>
+										<Table.Tr bg="var(--mantine-color-gray-0)">
 											<Table.Td>
-												<Stack gap={0}>
-													<Group gap="xs">
-														<Text fw={500}>{item.name}</Text>
-														<Tooltip label="Edit item name">
-															<ActionIcon
-																size="xs"
-																variant="subtle"
-																onClick={() =>
-																	handleUpdateItemName(item.id, item.name)
-																}
-															>
-																<IconEdit size={12} />
-															</ActionIcon>
-														</Tooltip>
-													</Group>
-													{item.subitems.map((sub) => (
-														<Box key={sub.id} mt={4}>
-															<Group justify="space-between" wrap="nowrap">
-																<Group gap={4} style={{ flex: 1 }}>
-																	<Text size="xs" c="dimmed">
-																		• {sub.label || sub.scriptName}
-																	</Text>
-																	<ActionIcon
-																		size="xs"
-																		variant="subtle"
-																		onClick={() =>
-																			handleUpdateSubitemLabel(
-																				item.id,
-																				sub.id,
-																				sub.label || sub.scriptName,
-																			)
-																		}
-																	>
-																		<IconEdit size={10} />
-																	</ActionIcon>
-																</Group>
-																<Group gap="xs">
-																	<Text size="xs" c="dimmed">
-																		${sub.ratePerWord.toFixed(3)}
-																	</Text>
-																	<ActionIcon
-																		size="xs"
-																		variant="subtle"
-																		onClick={() =>
-																			handleUpdateSubitemRate(
-																				item.id,
-																				sub.id,
-																				sub.ratePerWord,
-																			)
-																		}
-																	>
-																		<IconEdit size={10} />
-																	</ActionIcon>
-																	<ActionIcon
-																		size="xs"
-																		variant="subtle"
-																		color="red"
-																		onClick={() =>
-																			removeSubitem(item.id, sub.id)
-																		}
-																	>
-																		<IconTrash size={12} />
-																	</ActionIcon>
-																</Group>
-															</Group>
-														</Box>
-													))}
-												</Stack>
+												<Group gap="xs">
+													<Text fw={700}>{item.name}</Text>
+													<Tooltip label="Edit item name">
+														<ActionIcon
+															size="xs"
+															variant="subtle"
+															onClick={() => handleUpdateItemName(item.id, item.name)}
+														>
+															<IconEdit size={12} />
+														</ActionIcon>
+													</Tooltip>
+												</Group>
 											</Table.Td>
-											<Table.Td style={{ textAlign: "right" }}>
-												<Text size="sm">{itemWordCount.toLocaleString()}</Text>
-											</Table.Td>
-											<Table.Td style={{ textAlign: "right" }}>
-												{item.subitems.length === 1 ? (
-													<Text size="sm">
-														${item.subitems[0].ratePerWord.toFixed(3)}
-													</Text>
-												) : (
-													<Text size="sm" c="dimmed">
-														—
-													</Text>
-												)}
-											</Table.Td>
-											<Table.Td style={{ textAlign: "right" }}>
-												<Text fw={600}>${itemAmount.toFixed(2)}</Text>
-											</Table.Td>
+											<Table.Td colSpan={3} />
 											<Table.Td>
 												<Group gap="xs" justify="flex-end">
 													<Tooltip label="Add documents">
 														<ActionIcon
 															variant="light"
 															color="blue"
-															onClick={() =>
-																handleOpenUpload(item.id, item.name)
-															}
+															onClick={() => handleOpenUpload(item.id, item.name)}
 														>
 															<IconPlus size={16} />
 														</ActionIcon>
@@ -267,8 +184,71 @@ export const InvoiceSummary = memo(
 												</Group>
 											</Table.Td>
 										</Table.Tr>
-									);
-								})}
+
+										{item.subitems.map((sub) => (
+											<Table.Tr key={sub.id}>
+												<Table.Td style={{ paddingLeft: "var(--mantine-spacing-lg)" }}>
+													<Group gap={4} wrap="nowrap">
+														<Text size="sm">{sub.label || sub.scriptName}</Text>
+														<ActionIcon
+															size="xs"
+															variant="subtle"
+															onClick={() =>
+																handleUpdateSubitemLabel(
+																	item.id,
+																	sub.id,
+																	sub.label || sub.scriptName,
+																)
+															}
+														>
+															<IconEdit size={10} />
+														</ActionIcon>
+													</Group>
+												</Table.Td>
+												<Table.Td style={{ textAlign: "right" }}>
+													<Text size="sm">{sub.wordCount.toLocaleString()}</Text>
+												</Table.Td>
+												<Table.Td style={{ textAlign: "right" }}>
+													<Group gap={4} justify="flex-end" wrap="nowrap">
+														<Text size="sm">${sub.ratePerWord.toFixed(3)}</Text>
+														<ActionIcon
+															size="xs"
+															variant="subtle"
+															onClick={() =>
+																handleUpdateSubitemRate(
+																	item.id,
+																	sub.id,
+																	sub.ratePerWord,
+																)
+															}
+														>
+															<IconEdit size={10} />
+														</ActionIcon>
+													</Group>
+												</Table.Td>
+												<Table.Td style={{ textAlign: "right" }}>
+													<Text fw={600} size="sm">
+														${sub.amount.toFixed(2)}
+													</Text>
+												</Table.Td>
+												<Table.Td>
+													<Group justify="flex-end">
+														<Tooltip label="Remove subitem">
+															<ActionIcon
+																size="xs"
+																variant="subtle"
+																color="red"
+																onClick={() => removeSubitem(item.id, sub.id)}
+															>
+																<IconTrash size={12} />
+															</ActionIcon>
+														</Tooltip>
+													</Group>
+												</Table.Td>
+											</Table.Tr>
+										))}
+									</Fragment>
+								))}
 							</Table.Tbody>
 						</Table>
 
