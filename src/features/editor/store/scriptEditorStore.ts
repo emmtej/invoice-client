@@ -9,6 +9,7 @@ interface ScriptStoreProps {
 
 interface ScriptStoreActions {
 	setScripts: (newScripts: Script[]) => void;
+	addScripts: (newScripts: Script[]) => void;
 	updateHtml: (id: string, html: string) => void;
 	resetScript: (id: string) => void;
 	updateScriptFromHtml: (id: string, html: string) => void;
@@ -21,6 +22,14 @@ export const useScriptStore = create<ScriptStore>((set) => ({
 	setScripts: (scripts) =>
 		set({
 			scripts,
+		}),
+	addScripts: (newScripts) =>
+		set((state) => {
+			const existingIds = new Set(state.scripts.map((s) => s.id));
+			const uniqueNewScripts = newScripts.filter((s) => !existingIds.has(s.id));
+			return {
+				scripts: [...state.scripts, ...uniqueNewScripts],
+			};
 		}),
 	updateHtml: (id, html) =>
 		set((state) => ({
