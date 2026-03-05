@@ -24,7 +24,7 @@ function loadFromStorage(): InvoiceSubitemPreset[] {
 				typeof (p as InvoiceSubitemPreset).id === "string" &&
 				typeof (p as InvoiceSubitemPreset).subitemLabel === "string" &&
 				typeof (p as InvoiceSubitemPreset).rateAmount === "number" &&
-				typeof (p as InvoiceSubitemPreset).ratePerWords === "number"
+				typeof (p as InvoiceSubitemPreset).ratePerWords === "number",
 		);
 	} catch {
 		return [];
@@ -41,7 +41,9 @@ export function getPresets(): InvoiceSubitemPreset[] {
 }
 
 /** Save a new preset. Use API later: await savePresetToApi(preset) then invalidate local cache. */
-export function savePreset(preset: Omit<InvoiceSubitemPreset, "id">): InvoiceSubitemPreset {
+export function savePreset(
+	preset: Omit<InvoiceSubitemPreset, "id">,
+): InvoiceSubitemPreset {
 	const presets = loadFromStorage();
 	const withId: InvoiceSubitemPreset = {
 		...preset,

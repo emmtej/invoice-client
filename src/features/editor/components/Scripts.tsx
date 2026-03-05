@@ -1,16 +1,26 @@
-import { useScriptStore } from "../store/scriptEditorStore";
-import { processDocuments } from "../utils/documentParser";
 import { Box, Button, FileButton, Flex, Tabs, Text } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
-import { TextEditor } from "./TextEditor";
-import { useFileUpload } from "../hooks/useFileUpload";
-import { ScriptEditor } from "./ScriptEditor";
-import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
 import { InvoiceSummary } from "@/features/invoice/components/InvoiceSummary";
+import { useFileUpload } from "../hooks/useFileUpload";
+import { useScriptStore } from "../store/scriptEditorStore";
+import { processDocuments } from "../utils/documentParser";
+import { ScriptEditor } from "./ScriptEditor";
+import { TextEditor } from "./TextEditor";
+import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
 
-const tabsStyle = { display: "flex" as const, flexDirection: "column" as const, flex: 1, minHeight: 0 };
+const tabsStyle = {
+	display: "flex" as const,
+	flexDirection: "column" as const,
+	flex: 1,
+	minHeight: 0,
+};
 const flexMainStyle = { flex: 1, minHeight: 0 };
-const panelStyle = { flex: 1, display: "flex" as const, flexDirection: "column" as const, minHeight: 0 };
+const panelStyle = {
+	flex: 1,
+	display: "flex" as const,
+	flexDirection: "column" as const,
+	minHeight: 0,
+};
 const sidebarBoxStyle = { overflowY: "auto" as const };
 
 export default function Scripts() {
@@ -74,17 +84,25 @@ export default function Scripts() {
 				))}
 				<Tabs.Tab value="add">
 					<Text fw={700} c="dimmed" tt="uppercase" fz="xs">
-					{scripts.length > 0 ? "Add Document" : "New Document"}
+						{scripts.length > 0 ? "Add Document" : "New Document"}
 					</Text>
 				</Tabs.Tab>
 			</Tabs.List>
 
 			<Flex gap="md" align="flex-start" style={flexMainStyle}>
-				<Box style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column" }}>
+				<Box
+					style={{
+						flex: 1,
+						minWidth: 0,
+						height: "100%",
+						display: "flex",
+						flexDirection: "column",
+					}}
+				>
 					{scripts.map((script) => (
-						<Tabs.Panel 
-							key={script.id} 
-							value={script.id} 
+						<Tabs.Panel
+							key={script.id}
+							value={script.id}
 							keepMounted={false}
 							style={panelStyle}
 						>
@@ -96,11 +114,7 @@ export default function Scripts() {
 							/>
 						</Tabs.Panel>
 					))}
-					<Tabs.Panel 
-						value="add" 
-						keepMounted={false}
-						style={panelStyle}
-					>
+					<Tabs.Panel value="add" keepMounted={false} style={panelStyle}>
 						<TextEditor
 							content=""
 							onContentChange={noopContentChange}
@@ -123,13 +137,7 @@ export default function Scripts() {
 					</Tabs.Panel>
 				</Box>
 
-
-				<Box
-					w={300}
-					visibleFrom="sm"
-					h="100%"
-					style={sidebarBoxStyle}
-				>
+				<Box w={300} visibleFrom="sm" h="100%" style={sidebarBoxStyle}>
 					<Text fw={700} mb="sm" c="dimmed" tt="uppercase" fz="xs">
 						Invoice Summary
 					</Text>
@@ -137,10 +145,7 @@ export default function Scripts() {
 					<Text fw={700} mb="sm" mt="lg" c="dimmed" tt="uppercase" fz="xs">
 						Documents Overview
 					</Text>
-					<UploadDocumentsOverview
-						scripts={scripts}
-						onAddedToInvoice={reset}
-					/>
+					<UploadDocumentsOverview scripts={scripts} onAddedToInvoice={reset} />
 				</Box>
 			</Flex>
 		</Tabs>

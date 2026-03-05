@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { Script } from "@/types/Script";
-import { generateHtmlFromScript } from "../utils/formatParsedLines";
 import { reparseHtmlToScript } from "../utils/documentParser";
+import { generateHtmlFromScript } from "../utils/formatParsedLines";
 
 interface ScriptStoreProps {
 	scripts: Script[];
@@ -37,6 +37,12 @@ export const useScriptStore = create<ScriptStore>((set) => ({
 	updateScriptFromHtml: (id, html) =>
 		set((state) => {
 			const { lines, overview, html: newHtml } = reparseHtmlToScript(html);
+			const existingScript = state.scripts.find((s) => s.id === id);
+
+			if (existingScript && existingScript.html === newHtml) {
+				return state;
+			}
+
 			return {
 				scripts: state.scripts.map((s) =>
 					s.id === id ? { ...s, lines, overview, html: newHtml } : s,

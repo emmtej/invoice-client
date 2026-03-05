@@ -1,9 +1,9 @@
-import type { Script } from "@/types/Script";
-import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
-import { processDocuments } from "@/features/editor/utils/documentParser";
-import { UploadDocumentsOverview } from "@/features/editor/components/UploadDocumentsOverview";
 import { Box, Button, FileButton, Modal, Stack, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
+import { UploadDocumentsOverview } from "@/features/editor/components/UploadDocumentsOverview";
+import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
+import { processDocuments } from "@/features/editor/utils/documentParser";
+import type { Script } from "@/types/Script";
 
 export interface AddDocumentsToItemModalProps {
 	itemId: string;
@@ -37,7 +37,11 @@ export function AddDocumentsToItemModal({
 			.catch((err) => {
 				if (cancelled) return;
 				const message =
-					err instanceof Error ? err.message : typeof err === "string" ? err : "Failed to process documents.";
+					err instanceof Error
+						? err.message
+						: typeof err === "string"
+							? err
+							: "Failed to process documents.";
 				setProcessingError(message);
 			});
 		return () => {

@@ -1,7 +1,19 @@
-import type { Script } from "@/types/Script";
-import { Badge, Box, Button, Group, Paper, ScrollArea, Select, Stack, Table, Text, Title } from "@mantine/core";
+import {
+	Badge,
+	Box,
+	Button,
+	Group,
+	Paper,
+	ScrollArea,
+	Select,
+	Stack,
+	Table,
+	Text,
+	Title,
+} from "@mantine/core";
 import { IconEdit, IconFileText, IconFilter } from "@tabler/icons-react";
 import { memo, useMemo, useState } from "react";
+import type { Script } from "@/types/Script";
 
 const stackRootStyle = { flex: 1, minHeight: 0, overflow: "hidden" as const };
 const boxFlexStyle = { flex: 1 };
@@ -33,7 +45,11 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 		<Stack gap="lg" p="lg" style={stackRootStyle}>
 			<Paper>
 				<Group gap="md" align="center" mb="lg">
-					<IconFileText size={28} stroke={1.5} color="var(--mantine-color-violet-6)" />
+					<IconFileText
+						size={28}
+						stroke={1.5}
+						color="var(--mantine-color-violet-6)"
+					/>
 					<Title order={2}>{script.name}</Title>
 					<Box style={boxFlexStyle} />
 					{onEdit && (
@@ -76,11 +92,11 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 			<Box style={boxScrollStyle}>
 				<ScrollArea h="100%" scrollbars="y" type="hover">
 					{filteredLines.length === 0 ? (
-						<Text c="dimmed" ta="center" py="xl" size="sm">No lines matching the selected filter.</Text>
+						<Text c="dimmed" ta="center" py="xl" size="sm">
+							No lines matching the selected filter.
+						</Text>
 					) : (
-						<Table
-							stickyHeader
-						>
+						<Table stickyHeader>
 							<Table.Thead>
 								<Table.Tr>
 									<Table.Th w={120}>Type</Table.Th>
@@ -89,7 +105,8 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 							</Table.Thead>
 							<Table.Tbody>
 								{filteredLines.map((line, index) => {
-									const isInvalid = line.type === "invalid" || line.type === "malformed";
+									const isInvalid =
+										line.type === "invalid" || line.type === "malformed";
 									const lineKey = line.id ?? `line-${index}-${line.type}`;
 									return (
 										<Table.Tr key={lineKey}>

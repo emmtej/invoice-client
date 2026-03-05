@@ -1,9 +1,9 @@
 import { Button, Flex } from "@mantine/core";
-import { useScriptStore } from "../store/scriptEditorStore";
+import { memo, useCallback, useEffect } from "react";
 import type { Script } from "@/types/Script";
-import { memo, useCallback } from "react";
-import { TextEditor } from "./TextEditor";
+import { useScriptStore } from "../store/scriptEditorStore";
 import { ScriptOverview } from "./ScriptOverview";
+import { TextEditor } from "./TextEditor";
 
 const flexColumnStyle = { flex: 1, minHeight: 0 };
 
@@ -23,6 +23,17 @@ function ScriptEditorInner({
 	const { updateHtml, resetScript, updateScriptFromHtml } = useScriptStore(
 		(store) => store,
 	);
+
+	// Debounced reparse of the document while editing
+	useEffect(() => {
+		if (!isEditing) return;
+
+		const timer = setTimeout(() => {
+			updateScriptFromHtml(script.id, script.html);
+		}, 500);
+
+		return () => clearTimeout(timer);
+	}, [script.id, script.html, isEditing, updateScriptFromHtml]);
 
 	const handleContentChange = useCallback(
 		(html: string) => {
@@ -65,11 +76,7 @@ function ScriptEditorInner({
 						<Button size="xs" variant="filled" onClick={handleSubmit}>
 							Submit
 						</Button>
-						<Button
-							variant="subtle"
-							size="xs"
-							onClick={handleReset}
-						>
+						<Button variant="subtle" size="xs" onClick={handleReset}>
 							Reset to parsed
 						</Button>
 					</Flex>

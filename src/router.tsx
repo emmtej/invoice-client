@@ -6,12 +6,12 @@ import {
 	redirect,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import EditorPage from "@/features/editor";
+import { InvoicePage } from "@/features/invoice";
 import App from "./App";
 import { Layout } from "./components/ui/layout/Layout";
 import Authentication from "./pages/Authentication";
 import Dashboard from "./pages/Dashboard";
-import EditorPage from "@/features/editor";
-import { InvoicePage } from "@/features/invoice";
 import Profile from "./pages/Profile";
 import { useUserStore } from "./store/userStore";
 

@@ -1,11 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	Button,
-	Group,
-	Input,
-	PasswordInput,
-	TextInput,
-} from "@mantine/core";
+import { Button, Group, Input, PasswordInput, TextInput } from "@mantine/core";
 import { IconAt } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import {

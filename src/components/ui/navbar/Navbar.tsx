@@ -1,9 +1,9 @@
 import { Anchor, Avatar, Group, Text } from "@mantine/core";
+import { IconReceipt } from "@tabler/icons-react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { useUserStore } from "@/store/userStore";
 import { LinkButton } from "../button/ButtonLink";
 import classes from "./Navbar.module.css";
-import { IconReceipt } from "@tabler/icons-react";
 
 // TODO: Create single repo for navlinks
 const links = [

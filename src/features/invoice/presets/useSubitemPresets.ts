@@ -1,27 +1,26 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	getPresets,
+	type InvoiceSubitemPreset,
 	presetSummary,
 	removePreset,
 	savePreset,
-	type InvoiceSubitemPreset,
 } from "./subitemPresets";
 
 export function useSubitemPresets() {
-	const [presets, setPresets] = useState<InvoiceSubitemPreset[]>(() => getPresets());
+	const [presets, setPresets] = useState<InvoiceSubitemPreset[]>(() =>
+		getPresets(),
+	);
 
 	useEffect(() => {
 		setPresets(getPresets());
 	}, []);
 
-	const addPreset = useCallback(
-		(data: Omit<InvoiceSubitemPreset, "id">) => {
-			const created = savePreset(data);
-			setPresets(getPresets());
-			return created;
-		},
-		[]
-	);
+	const addPreset = useCallback((data: Omit<InvoiceSubitemPreset, "id">) => {
+		const created = savePreset(data);
+		setPresets(getPresets());
+		return created;
+	}, []);
 
 	const deletePreset = useCallback((id: string) => {
 		removePreset(id);
@@ -40,14 +39,14 @@ export function useSubitemPresets() {
 					value: p.id,
 					label: presetSummary(p),
 				})),
-			[presets]
+			[presets],
 		),
 		addPreset,
 		deletePreset,
 		refreshPresets,
 		getPresetById: useCallback(
 			(id: string) => presets.find((p) => p.id === id),
-			[presets]
+			[presets],
 		),
 	};
 }

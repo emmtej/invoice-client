@@ -55,10 +55,7 @@ export function LinksGroup({
 
 	return (
 		<>
-			<UnstyledButton
-				onClick={handleToggle}
-				className={classes.control}
-			>
+			<UnstyledButton onClick={handleToggle} className={classes.control}>
 				<Group justify="space-between" gap="xs">
 					<Flex align="center">
 						<ThemeIcon variant="light" size={30} color="violet">

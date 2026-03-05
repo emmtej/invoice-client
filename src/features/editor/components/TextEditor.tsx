@@ -1,12 +1,15 @@
 import { Link, RichTextEditor } from "@mantine/tiptap";
 import Highlight from "@tiptap/extension-highlight";
+import Placeholder from "@tiptap/extension-placeholder";
 import SubScript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect, type ReactNode } from "react";
-import Placeholder from "@tiptap/extension-placeholder";
+import { type ReactNode, useEffect } from "react";
+
+const normalizeHtml = (html: string) =>
+	html.replace(/>\s+</g, "><").trim();
 
 interface TextEditorProps {
 	content: string;
@@ -45,8 +48,19 @@ export function TextEditor({
 		// Waits for editor to render and sets initial content.
 		if (!editor || content === undefined) return;
 
-		if (content !== editor.getHTML()) {
-			editor.commands.setContent(content);
+		const normalizedContent = normalizeHtml(content);
+		const normalizedEditorHtml = normalizeHtml(editor.getHTML());
+
+		if (normalizedContent !== normalizedEditorHtml) {
+			const { from, to } = editor.state.selection;
+			editor.commands.setContent(content, { emitUpdate: false });
+
+			// Preserve cursor position after reparse
+			const maxPos = editor.state.doc.content.size;
+			editor.commands.setTextSelection({
+				from: Math.min(from, maxPos),
+				to: Math.min(to, maxPos),
+			});
 		}
 	}, [content, editor]);
 

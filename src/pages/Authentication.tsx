@@ -12,28 +12,28 @@ function Authentication() {
 		<Container size="xs">
 			<Flex justify="center" align="center" py="xl">
 				<Card p="xl" maw={400} withBorder shadow="sm">
-				<Card.Section>
-					<Title order={2} mb="lg">
-						{isRegistering ? "Sign Up" : "Login"}
-					</Title>
-					{activeTab}
-				</Card.Section>
-				<Card.Section py="xs" mt="md">
-					<Anchor
-						component={Link}
-						to={isRegistering ? "/login" : "/register"}
-						display="block"
-						size="sm"
-						c="violet.6"
-					>
-						{isRegistering
-							? "Already have an account? Login"
-							: "Don't have an account? Sign up"}
-					</Anchor>
-				</Card.Section>
-				<Divider my="md" label="Or continue with" />
-				<OAuthProviders />
-			</Card>
+					<Card.Section>
+						<Title order={2} mb="lg">
+							{isRegistering ? "Sign Up" : "Login"}
+						</Title>
+						{activeTab}
+					</Card.Section>
+					<Card.Section py="xs" mt="md">
+						<Anchor
+							component={Link}
+							to={isRegistering ? "/login" : "/register"}
+							display="block"
+							size="sm"
+							c="violet.6"
+						>
+							{isRegistering
+								? "Already have an account? Login"
+								: "Don't have an account? Sign up"}
+						</Anchor>
+					</Card.Section>
+					<Divider my="md" label="Or continue with" />
+					<OAuthProviders />
+				</Card>
 			</Flex>
 		</Container>
 	);

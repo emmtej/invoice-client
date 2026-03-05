@@ -1,6 +1,6 @@
-import { xmlParser } from "../utils/xmlParser";
 import mammoth from "mammoth";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { xmlParser } from "../utils/xmlParser";
 
 export interface DocFile {
 	name: string;
@@ -111,4 +111,3 @@ export function useFileUpload(): UseFileUpload {
 		reset,
 	};
 }
-

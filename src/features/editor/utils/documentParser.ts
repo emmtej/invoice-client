@@ -1,5 +1,10 @@
+import type {
+	Dialogue,
+	ParsedLine,
+	Script,
+	ScriptOverview,
+} from "@/types/Script";
 import type { DocFile } from "../hooks/useFileUpload";
-import type { Dialogue, ParsedLine, Script, ScriptOverview } from "@/types/Script";
 import { generateHtmlFromScript } from "./formatParsedLines";
 import { getScriptOverview } from "./scriptParser";
 import { xmlParser } from "./xmlParser";
@@ -109,7 +114,10 @@ export function reparseHtmlToScript(html: string): {
 			.filter(Boolean)
 			.map((line) => documentLineParser(line));
 	});
-	const linesWithId = lines.map((line, idx) => ({ ...line, id: `line-${idx}` }));
+	const linesWithId = lines.map((line, idx) => ({
+		...line,
+		id: `line-${idx}`,
+	}));
 	const overview = getScriptOverview(linesWithId);
 	const generatedHtml = generateHtmlFromScript(linesWithId);
 	return { lines: linesWithId, overview, html: generatedHtml };

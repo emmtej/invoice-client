@@ -43,12 +43,7 @@ const features = [
 export default function App() {
 	const items = features.map((feature) => (
 		<div key={feature.title}>
-			<ThemeIcon
-				size={44}
-				radius="md"
-				variant="light"
-				color="violet"
-			>
+			<ThemeIcon size={44} radius="md" variant="light" color="violet">
 				<feature.icon size={26} stroke={1.5} />
 			</ThemeIcon>
 			<Text fz="lg" mt="sm" fw={500}>

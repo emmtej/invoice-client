@@ -11,7 +11,7 @@ export const profileSchema = z.object({
 	lastName: z.string().trim().min(2, "Last name is required"),
 	email: z.email({
 		pattern:
-			/^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i,
+			/^(?!\.)(?!.*\.\.)([a-z0-9_'+\-.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9-]*\.)+[a-z]{2,}$/i,
 	}),
 });
 
@@ -63,7 +63,7 @@ export const getEmptyProfile = (): InvoiceProfile => ({
 
 export const createProfileWithMeta = (
 	profile: InvoiceProfile,
-	options?: { makeDefault?: boolean }
+	options?: { makeDefault?: boolean },
 ): { state: ProfilesState; createdProfile: InvoiceProfileWithMeta } => {
 	const id = createProfileId();
 	const label = deriveProfileLabel(profile);
@@ -85,7 +85,7 @@ export const createProfileWithMeta = (
 };
 
 export const getDefaultProfileFromState = (
-	state: ProfilesState
+	state: ProfilesState,
 ): InvoiceProfileWithMeta | null => {
 	if (!state.profiles.length) return null;
 
@@ -109,7 +109,11 @@ export const loadProfilesFromStorage = (): ProfilesState => {
 		}
 
 		const parsed = JSON.parse(raw) as ProfilesState | null;
-		if (!parsed || typeof parsed !== "object" || !Array.isArray(parsed.profiles)) {
+		if (
+			!parsed ||
+			typeof parsed !== "object" ||
+			!Array.isArray(parsed.profiles)
+		) {
 			return { profiles: [] };
 		}
 
@@ -170,7 +174,10 @@ export const saveProfilesToStorage = (state: ProfilesState) => {
 			defaultProfileId: state.defaultProfileId,
 		};
 
-		window.localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(serializable));
+		window.localStorage.setItem(
+			PROFILES_STORAGE_KEY,
+			JSON.stringify(serializable),
+		);
 	} catch {
 		// Ignore storage errors to avoid breaking the UI
 	}

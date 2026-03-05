@@ -36,7 +36,6 @@ export interface Dialogue extends BaseLine {
 	content: string;
 	metadata: DialogueMetadata;
 	notes?: string[];
-
 }
 
 export interface Marker {
