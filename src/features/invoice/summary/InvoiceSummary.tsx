@@ -14,8 +14,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
 import { Fragment, memo, useCallback, useState } from "react";
+import { EditValueModal, ExportModal } from "../components";
 import { AddDocumentsToItemModal } from "../items";
-import { EditValueModal } from "../components";
 import { getTodayDateString, type InvoiceProfile } from "../profile";
 import { useInvoiceStore } from "../store/invoiceStore";
 
@@ -41,6 +41,8 @@ export const InvoiceSummary = memo(
 			updateItemName,
 		} = useInvoiceStore();
 		const [modalOpened, { open, close }] = useDisclosure(false);
+		const [exportModalOpened, { open: openExport, close: closeExport }] =
+			useDisclosure(false);
 		const [activeItemId, setActiveItemId] = useState<{
 			id: string;
 			name: string;
@@ -306,10 +308,10 @@ export const InvoiceSummary = memo(
 							<Button
 								variant="filled"
 								size="md"
-								onClick={() => window.print()}
+								onClick={openExport}
 								disabled={items.length === 0}
 							>
-								Download Invoice (PDF)
+								Export
 							</Button>
 						</Group>
 					</Stack>
@@ -323,6 +325,13 @@ export const InvoiceSummary = memo(
 						onClose={close}
 					/>
 				)}
+
+				<ExportModal
+					opened={exportModalOpened}
+					onClose={closeExport}
+					items={items}
+					onDownloadPDF={() => window.print()}
+				/>
 
 				<EditValueModal
 					opened={editModalConfig.opened}

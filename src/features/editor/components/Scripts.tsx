@@ -24,10 +24,7 @@ import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import { InvoiceSummary } from "@/features/invoice/summary";
 import { useFileUpload } from "../hooks/useFileUpload";
 import { useScriptStore } from "../store/scriptEditorStore";
-import {
-	processDocuments,
-	reparseHtmlToScript,
-} from "../utils/documentParser";
+import { processDocuments, reparseHtmlToScript } from "../utils/documentParser";
 import { ScriptEditor } from "./ScriptEditor";
 import { TextEditor } from "./TextEditor";
 import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
@@ -309,4 +306,3 @@ export default function Scripts() {
 		</Stack>
 	);
 }
-
