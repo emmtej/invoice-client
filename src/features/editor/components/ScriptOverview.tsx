@@ -9,9 +9,19 @@ import {
 	Stack,
 	Table,
 	Text,
+	ThemeIcon,
 	Title,
 } from "@mantine/core";
-import { IconEdit, IconFileText, IconFilter } from "@tabler/icons-react";
+import {
+	IconAlertCircle,
+	IconBookmark,
+	IconCircleX,
+	IconEdit,
+	IconFileText,
+	IconFilter,
+	IconMessage2,
+	IconBolt,
+} from "@tabler/icons-react";
 import { memo, useMemo, useState } from "react";
 import type { ParsedLine, Script } from "@/types/Script";
 
@@ -24,40 +34,92 @@ interface ScriptOverviewProps {
 	onEdit?: () => void;
 }
 
-const getLineBadgeProps = (type: string) => {
-	switch (type) {
-		case "dialogue":
-			return { color: "violet", variant: "filled" as const };
-		case "action":
-			return { color: "teal", variant: "light" as const };
-		case "marker":
-			return { color: "blue", variant: "light" as const };
-		case "malformed":
-			return { color: "red", variant: "light" as const };
-		case "invalid":
-			return { color: "orange", variant: "light" as const };
-		default:
-			return { color: "gray", variant: "light" as const };
-	}
-};
+const TYPE_CONFIG = {
+	dialogue: {
+		icon: IconMessage2,
+		color: "indigo",
+		label: "Dialogue",
+		bg: "var(--mantine-color-indigo-0)",
+		border: "var(--mantine-color-indigo-2)",
+	},
+	action: {
+		icon: IconBolt,
+		color: "teal",
+		label: "Action",
+		bg: "var(--mantine-color-teal-0)",
+		border: "var(--mantine-color-teal-2)",
+	},
+	marker: {
+		icon: IconBookmark,
+		color: "gray",
+		label: "Marker",
+		bg: "var(--mantine-color-gray-0)",
+		border: "var(--mantine-color-gray-2)",
+	},
+	malformed: {
+		icon: IconAlertCircle,
+		color: "orange",
+		label: "Malformed",
+		bg: "var(--mantine-color-orange-0)",
+		border: "var(--mantine-color-orange-2)",
+	},
+	invalid: {
+		icon: IconCircleX,
+		color: "red",
+		label: "Invalid",
+		bg: "var(--mantine-color-red-0)",
+		border: "var(--mantine-color-red-2)",
+	},
+} as const;
 
-const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
-	const badgeProps = getLineBadgeProps(line.type);
+const TypeBadge = memo(({ type }: { type: string }) => {
+	const config =
+		TYPE_CONFIG[type as keyof typeof TYPE_CONFIG] || TYPE_CONFIG.marker;
+	const Icon = config.icon;
 
 	return (
+		<Group gap={8} wrap="nowrap">
+			<ThemeIcon
+				variant="light"
+				color={config.color}
+				size="sm"
+				radius="sm"
+				style={{
+					backgroundColor: config.bg,
+					border: `1px solid ${config.border}`,
+				}}
+			>
+				<Icon size={12} stroke={2.5} />
+			</ThemeIcon>
+			<Text size="xs" fw={700} c="dimmed" tt="uppercase" ls="0.5px">
+				{config.label}
+			</Text>
+		</Group>
+	);
+});
+
+const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
+	return (
 		<Table.Tr>
-			<Table.Td>
-				<Badge {...badgeProps} fullWidth tt="capitalize">
-					{line.type}
-				</Badge>
+			<Table.Td py="md" w={160}>
+				<TypeBadge type={line.type} />
 			</Table.Td>
-			<Table.Td>
-				<Group justify="space-between" wrap="nowrap" align="center">
-					<Text size="sm" lineClamp={2} style={{ flex: 1 }}>
+			<Table.Td py="md">
+				<Group justify="space-between" wrap="nowrap" align="center" gap="lg">
+					<Text size="sm" c="gray.7" style={{ flex: 1, lineHeight: 1.6 }}>
 						{line.source}
 					</Text>
 					{line.type === "dialogue" && (
-						<Badge variant="dot" color="gray" size="sm" style={{ flex: "0 0 auto" }}>
+						<Badge
+							variant="outline"
+							color="gray.4"
+							size="xs"
+							radius="xs"
+							styles={{
+								label: { color: "var(--mantine-color-gray-6)", fontWeight: 600 },
+							}}
+							style={{ flex: "0 0 auto", borderStyle: "dashed" }}
+						>
 							{line.metadata.wordCount} words
 						</Badge>
 					)}
@@ -85,65 +147,139 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 	}, [script.lines, typeFilter]);
 
 	return (
-		<Stack gap="lg" p="lg" style={stackRootStyle}>
-			<Paper>
-				<Group gap="md" align="center" mb="lg">
-					<IconFileText
-						size={28}
-						stroke={1.5}
-						color="var(--mantine-color-violet-6)"
-					/>
-					<Title order={2}>{script.name}</Title>
+		<Stack gap="lg" p="xl" style={stackRootStyle} bg="gray.0">
+			<Paper p="lg" radius="md" withBorder shadow="sm">
+				<Group gap="md" align="center" mb="xl">
+					<ThemeIcon
+						size={40}
+						radius="md"
+						variant="light"
+						color="violet"
+						style={{ backgroundColor: "var(--mantine-color-violet-0)" }}
+					>
+						<IconFileText size={24} stroke={1.5} />
+					</ThemeIcon>
+					<Stack gap={2}>
+						<Title order={3} fw={700}>
+							{script.name}
+						</Title>
+						<Text size="xs" c="dimmed" fw={500}>
+							Script Preview & Verification
+						</Text>
+					</Stack>
 					<Box style={boxFlexStyle} />
 					{onEdit && (
 						<Button
-							variant="light"
+							variant="filled"
 							color="violet"
 							leftSection={<IconEdit size={16} />}
 							onClick={onEdit}
+							radius="md"
 						>
 							Edit Script
 						</Button>
 					)}
 				</Group>
 
-				<Group justify="space-between" mb="md" align="flex-end">
-					<Text size="sm" c="dimmed">
-						Total lines: {overview.totalLines} · Words: {overview.wordCount} ·{" "}
-						<Text
-							span
-							size="sm"
-							c={overview.invalidLines.length > 0 ? "red" : "dimmed"}
-							inherit
-						>
-							Invalid: {overview.invalidLines.length}
-						</Text>
-					</Text>
+				<Group justify="space-between" align="flex-end">
+					<Group gap="xl">
+						<Stack gap={2}>
+							<Text size="xs" c="dimmed" fw={700} tt="uppercase" ls="0.5px">
+								Total Lines
+							</Text>
+							<Text size="sm" fw={600}>
+								{overview.totalLines}
+							</Text>
+						</Stack>
+						<Stack gap={2}>
+							<Text size="xs" c="dimmed" fw={700} tt="uppercase" ls="0.5px">
+								Words
+							</Text>
+							<Text size="sm" fw={600}>
+								{overview.wordCount}
+							</Text>
+						</Stack>
+						<Stack gap={2}>
+							<Text size="xs" c="dimmed" fw={700} tt="uppercase" ls="0.5px">
+								Status
+							</Text>
+							<Group gap={6}>
+								{overview.invalidLines.length > 0 ? (
+									<>
+										<Box
+											w={8}
+											h={8}
+											bg="red.6"
+											style={{ borderRadius: "50%" }}
+										/>
+										<Text size="sm" fw={600} c="red.7">
+											{overview.invalidLines.length} Issues
+										</Text>
+									</>
+								) : (
+									<>
+										<Box
+											w={8}
+											h={8}
+											bg="green.6"
+											style={{ borderRadius: "50%" }}
+										/>
+										<Text size="sm" fw={600} c="green.7">
+											Validated
+										</Text>
+									</>
+								)}
+							</Group>
+						</Stack>
+					</Group>
 					<Select
 						placeholder="Filter by type"
 						data={availableTypes}
 						value={typeFilter}
 						onChange={setTypeFilter}
 						clearable
-						size="xs"
+						size="sm"
+						radius="md"
 						leftSection={<IconFilter size={14} />}
 						variant="default"
+						w={180}
 					/>
 				</Group>
 			</Paper>
 
-			<Box style={boxScrollStyle}>
-				<ScrollArea h="100%" scrollbars="y" type="hover">
+			<Paper radius="md" withBorder shadow="sm" style={boxScrollStyle}>
+				<ScrollArea h="100%" scrollbars="y" type="hover" offsetScrollbars>
 					{filteredLines.length === 0 ? (
-						<Text c="dimmed" ta="center" py="xl" size="sm">
-							No lines matching the selected filter.
-						</Text>
+						<Stack align="center" py={60} gap="xs">
+							<IconFilter size={32} stroke={1} color="var(--mantine-color-gray-4)" />
+							<Text c="dimmed" ta="center" size="sm" fw={500}>
+								No lines matching the selected filter.
+							</Text>
+						</Stack>
 					) : (
-						<Table stickyHeader>
-							<Table.Thead>
+						<Table stickyHeader verticalSpacing="sm" horizontalSpacing="lg">
+							<Table.Thead
+								style={{
+									backgroundColor: "var(--mantine-color-gray-0)",
+									zIndex: 10,
+								}}
+							>
 								<Table.Tr>
-									<Table.Th w={120}>Type</Table.Th>
-									<Table.Th>Content / Source</Table.Th>
+									<Table.Th
+										w={160}
+										style={{ borderBottom: "1px solid var(--mantine-color-gray-2)" }}
+									>
+										<Text size="xs" fw={700} c="dimmed" tt="uppercase" ls="0.5px">
+											Line Type
+										</Text>
+									</Table.Th>
+									<Table.Th
+										style={{ borderBottom: "1px solid var(--mantine-color-gray-2)" }}
+									>
+										<Text size="xs" fw={700} c="dimmed" tt="uppercase" ls="0.5px">
+											Content / Source
+										</Text>
+									</Table.Th>
 								</Table.Tr>
 							</Table.Thead>
 							<Table.Tbody>
@@ -157,9 +293,10 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						</Table>
 					)}
 				</ScrollArea>
-			</Box>
+			</Paper>
 		</Stack>
 	);
 }
 
 export const ScriptOverview = memo(ScriptOverviewInner);
+
