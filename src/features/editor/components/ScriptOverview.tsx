@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { IconEdit, IconFileText, IconFilter } from "@tabler/icons-react";
 import { memo, useMemo, useState } from "react";
-import type { Script } from "@/types/Script";
+import type { ParsedLine, Script } from "@/types/Script";
 
 const stackRootStyle = { flex: 1, minHeight: 0, overflow: "hidden" as const };
 const boxFlexStyle = { flex: 1 };
@@ -23,6 +23,49 @@ interface ScriptOverviewProps {
 	script: Script;
 	onEdit?: () => void;
 }
+
+const getLineBadgeProps = (type: string) => {
+	switch (type) {
+		case "dialogue":
+			return { color: "violet", variant: "filled" as const };
+		case "action":
+			return { color: "teal", variant: "light" as const };
+		case "marker":
+			return { color: "blue", variant: "light" as const };
+		case "malformed":
+			return { color: "red", variant: "light" as const };
+		case "invalid":
+			return { color: "orange", variant: "light" as const };
+		default:
+			return { color: "gray", variant: "light" as const };
+	}
+};
+
+const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
+	const badgeProps = getLineBadgeProps(line.type);
+
+	return (
+		<Table.Tr>
+			<Table.Td>
+				<Badge {...badgeProps} fullWidth tt="capitalize">
+					{line.type}
+				</Badge>
+			</Table.Td>
+			<Table.Td>
+				<Group justify="space-between" wrap="nowrap" align="center">
+					<Text size="sm" lineClamp={2} style={{ flex: 1 }}>
+						{line.source}
+					</Text>
+					{line.type === "dialogue" && (
+						<Badge variant="dot" color="gray" size="sm" style={{ flex: "0 0 auto" }}>
+							{line.metadata.wordCount} words
+						</Badge>
+					)}
+				</Group>
+			</Table.Td>
+		</Table.Tr>
+	);
+});
 
 function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 	const { overview } = script;
@@ -104,29 +147,12 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 								</Table.Tr>
 							</Table.Thead>
 							<Table.Tbody>
-								{filteredLines.map((line, index) => {
-									const isInvalid =
-										line.type === "invalid" || line.type === "malformed";
-									const lineKey = line.id ?? `line-${index}-${line.type}`;
-									return (
-										<Table.Tr key={lineKey}>
-											<Table.Td>
-												<Badge
-													variant="light"
-													color={isInvalid ? "red" : "violet"}
-													fullWidth
-												>
-													{line.type}
-												</Badge>
-											</Table.Td>
-											<Table.Td>
-												<Text size="sm" lineClamp={2}>
-													{line.source}
-												</Text>
-											</Table.Td>
-										</Table.Tr>
-									);
-								})}
+								{filteredLines.map((line, index) => (
+									<ScriptLineRow
+										key={line.id ?? `line-${index}-${line.type}`}
+										line={line}
+									/>
+								))}
 							</Table.Tbody>
 						</Table>
 					)}

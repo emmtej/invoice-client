@@ -9,18 +9,18 @@ import { generateHtmlFromScript } from "./formatParsedLines";
 import { getScriptOverview } from "./scriptParser";
 import { xmlParser } from "./xmlParser";
 
-// Groups Time -> Speaker -> Colon -> Content
-const MAIN_PATTERN = /^(\d{1,2}:\d{2})\s+([^:]+):\s*(.*)$/;
-const TIMESTAMP_START_PATTERN = /^(\d{1,2}:\d{2})\s+(.+)$/;
+// Groups Time (H:MM:SS or MM:SS) -> Speaker -> Colon -> Content
+const MAIN_PATTERN = /^(\d{1,2}(?::\d{1,2}){1,2})\s+([^:]+):\s*(.*)$/;
+const TIMESTAMP_START_PATTERN = /^(\d{1,2}(?::\d{1,2}){1,2})\s+(.+)$/;
 const NOTES_PATTERN = /\((.*?)\)/g;
 const SPLIT_PATTERN = /(?:,|\s+(?:and|&))\s+|\//;
-const MARKER_PATTERN = /Scene|Scena|Blooper|Bloopers|Vlog|Vlogs/i;
+const MARKER_PATTERN = /^(?:Scene|Scena|Blooper|Bloopers|Vlog|Vlogs)\b/i;
 
 const getWordCount = (text: string) =>
 	text.trim().split(/\s+/).filter(Boolean).length;
 
-export const documentLineParser = (line: string): ParsedLine => {
-	if (!line) return { type: "invalid", source: "" };
+export const documentLineParser = (line: string): ParsedLine | null => {
+	if (!line || !line.trim()) return null;
 
 	let cleanLine = line;
 	let notes: string[] | undefined;
@@ -35,7 +35,12 @@ export const documentLineParser = (line: string): ParsedLine => {
 	}
 
 	cleanLine = cleanLine.trim();
-	if (!cleanLine) return { type: "invalid", source: line };
+	if (!cleanLine) {
+		// If line only contained notes, it might be an action, but without a timestamp/speaker context here,
+		// we check if we should return it as action or if it's just invalid.
+		// Usually, standalone notes in parentheses are markers or actions.
+		return { type: "invalid", source: line };
+	}
 
 	const match = MAIN_PATTERN.exec(cleanLine);
 
@@ -57,12 +62,12 @@ export const documentLineParser = (line: string): ParsedLine => {
 					notes: notes,
 					source: line,
 				};
-			} else {
-				return {
-					type: "invalid",
-					source: line,
-				};
 			}
+			return {
+				type: "malformed",
+				source: line,
+				message: "Line has a timestamp and speaker but no content.",
+			};
 		}
 
 		const result: Dialogue = {
@@ -76,22 +81,25 @@ export const documentLineParser = (line: string): ParsedLine => {
 		if (notes) result.notes = notes;
 		return result;
 	}
+
 	const timestampMatch = TIMESTAMP_START_PATTERN.exec(cleanLine);
 
 	if (timestampMatch) {
 		if (!cleanLine.includes(":")) {
-			console.log("MISSING COLON: " + line);
 			return {
 				type: "malformed",
 				source: line,
-				message: "Line has a timestamp but is missing a colon separator (:)",
+				message: "Line has a timestamp but is missing a speaker colon separator (:)",
 			};
 		}
-		console.trace(line);
-		console.error("SOMETHING WENT WRONG");
+		return {
+			type: "malformed",
+			source: line,
+			message: "Line has a timestamp and colon but failed to parse correctly. Check the format.",
+		};
 	}
 
-	if (MARKER_PATTERN.test(line)) {
+	if (MARKER_PATTERN.test(cleanLine)) {
 		return { type: "marker", source: line };
 	}
 
@@ -105,15 +113,17 @@ export function reparseHtmlToScript(html: string): {
 } {
 	const doc = xmlParser(html);
 	const nodes = Array.from(doc.body.querySelectorAll("p, h3"));
-	const lines = nodes.flatMap((node) => {
-		const text = (node.textContent ?? "").trim();
-		if (!text) return [];
-		return text
-			.split("\n")
-			.map((l) => l.trim())
-			.filter(Boolean)
-			.map((line) => documentLineParser(line));
-	});
+	const lines = nodes
+		.flatMap((node) => {
+			const text = (node.textContent ?? "").trim();
+			if (!text) return [];
+			return text
+				.split("\n")
+				.map((l) => l.trim())
+				.filter(Boolean)
+				.map((line) => documentLineParser(line));
+		})
+		.filter((line): line is ParsedLine => line !== null);
 	const linesWithId = lines.map((line, idx) => ({
 		...line,
 		id: `line-${idx}`,
@@ -129,14 +139,15 @@ export const processDocuments = async (
 	const parsedScripts: Script[] = documents.map((doc, i) => {
 		const paragraphs = Array.from(doc.document.querySelectorAll("p"));
 
-		const parsedLines = paragraphs.flatMap((p) =>
-			(p.textContent ?? "")
-				.split("\n")
-				.map((line) => line.trim())
-				.filter((line) => line.length > 0)
-				.map((line) => documentLineParser(line)),
-		);
-
+		const parsedLines = paragraphs
+			.flatMap((p) =>
+				(p.textContent ?? "")
+					.split("\n")
+					.map((line) => line.trim())
+					.filter((line) => line.length > 0)
+					.map((line) => documentLineParser(line)),
+			)
+			.filter((line): line is ParsedLine => line !== null);
 		const linesWithId: ParsedLine[] = parsedLines.map((line, idx) => ({
 			...line,
 			id: `${i}-${doc.name}-line-${idx}`,
