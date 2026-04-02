@@ -1,6 +1,6 @@
 .navbar {
 	background-color: light-dark(
-		var(--mantine-color-white),
+		color-mix(in srgb, var(--mantine-color-primary-0) 65%, white),
 		var(--mantine-color-dark-6)
 	);
 	height: 100%;
@@ -9,7 +9,14 @@
 	display: flex;
 	flex-direction: column;
 	border-right: 1px solid
-		light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+		light-dark(
+			color-mix(
+				in srgb,
+				var(--mantine-color-gray-3) 85%,
+				var(--mantine-color-primary-2)
+			),
+			var(--mantine-color-dark-4)
+		);
 }
 
 .links {

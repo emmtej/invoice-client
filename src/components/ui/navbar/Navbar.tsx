@@ -38,7 +38,7 @@ export function Navbar() {
 					<IconReceipt
 						size={24}
 						stroke={1.5}
-						style={{ color: "var(--mantine-color-violet-6)" }}
+						style={{ color: "var(--mantine-color-primary-6)" }}
 					/>
 					<Text size="sm" fw={600} c="dark.9" visibleFrom="xs">
 						InVoice

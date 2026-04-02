@@ -1,9 +1,27 @@
 .header {
 	height: 60px;
 	width: 100%;
-	background-color: var(--mantine-color-body);
+	background-color: light-dark(
+		color-mix(
+			in srgb,
+			var(--mantine-color-body) 92%,
+			var(--mantine-color-primary-0)
+		),
+		var(--mantine-color-body)
+	);
 	border-bottom: 1px solid
-		light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+		light-dark(
+			color-mix(
+				in srgb,
+				var(--mantine-color-gray-3) 88%,
+				var(--mantine-color-primary-2)
+			),
+			var(--mantine-color-dark-4)
+		);
+	box-shadow: light-dark(
+		0 1px 0 color-mix(in srgb, var(--mantine-color-primary-3) 12%, transparent),
+		none
+	);
 	padding-left: var(--mantine-spacing-lg);
 	padding-right: var(--mantine-spacing-lg);
 }
@@ -35,16 +53,16 @@
 }
 
 .linkActive {
-	color: var(--mantine-color-violet-6);
+	color: var(--mantine-color-primary-6);
 	background-color: light-dark(
-		var(--mantine-color-violet-0),
+		var(--mantine-color-primary-0),
 		var(--mantine-color-dark-6)
 	);
 }
 
 .linkActive:hover {
 	background-color: light-dark(
-		var(--mantine-color-violet-1),
+		var(--mantine-color-primary-1),
 		var(--mantine-color-dark-5)
 	);
 }
