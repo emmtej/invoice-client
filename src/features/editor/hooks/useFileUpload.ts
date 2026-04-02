@@ -85,7 +85,7 @@ export function useFileUpload(): UseFileUpload {
 
 			if (Array.isArray(input)) {
 				incomingFiles = input;
-			} else if (input.target && input.target.files) {
+			} else if (input.target?.files) {
 				incomingFiles = Array.from(input.target.files);
 			}
 

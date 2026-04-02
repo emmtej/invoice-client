@@ -126,9 +126,10 @@ export function reparseHtmlToScript(html: string): {
 				.map((line) => documentLineParser(line));
 		})
 		.filter((line): line is ParsedLine => line !== null);
+	const timestamp = Date.now();
 	const linesWithId = lines.map((line, idx) => ({
 		...line,
-		id: `line-${idx}`,
+		id: `line-${timestamp}-${idx}`,
 	}));
 	const overview = getScriptOverview(linesWithId);
 	const generatedHtml = generateHtmlFromScript(linesWithId);
