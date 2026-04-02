@@ -62,9 +62,19 @@ export function AddDocumentsToItemModal({
 		<Modal
 			opened={opened}
 			onClose={onClose}
-			title={`Upload documents for ${itemName}`}
+			title={
+				<Text fw={800} lts={-0.5}>
+					Upload Documents for {itemName}
+				</Text>
+			}
 			size="lg"
 			centered
+			radius="lg"
+			withinPortal
+			overlayProps={{
+				blur: 3,
+				backgroundOpacity: 0.55,
+			}}
 		>
 			<Stack gap="md">
 				<FileButton
@@ -73,7 +83,15 @@ export function AddDocumentsToItemModal({
 					multiple
 				>
 					{(props) => (
-						<Button {...props} variant="default" size="sm" fullWidth>
+						<Button
+							{...props}
+							variant="filled"
+							color="studio"
+							size="md"
+							radius="lg"
+							fullWidth
+							className="shadow-sm shadow-studio-100"
+						>
 							Upload Document(s)
 						</Button>
 					)}

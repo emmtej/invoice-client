@@ -1,11 +1,10 @@
-import { Button, Flex } from "@mantine/core";
+import { Box, Button, Group } from "@mantine/core";
+import { ArrowLeft, Check, RotateCcw } from "lucide-react";
 import { memo, useCallback, useEffect } from "react";
 import type { Script } from "@/types/Script";
 import { useScriptStore } from "../store/scriptEditorStore";
 import { ScriptOverview } from "./ScriptOverview";
 import { TextEditor } from "./TextEditor";
-
-const flexColumnStyle = { flex: 1, minHeight: 0 };
 
 interface ScriptEditorProps {
 	script: Script;
@@ -20,9 +19,9 @@ function ScriptEditorInner({
 	onStartEdit,
 	onStopEdit,
 }: ScriptEditorProps) {
-	const { updateHtml, resetScript, updateScriptFromHtml } = useScriptStore(
-		(store) => store,
-	);
+	const updateHtml = useScriptStore((s) => s.updateHtml);
+	const resetScript = useScriptStore((s) => s.resetScript);
+	const updateScriptFromHtml = useScriptStore((s) => s.updateScriptFromHtml);
 
 	// Debounced reparse of the document while editing
 	useEffect(() => {
@@ -57,32 +56,54 @@ function ScriptEditorInner({
 
 	if (!isEditing) {
 		return (
-			<Flex style={flexColumnStyle} direction="column">
+			<Box className="flex-1 flex flex-col min-h-0">
 				<ScriptOverview script={script} onEdit={handleStartEditClick} />
-			</Flex>
+			</Box>
 		);
 	}
 
 	return (
-		<Flex style={flexColumnStyle} direction="column">
+		<Box className="flex-1 flex flex-col min-h-0 bg-white">
 			<TextEditor
 				content={script.html}
 				onContentChange={handleContentChange}
 				additionalMenu={
-					<Flex gap="sm">
-						<Button variant="subtle" size="xs" onClick={onStopEdit}>
+					<Group gap="xs">
+						<Button
+							variant="subtle"
+							color="gray"
+							size="xs"
+							leftSection={<ArrowLeft size={14} />}
+							onClick={onStopEdit}
+							radius="md"
+						>
 							Back to overview
 						</Button>
-						<Button size="xs" variant="filled" onClick={handleSubmit}>
-							Submit
+						<Button
+							variant="subtle"
+							color="orange"
+							size="xs"
+							leftSection={<RotateCcw size={14} />}
+							onClick={handleReset}
+							radius="md"
+						>
+							Reset Changes
 						</Button>
-						<Button variant="subtle" size="xs" onClick={handleReset}>
-							Reset to parsed
+						<Button
+							size="xs"
+							color="studio"
+							variant="filled"
+							leftSection={<Check size={14} />}
+							onClick={handleSubmit}
+							radius="md"
+							className="shadow-sm shadow-studio-100"
+						>
+							Finish Editing
 						</Button>
-					</Flex>
+					</Group>
 				}
 			/>
-		</Flex>
+		</Box>
 	);
 }
 

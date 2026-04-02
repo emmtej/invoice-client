@@ -14,7 +14,7 @@ import {
 	TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconBookmark, IconFileText } from "@tabler/icons-react";
+import { Bookmark, FileText } from "lucide-react";
 import { memo, useCallback, useEffect, useState } from "react";
 import { useSubitemPresets } from "@/features/invoice/presets/useSubitemPresets";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
@@ -27,8 +27,8 @@ const numberInputWidthStyle = { width: 100 };
 
 interface UploadDocumentsOverviewProps {
 	scripts: Script[];
-	/** Called after scripts are successfully added to the invoice. Use to e.g. clear uploaded documents. */
-	onAddedToInvoice?: () => void;
+	/** Called after scripts are successfully added to the invoice with the IDs that were added. */
+	onAddedToInvoice?: (addedIds: string[]) => void;
 	/** When set, only add to this invoice item; hide "Add to existing vs new" and item selector. Same form (preset, subitem label, rate) as Editor. */
 	targetItemId?: string;
 	targetItemName?: string;
@@ -65,9 +65,11 @@ function UploadDocumentsOverviewInner({
 		? getPresetById(selectedPresetId)
 		: null;
 
+	const _scriptIds = scripts.map((s) => s.id).join(",");
+
 	useEffect(() => {
 		setSelectedScriptIds(new Set(scripts.map((s) => s.id)));
-	}, [scripts]);
+	}, [scripts.map]); // Only reset if IDs change (new upload/deletion), not if HTML/content changes
 
 	const toggleScript = useCallback((scriptId: string) => {
 		setSelectedScriptIds((prev) => {
@@ -123,7 +125,7 @@ function UploadDocumentsOverviewInner({
 			);
 			closeAddModal();
 			setSelectedScriptIds(new Set());
-			onAddedToInvoice?.();
+			onAddedToInvoice?.(selectedIds);
 			return;
 		}
 
@@ -168,7 +170,7 @@ function UploadDocumentsOverviewInner({
 
 		closeAddModal();
 		setSelectedScriptIds(new Set());
-		onAddedToInvoice?.();
+		onAddedToInvoice?.(selectedIds);
 	}, [
 		selectedScriptIds,
 		scripts,
@@ -195,18 +197,20 @@ function UploadDocumentsOverviewInner({
 
 	if (scripts.length === 0) {
 		return (
-			<Paper pt="md">
-				<Stack gap="sm">
-					<Group gap="xs">
-						<IconFileText size={18} color="var(--mantine-color-gray-6)" />
-						<Text fw={700} size="sm">
-							No documents yet
+			<Paper py="xl" px="md" bg="transparent">
+				<Stack gap="md" align="center">
+					<Box className="p-3 rounded-full bg-slate-50 text-slate-200">
+						<FileText size={32} strokeWidth={1} />
+					</Box>
+					<Stack gap={4} ta="center">
+						<Text fw={700} size="sm" className="text-slate-600">
+							No documents analyzed
 						</Text>
-					</Group>
-					<Text size="sm" c="dimmed">
-						Upload one or more documents to see billable dialogue word counts
-						here.
-					</Text>
+						<Text size="xs" c="dimmed" maw={200}>
+							Analyze your scripts to see dialogue word counts and add them to
+							your invoice.
+						</Text>
+					</Stack>
 				</Stack>
 			</Paper>
 		);
@@ -215,63 +219,91 @@ function UploadDocumentsOverviewInner({
 	return (
 		<>
 			<Stack gap={0}>
-				<Paper radius="md" p={0} style={paperOverflowStyle}>
+				<Paper
+					radius="lg"
+					p={0}
+					style={paperOverflowStyle}
+					className="border border-slate-100 shadow-sm"
+				>
 					<Table stickyHeader highlightOnHover style={tableLayoutStyle}>
-						<Table.Thead>
+						<Table.Thead className="bg-slate-50">
 							<Table.Tr>
-								<Table.Th w={44}>
+								<Table.Th w={44} className="py-3">
 									<Checkbox
 										checked={allSelected}
 										indeterminate={someSelected && !allSelected}
 										onChange={() => (allSelected ? deselectAll() : selectAll())}
 										aria-label="Select all"
+										size="xs"
+										color="studio"
 									/>
 								</Table.Th>
-								<Table.Th>Document name</Table.Th>
-								<Table.Th w={100}>Word count</Table.Th>
+								<Table.Th className="py-3">
+									<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
+										Document
+									</Text>
+								</Table.Th>
+								<Table.Th w={100} className="py-3">
+									<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
+										Words
+									</Text>
+								</Table.Th>
 							</Table.Tr>
 						</Table.Thead>
 						<Table.Tbody>
 							{scripts.map((script) => (
-								<Table.Tr key={script.id}>
+								<Table.Tr
+									key={script.id}
+									className="transition-colors hover:bg-slate-50/50"
+								>
 									<Table.Td>
 										<Checkbox
 											checked={selectedScriptIds.has(script.id)}
 											onChange={() => toggleScript(script.id)}
 											aria-label={`Select ${script.name}`}
+											size="xs"
+											color="studio"
 										/>
 									</Table.Td>
 									<Table.Td>
-										<Text fw={700} size="sm" lineClamp={2}>
+										<Text
+											fw={600}
+											size="xs"
+											lineClamp={1}
+											className="text-slate-700"
+										>
 											{script.name}
 										</Text>
 									</Table.Td>
-									<Table.Td>{script.overview.wordCount}</Table.Td>
+									<Table.Td>
+										<Text size="xs" fw={700} className="text-slate-900">
+											{script.overview.wordCount}
+										</Text>
+									</Table.Td>
 								</Table.Tr>
 							))}
 						</Table.Tbody>
 					</Table>
 				</Paper>
 
-				<Box py="sm" px="md" bg="gray.0">
+				<Box py="md" px="xs">
 					<Group justify="space-between" align="baseline">
-						<Text size="sm" c="dimmed" fw={600} tt="uppercase" lts={0.5}>
-							Total billable words
+						<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts={1}>
+							Total Billable Words
 						</Text>
-						<Text size="xl" fw={800} lh={1.2}>
+						<Text size="lg" fw={800} className="text-studio-600">
 							{totalBillableWords}
 						</Text>
 					</Group>
-					<Text size="xs" c="dimmed" mt={4}>
-						{scripts.length} document{scripts.length === 1 ? "" : "s"}
-					</Text>
 				</Box>
 
 				<Button
-					mt="md"
 					variant="filled"
+					color="studio"
 					onClick={handleOpenAddModal}
 					disabled={!someSelected}
+					radius="md"
+					className="shadow-sm shadow-studio-100 mt-2"
 				>
 					{targetItemId
 						? targetItemName
@@ -280,8 +312,11 @@ function UploadDocumentsOverviewInner({
 						: "Add to Invoice"}
 				</Button>
 				{someSelected && (
-					<Text size="xs" c="dimmed" mt={4}>
-						{selectedScriptIds.size} selected · {selectedWords} words
+					<Text size="xs" c="dimmed" ta="center" mt="xs" fw={500}>
+						{selectedScriptIds.size} selected ·{" "}
+						<span className="text-slate-700 font-bold">
+							{selectedWords} words
+						</span>
 					</Text>
 				)}
 			</Stack>
@@ -290,13 +325,21 @@ function UploadDocumentsOverviewInner({
 				opened={addModalOpened}
 				onClose={closeAddModal}
 				title={
-					targetItemId
-						? targetItemName
-							? `Add to ${targetItemName}`
-							: "Add to this item"
-						: "Add to invoice"
+					<Text fw={800} lts={-0.5}>
+						{targetItemId
+							? targetItemName
+								? `Add to ${targetItemName}`
+								: "Add to this item"
+							: "Add to invoice"}
+					</Text>
 				}
 				centered
+				radius="lg"
+				withinPortal
+				overlayProps={{
+					blur: 3,
+					backgroundOpacity: 0.55,
+				}}
 			>
 				<Stack gap="md">
 					{!targetItemId && hasItems ? (
@@ -305,9 +348,13 @@ function UploadDocumentsOverviewInner({
 							onChange={(v) => setAddMode(v as AddToMode)}
 							label="Add to"
 						>
-							<Stack gap="xs">
-								<Radio value="existing" label="Existing invoice item" />
-								<Radio value="new" label="New invoice item" />
+							<Stack gap="xs" mt="xs">
+								<Radio
+									value="existing"
+									label="Existing invoice item"
+									color="studio"
+								/>
+								<Radio value="new" label="New invoice item" color="studio" />
 							</Stack>
 						</Radio.Group>
 					) : !targetItemId && !hasItems ? (
@@ -329,6 +376,7 @@ function UploadDocumentsOverviewInner({
 								label: item.name,
 							}))}
 							placeholder="Select item"
+							radius="md"
 						/>
 					)}
 
@@ -338,6 +386,7 @@ function UploadDocumentsOverviewInner({
 							placeholder="e.g. Episode 1"
 							value={newItemName}
 							onChange={(e) => setNewItemName(e.currentTarget.value)}
+							radius="md"
 						/>
 					)}
 
@@ -356,6 +405,7 @@ function UploadDocumentsOverviewInner({
 								setRatePerWords(preset.ratePerWords);
 							}
 						}}
+						radius="md"
 					/>
 
 					<TextInput
@@ -368,17 +418,23 @@ function UploadDocumentsOverviewInner({
 							setSelectedPresetId(null);
 						}}
 						required
+						radius="md"
 					/>
 
 					{selectedPreset ? (
-						<Text size="sm" c="dimmed">
-							Rate: {selectedPreset.rateAmount} per{" "}
-							{selectedPreset.ratePerWords} words
-						</Text>
+						<Box className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+							<Text size="xs" fw={700} c="dimmed" tt="uppercase" mb={4}>
+								Applied Rate
+							</Text>
+							<Text size="sm" fw={600} className="text-slate-800">
+								{selectedPreset.rateAmount} per {selectedPreset.ratePerWords}{" "}
+								words
+							</Text>
+						</Box>
 					) : (
 						<>
 							<Box>
-								<Text size="sm" fw={500} mb={4} component="label">
+								<Text size="sm" fw={600} mb={4} component="label">
 									Rate (optional)
 								</Text>
 								<Text size="xs" c="dimmed" mb="xs">
@@ -396,8 +452,9 @@ function UploadDocumentsOverviewInner({
 										decimalScale={2}
 										step={0.5}
 										style={numberInputFlexStyle}
+										radius="md"
 									/>
-									<Text size="sm" c="dimmed">
+									<Text size="sm" c="dimmed" fw={600}>
 										per
 									</Text>
 									<NumberInput
@@ -410,8 +467,9 @@ function UploadDocumentsOverviewInner({
 										min={1}
 										step={1}
 										style={numberInputWidthStyle}
+										radius="md"
 									/>
-									<Text size="sm" c="dimmed">
+									<Text size="sm" c="dimmed" fw={600}>
 										words
 									</Text>
 								</Group>
@@ -424,8 +482,9 @@ function UploadDocumentsOverviewInner({
 								Number(ratePerWords) > 0 && (
 									<Button
 										variant="light"
+										color="studio"
 										size="xs"
-										leftSection={<IconBookmark size={14} />}
+										leftSection={<Bookmark size={14} />}
 										onClick={() => {
 											const created = addPreset({
 												subitemLabel: subitemLabel.trim(),
@@ -434,6 +493,7 @@ function UploadDocumentsOverviewInner({
 											});
 											setSelectedPresetId(created.id);
 										}}
+										radius="md"
 									>
 										Save as preset
 									</Button>
@@ -442,17 +502,23 @@ function UploadDocumentsOverviewInner({
 					)}
 
 					{addError && (
-						<Text size="sm" c="red">
+						<Text size="xs" c="red" fw={600}>
 							{addError}
 						</Text>
 					)}
 
-					<Group justify="flex-end" mt="md">
-						<Button variant="default" onClick={closeAddModal}>
+					<Group justify="flex-end" mt="xl">
+						<Button
+							variant="subtle"
+							color="gray"
+							onClick={closeAddModal}
+							radius="md"
+						>
 							Cancel
 						</Button>
 						<Button
 							variant="filled"
+							color="studio"
 							onClick={handleAddToInvoice}
 							disabled={
 								!subitemLabel.trim() ||
@@ -462,12 +528,10 @@ function UploadDocumentsOverviewInner({
 										? !selectedItemId
 										: !newItemName.trim())
 							}
+							radius="md"
+							className="shadow-sm shadow-studio-100"
 						>
-							{targetItemId
-								? targetItemName
-									? `Add to ${targetItemName}`
-									: "Add to this item"
-								: "Add to invoice"}
+							{targetItemId ? "Add to Item" : "Confirm & Add"}
 						</Button>
 					</Group>
 				</Stack>

@@ -3,7 +3,6 @@ import {
 	Box,
 	Button,
 	Group,
-	Paper,
 	ScrollArea,
 	Select,
 	Stack,
@@ -13,58 +12,50 @@ import {
 	Title,
 } from "@mantine/core";
 import {
-	IconAlertCircle,
-	IconBolt,
-	IconBookmark,
-	IconCircleX,
-	IconEdit,
-	IconFileText,
-	IconFilter,
-	IconMessage2,
-} from "@tabler/icons-react";
+	AlertCircle,
+	CheckCircle2,
+	Edit3,
+	FileText,
+	Filter,
+	MessageSquare,
+	Search,
+	Tag,
+	Zap,
+} from "lucide-react";
 import { memo, useMemo, useState } from "react";
 import type { ParsedLine, Script } from "@/types/Script";
 
-const stackRootStyle = { flex: 1, minHeight: 0, overflow: "hidden" as const };
-const boxFlexStyle = { flex: 1 };
-const boxScrollStyle = { flex: 1, minHeight: 0, overflow: "hidden" as const };
-
-interface ScriptOverviewProps {
-	script: Script;
-	onEdit?: () => void;
-}
-
 const TYPE_CONFIG = {
 	dialogue: {
-		icon: IconMessage2,
+		icon: MessageSquare,
 		color: "indigo",
 		label: "Dialogue",
 		bg: "var(--mantine-color-indigo-0)",
 		border: "var(--mantine-color-indigo-2)",
 	},
 	action: {
-		icon: IconBolt,
+		icon: Zap,
 		color: "teal",
 		label: "Action",
 		bg: "var(--mantine-color-teal-0)",
 		border: "var(--mantine-color-teal-2)",
 	},
 	marker: {
-		icon: IconBookmark,
+		icon: Tag,
 		color: "gray",
 		label: "Marker",
 		bg: "var(--mantine-color-gray-0)",
 		border: "var(--mantine-color-gray-2)",
 	},
 	malformed: {
-		icon: IconAlertCircle,
+		icon: AlertCircle,
 		color: "orange",
 		label: "Malformed",
 		bg: "var(--mantine-color-orange-0)",
 		border: "var(--mantine-color-orange-2)",
 	},
 	invalid: {
-		icon: IconCircleX,
+		icon: AlertCircle,
 		color: "red",
 		label: "Invalid",
 		bg: "var(--mantine-color-red-0)",
@@ -89,7 +80,7 @@ const TypeBadge = memo(({ type }: { type: string }) => {
 					border: `1px solid ${config.border}`,
 				}}
 			>
-				<Icon size={12} stroke={2.5} />
+				<Icon size={12} strokeWidth={2.5} />
 			</ThemeIcon>
 			<Text size="xs" fw={700} c="dimmed" tt="uppercase" lts="0.05em">
 				{config.label}
@@ -100,13 +91,17 @@ const TypeBadge = memo(({ type }: { type: string }) => {
 
 const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 	return (
-		<Table.Tr>
+		<Table.Tr className="hover:bg-slate-50/50 transition-colors">
 			<Table.Td py="md" w={160}>
 				<TypeBadge type={line.type} />
 			</Table.Td>
 			<Table.Td py="md">
 				<Group justify="space-between" wrap="nowrap" align="center" gap="lg">
-					<Text size="sm" c="gray.7" style={{ flex: 1, lineHeight: 1.6 }}>
+					<Text
+						size="sm"
+						className="text-slate-700 leading-relaxed font-medium"
+						style={{ flex: 1 }}
+					>
 						{line.source}
 					</Text>
 					{line.type === "dialogue" && (
@@ -114,14 +109,14 @@ const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 							variant="outline"
 							color="gray.4"
 							size="xs"
-							radius="xs"
+							radius="sm"
+							className="border-dashed border-slate-300 bg-white"
 							styles={{
 								label: {
-									color: "var(--mantine-color-gray-6)",
+									color: "var(--mantine-color-slate-600)",
 									fontWeight: 600,
 								},
 							}}
-							style={{ flex: "0 0 auto", borderStyle: "dashed" }}
 						>
 							{line.metadata.wordCount} words
 						</Badge>
@@ -150,34 +145,34 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 	}, [script.lines, typeFilter]);
 
 	return (
-		<Stack gap="lg" p="xl" style={stackRootStyle} bg="gray.0">
-			<Paper p="lg" radius="md" withBorder shadow="sm">
-				<Group gap="md" align="center" mb="xl">
-					<ThemeIcon
-						size={40}
-						radius="md"
-						variant="light"
-						color="studio"
-						style={{ backgroundColor: "var(--mantine-color-studio-0)" }}
-					>
-						<IconFileText size={24} stroke={1.5} />
-					</ThemeIcon>
-					<Stack gap={2}>
-						<Title order={3} fw={700}>
-							{script.name}
-						</Title>
-						<Text size="xs" c="dimmed" fw={500}>
-							Script Preview & Verification
-						</Text>
-					</Stack>
-					<Box style={boxFlexStyle} />
+		<Stack gap={0} h="100%" className="bg-slate-50/20 overflow-hidden">
+			{/* Header Section */}
+			<Box
+				p="xl"
+				className="border-b border-slate-100 bg-white/80 backdrop-blur-sm sticky top-0 z-20"
+			>
+				<Group justify="space-between" align="center" mb="xl">
+					<Group gap="md">
+						<Box className="p-3 rounded-xl bg-studio-50 text-studio-600">
+							<FileText size={24} strokeWidth={1.5} />
+						</Box>
+						<Stack gap={0}>
+							<Title order={3} fw={800} lts={-0.5} className="text-slate-900">
+								{script.name}
+							</Title>
+							<Text size="xs" c="dimmed" fw={600} tt="uppercase" lts={1}>
+								Parsed Script Analysis
+							</Text>
+						</Stack>
+					</Group>
 					{onEdit && (
 						<Button
 							variant="filled"
 							color="studio"
-							leftSection={<IconEdit size={16} />}
+							leftSection={<Edit3 size={16} />}
 							onClick={onEdit}
 							radius="md"
+							className="shadow-sm shadow-studio-200"
 						>
 							Edit Script
 						</Button>
@@ -185,49 +180,39 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 				</Group>
 
 				<Group justify="space-between" align="flex-end">
-					<Group gap="xl">
-						<Stack gap={2}>
-							<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts="0.05em">
+					<Group gap={40}>
+						<Stack gap={4}>
+							<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts={0.5}>
 								Total Lines
 							</Text>
-							<Text size="sm" fw={600}>
+							<Text size="xl" fw={800} className="text-slate-800">
 								{overview.totalLines}
 							</Text>
 						</Stack>
-						<Stack gap={2}>
-							<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts="0.05em">
-								Words
+						<Stack gap={4}>
+							<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts={0.5}>
+								Billable Words
 							</Text>
-							<Text size="sm" fw={600}>
+							<Text size="xl" fw={800} className="text-studio-600">
 								{overview.wordCount}
 							</Text>
 						</Stack>
-						<Stack gap={2}>
-							<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts="0.05em">
-								Status
+						<Stack gap={4}>
+							<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts={0.5}>
+								Validation Status
 							</Text>
-							<Group gap={6}>
+							<Group gap={8}>
 								{overview.invalidLines.length > 0 ? (
 									<>
-										<Box
-											w={8}
-											h={8}
-											bg="red.6"
-											style={{ borderRadius: "50%" }}
-										/>
-										<Text size="sm" fw={600} c="red.7">
+										<AlertCircle size={18} className="text-amber-500" />
+										<Text size="sm" fw={700} className="text-amber-600">
 											{overview.invalidLines.length} Issues
 										</Text>
 									</>
 								) : (
 									<>
-										<Box
-											w={8}
-											h={8}
-											bg="green.6"
-											style={{ borderRadius: "50%" }}
-										/>
-										<Text size="sm" fw={600} c="green.7">
+										<CheckCircle2 size={18} className="text-emerald-500" />
+										<Text size="sm" fw={700} className="text-emerald-600">
 											Validated
 										</Text>
 									</>
@@ -243,63 +228,42 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						clearable
 						size="sm"
 						radius="md"
-						leftSection={<IconFilter size={14} />}
+						leftSection={<Filter size={14} className="text-slate-400" />}
 						variant="default"
 						w={180}
+						className="shadow-xs"
 					/>
 				</Group>
-			</Paper>
+			</Box>
 
-			<Paper radius="md" withBorder shadow="sm" style={boxScrollStyle}>
+			{/* Content Section */}
+			<Box className="flex-1 min-h-0 bg-white">
 				<ScrollArea h="100%" scrollbars="y" type="hover" offsetScrollbars>
 					{filteredLines.length === 0 ? (
-						<Stack align="center" py={60} gap="xs">
-							<IconFilter
-								size={32}
-								stroke={1}
-								color="var(--mantine-color-gray-4)"
-							/>
-							<Text c="dimmed" ta="center" size="sm" fw={500}>
-								No lines matching the selected filter.
+						<Stack align="center" py={80} gap="md">
+							<Box className="p-4 rounded-full bg-slate-50 text-slate-300">
+								<Search size={40} strokeWidth={1} />
+							</Box>
+							<Text c="dimmed" ta="center" size="sm" fw={600} maw={300}>
+								No script lines match your current filter. Try selecting a
+								different type.
 							</Text>
 						</Stack>
 					) : (
-						<Table stickyHeader verticalSpacing="sm" horizontalSpacing="lg">
-							<Table.Thead
-								style={{
-									backgroundColor: "var(--mantine-color-gray-0)",
-									zIndex: 10,
-								}}
-							>
+						<Table
+							verticalSpacing="sm"
+							horizontalSpacing="xl"
+							className="border-separate border-spacing-0"
+						>
+							<Table.Thead className="bg-slate-50/50 sticky top-0 z-10 backdrop-blur-sm">
 								<Table.Tr>
-									<Table.Th
-										w={160}
-										style={{
-											borderBottom: "1px solid var(--mantine-color-gray-2)",
-										}}
-									>
-										<Text
-											size="xs"
-											fw={700}
-											c="dimmed"
-											tt="uppercase"
-											lts="0.05em"
-										>
+									<Table.Th className="border-b border-slate-100 py-4">
+										<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
 											Line Type
 										</Text>
 									</Table.Th>
-									<Table.Th
-										style={{
-											borderBottom: "1px solid var(--mantine-color-gray-2)",
-										}}
-									>
-										<Text
-											size="xs"
-											fw={700}
-											c="dimmed"
-											tt="uppercase"
-											lts="0.05em"
-										>
+									<Table.Th className="border-b border-slate-100 py-4">
+										<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
 											Content / Source
 										</Text>
 									</Table.Th>
@@ -316,9 +280,14 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						</Table>
 					)}
 				</ScrollArea>
-			</Paper>
+			</Box>
 		</Stack>
 	);
+}
+
+interface ScriptOverviewProps {
+	script: Script;
+	onEdit?: () => void;
 }
 
 export const ScriptOverview = memo(ScriptOverviewInner);
