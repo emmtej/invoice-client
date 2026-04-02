@@ -14,12 +14,14 @@ interface TextEditorProps {
 	content: string;
 	onContentChange: (html: string) => void;
 	additionalMenu?: ReactNode;
+	placeholder?: string;
 }
 
 export function TextEditor({
 	content,
 	onContentChange,
 	additionalMenu,
+	placeholder = "Paste your script here or upload several to start...",
 }: TextEditorProps) {
 	const editor = useEditor({
 		shouldRerenderOnTransaction: true,
@@ -31,7 +33,7 @@ export function TextEditor({
 			Highlight,
 			TextAlign.configure({ types: ["heading", "paragraph"] }),
 			Placeholder.configure({
-				placeholder: "Paste your script here or upload several to start...",
+				placeholder,
 			}),
 		],
 

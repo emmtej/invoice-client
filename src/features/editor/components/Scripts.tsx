@@ -1,23 +1,22 @@
 import {
+	ActionIcon,
 	Box,
-	Button,
-	FileButton,
 	Flex,
 	Group,
-	Paper,
+	NavLink,
+	ScrollArea,
 	Stack,
-	Tabs,
 	Text,
-	Title,
+	Tooltip,
 } from "@mantine/core";
 import {
-	IconCloudUpload,
-	IconFileDescription,
-	IconFilePlus,
-	IconFileText,
-	IconInfoCircle,
-	IconPlus,
-} from "@tabler/icons-react";
+	FilePlus,
+	FileText,
+	Layers,
+	LayoutDashboard,
+	Plus,
+	Trash2,
+} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { loadInvoiceDefaults } from "@/features/invoice/details";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
@@ -25,60 +24,75 @@ import { InvoiceSummary } from "@/features/invoice/summary";
 import { useFileUpload } from "../hooks/useFileUpload";
 import { useScriptStore } from "../store/scriptEditorStore";
 import { processDocuments, reparseHtmlToScript } from "../utils/documentParser";
+import { GettingStarted } from "./GettingStarted";
 import { ScriptEditor } from "./ScriptEditor";
-import { TextEditor } from "./TextEditor";
 import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
-
-const tabsStyle = {
-	display: "flex" as const,
-	flexDirection: "column" as const,
-	flex: 1,
-	minHeight: 0,
-};
-const flexMainStyle = { flex: 1, minHeight: 0 };
-const panelStyle = {
-	flex: 1,
-	display: "flex" as const,
-	flexDirection: "column" as const,
-	minHeight: 0,
-};
-const sidebarBoxStyle = { overflowY: "auto" as const };
 
 export default function Scripts() {
 	const { docFiles, handleFileChange, reset } = useFileUpload();
-	const { scripts, setScripts, addScripts } = useScriptStore((store) => store);
+
+	const scripts = useScriptStore((s) => s.scripts);
+	const addScripts = useScriptStore((s) => s.addScripts);
+	const removeScript = useScriptStore((s) => s.removeScript);
+	const removeScripts = useScriptStore((s) => s.removeScripts);
+
 	const { invoice } = useInvoiceStore();
 
-	// Default state - empty doc array
-	const [activeTab, setActiveTab] = useState<string>("add");
+	const [activeScriptId, setActiveScriptId] = useState<string | null>(null);
 	const [editingScriptId, setEditingScriptId] = useState<string | null>(null);
-	const [pastedContent, setPastedContent] = useState("");
+	const [initialSelectDone, setInitialSelectDone] = useState(false);
+
+	const scriptIds = scripts.map((s) => s.id).join(",");
 
 	useEffect(() => {
-		if (!docFiles) return;
+		if (!docFiles || docFiles.length === 0) return;
 		let cancelled = false;
 		processDocuments(docFiles).then((s) => {
 			if (!cancelled) {
-				setScripts(s);
-				if (s.length > 0) setActiveTab(s[0].id);
+				addScripts(s);
+				if (s.length > 0) {
+					setActiveScriptId(s[0].id);
+					setInitialSelectDone(true);
+				}
+				reset(); // Clear the temporary docFiles from hook
 			}
 		});
 		return () => {
 			cancelled = true;
 		};
-	}, [docFiles, setScripts]);
+	}, [docFiles, addScripts, reset]);
 
+	// Auto-select first script if none selected but scripts exist (initial load)
 	useEffect(() => {
-		const scriptIds = scripts.map((s) => s.id);
-		const currentValid = scriptIds.includes(activeTab) || activeTab === "add";
-		if (currentValid) return;
-		setActiveTab(scripts.length > 0 ? scripts[0].id : "add");
-	}, [scripts, activeTab]);
+		if (
+			!initialSelectDone &&
+			scripts.length > 0 &&
+			activeScriptId === null &&
+			!docFiles.length
+		) {
+			setActiveScriptId(scripts[0].id);
+			setInitialSelectDone(true);
+		} else if (scripts.length === 0 && activeScriptId !== null) {
+			// Clear active ID if all scripts were deleted
+			setActiveScriptId(null);
+			setInitialSelectDone(false);
+		}
+	}, [scriptIds, activeScriptId, docFiles.length, initialSelectDone]);
 
-	const handleTabChange = useCallback((value: string | null) => {
-		setActiveTab(value ? value : "add");
+	// Clear editing state when active script changes
+	useEffect(() => {
 		setEditingScriptId(null);
-	}, []);
+	}, [activeScriptId]);
+
+	// Effect to handle selection fallback if the active one is removed
+	useEffect(() => {
+		if (activeScriptId !== null && scripts.length > 0) {
+			const exists = scripts.some((s) => s.id === activeScriptId);
+			if (!exists) {
+				setActiveScriptId(scripts[0].id);
+			}
+		}
+	}, [scriptIds, activeScriptId]);
 
 	const handleStopEdit = useCallback(() => {
 		setEditingScriptId(null);
@@ -88,221 +102,189 @@ export default function Scripts() {
 		setEditingScriptId(scriptId);
 	}, []);
 
-	const handlePastedContentChange = useCallback((html: string) => {
-		setPastedContent(html);
-	}, []);
+	const handlePasteProcessed = useCallback(
+		(html: string) => {
+			const { lines, overview, html: parsedHtml } = reparseHtmlToScript(html);
 
-	const handleCreateFromPaste = useCallback(() => {
-		if (!pastedContent.trim()) return;
+			if (lines.length === 0) {
+				alert(
+					"No billable dialogue or lines were found in the pasted content. Please check the format.",
+				);
+				return;
+			}
 
-		const { lines, overview, html } = reparseHtmlToScript(pastedContent);
-		const newId = `pasted-${Date.now()}`;
-		const newScript = {
-			id: newId,
-			name: `Pasted Content ${scripts.length + 1}`,
-			source: document.implementation.createHTMLDocument(), // Placeholder
-			lines,
-			overview,
-			html,
-		};
+			const newId = `pasted-${Date.now()}`;
+			const newScript = {
+				id: newId,
+				name: `Pasted Content ${scripts.length + 1}`,
+				source: document.implementation.createHTMLDocument(),
+				lines,
+				overview,
+				html: parsedHtml,
+			};
 
-		addScripts([newScript]);
-		setActiveTab(newId);
-		setPastedContent("");
-	}, [pastedContent, scripts.length, addScripts]);
+			addScripts([newScript]);
+			setActiveScriptId(newId);
+		},
+		[scripts.length, addScripts],
+	);
 
+	const activeScript = scripts.find((s) => s.id === activeScriptId);
 	const hasScripts = scripts.length > 0;
 	const hasInvoiceItems = invoice.items.length > 0;
-	const showSidebar = hasScripts || hasInvoiceItems;
 
 	return (
-		<Stack gap="xl" h="100%">
-			<Box>
-				<Title order={2} fw={800} lts={-0.5} c="studio.7">
-					Script & Document Editor
-				</Title>
-				<Text c="dimmed" size="sm" mt={4}>
-					Upload, parse, and organize your scripts to automatically calculate
-					dialogue word counts for your invoices.
-				</Text>
+		<Flex
+			h="100%"
+			gap={0}
+			className="overflow-hidden bg-white border border-slate-200 rounded-2xl shadow-sm"
+		>
+			{/* Left Sidebar: Navigation */}
+			<Box
+				w={220}
+				className="border-r border-slate-100 flex flex-col bg-slate-50/30"
+			>
+				<Stack gap="xs" p="md" className="flex-1 overflow-hidden">
+					<Group justify="space-between" px="xs" mb="xs">
+						<Text fw={800} size="xs" c="dimmed" tt="uppercase" lts={0.5}>
+							Documents
+						</Text>
+						<Tooltip label="Add new document" position="right">
+							<ActionIcon
+								variant="light"
+								color="studio"
+								size="sm"
+								radius="md"
+								onClick={() => setActiveScriptId(null)}
+							>
+								<Plus size={16} />
+							</ActionIcon>
+						</Tooltip>
+					</Group>
+
+					<ScrollArea className="flex-1" type="hover" offsetScrollbars>
+						<Stack gap={4}>
+							{!hasScripts && (
+								<NavLink
+									label="Getting Started"
+									leftSection={<LayoutDashboard size={18} strokeWidth={1.5} />}
+									active={activeScriptId === null}
+									onClick={() => setActiveScriptId(null)}
+									variant="filled"
+									color="studio"
+									className="rounded-lg py-2.5 transition-all"
+									styles={{
+										label: { fontWeight: 600 },
+									}}
+								/>
+							)}
+
+							{hasScripts && (
+								<Stack gap={4}>
+									{scripts.map((script) => (
+										<NavLink
+											key={script.id}
+											label={script.name}
+											leftSection={<FileText size={18} strokeWidth={1.5} />}
+											active={activeScriptId === script.id}
+											onClick={() => setActiveScriptId(script.id)}
+											variant="filled"
+											color="studio"
+											className="rounded-lg py-2.5 group"
+											styles={{
+												label: {
+													fontWeight: activeScriptId === script.id ? 700 : 500,
+													whiteSpace: "nowrap",
+													overflow: "hidden",
+													textOverflow: "ellipsis",
+													fontSize: "var(--mantine-font-size-sm)",
+												},
+											}}
+											rightSection={
+												<ActionIcon
+													variant="subtle"
+													color="gray"
+													size="xs"
+													className="opacity-0 group-hover:opacity-100 transition-opacity"
+													onClick={(e) => {
+														e.stopPropagation();
+														removeScript(script.id);
+														if (activeScriptId === script.id) {
+															// Selection logic is now handled by useEffect effects
+														}
+													}}
+												>
+													<Trash2 size={12} />
+												</ActionIcon>
+											}
+										/>
+									))}
+								</Stack>
+							)}
+						</Stack>
+					</ScrollArea>
+				</Stack>
 			</Box>
 
-			<Tabs
-				defaultValue="add"
-				value={activeTab}
-				onChange={handleTabChange}
-				variant="outline"
-				radius="md"
-				style={tabsStyle}
-			>
-				<Tabs.List mb="md">
-					{scripts.map((script) => (
-						<Tabs.Tab
-							key={script.id}
-							value={script.id}
-							leftSection={<IconFileText size={14} />}
-						>
-							{script.name}
-						</Tabs.Tab>
-					))}
-					<Tabs.Tab
-						value="add"
-						leftSection={
-							<IconFilePlus
-								size={14}
-								color="var(--mantine-color-wave-filled)"
-							/>
-						}
-					>
-						<Text fw={700} c="wave.7" tt="uppercase" fz="xs">
-							{scripts.length > 0 ? "Add Document" : "New Document"}
-						</Text>
-					</Tabs.Tab>
-				</Tabs.List>
+			{/* Main Content Area */}
+			<Box className="flex-1 flex flex-col min-w-0 bg-white">
+				{activeScript ? (
+					<ScriptEditor
+						script={activeScript}
+						isEditing={editingScriptId === activeScript.id}
+						onStartEdit={handleStartEdit}
+						onStopEdit={handleStopEdit}
+					/>
+				) : (
+					<GettingStarted
+						onFileChange={(files) => handleFileChange(files)}
+						onPasteProcessed={handlePasteProcessed}
+					/>
+				)}
+			</Box>
 
-				<Flex
-					gap={showSidebar ? "md" : 0}
-					align="flex-start"
-					style={flexMainStyle}
+			{/* Right Sidebar: Summary & Overview */}
+			{(hasScripts || hasInvoiceItems) && (
+				<Box
+					w={320}
+					className="border-l border-slate-100 flex flex-col bg-slate-50/30"
+					visibleFrom="md"
 				>
-					<Box
-						style={{
-							flex: 1,
-							minWidth: 0,
-							height: "100%",
-							display: "flex",
-							flexDirection: "column",
-						}}
-					>
-						{scripts.map((script) => (
-							<Tabs.Panel
-								key={script.id}
-								value={script.id}
-								keepMounted={false}
-								style={panelStyle}
-							>
-								<ScriptEditor
-									script={script}
-									isEditing={editingScriptId === script.id}
-									onStartEdit={handleStartEdit}
-									onStopEdit={handleStopEdit}
-								/>
-							</Tabs.Panel>
-						))}
-						<Tabs.Panel value="add" keepMounted={false} style={panelStyle}>
-							{!hasScripts && (
-								<Paper
-									withBorder
-									p="xl"
-									radius="md"
-									mb="lg"
-									bg="var(--mantine-color-wave-light)"
-								>
-									<Group align="flex-start" wrap="nowrap" gap="lg">
-										<Box
-											bg="var(--mantine-color-wave-light-hover)"
-											p="md"
-											style={{ borderRadius: "50%" }}
-										>
-											<IconFileDescription
-												size={32}
-												color="var(--mantine-color-wave-filled)"
-											/>
-										</Box>
-										<Stack gap="xs" style={{ flex: 1 }}>
-											<Text fw={700} size="lg">
-												Getting Started
-											</Text>
-											<Text size="sm">
-												Paste your script content directly into the editor
-												below, or upload existing Word documents (.docx) to
-												parse them automatically.
-											</Text>
-											<Group gap={6} mt="xs">
-												<IconInfoCircle size={14} color="gray" />
-												<Text size="xs" c="dimmed">
-													Word counts are calculated based on dialogue lines
-													only.
-												</Text>
-											</Group>
-										</Stack>
-									</Group>
-								</Paper>
-							)}
-
-							<TextEditor
-								content={pastedContent}
-								onContentChange={handlePastedContentChange}
-								additionalMenu={
-									<Flex gap="xs" align="center">
-										{pastedContent.trim() && (
-											<Button
-												variant="filled"
-												size="xs"
-												leftSection={<IconPlus size={14} />}
-												onClick={handleCreateFromPaste}
-											>
-												Process Paste
-											</Button>
-										)}
-										<FileButton
-											onChange={handleFileChange}
-											accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-											multiple
-										>
-											{(props) => (
-												<Button
-													{...props}
-													variant="default"
-													size="xs"
-													leftSection={<IconCloudUpload size={14} />}
-												>
-													Upload Document(s)
-												</Button>
-											)}
-										</FileButton>
-									</Flex>
-								}
-							/>
-						</Tabs.Panel>
-					</Box>
-
-					{showSidebar && (
-						<Box w={300} visibleFrom="sm" h="100%" style={sidebarBoxStyle}>
-							{hasScripts && (
-								<Box mb="xl">
-									<Text
-										fw={700}
-										mb="sm"
-										mt="lg"
-										c="dimmed"
-										tt="uppercase"
-										fz="xs"
-									>
-										Documents Overview
+					<Stack gap="xl" p="lg" className="flex-1 overflow-y-auto">
+						{hasScripts && (
+							<Box>
+								<Group gap="xs" mb="sm">
+									<Layers size={16} className="text-studio-500" />
+									<Text fw={800} size="xs" c="dimmed" tt="uppercase" lts={0.5}>
+										Parsing Overview
 									</Text>
-									<UploadDocumentsOverview
-										scripts={scripts}
-										onAddedToInvoice={reset}
-									/>
-								</Box>
-							)}
+								</Group>
+								<UploadDocumentsOverview
+									scripts={scripts}
+									onAddedToInvoice={(addedIds) => {
+										removeScripts(addedIds);
+									}}
+								/>
+							</Box>
+						)}
 
-							{hasInvoiceItems && (
-								<Box>
-									<Text fw={700} mb="sm" c="dimmed" tt="uppercase" fz="xs">
+						{hasInvoiceItems && (
+							<Box>
+								<Group gap="xs" mb="sm">
+									<FilePlus size={16} className="text-wave-500" />
+									<Text fw={800} size="xs" c="dimmed" tt="uppercase" lts={0.5}>
 										Invoice Summary
 									</Text>
-									<InvoiceSummary
-										invoiceTitle={loadInvoiceDefaults().invoiceTitle}
-										invoiceDate={loadInvoiceDefaults().invoiceDate}
-									/>
-								</Box>
-							)}
-						</Box>
-					)}
-				</Flex>
-			</Tabs>
-		</Stack>
+								</Group>
+								<InvoiceSummary
+									invoiceTitle={loadInvoiceDefaults().invoiceTitle}
+									invoiceDate={loadInvoiceDefaults().invoiceDate}
+								/>
+							</Box>
+						)}
+					</Stack>
+				</Box>
+			)}
+		</Flex>
 	);
 }
