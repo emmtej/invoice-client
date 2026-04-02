@@ -69,7 +69,7 @@ export function Login() {
 				ta="right"
 				display="block"
 				mb="md"
-				c="violet.6"
+				c="studio.6"
 			>
 				Forgot Password?
 			</Anchor>
