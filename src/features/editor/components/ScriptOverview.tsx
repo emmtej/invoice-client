@@ -14,13 +14,13 @@ import {
 } from "@mantine/core";
 import {
 	IconAlertCircle,
+	IconBolt,
 	IconBookmark,
 	IconCircleX,
 	IconEdit,
 	IconFileText,
 	IconFilter,
 	IconMessage2,
-	IconBolt,
 } from "@tabler/icons-react";
 import { memo, useMemo, useState } from "react";
 import type { ParsedLine, Script } from "@/types/Script";
@@ -91,7 +91,7 @@ const TypeBadge = memo(({ type }: { type: string }) => {
 			>
 				<Icon size={12} stroke={2.5} />
 			</ThemeIcon>
-			<Text size="xs" fw={700} c="dimmed" tt="uppercase" ls="0.5px">
+			<Text size="xs" fw={700} c="dimmed" tt="uppercase" lts="0.05em">
 				{config.label}
 			</Text>
 		</Group>
@@ -116,7 +116,10 @@ const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 							size="xs"
 							radius="xs"
 							styles={{
-								label: { color: "var(--mantine-color-gray-6)", fontWeight: 600 },
+								label: {
+									color: "var(--mantine-color-gray-6)",
+									fontWeight: 600,
+								},
 							}}
 							style={{ flex: "0 0 auto", borderStyle: "dashed" }}
 						>
@@ -154,8 +157,8 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						size={40}
 						radius="md"
 						variant="light"
-						color="violet"
-						style={{ backgroundColor: "var(--mantine-color-violet-0)" }}
+						color="studio"
+						style={{ backgroundColor: "var(--mantine-color-studio-0)" }}
 					>
 						<IconFileText size={24} stroke={1.5} />
 					</ThemeIcon>
@@ -171,7 +174,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 					{onEdit && (
 						<Button
 							variant="filled"
-							color="violet"
+							color="studio"
 							leftSection={<IconEdit size={16} />}
 							onClick={onEdit}
 							radius="md"
@@ -184,7 +187,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 				<Group justify="space-between" align="flex-end">
 					<Group gap="xl">
 						<Stack gap={2}>
-							<Text size="xs" c="dimmed" fw={700} tt="uppercase" ls="0.5px">
+							<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts="0.05em">
 								Total Lines
 							</Text>
 							<Text size="sm" fw={600}>
@@ -192,7 +195,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 							</Text>
 						</Stack>
 						<Stack gap={2}>
-							<Text size="xs" c="dimmed" fw={700} tt="uppercase" ls="0.5px">
+							<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts="0.05em">
 								Words
 							</Text>
 							<Text size="sm" fw={600}>
@@ -200,7 +203,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 							</Text>
 						</Stack>
 						<Stack gap={2}>
-							<Text size="xs" c="dimmed" fw={700} tt="uppercase" ls="0.5px">
+							<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts="0.05em">
 								Status
 							</Text>
 							<Group gap={6}>
@@ -251,7 +254,11 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 				<ScrollArea h="100%" scrollbars="y" type="hover" offsetScrollbars>
 					{filteredLines.length === 0 ? (
 						<Stack align="center" py={60} gap="xs">
-							<IconFilter size={32} stroke={1} color="var(--mantine-color-gray-4)" />
+							<IconFilter
+								size={32}
+								stroke={1}
+								color="var(--mantine-color-gray-4)"
+							/>
 							<Text c="dimmed" ta="center" size="sm" fw={500}>
 								No lines matching the selected filter.
 							</Text>
@@ -267,16 +274,32 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 								<Table.Tr>
 									<Table.Th
 										w={160}
-										style={{ borderBottom: "1px solid var(--mantine-color-gray-2)" }}
+										style={{
+											borderBottom: "1px solid var(--mantine-color-gray-2)",
+										}}
 									>
-										<Text size="xs" fw={700} c="dimmed" tt="uppercase" ls="0.5px">
+										<Text
+											size="xs"
+											fw={700}
+											c="dimmed"
+											tt="uppercase"
+											lts="0.05em"
+										>
 											Line Type
 										</Text>
 									</Table.Th>
 									<Table.Th
-										style={{ borderBottom: "1px solid var(--mantine-color-gray-2)" }}
+										style={{
+											borderBottom: "1px solid var(--mantine-color-gray-2)",
+										}}
 									>
-										<Text size="xs" fw={700} c="dimmed" tt="uppercase" ls="0.5px">
+										<Text
+											size="xs"
+											fw={700}
+											c="dimmed"
+											tt="uppercase"
+											lts="0.05em"
+										>
 											Content / Source
 										</Text>
 									</Table.Th>
@@ -299,4 +322,3 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 }
 
 export const ScriptOverview = memo(ScriptOverviewInner);
-

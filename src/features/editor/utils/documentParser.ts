@@ -89,13 +89,15 @@ export const documentLineParser = (line: string): ParsedLine | null => {
 			return {
 				type: "malformed",
 				source: line,
-				message: "Line has a timestamp but is missing a speaker colon separator (:)",
+				message:
+					"Line has a timestamp but is missing a speaker colon separator (:)",
 			};
 		}
 		return {
 			type: "malformed",
 			source: line,
-			message: "Line has a timestamp and colon but failed to parse correctly. Check the format.",
+			message:
+				"Line has a timestamp and colon but failed to parse correctly. Check the format.",
 		};
 	}
 

@@ -136,7 +136,12 @@ export const InvoiceSummary = memo(
 					labelPosition="left"
 				/>
 
-				<Paper withBorder p="md" radius="md" bg="var(--mantine-color-body)">
+				<Paper
+					withBorder
+					p="md"
+					radius="md"
+					bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7))"
+				>
 					<Stack gap="md">
 						<Flex justify="space-between" align="flex-start">
 							<Box>
@@ -159,9 +164,14 @@ export const InvoiceSummary = memo(
 							)}
 						</Flex>
 
-						<Table verticalSpacing="sm">
+						<Table verticalSpacing="sm" highlightOnHover>
 							<Table.Thead>
-								<Table.Tr>
+								<Table.Tr
+									style={{
+										backgroundColor:
+											"light-dark(var(--mantine-color-primary-0), var(--mantine-color-dark-6))",
+									}}
+								>
 									<Table.Th style={flexOneStyle}>Description</Table.Th>
 									<Table.Th w={120} style={{ textAlign: "right" }}>
 										Words
@@ -178,7 +188,12 @@ export const InvoiceSummary = memo(
 							<Table.Tbody>
 								{items.map((item) => (
 									<Fragment key={item.id}>
-										<Table.Tr bg="var(--mantine-color-gray-0)">
+										<Table.Tr
+											style={{
+												backgroundColor:
+													"light-dark(var(--mantine-color-studio-0), var(--mantine-color-dark-6))",
+											}}
+										>
 											<Table.Td>
 												<Group gap="xs">
 													<Text fw={700}>{item.name}</Text>
@@ -201,7 +216,7 @@ export const InvoiceSummary = memo(
 													<Tooltip label="Add documents">
 														<ActionIcon
 															variant="light"
-															color="blue"
+															color="wave"
 															onClick={() =>
 																handleOpenUpload(item.id, item.name)
 															}
@@ -222,8 +237,16 @@ export const InvoiceSummary = memo(
 											</Table.Td>
 										</Table.Tr>
 
-										{item.subitems.map((sub) => (
-											<Table.Tr key={sub.id}>
+										{item.subitems.map((sub, subIdx) => (
+											<Table.Tr
+												key={sub.id}
+												style={{
+													backgroundColor:
+														subIdx % 2 === 0
+															? "light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))"
+															: undefined,
+												}}
+											>
 												<Table.Td
 													style={{ paddingLeft: "var(--mantine-spacing-lg)" }}
 												>
@@ -298,7 +321,7 @@ export const InvoiceSummary = memo(
 								<Text fw={700} size="lg">
 									Total Amount
 								</Text>
-								<Text fw={800} size="xl" c="blue">
+								<Text fw={800} size="xl" c="studio.7">
 									${totalAmount.toFixed(2)}
 								</Text>
 							</Group>
@@ -307,6 +330,7 @@ export const InvoiceSummary = memo(
 						<Group justify="flex-end" mt="md">
 							<Button
 								variant="filled"
+								color="studio"
 								size="md"
 								onClick={openExport}
 								disabled={items.length === 0}

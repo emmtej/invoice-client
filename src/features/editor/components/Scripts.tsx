@@ -118,7 +118,7 @@ export default function Scripts() {
 	return (
 		<Stack gap="xl" h="100%">
 			<Box>
-				<Title order={2} fw={800} lts={-0.5} c="blue.7">
+				<Title order={2} fw={800} lts={-0.5} c="studio.7">
 					Script & Document Editor
 				</Title>
 				<Text c="dimmed" size="sm" mt={4}>
@@ -150,11 +150,11 @@ export default function Scripts() {
 						leftSection={
 							<IconFilePlus
 								size={14}
-								color="var(--mantine-color-blue-filled)"
+								color="var(--mantine-color-wave-filled)"
 							/>
 						}
 					>
-						<Text fw={700} c="blue.7" tt="uppercase" fz="xs">
+						<Text fw={700} c="wave.7" tt="uppercase" fz="xs">
 							{scripts.length > 0 ? "Add Document" : "New Document"}
 						</Text>
 					</Tabs.Tab>
@@ -196,17 +196,17 @@ export default function Scripts() {
 									p="xl"
 									radius="md"
 									mb="lg"
-									bg="var(--mantine-color-blue-light)"
+									bg="var(--mantine-color-wave-light)"
 								>
 									<Group align="flex-start" wrap="nowrap" gap="lg">
 										<Box
-											bg="var(--mantine-color-blue-light-hover)"
+											bg="var(--mantine-color-wave-light-hover)"
 											p="md"
 											style={{ borderRadius: "50%" }}
 										>
 											<IconFileDescription
 												size={32}
-												color="var(--mantine-color-blue-filled)"
+												color="var(--mantine-color-wave-filled)"
 											/>
 										</Box>
 										<Stack gap="xs" style={{ flex: 1 }}>

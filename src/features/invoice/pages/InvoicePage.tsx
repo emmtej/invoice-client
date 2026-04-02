@@ -1,4 +1,4 @@
-import { Box, Stack, Text } from "@mantine/core";
+import { Box, Stack, Text, Title } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import {
@@ -53,9 +53,15 @@ export default function InvoicePage() {
 				flexDirection: "column",
 			}}
 		>
-			<Text fw={700} size="xl" mb="lg">
-				Invoice
-			</Text>
+			<Stack gap={4} mb="lg">
+				<Title order={1} size="h2">
+					Invoice
+				</Title>
+				<Text size="sm" c="dimmed">
+					Build line items from scripts, set rates, and export a clear summary
+					for clients.
+				</Text>
+			</Stack>
 
 			<Box style={{ flex: 1, minWidth: 0 }}>
 				<Stack gap="lg">
