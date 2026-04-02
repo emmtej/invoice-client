@@ -65,40 +65,31 @@ const dashboardRoute = createRoute({
 	component: Dashboard,
 });
 
-const editorRoute = createRoute({
-	getParentRoute: () => authenticatedRoutes,
-	path: "/editor",
-	component: EditorPage,
-});
-
 const profileRoute = createRoute({
 	getParentRoute: () => authenticatedRoutes,
 	path: "/profile",
 	component: Profile,
 });
 
-// Testing route for editor (no auth required)
-const testEditorRoute = createRoute({
+const editorRoute = createRoute({
 	getParentRoute: () => rootRoute,
-	path: "/test/editor",
+	path: "/editor",
 	component: EditorPage,
 });
 
-// Temporary test route for invoice page – no auth; remove in prod when /invoice is added under authenticatedRoutes
-const testInvoiceRoute = createRoute({
+const invoiceRoute = createRoute({
 	getParentRoute: () => rootRoute,
-	path: "/test/invoice",
+	path: "/invoice",
 	component: InvoicePage,
 });
 
 const routeTree = rootRoute.addChildren([
 	indexRoute,
 	editorRoute,
+	invoiceRoute,
 	loginRoute,
 	registrationRoute,
-	testEditorRoute,
-	testInvoiceRoute,
-	authenticatedRoutes.addChildren([dashboardRoute, editorRoute, profileRoute]),
+	authenticatedRoutes.addChildren([dashboardRoute, profileRoute]),
 ]);
 
 export const router = createRouter({

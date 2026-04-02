@@ -65,7 +65,7 @@ const tools = [
 		title: "Invoice Tool",
 		description: "Manage and generate professional invoices",
 		icon: IconReceipt,
-		to: "/test/invoice",
+		to: "/invoice",
 		color: "blue",
 	},
 	{
@@ -89,7 +89,7 @@ const footerLinks = [
 		title: "Product",
 		links: [
 			{ label: "Editor", to: "/editor" },
-			{ label: "Invoices", to: "/test/invoice" },
+			{ label: "Invoices", to: "/invoice" },
 			{ label: "Dashboard", to: "/dashboard" },
 		],
 	},
