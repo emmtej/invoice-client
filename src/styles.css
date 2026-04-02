@@ -3,6 +3,35 @@
 @import "@mantine/dropzone/styles.css";
 @import "@mantine/tiptap/styles.css";
 
+:root {
+	--app-bg: light-dark(#f7f6f3, var(--mantine-color-dark-8));
+}
+
+html,
+body {
+	background: var(--app-bg);
+	min-height: 100dvh;
+}
+
+body {
+	background-image: radial-gradient(
+		ellipse 120% 80% at 100% -20%,
+		light-dark(
+			color-mix(in srgb, var(--mantine-color-studio-2) 35%, transparent),
+			color-mix(in srgb, var(--mantine-color-studio-9) 25%, transparent)
+		),
+		transparent 55%
+	);
+}
+
+@media print {
+	html,
+	body {
+		background: white !important;
+		background-image: none !important;
+	}
+}
+
 /* Notion-like minimal editor toolbar */
 .rich-text-editor-toolbar {
 	padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
