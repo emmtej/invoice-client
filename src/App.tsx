@@ -8,7 +8,6 @@ import {
 	Group,
 	Paper,
 	SimpleGrid,
-	Skeleton,
 	Stack,
 	Text,
 	ThemeIcon,
@@ -18,69 +17,69 @@ import {
 	IconCircleDotted,
 	IconDashboard,
 	IconEdit,
-	IconFileCode,
-	IconFlame,
+	IconMicrophone2,
 	IconReceipt,
-	IconReceiptOff,
 	IconUser,
+	IconWaveSine,
 } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
+import { useId } from "react";
 
 const features = [
 	{
-		icon: IconReceiptOff,
-		title: "Free and open source",
+		icon: IconMicrophone2,
+		title: "Built for voice talent",
 		description:
-			"All packages are published under MIT license, you can use InVoice in any project without restrictions.",
+			"Line-item invoicing tuned for sessions, pickups, and script-based word counts—so you bill accurately without spreadsheet gymnastics.",
 	},
 	{
-		icon: IconFileCode,
-		title: "TypeScript Based",
+		icon: IconWaveSine,
+		title: "Script-aware workflow",
 		description:
-			"Experience ultimate type safety and developer experience with our robust TS architecture.",
+			"Parse and review scripts in one place, then flow dialogue counts straight into your invoice items.",
 	},
 	{
 		icon: IconCircleDotted,
-		title: "Seamless Experience",
+		title: "Calm, focused UI",
 		description:
-			"A distraction-free interface designed for productivity and ease of use.",
+			"A soft, distraction-free workspace that stays out of your way when you are juggling auditions and deadlines.",
 	},
 	{
-		icon: IconFlame,
-		title: "Powerful Parsing",
+		icon: IconReceipt,
+		title: "Professional summaries",
 		description:
-			"Automatically parse complex script formats and document structures with our custom engine.",
+			"Export clear invoice summaries you can share with clients or drop into your accounting stack.",
 	},
 ];
 
 const tools = [
 	{
 		title: "Script Editor",
-		description: "Advanced script parsing and editing",
+		description: "Parse scripts and track dialogue",
 		icon: IconEdit,
 		to: "/editor",
-		color: "violet",
+		color: "studio" as const,
 	},
 	{
-		title: "Invoice Tool",
-		description: "Manage and generate professional invoices",
+		title: "Invoices",
+		description: "Build and export invoice lines",
 		icon: IconReceipt,
 		to: "/invoice",
-		color: "blue",
+		color: "wave" as const,
 	},
 	{
 		title: "Dashboard",
-		description: "Overview of your recent activity",
+		description: "Your hub for recent activity",
 		icon: IconDashboard,
 		to: "/dashboard",
-		color: "teal",
+		color: "gray" as const,
 	},
 	{
 		title: "Profile",
-		description: "Manage your account settings",
+		description: "Account and defaults",
 		icon: IconUser,
 		to: "/profile",
-		color: "orange",
+		color: "grape" as const,
 	},
 ];
 
@@ -111,10 +110,121 @@ const footerLinks = [
 	},
 ];
 
+function HeroPreviewMock() {
+	const waveFillId = useId().replace(/:/g, "");
+	const waveformPath =
+		"M0,42 Q25,18 50,38 T100,32 T150,48 T200,28 T250,44 T300,24 T350,40 T400,36";
+
+	return (
+		<Paper
+			shadow="xl"
+			radius="lg"
+			withBorder
+			p="md"
+			style={{
+				background:
+					"light-dark(var(--mantine-color-body), var(--mantine-color-dark-7))",
+			}}
+		>
+			<Stack gap="md">
+				<Group justify="space-between" align="center" wrap="nowrap">
+					<Badge variant="light" color="wave" size="lg">
+						Invoice & sessions
+					</Badge>
+					<Text size="xs" c="dimmed" fw={500}>
+						Preview
+					</Text>
+				</Group>
+				<Box
+					p="md"
+					style={{
+						borderRadius: "var(--mantine-radius-md)",
+						background:
+							"linear-gradient(135deg, color-mix(in srgb, var(--mantine-color-studio-2) 55%, transparent) 0%, color-mix(in srgb, var(--mantine-color-wave-2) 50%, transparent) 100%)",
+					}}
+				>
+					<svg
+						width="100%"
+						height={100}
+						viewBox="0 0 400 80"
+						preserveAspectRatio="none"
+						aria-hidden
+					>
+						<title>Waveform preview</title>
+						<defs>
+							<linearGradient id={waveFillId} x1="0%" y1="0%" x2="100%" y2="0%">
+								<stop
+									offset="0%"
+									stopColor="var(--mantine-color-studio-5)"
+									stopOpacity={0.35}
+								/>
+								<stop
+									offset="50%"
+									stopColor="var(--mantine-color-wave-5)"
+									stopOpacity={0.45}
+								/>
+								<stop
+									offset="100%"
+									stopColor="var(--mantine-color-studio-4)"
+									stopOpacity={0.3}
+								/>
+							</linearGradient>
+						</defs>
+						<path
+							d={`${waveformPath} L400,80 L0,80 Z`}
+							fill={`url(#${waveFillId})`}
+							opacity={0.9}
+						/>
+						<path
+							d={waveformPath}
+							fill="none"
+							stroke="var(--mantine-color-wave-6)"
+							strokeWidth={2}
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							opacity={0.85}
+						/>
+					</svg>
+				</Box>
+				<Group grow gap="xs">
+					{["Session A", "Pickup", "ADR"].map((label) => (
+						<Paper
+							key={label}
+							p="xs"
+							withBorder
+							radius="sm"
+							bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+						>
+							<Text size="xs" fw={600} c="dimmed" tt="uppercase">
+								{label}
+							</Text>
+							<Text size="sm" fw={700}>
+								—
+							</Text>
+						</Paper>
+					))}
+				</Group>
+			</Stack>
+		</Paper>
+	);
+}
+
 export default function App() {
-	const featureItems = features.map((feature) => (
+	const featureIcons: Array<"studio" | "wave" | "gray" | "grape"> = [
+		"studio",
+		"wave",
+		"gray",
+		"grape",
+	];
+
+	const featureItems = features.map((feature, i) => (
 		<div key={feature.title}>
-			<ThemeIcon size={44} radius="md" variant="light" color="violet">
+			<ThemeIcon
+				size={44}
+				radius="md"
+				variant="light"
+				color={featureIcons[i] ?? "studio"}
+			>
 				<feature.icon size={26} stroke={1.5} />
 			</ThemeIcon>
 			<Text fz="lg" mt="sm" fw={500}>
@@ -160,33 +270,31 @@ export default function App() {
 
 	return (
 		<Stack gap={80} pb={40}>
-			{/* Hero Section */}
 			<section>
 				<Grid gutter={40} align="center">
 					<Grid.Col span={{ base: 12, md: 6 }}>
 						<Stack gap="xl">
 							<div>
-								<Badge variant="light" color="violet" size="lg" mb="sm">
-									New Version 2.0
+								<Badge variant="light" color="studio" size="lg" mb="sm">
+									Invoicing for voice actors
 								</Badge>
 								<Title order={1} size={48} fw={900} style={{ lineHeight: 1.1 }}>
-									The modern platform for{" "}
+									Invoices and scripts,{" "}
 									<Text
 										component="span"
 										inherit
 										variant="gradient"
-										gradient={{ from: "violet", to: "blue" }}
+										gradient={{ from: "studio", to: "wave", deg: 105 }}
 									>
-										Script & Document
-									</Text>{" "}
-									Management
+										in one calm studio
+									</Text>
 								</Title>
 							</div>
 
 							<Text c="dimmed" size="lg" lh={1.6}>
-								InVoice provides a comprehensive suite of tools for parsing,
-								editing, and managing your scripts and invoices. Built for
-								speed, precision, and ease of use.
+								InVoice helps you go from script to line items with less
+								friction: parse dialogue, track word counts, and send clear
+								invoices that match how you actually work.
 							</Text>
 
 							<Group gap="md">
@@ -194,53 +302,38 @@ export default function App() {
 									component={Link}
 									to="/register"
 									variant="filled"
+									color="studio"
 									size="lg"
 									radius="md"
 								>
-									Get Started
+									Get started
 								</Button>
 								<Button
 									component={Link}
 									to="/editor"
 									variant="light"
+									color="wave"
 									size="lg"
 									radius="md"
 								>
-									Try the Editor
+									Open script editor
 								</Button>
 							</Group>
 						</Stack>
 					</Grid.Col>
 					<Grid.Col span={{ base: 12, md: 6 }}>
-						<Paper shadow="xl" radius="lg" withBorder p="xs">
-							<Skeleton height={320} radius="md" animate={false}>
-								<Box
-									h="100%"
-									style={{
-										display: "flex",
-										alignItems: "center",
-										justifyContent: "center",
-										background: "rgba(0,0,0,0.05)",
-									}}
-								>
-									<Text c="dimmed" fw={500}>
-										Application Interface Preview
-									</Text>
-								</Box>
-							</Skeleton>
-						</Paper>
+						<HeroPreviewMock />
 					</Grid.Col>
 				</Grid>
 			</section>
 
-			{/* Submenu / Tool Shortcuts */}
 			<section>
 				<Stack gap="xl">
 					<div>
 						<Title order={2} size="h3" mb="xs">
-							Quick Access
+							Quick access
 						</Title>
-						<Text c="dimmed">Jump directly to your favorite tools</Text>
+						<Text c="dimmed">Jump straight into your workflow</Text>
 					</div>
 					<SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
 						{toolItems}
@@ -248,27 +341,27 @@ export default function App() {
 				</Stack>
 			</section>
 
-			{/* Features Section */}
 			<section>
 				<Grid gutter={60}>
 					<Grid.Col span={{ base: 12, md: 5 }}>
 						<Title order={2} mb="md">
-							A fully featured ecosystem for document processing
+							Everything you need to bill with confidence
 						</Title>
 						<Text c="dimmed" mb="lg" size="md">
-							Mantine includes more than 120 customizable components and hooks
-							to cover you in any situation. InVoice leverages these to provide
-							a seamless editing experience.
+							Whether you are recording from a home booth or a studio session,
+							InVoice keeps your script data and invoice math aligned—without
+							switching between a dozen browser tabs.
 						</Text>
 
 						<Button
 							variant="outline"
+							color="studio"
 							size="md"
 							radius="md"
 							component={Link}
 							to="/dashboard"
 						>
-							View Dashboard
+							View dashboard
 						</Button>
 					</Grid.Col>
 					<Grid.Col span={{ base: 12, md: 7 }}>
@@ -279,7 +372,6 @@ export default function App() {
 				</Grid>
 			</section>
 
-			{/* Footer Section */}
 			<Box pt={40}>
 				<Divider mb={60} />
 				<Grid gutter={40}>
@@ -288,15 +380,15 @@ export default function App() {
 							<IconReceipt
 								size={30}
 								stroke={1.5}
-								style={{ color: "var(--mantine-color-violet-6)" }}
+								style={{ color: "var(--mantine-color-primary-6)" }}
 							/>
 							<Text size="xl" fw={700}>
 								InVoice
 							</Text>
 						</Group>
 						<Text size="sm" c="dimmed" maw={300} mb="xl">
-							Streamlining script parsing and document management for creative
-							professionals and businesses.
+							Billing and script tools for voice actors—soft on the eyes, sharp
+							on the details.
 						</Text>
 						<Text size="xs" c="dimmed">
 							© 2026 InVoice Platform. All rights reserved.
