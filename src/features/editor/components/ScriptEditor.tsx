@@ -24,11 +24,13 @@ function ScriptEditorInner({
 	const updateScriptFromHtml = useScriptStore((s) => s.updateScriptFromHtml);
 
 	// Debounced reparse of the document while editing
+	// This only updates lines and overview (word counts) but preserves the current HTML
 	useEffect(() => {
 		if (!isEditing) return;
 
 		const timer = setTimeout(() => {
-			updateScriptFromHtml(script.id, script.html);
+			// Pass 'false' to avoid overwriting editor HTML with re-generated/formatted HTML
+			updateScriptFromHtml(script.id, script.html, false);
 		}, 500);
 
 		return () => clearTimeout(timer);

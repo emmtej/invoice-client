@@ -77,12 +77,12 @@ export default function Scripts() {
 			setActiveScriptId(null);
 			setInitialSelectDone(false);
 		}
-	}, [scriptIds, activeScriptId, docFiles.length, initialSelectDone]);
+	}, [scripts, activeScriptId, docFiles.length, initialSelectDone]);
 
 	// Clear editing state when active script changes
 	useEffect(() => {
 		setEditingScriptId(null);
-	}, [activeScriptId]);
+	}, []);
 
 	// Effect to handle selection fallback if the active one is removed
 	useEffect(() => {
@@ -92,7 +92,7 @@ export default function Scripts() {
 				setActiveScriptId(scripts[0].id);
 			}
 		}
-	}, [scriptIds, activeScriptId]);
+	}, [activeScriptId, scripts]);
 
 	const handleStopEdit = useCallback(() => {
 		setEditingScriptId(null);

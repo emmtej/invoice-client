@@ -14,7 +14,11 @@ interface ScriptStoreActions {
 	removeScripts: (ids: string[]) => void;
 	updateHtml: (id: string, html: string) => void;
 	resetScript: (id: string) => void;
-	updateScriptFromHtml: (id: string, html: string) => void;
+	updateScriptFromHtml: (
+		id: string,
+		html: string,
+		shouldUpdateHtml?: boolean,
+	) => void;
 }
 
 type ScriptStore = ScriptStoreProps & ScriptStoreActions;
@@ -56,18 +60,28 @@ export const useScriptStore = create<ScriptStore>((set) => ({
 			),
 		})),
 
-	updateScriptFromHtml: (id, html) =>
+	updateScriptFromHtml: (id: string, html: string, shouldUpdateHtml = true) =>
 		set((state) => {
 			const { lines, overview, html: newHtml } = reparseHtmlToScript(html);
 			const existingScript = state.scripts.find((s) => s.id === id);
 
-			if (existingScript && existingScript.html === newHtml) {
+			if (!existingScript) return state;
+
+			// If we shouldn't update the HTML field (to avoid disrupting the editor),
+			// we keep the HTML that was passed in (which should be the current editor HTML).
+			const finalHtml = shouldUpdateHtml ? newHtml : html;
+
+			// Optimization: if nothing changed, don't trigger a state update
+			if (
+				existingScript.html === finalHtml &&
+				JSON.stringify(existingScript.lines) === JSON.stringify(lines)
+			) {
 				return state;
 			}
 
 			return {
 				scripts: state.scripts.map((s) =>
-					s.id === id ? { ...s, lines, overview, html: newHtml } : s,
+					s.id === id ? { ...s, lines, overview, html: finalHtml } : s,
 				),
 			};
 		}),
