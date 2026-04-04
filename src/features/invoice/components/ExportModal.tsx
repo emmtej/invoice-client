@@ -1,6 +1,6 @@
 import { Button, Group, Modal, Stack, Text } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
-import { IconCopy, IconFileDownload } from "@tabler/icons-react";
+import { Copy, FileDown } from "lucide-react";
 import type { InvoiceItem } from "../store/invoiceStore";
 
 type ExportModalProps = {
@@ -49,7 +49,7 @@ export const ExportModal = ({
 
 				<Group grow>
 					<Button
-						leftSection={<IconFileDownload size={16} />}
+						leftSection={<FileDown size={16} />}
 						onClick={() => {
 							onDownloadPDF();
 							onClose();
@@ -59,7 +59,7 @@ export const ExportModal = ({
 						Download PDF
 					</Button>
 					<Button
-						leftSection={<IconCopy size={16} />}
+						leftSection={<Copy size={16} />}
 						onClick={handleCopyAsText}
 						color={clipboard.copied ? "teal" : "wave"}
 						variant="light"

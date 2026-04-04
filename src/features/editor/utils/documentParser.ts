@@ -139,7 +139,11 @@ export function reparseHtmlToScript(html: string): {
 
 export function processDocuments(documents: DocFile[]): Script[] {
 	const parsedScripts: Script[] = documents.map((doc) => {
-		const paragraphs = Array.from(doc.document.querySelectorAll("p"));
+		const paragraphs = Array.from(
+			doc.document.querySelectorAll(
+				"p, h1, h2, h3, h4, h5, h6, blockquote, li, div",
+			),
+		);
 
 		const parsedLines = paragraphs
 			.flatMap((p) =>

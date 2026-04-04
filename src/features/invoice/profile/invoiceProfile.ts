@@ -27,7 +27,7 @@ export type ProfilesState = {
 	defaultProfileId?: string;
 };
 
-const PROFILES_STORAGE_KEY = "invoice_profiles";
+const PROFILES_STORAGE_KEY = "invoice-profiles";
 
 export const getTodayDateString = () => {
 	const today = new Date();

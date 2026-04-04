@@ -1,5 +1,5 @@
 import { Avatar, Box, Group, Text, UnstyledButton } from "@mantine/core";
-import { IconChevronRight } from "@tabler/icons-react";
+import { ChevronRight } from "lucide-react";
 import type { UserProfile } from "@/store/userStore";
 import classes from "./UserButton.module.css";
 
@@ -20,7 +20,7 @@ export function UserButton({ user }: UserButtonProps) {
 						{user.email}
 					</Text>
 				</Box>
-				<IconChevronRight size={14} stroke={1.5} />
+				<ChevronRight size={14} strokeWidth={1.5} />
 			</Group>
 		</UnstyledButton>
 	);

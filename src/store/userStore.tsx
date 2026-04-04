@@ -18,9 +18,10 @@ export interface UserLoginCredentials {
 	password: string;
 }
 
-export type AuthResponse =
-	| { success: true }
-	| { success: false; message: string };
+export interface AuthResponse {
+	success: boolean;
+	message?: string;
+}
 
 interface UserState {
 	user: UserProfile | null;
@@ -28,6 +29,7 @@ interface UserState {
 	error: string | null;
 	login: (credentials: UserLoginCredentials) => Promise<AuthResponse>;
 	logout: () => void;
+	getIsLoggedIn: () => boolean;
 }
 
 const LOCAL_STORAGE_KEY = "user-storage";
@@ -84,9 +86,9 @@ export const useUserStore = create<UserState>()(
 			version: VERSION,
 			storage: createJSONStorage(() => localStorage),
 			partialize: (state) => {
-				if (!state.user) return undefined;
-				const { email, ...safeUser } = state.user;
-				return { user: safeUser as UserProfile };
+				if (!state.user) return { user: null };
+				// Retain the email as it might be needed for display, or exclude sensitive fields only.
+				return { user: state.user };
 			},
 		},
 	),
@@ -96,7 +98,9 @@ export const useUser = () => useUserStore((state) => state.user);
 export const useUserLoading = () => useUserStore((state) => state.isLoading);
 export const useUserError = () => useUserStore((state) => state.error);
 export const useUserActions = () =>
-	useUserStore((state) => ({
-		login: state.login,
-		logout: state.logout,
-	}));
+	useUserStore(
+		useShallow((state) => ({
+			login: state.login,
+			logout: state.logout,
+		})),
+	);

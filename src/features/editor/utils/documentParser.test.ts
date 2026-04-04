@@ -146,7 +146,7 @@ describe("reparseHtmlToScript", () => {
 });
 
 describe("processDocuments", () => {
-	it("should process multiple documents", async () => {
+	it("should process multiple documents", () => {
 		const doc1 = parseHtmlToDocument("<p>00:01 Alice: Hello</p>");
 		const doc2 = parseHtmlToDocument("<p>00:02 Bob: Bye</p>");
 
@@ -155,7 +155,7 @@ describe("processDocuments", () => {
 			{ name: "Doc 2", document: doc2 },
 		];
 
-		const scripts = await processDocuments(documents);
+		const scripts = processDocuments(documents);
 
 		expect(scripts).toHaveLength(2);
 		expect(scripts[0].name).toBe("Doc 1");

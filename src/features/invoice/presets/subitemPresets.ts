@@ -1,3 +1,5 @@
+import { generateId } from "@/utils/id";
+
 /**
  * Preset for subitem label + rate (e.g. "Translation" at 6 per 1000 words).
  * Stored in localStorage for now; can be replaced with API fetch later.
@@ -47,7 +49,7 @@ export function savePreset(
 	const presets = loadFromStorage();
 	const withId: InvoiceSubitemPreset = {
 		...preset,
-		id: crypto.randomUUID(),
+		id: generateId(),
 	};
 	presets.push(withId);
 	saveToStorage(presets);

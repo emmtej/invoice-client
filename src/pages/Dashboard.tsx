@@ -7,8 +7,8 @@ import {
 	ThemeIcon,
 	Title,
 } from "@mantine/core";
-import { IconGauge, IconReceipt } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
+import { Gauge, Receipt } from "lucide-react";
 
 export default function Dashboard() {
 	return (
@@ -31,7 +31,7 @@ export default function Dashboard() {
 				<Stack gap="md">
 					<Group gap="sm">
 						<ThemeIcon size={32} radius="md" variant="light" color="studio">
-							<IconGauge size={18} stroke={1.5} />
+							<Gauge size={18} strokeWidth={1.5} />
 						</ThemeIcon>
 						<div>
 							<Text fw={600} size="sm">
@@ -47,7 +47,7 @@ export default function Dashboard() {
 						to="/invoice"
 						color="studio"
 						size="sm"
-						leftSection={<IconReceipt size={16} />}
+						leftSection={<Receipt size={16} />}
 						radius="md"
 					>
 						Create invoice

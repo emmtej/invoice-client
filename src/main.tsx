@@ -2,7 +2,6 @@ import { RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 
-import reportWebVitals from "./reportWebVitals.ts";
 import "./styles.css";
 
 import { MantineProvider } from "@mantine/core";
@@ -20,5 +19,3 @@ if (rootElement && !rootElement.innerHTML) {
 		</StrictMode>,
 	);
 }
-
-reportWebVitals();

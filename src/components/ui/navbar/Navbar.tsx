@@ -1,16 +1,12 @@
 import { Anchor, Avatar, Group, Text } from "@mantine/core";
-import { IconReceipt } from "@tabler/icons-react";
 import { Link, useLocation } from "@tanstack/react-router";
+import { Receipt } from "lucide-react";
 import { useUserStore } from "@/store/userStore";
 import { LinkButton } from "../button/ButtonLink";
 import classes from "./Navbar.module.css";
 
 // TODO: Create single repo for navlinks
-const links = [
-	{ link: "/invoice", label: "Invoices" },
-	{ link: "/scripts", label: "Script Tools" },
-	{ link: "/tools", label: "Tools" },
-];
+const links = [{ link: "/invoice", label: "Invoices" }];
 
 export function Navbar() {
 	const user = useUserStore((store) => store.user);
@@ -18,7 +14,7 @@ export function Navbar() {
 
 	const items = links.map((link) => {
 		const isActive =
-			pathname === link.link || pathname.startsWith(link.link + "/");
+			pathname === link.link || pathname.startsWith(`${link.link}/`);
 		return (
 			<Anchor
 				key={link.label}
@@ -35,9 +31,9 @@ export function Navbar() {
 		<header className={classes.header}>
 			<div className={classes.inner}>
 				<Group gap="sm">
-					<IconReceipt
+					<Receipt
 						size={24}
-						stroke={1.5}
+						strokeWidth={1.5}
 						style={{ color: "var(--mantine-color-primary-6)" }}
 					/>
 					<Text size="sm" fw={600} c="dark.9" visibleFrom="xs">

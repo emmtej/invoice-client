@@ -8,7 +8,8 @@ import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { type ReactNode, useEffect } from "react";
 
-const normalizeHtml = (html: string) => html.replace(/>\s+</g, "><").trim();
+const normalizeHtml = (html: string) =>
+	html.replace(/>[\r\n]+\s*</g, "><").trim();
 
 interface TextEditorProps {
 	content: string;

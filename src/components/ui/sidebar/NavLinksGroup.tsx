@@ -7,7 +7,6 @@ import {
 	ThemeIcon,
 	UnstyledButton,
 } from "@mantine/core";
-import { IconChevronRight } from "@tabler/icons-react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { useCallback, useMemo, useState } from "react";
 import classes from "./NavLinksGroup.module.css";
@@ -37,7 +36,7 @@ function getActiveLinkPath(
 }
 
 interface LinksGroupProps {
-	icon: React.FC<any>;
+	icon: React.FC<React.SVGProps<SVGSVGElement>>;
 	label: string;
 	initiallyOpened?: boolean;
 	links?: { label: string; link: string }[];
@@ -93,9 +92,9 @@ export function LinksGroup({
 					</Flex>
 
 					{hasLinks && (
-						<IconChevronRight
+						<ChevronRight
 							className={classes.chevron}
-							stroke={1.5}
+							strokeWidth={1.5}
 							size={16}
 							style={chevronStyle}
 						/>

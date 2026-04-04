@@ -62,7 +62,7 @@ const TYPE_CONFIG = {
 	},
 } as const;
 
-const TypeBadge = memo(({ type }: { type: string }) => {
+const TypeBadge = memo(({ type }: { type: ParsedLine["type"] }) => {
 	const config =
 		TYPE_CONFIG[type as keyof typeof TYPE_CONFIG] || TYPE_CONFIG.marker;
 	const Icon = config.icon;

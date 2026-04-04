@@ -5,7 +5,7 @@ export type InvoiceDefaults = {
 	invoiceDate: string;
 };
 
-const INVOICE_DEFAULTS_STORAGE_KEY = "invoice_defaults";
+const INVOICE_DEFAULTS_STORAGE_KEY = "invoice-defaults";
 
 function getFallbackDefaults(): InvoiceDefaults {
 	return {

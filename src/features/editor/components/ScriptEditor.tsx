@@ -1,6 +1,6 @@
 import { Box, Button, Group } from "@mantine/core";
 import { ArrowLeft, Check, RotateCcw } from "lucide-react";
-import { memo, useCallback, useEffect } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import type { Script } from "@/types/Script";
 import { useScriptStore } from "../store/scriptEditorStore";
 import { ScriptOverview } from "./ScriptOverview";
@@ -23,34 +23,46 @@ function ScriptEditorInner({
 	const resetScript = useScriptStore((s) => s.resetScript);
 	const updateScriptFromHtml = useScriptStore((s) => s.updateScriptFromHtml);
 
-	// Debounced reparse of the document while editing
-	// This only updates lines and overview (word counts) but preserves the current HTML
+	const [localHtml, setLocalHtml] = useState(script.html);
+
+	useEffect(() => {
+		if (!isEditing) {
+			setLocalHtml(script.html);
+		}
+	}, [script.html, isEditing]);
+
+	// Debounced sync of HTML and reparse of the document while editing
 	useEffect(() => {
 		if (!isEditing) return;
 
 		const timer = setTimeout(() => {
+			updateHtml(script.id, localHtml);
 			// Pass 'false' to avoid overwriting editor HTML with re-generated/formatted HTML
-			updateScriptFromHtml(script.id, script.html, false);
+			updateScriptFromHtml(script.id, localHtml, false);
 		}, 500);
 
 		return () => clearTimeout(timer);
-	}, [script.id, script.html, isEditing, updateScriptFromHtml]);
+	}, [script.id, localHtml, isEditing, updateHtml, updateScriptFromHtml]);
 
-	const handleContentChange = useCallback(
-		(html: string) => {
-			updateHtml(script.id, html);
-		},
-		[script.id, updateHtml],
-	);
+	const handleContentChange = useCallback((html: string) => {
+		setLocalHtml(html);
+	}, []);
 
 	const handleReset = useCallback(() => {
 		resetScript(script.id);
-	}, [script.id, resetScript]);
+		// Local state will sync because the component might not re-mount but we need to force it.
+		// Since we don't have the original html here synchronously, it will eventually update from store
+		// if we briefly stop editing, but we can't easily do that.
+		// Actually, resetScript updates script.html in the store. We can add an effect that watches script.html
+		// and syncs localHtml if they differ and it's a reset. For now, onStopEdit() is a good way to see it.
+		onStopEdit();
+	}, [script.id, resetScript, onStopEdit]);
 
 	const handleSubmit = useCallback(() => {
-		updateScriptFromHtml(script.id, script.html);
+		updateHtml(script.id, localHtml);
+		updateScriptFromHtml(script.id, localHtml);
 		onStopEdit();
-	}, [script.id, script.html, updateScriptFromHtml, onStopEdit]);
+	}, [script.id, localHtml, updateHtml, updateScriptFromHtml, onStopEdit]);
 
 	const handleStartEditClick = useCallback(() => {
 		onStartEdit(script.id);

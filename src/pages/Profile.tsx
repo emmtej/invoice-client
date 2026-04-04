@@ -7,8 +7,8 @@ import {
 	ThemeIcon,
 	Title,
 } from "@mantine/core";
-import { IconMicrophone2, IconUser } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
+import { Mic, User } from "lucide-react";
 
 export default function Profile() {
 	return (
@@ -32,7 +32,7 @@ export default function Profile() {
 				<Stack gap="md">
 					<Group gap="sm">
 						<ThemeIcon size={32} radius="md" variant="light" color="wave">
-							<IconUser size={18} stroke={1.5} />
+							<User size={18} strokeWidth={1.5} />
 						</ThemeIcon>
 						<div>
 							<Text fw={600} size="sm">
@@ -49,7 +49,7 @@ export default function Profile() {
 						variant="light"
 						color="wave"
 						size="sm"
-						leftSection={<IconMicrophone2 size={16} />}
+						leftSection={<Mic size={16} />}
 						radius="md"
 					>
 						Open script editor

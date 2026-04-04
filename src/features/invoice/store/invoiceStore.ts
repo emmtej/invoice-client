@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { generateId } from "@/utils/id";
 
 export interface InvoiceSubitem {
@@ -91,153 +92,179 @@ function createOneSubitem(
 	};
 }
 
-export const useInvoiceStore = create<InvoiceStore>((set) => ({
-	invoice: {
-		id: generateId(),
-		defaultRatePerWord: 0.1,
-		items: [],
-	},
-
-	addSubitemsToItem: (scriptIds, itemId, scripts, subitemLabel, ratePerWord) =>
-		set((state) => {
-			const rate = ratePerWord ?? state.invoice.defaultRatePerWord;
-			const newSubitem = createOneSubitem(
-				scriptIds,
-				scripts,
-				subitemLabel,
-				rate,
-			);
-			if (!newSubitem) return state;
-			const itemExists = state.invoice.items.some((item) => item.id === itemId);
-			if (!itemExists) return state;
-			return {
-				invoice: {
-					...state.invoice,
-					items: state.invoice.items.map((item) =>
-						item.id === itemId
-							? { ...item, subitems: [...item.subitems, newSubitem] }
-							: item,
-					),
-				},
-			};
-		}),
-
-	addSubitemsAsNewItem: (
-		scriptIds,
-		itemName,
-		scripts,
-		subitemLabel,
-		ratePerWord,
-	) =>
-		set((state) => {
-			const rate = ratePerWord ?? state.invoice.defaultRatePerWord;
-			const subitem = createOneSubitem(scriptIds, scripts, subitemLabel, rate);
-			if (!subitem) return state;
-			const newItem: InvoiceItem = {
+export const useInvoiceStore = create<InvoiceStore>()(
+	persist(
+		(set) => ({
+			invoice: {
 				id: generateId(),
-				name: itemName,
-				subitems: [subitem],
-			};
-			return {
-				invoice: {
-					...state.invoice,
-					items: [...state.invoice.items, newItem],
-				},
-			};
-		}),
-
-	updateItemName: (itemId, name) =>
-		set((state) => ({
-			invoice: {
-				...state.invoice,
-				items: state.invoice.items.map((item) =>
-					item.id === itemId
-						? { ...item, name: name.trim() === "" ? item.name : name }
-						: item,
-				),
-			},
-		})),
-
-	updateSubitemRate: (itemId, subitemId, rate) =>
-		set((state) => ({
-			invoice: {
-				...state.invoice,
-				items: state.invoice.items.map((item) =>
-					item.id === itemId
-						? {
-								...item,
-								subitems: item.subitems.map((sub) =>
-									sub.id === subitemId
-										? {
-												...sub,
-												ratePerWord: rate,
-												amount: sub.wordCount * rate,
-											}
-										: sub,
-								),
-							}
-						: item,
-				),
-			},
-		})),
-
-	updateSubitemLabel: (itemId, subitemId, label) =>
-		set((state) => ({
-			invoice: {
-				...state.invoice,
-				items: state.invoice.items.map((item) =>
-					item.id === itemId
-						? {
-								...item,
-								subitems: item.subitems.map((sub) =>
-									sub.id === subitemId ? { ...sub, label } : sub,
-								),
-							}
-						: item,
-				),
-			},
-		})),
-
-	removeSubitem: (itemId, subitemId) =>
-		set((state) => {
-			const items = state.invoice.items.map((item) => {
-				if (item.id !== itemId) return item;
-				const subitems = item.subitems.filter((sub) => sub.id !== subitemId);
-				return { ...item, subitems };
-			});
-			return {
-				invoice: { ...state.invoice, items },
-			};
-		}),
-
-	removeItem: (itemId) =>
-		set((state) => ({
-			invoice: {
-				...state.invoice,
-				items: state.invoice.items.filter((item) => item.id !== itemId),
-			},
-		})),
-
-	resetInvoice: () =>
-		set((state) => ({
-			invoice: {
-				...state.invoice,
+				defaultRatePerWord: 0.1,
 				items: [],
 			},
-		})),
 
-	addEmptyItem: (name) =>
-		set((state) => {
-			const newItem: InvoiceItem = {
-				id: generateId(),
-				name: name.trim() || "New item",
-				subitems: [],
-			};
-			return {
-				invoice: {
-					...state.invoice,
-					items: [...state.invoice.items, newItem],
-				},
-			};
+			addSubitemsToItem: (
+				scriptIds,
+				itemId,
+				scripts,
+				subitemLabel,
+				ratePerWord,
+			) =>
+				set((state) => {
+					const rate = ratePerWord ?? state.invoice.defaultRatePerWord;
+					const newSubitem = createOneSubitem(
+						scriptIds,
+						scripts,
+						subitemLabel,
+						rate,
+					);
+					if (!newSubitem) return state;
+					const itemExists = state.invoice.items.some(
+						(item) => item.id === itemId,
+					);
+					if (!itemExists) return state;
+					return {
+						invoice: {
+							...state.invoice,
+							items: state.invoice.items.map((item) =>
+								item.id === itemId
+									? { ...item, subitems: [...item.subitems, newSubitem] }
+									: item,
+							),
+						},
+					};
+				}),
+
+			addSubitemsAsNewItem: (
+				scriptIds,
+				itemName,
+				scripts,
+				subitemLabel,
+				ratePerWord,
+			) =>
+				set((state) => {
+					const rate = ratePerWord ?? state.invoice.defaultRatePerWord;
+					const subitem = createOneSubitem(
+						scriptIds,
+						scripts,
+						subitemLabel,
+						rate,
+					);
+					if (!subitem) return state;
+					const newItem: InvoiceItem = {
+						id: generateId(),
+						name: itemName,
+						subitems: [subitem],
+					};
+					return {
+						invoice: {
+							...state.invoice,
+							items: [...state.invoice.items, newItem],
+						},
+					};
+				}),
+
+			updateItemName: (itemId, name) =>
+				set((state) => ({
+					invoice: {
+						...state.invoice,
+						items: state.invoice.items.map((item) =>
+							item.id === itemId
+								? { ...item, name: name.trim() === "" ? item.name : name }
+								: item,
+						),
+					},
+				})),
+
+			updateSubitemRate: (itemId, subitemId, rate) =>
+				set((state) => ({
+					invoice: {
+						...state.invoice,
+						items: state.invoice.items.map((item) =>
+							item.id === itemId
+								? {
+										...item,
+										subitems: item.subitems.map((sub) =>
+											sub.id === subitemId
+												? {
+														...sub,
+														ratePerWord: rate,
+														amount: sub.wordCount * rate,
+													}
+												: sub,
+										),
+									}
+								: item,
+						),
+					},
+				})),
+
+			updateSubitemLabel: (itemId, subitemId, label) =>
+				set((state) => ({
+					invoice: {
+						...state.invoice,
+						items: state.invoice.items.map((item) =>
+							item.id === itemId
+								? {
+										...item,
+										subitems: item.subitems.map((sub) =>
+											sub.id === subitemId ? { ...sub, label } : sub,
+										),
+									}
+								: item,
+						),
+					},
+				})),
+
+			removeSubitem: (itemId, subitemId) =>
+				set((state) => {
+					const items = state.invoice.items.map((item) => {
+						if (item.id !== itemId) return item;
+						const subitems = item.subitems.filter(
+							(sub) => sub.id !== subitemId,
+						);
+						return { ...item, subitems };
+					});
+					return {
+						invoice: { ...state.invoice, items },
+					};
+				}),
+
+			removeItem: (itemId) =>
+				set((state) => ({
+					invoice: {
+						...state.invoice,
+						items: state.invoice.items.filter((item) => item.id !== itemId),
+					},
+				})),
+
+			resetInvoice: () =>
+				set((state) => ({
+					invoice: {
+						...state.invoice,
+						items: [],
+					},
+				})),
+
+			addEmptyItem: (name) =>
+				set((state) => {
+					const newItem: InvoiceItem = {
+						id: generateId(),
+						name: name.trim() || "New item",
+						subitems: [],
+					};
+					return {
+						invoice: {
+							...state.invoice,
+							items: [...state.invoice.items, newItem],
+						},
+					};
+				}),
 		}),
-}));
+		{
+			name: "invoice-store",
+			storage: createJSONStorage(() => {
+				if (typeof window !== "undefined" && window.localStorage) return window.localStorage;
+				return { getItem: () => null, setItem: () => {}, removeItem: () => {} };
+			}),
+		},
+	),
+);

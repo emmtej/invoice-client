@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Anchor, Button, Input, PasswordInput, TextInput } from "@mantine/core";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Button, Input, PasswordInput, TextInput } from "@mantine/core";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useUserStore } from "@/store/userStore";
@@ -62,17 +62,6 @@ export function Login() {
 			>
 				<PasswordInput type="password" {...register("password")} />
 			</Input.Wrapper>
-			<Anchor
-				component={Link}
-				to="/forgot-password"
-				size="sm"
-				ta="right"
-				display="block"
-				mb="md"
-				c="studio.6"
-			>
-				Forgot Password?
-			</Anchor>
 
 			<Button
 				loaderProps={{ type: "dots" }}

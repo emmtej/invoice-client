@@ -1,36 +1,24 @@
 import { ScrollArea } from "@mantine/core";
-import {
-	IconFileAnalytics,
-	IconGauge,
-	IconNotes,
-	IconPresentationAnalytics,
-} from "@tabler/icons-react";
+import { FileText, LayoutDashboard, Receipt, User } from "lucide-react";
 import { useUserStore } from "@/store/userStore";
 import { LinksGroup } from "./NavLinksGroup";
 import classes from "./Sidebar.module.css";
 import { UserButton } from "./UserButton";
 
 const navlinks = [
-	{ label: "Home", icon: IconGauge },
-	{ label: "Profile", icon: IconPresentationAnalytics, href: "/profile" },
+	{ label: "Home", icon: LayoutDashboard },
+	{ label: "Profile", icon: User, href: "/profile" },
 	{
 		label: "Invoice",
-		icon: IconNotes,
+		icon: Receipt,
 		initiallyOpened: true,
-		links: [
-			{ label: "Overview", link: "/invoice" },
-			{ label: "Create", link: "/invoice/create" },
-			{ label: "Manage", link: "/invoice/manage" },
-		],
+		links: [{ label: "Overview", link: "/invoice" }],
 	},
 	{
 		label: "Script Tools",
-		icon: IconFileAnalytics,
+		icon: FileText,
 
-		links: [
-			{ label: "Editor", link: "/editor" },
-			{ label: "Calculator", link: "/script/calculator" },
-		],
+		links: [{ label: "Editor", link: "/editor" }],
 	},
 ];
 

@@ -1,5 +1,5 @@
 import { Group, Paper, Stack, Text } from "@mantine/core";
-import { IconAt, IconUser } from "@tabler/icons-react";
+import { AtSign, User } from "lucide-react";
 import type { InvoiceProfile } from "./invoiceProfile";
 
 type ActiveProfileDisplayProps = {
@@ -16,14 +16,14 @@ export function ActiveProfileDisplay({ profile }: ActiveProfileDisplayProps) {
 		<Paper withBorder p="sm" radius="sm" bg="gray.0">
 			<Stack gap="xs">
 				<Group gap="xs">
-					<IconUser size={16} style={{ opacity: 0.7 }} />
+					<User size={16} style={{ opacity: 0.7 }} />
 					<Text size="sm" fw={500}>
 						{fullName || "—"}
 					</Text>
 				</Group>
 				{profile.email?.trim() && (
 					<Group gap="xs">
-						<IconAt size={16} style={{ opacity: 0.7 }} />
+						<AtSign size={16} style={{ opacity: 0.7 }} />
 						<Text size="sm" c="dimmed">
 							{profile.email}
 						</Text>

@@ -29,5 +29,5 @@ export interface ApiErrorResponse {
 export interface ValidationError {
 	field: string;
 	message: string;
-	rejectedValue?: any; // The value that caused the validation to fail
+	rejectedValue?: unknown; // The value that caused the validation to fail
 }

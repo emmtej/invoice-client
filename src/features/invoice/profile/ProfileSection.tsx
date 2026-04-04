@@ -8,14 +8,7 @@ import {
 	Text,
 	TextInput,
 } from "@mantine/core";
-import {
-	IconAt,
-	IconDeviceFloppy,
-	IconEdit,
-	IconStar,
-	IconUser,
-	IconX,
-} from "@tabler/icons-react";
+import { AtSign, Pencil, Save, Star, User, X } from "lucide-react";
 import { ActiveProfileDisplay } from "./ActiveProfileDisplay";
 import {
 	getDefaultProfileFromState,
@@ -71,7 +64,7 @@ export function ProfileSection({
 					<Divider
 						label={
 							<Group gap="xs">
-								<IconUser size={16} stroke={1.5} />
+								<User size={16} strokeWidth={1.5} />
 								<Text fw={800} size="sm" tt="uppercase" lts={1}>
 									Profile
 								</Text>
@@ -121,7 +114,7 @@ export function ProfileSection({
 										size="xs"
 										variant="subtle"
 										color="red"
-										leftSection={<IconX size={14} />}
+										leftSection={<X size={14} />}
 									>
 										Cancel
 									</Button>
@@ -131,7 +124,7 @@ export function ProfileSection({
 									disabled={!isProfileValid}
 									size="xs"
 									variant="light"
-									leftSection={<IconDeviceFloppy size={14} />}
+									leftSection={<Save size={14} />}
 								>
 									Save
 								</Button>
@@ -146,7 +139,7 @@ export function ProfileSection({
 											onClick={handleSetAsDefault}
 											size="xs"
 											variant="subtle"
-											leftSection={<IconStar size={14} />}
+											leftSection={<Star size={14} />}
 										>
 											Set as default
 										</Button>
@@ -165,7 +158,7 @@ export function ProfileSection({
 									}}
 									size="xs"
 									variant="light"
-									leftSection={<IconEdit size={14} />}
+									leftSection={<Pencil size={14} />}
 								>
 									Edit
 								</Button>
@@ -190,7 +183,7 @@ export function ProfileSection({
 								onChange={handleProfileChange("firstName")}
 								required
 								size="sm"
-								leftSection={<IconUser size={14} stroke={1.5} />}
+								leftSection={<User size={14} strokeWidth={1.5} />}
 							/>
 							<TextInput
 								label="Last name"
@@ -209,7 +202,7 @@ export function ProfileSection({
 							onChange={handleProfileChange("email")}
 							required
 							size="sm"
-							leftSection={<IconAt size={14} stroke={1.5} />}
+							leftSection={<AtSign size={14} strokeWidth={1.5} />}
 						/>{" "}
 					</Stack>
 				)}

@@ -21,8 +21,8 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 import { appTheme } from "@/theme";
-import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
 import type { Script } from "@/types/Script";
+import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
 
 // Mock Zustand stores
 vi.mock("@/features/invoice/store/invoiceStore", () => ({
@@ -47,24 +47,24 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 	<MantineProvider theme={appTheme}>{children}</MantineProvider>
 );
 
+const createMockScript = (
+	id: string,
+	name: string,
+	wordCount: number,
+	totalLines: number,
+): Script => ({
+	id,
+	name,
+	lines: [],
+	overview: { wordCount, totalLines, title: name },
+	html: "",
+	source: { name, type: "text/plain", size: 1024, lastModified: Date.now() },
+});
+
 describe("UploadDocumentsOverview", () => {
 	const mockScripts: Script[] = [
-		{
-			id: "1",
-			name: "Script 1",
-			lines: [],
-			overview: { wordCount: 100, totalLines: 10 } as any,
-			html: "",
-			source: {} as any,
-		},
-		{
-			id: "2",
-			name: "Script 2",
-			lines: [],
-			overview: { wordCount: 200, totalLines: 20 } as any,
-			html: "",
-			source: {} as any,
-		},
+		createMockScript("1", "Script 1", 100, 10),
+		createMockScript("2", "Script 2", 200, 20),
 	];
 
 	it("should render all scripts in the list", () => {
@@ -79,22 +79,8 @@ describe("UploadDocumentsOverview", () => {
 
 	it("should update internal selection when scripts prop changes", () => {
 		const uniqueScripts: Script[] = [
-			{
-				id: "3",
-				name: "Unique Script A",
-				lines: [],
-				overview: { wordCount: 100, totalLines: 10 } as any,
-				html: "",
-				source: {} as any,
-			},
-			{
-				id: "4",
-				name: "Unique Script B",
-				lines: [],
-				overview: { wordCount: 200, totalLines: 20 } as any,
-				html: "",
-				source: {} as any,
-			},
+			createMockScript("3", "Unique Script A", 100, 10),
+			createMockScript("4", "Unique Script B", 200, 20),
 		];
 
 		const { rerender } = render(

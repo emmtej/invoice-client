@@ -1,5 +1,5 @@
 import { Group, Paper, Stack, Text, TextInput } from "@mantine/core";
-import { IconCalendar } from "@tabler/icons-react";
+import { Calendar } from "lucide-react";
 
 interface InvoiceDetailsSectionProps {
 	invoiceTitle: string;
@@ -38,7 +38,7 @@ export function InvoiceDetailsSection({
 						type="date"
 						value={invoiceDate}
 						onChange={(e) => setInvoiceDate(e.currentTarget.value)}
-						leftSection={<IconCalendar size={14} stroke={1.5} />}
+						leftSection={<Calendar size={14} strokeWidth={1.5} />}
 						size="sm"
 					/>
 				</Group>

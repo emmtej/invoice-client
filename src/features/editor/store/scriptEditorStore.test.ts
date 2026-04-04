@@ -1,11 +1,26 @@
 /**
  * @vitest-environment jsdom
  */
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("zustand/middleware", () => ({
+	persist: (config: any) => config,
+	createJSONStorage: () => ({}),
+}));
+
 import { useScriptStore } from "./scriptEditorStore";
 
 describe("scriptEditorStore", () => {
 	beforeEach(() => {
+		Object.defineProperty(window, "localStorage", {
+			value: {
+				getItem: vi.fn(() => null),
+				setItem: vi.fn(),
+				removeItem: vi.fn(),
+				clear: vi.fn(),
+			},
+			writable: true,
+		});
 		useScriptStore.setState({ scripts: [] });
 	});
 

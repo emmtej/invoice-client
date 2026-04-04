@@ -1,6 +1,5 @@
 import { AppShell, Burger, Container } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { ReactNode } from "react";
 import { Navbar } from "../navbar/Navbar";
 import { Sidebar } from "../sidebar/Sidebar";
@@ -54,7 +53,6 @@ export function Layout({ children }: LayoutProps) {
 					{children}
 				</Container>
 			</AppShell.Main>
-			<TanStackRouterDevtools />
 		</AppShell>
 	);
 }

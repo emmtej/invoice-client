@@ -13,39 +13,39 @@ import {
 	ThemeIcon,
 	Title,
 } from "@mantine/core";
-import {
-	IconCircleDotted,
-	IconDashboard,
-	IconEdit,
-	IconMicrophone2,
-	IconReceipt,
-	IconUser,
-	IconWaveSine,
-} from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
+import {
+	Activity,
+	CircleDashed,
+	LayoutDashboard,
+	Mic,
+	Pencil,
+	Receipt,
+	User,
+} from "lucide-react";
 import { useId } from "react";
 
 const features = [
 	{
-		icon: IconMicrophone2,
+		icon: Mic,
 		title: "Built for voice talent",
 		description:
 			"Line-item invoicing tuned for sessions, pickups, and script-based word counts—so you bill accurately without spreadsheet gymnastics.",
 	},
 	{
-		icon: IconWaveSine,
+		icon: Activity,
 		title: "Script-aware workflow",
 		description:
 			"Parse and review scripts in one place, then flow dialogue counts straight into your invoice items.",
 	},
 	{
-		icon: IconCircleDotted,
+		icon: CircleDashed,
 		title: "Calm, focused UI",
 		description:
 			"A soft, distraction-free workspace that stays out of your way when you are juggling auditions and deadlines.",
 	},
 	{
-		icon: IconReceipt,
+		icon: Receipt,
 		title: "Professional summaries",
 		description:
 			"Export clear invoice summaries you can share with clients or drop into your accounting stack.",
@@ -56,28 +56,28 @@ const tools = [
 	{
 		title: "Script Editor",
 		description: "Parse scripts and track dialogue",
-		icon: IconEdit,
+		icon: Pencil,
 		to: "/editor",
 		color: "studio" as const,
 	},
 	{
 		title: "Invoices",
 		description: "Build and export invoice lines",
-		icon: IconReceipt,
+		icon: Receipt,
 		to: "/invoice",
 		color: "wave" as const,
 	},
 	{
 		title: "Dashboard",
 		description: "Your hub for recent activity",
-		icon: IconDashboard,
+		icon: LayoutDashboard,
 		to: "/dashboard",
 		color: "gray" as const,
 	},
 	{
 		title: "Profile",
 		description: "Account and defaults",
-		icon: IconUser,
+		icon: User,
 		to: "/profile",
 		color: "grape" as const,
 	},
@@ -225,7 +225,7 @@ export default function App() {
 				variant="light"
 				color={featureIcons[i] ?? "studio"}
 			>
-				<feature.icon size={26} stroke={1.5} />
+				<feature.icon size={26} strokeWidth={1.5} />
 			</ThemeIcon>
 			<Text fz="lg" mt="sm" fw={500}>
 				{feature.title}
@@ -377,9 +377,9 @@ export default function App() {
 				<Grid gutter={40}>
 					<Grid.Col span={{ base: 12, md: 4 }}>
 						<Group gap="xs" mb="md">
-							<IconReceipt
+							<Receipt
 								size={30}
-								stroke={1.5}
+								strokeWidth={1.5}
 								style={{ color: "var(--mantine-color-primary-6)" }}
 							/>
 							<Text size="xl" fw={700}>

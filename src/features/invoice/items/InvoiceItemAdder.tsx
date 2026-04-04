@@ -1,5 +1,5 @@
 import { Button, Divider, Group, Paper, Text, TextInput } from "@mantine/core";
-import { IconList, IconPlus } from "@tabler/icons-react";
+import { List, Plus } from "lucide-react";
 
 interface InvoiceItemAdderProps {
 	newItemName: string;
@@ -23,7 +23,7 @@ export function InvoiceItemAdder({
 				mb="sm"
 				label={
 					<Group gap="xs">
-						<IconList size={16} stroke={1.5} />
+						<List size={16} strokeWidth={1.5} />
 						<Text fw={800} size="sm" tt="uppercase" lts={1}>
 							Items
 						</Text>
@@ -43,7 +43,7 @@ export function InvoiceItemAdder({
 					size="sm"
 				/>
 				<Button
-					leftSection={<IconPlus size={16} />}
+					leftSection={<Plus size={16} />}
 					onClick={handleAddItem}
 					variant="filled"
 					color="studio"

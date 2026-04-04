@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Group, Input, PasswordInput, TextInput } from "@mantine/core";
-import { IconAt } from "@tabler/icons-react";
+import { AtSign } from "lucide-react";
 import { useForm } from "react-hook-form";
 import {
 	type RegistrationSchema,
@@ -57,7 +57,7 @@ export function Register() {
 					type="email"
 					placeholder="Email"
 					{...register("email")}
-					leftSection={<IconAt size={16} />}
+					leftSection={<AtSign size={16} />}
 				/>
 			</Input.Wrapper>
 			<Input.Wrapper
@@ -69,7 +69,7 @@ export function Register() {
 				<Input
 					type="email"
 					{...register("confirmEmail")}
-					leftSection={<IconAt size={16} />}
+					leftSection={<AtSign size={16} />}
 				/>
 			</Input.Wrapper>
 			<Group grow gap="md" mb="sm">

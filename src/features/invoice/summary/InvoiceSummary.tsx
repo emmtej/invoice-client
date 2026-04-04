@@ -11,7 +11,7 @@ import {
 	Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { Fragment, memo, useCallback, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { EditValueModal, ExportModal } from "../components";
@@ -209,7 +209,7 @@ export const InvoiceSummary = memo(
 																handleUpdateItemName(item.id, item.name)
 															}
 														>
-															<IconEdit size={12} />
+															<Pencil size={12} />
 														</ActionIcon>
 													</Tooltip>
 												</Group>
@@ -225,7 +225,7 @@ export const InvoiceSummary = memo(
 																handleOpenUpload(item.id, item.name)
 															}
 														>
-															<IconPlus size={16} />
+															<Plus size={16} />
 														</ActionIcon>
 													</Tooltip>
 													<Tooltip label="Remove item">
@@ -234,7 +234,7 @@ export const InvoiceSummary = memo(
 															color="red"
 															onClick={() => removeItem(item.id)}
 														>
-															<IconTrash size={16} />
+															<Trash2 size={16} />
 														</ActionIcon>
 													</Tooltip>
 												</Group>
@@ -267,7 +267,7 @@ export const InvoiceSummary = memo(
 																)
 															}
 														>
-															<IconEdit size={10} />
+															<Pencil size={10} />
 														</ActionIcon>
 													</Group>
 												</Table.Td>
@@ -290,7 +290,7 @@ export const InvoiceSummary = memo(
 																)
 															}
 														>
-															<IconEdit size={10} />
+															<Pencil size={10} />
 														</ActionIcon>
 													</Group>
 												</Table.Td>
@@ -308,7 +308,7 @@ export const InvoiceSummary = memo(
 																color="red"
 																onClick={() => removeSubitem(item.id, sub.id)}
 															>
-																<IconTrash size={12} />
+																<Trash2 size={12} />
 															</ActionIcon>
 														</Tooltip>
 													</Group>

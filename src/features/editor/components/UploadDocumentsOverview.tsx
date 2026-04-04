@@ -71,11 +71,11 @@ function UploadDocumentsOverviewInner({
 		? getPresetById(selectedPresetId)
 		: null;
 
-	const scriptIdsKey = scripts.map((s) => s.id).join(",");
+	const _scriptIdsKey = scripts.map((s) => s.id).join(",");
 
 	useEffect(() => {
 		setSelectedScriptIds(new Set(scripts.map((s) => s.id)));
-	}, [scriptIdsKey, scripts]); // Reset if IDs change or scripts list reference changes
+	}, [scripts]); // Reset if IDs change or scripts list reference changes
 
 	const toggleScript = useCallback((scriptId: string) => {
 		setSelectedScriptIds((prev) => {
@@ -193,14 +193,17 @@ function UploadDocumentsOverviewInner({
 		onAddedToInvoice,
 	]);
 
-	const totalBillableWords = scripts.reduce(
-		(acc, script) => acc + script.overview.wordCount,
-		0,
+	const totalBillableWords = useMemo(
+		() => scripts.reduce((acc, script) => acc + script.overview.wordCount, 0),
+		[scripts],
 	);
-	const selectedWords = scripts
-		.filter((s) => selectedScriptIds.has(s.id))
-		.reduce((acc, s) => acc + s.overview.wordCount, 0);
-
+	const selectedWords = useMemo(
+		() =>
+			scripts
+				.filter((s) => selectedScriptIds.has(s.id))
+				.reduce((acc, s) => acc + s.overview.wordCount, 0),
+		[scripts, selectedScriptIds],
+	);
 	if (scripts.length === 0) {
 		return (
 			<Paper py="xl" px="md" bg="transparent">

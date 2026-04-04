@@ -83,7 +83,7 @@ export default function Scripts() {
 	useEffect(() => {
 		setEditingScriptId(null);
 		setPasteError(null);
-	}, [activeScriptId]);
+	}, []);
 
 	// Effect to handle selection fallback if the active one is removed
 	useEffect(() => {
