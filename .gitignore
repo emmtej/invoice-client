@@ -13,4 +13,5 @@ GEMINI.md
 .superpowers
 
 .worktrees/
-.cursor/docs/
+.cursor/
+docs/
