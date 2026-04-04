@@ -27,8 +27,7 @@ function getActiveLinkPath(
 
 	for (const l of links) {
 		const p = normalizePath(l.link);
-		const matches =
-			normalized === p || normalized.startsWith(`${p}/`);
+		const matches = normalized === p || normalized.startsWith(`${p}/`);
 		if (matches && p.length > bestLen) {
 			best = p;
 			bestLen = p.length;

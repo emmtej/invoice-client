@@ -65,8 +65,6 @@ function UploadDocumentsOverviewInner({
 		? getPresetById(selectedPresetId)
 		: null;
 
-	const _scriptIds = scripts.map((s) => s.id).join(",");
-
 	useEffect(() => {
 		setSelectedScriptIds(new Set(scripts.map((s) => s.id)));
 	}, [scripts.map]); // Only reset if IDs change (new upload/deletion), not if HTML/content changes
@@ -218,107 +216,152 @@ function UploadDocumentsOverviewInner({
 
 	return (
 		<>
-			<Stack gap={0}>
-				<Paper
-					radius="lg"
-					p={0}
-					style={paperOverflowStyle}
-					className="border border-slate-100 shadow-sm"
-				>
-					<Table stickyHeader highlightOnHover style={tableLayoutStyle}>
-						<Table.Thead className="bg-slate-50">
-							<Table.Tr>
-								<Table.Th w={44} className="py-3">
-									<Checkbox
-										checked={allSelected}
-										indeterminate={someSelected && !allSelected}
-										onChange={() => (allSelected ? deselectAll() : selectAll())}
-										aria-label="Select all"
-										size="xs"
-										color="studio"
-									/>
-								</Table.Th>
-								<Table.Th className="py-3">
-									<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
-										Document
-									</Text>
-								</Table.Th>
-								<Table.Th w={100} className="py-3">
-									<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
-										Words
-									</Text>
-								</Table.Th>
-							</Table.Tr>
-						</Table.Thead>
-						<Table.Tbody>
-							{scripts.map((script) => (
-								<Table.Tr
-									key={script.id}
-									className="transition-colors hover:bg-slate-50/50"
-								>
-									<Table.Td>
+			<Stack gap="xl">
+				<Stack gap="md">
+					<Box className="px-2">
+						<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={2}>
+							Selected Documents
+						</Text>
+					</Box>
+					<Paper
+						radius="md"
+						p={0}
+						style={paperOverflowStyle}
+						className="bg-transparent"
+					>
+						<Table
+							verticalSpacing="sm"
+							horizontalSpacing="md"
+							highlightOnHover
+							style={tableLayoutStyle}
+						>
+							<Table.Thead className="bg-slate-50/80">
+								<Table.Tr>
+									<Table.Th w={48} className="py-4 border-b border-slate-100">
 										<Checkbox
-											checked={selectedScriptIds.has(script.id)}
-											onChange={() => toggleScript(script.id)}
-											aria-label={`Select ${script.name}`}
+											checked={allSelected}
+											indeterminate={someSelected && !allSelected}
+											onChange={() =>
+												allSelected ? deselectAll() : selectAll()
+											}
+											aria-label="Select all"
 											size="xs"
 											color="studio"
 										/>
-									</Table.Td>
-									<Table.Td>
+									</Table.Th>
+									<Table.Th className="py-4 border-b border-slate-100">
+										<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
+											Title
+										</Text>
+									</Table.Th>
+									<Table.Th w={80} className="py-4 border-b border-slate-100">
 										<Text
-											fw={600}
 											size="xs"
-											lineClamp={1}
-											className="text-slate-700"
+											fw={800}
+											c="dimmed"
+											tt="uppercase"
+											lts={1}
+											ta="right"
 										>
-											{script.name}
+											Words
 										</Text>
-									</Table.Td>
-									<Table.Td>
-										<Text size="xs" fw={700} className="text-slate-900">
-											{script.overview.wordCount}
-										</Text>
-									</Table.Td>
+									</Table.Th>
 								</Table.Tr>
-							))}
-						</Table.Tbody>
-					</Table>
-				</Paper>
+							</Table.Thead>
+							<Table.Tbody>
+								{scripts.map((script) => (
+									<Table.Tr
+										key={script.id}
+										className="transition-colors hover:bg-slate-50/50"
+									>
+										<Table.Td className="border-b border-slate-50">
+											<Checkbox
+												checked={selectedScriptIds.has(script.id)}
+												onChange={() => toggleScript(script.id)}
+												aria-label={`Select ${script.name}`}
+												size="xs"
+												color="studio"
+											/>
+										</Table.Td>
+										<Table.Td className="border-b border-slate-50">
+											<Text
+												fw={600}
+												size="xs"
+												lineClamp={1}
+												className="text-slate-700"
+											>
+												{script.name}
+											</Text>
+										</Table.Td>
+										<Table.Td className="border-b border-slate-50">
+											<Text
+												size="xs"
+												fw={800}
+												className="text-slate-900"
+												ta="right"
+											>
+												{script.overview.wordCount}
+											</Text>
+										</Table.Td>
+									</Table.Tr>
+								))}
+							</Table.Tbody>
+						</Table>
+					</Paper>
+				</Stack>
 
-				<Box py="md" px="xs">
-					<Group justify="space-between" align="baseline">
-						<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts={1}>
-							Total Billable Words
+				<Box className="p-4 rounded-md bg-slate-50 border border-slate-100">
+					<Stack gap="xs">
+						<Text size="xs" c="slate.6" fw={800} tt="uppercase" lts={2}>
+							Total Billable Volume
 						</Text>
-						<Text size="lg" fw={800} className="text-studio-600">
-							{totalBillableWords}
-						</Text>
-					</Group>
+						<Group align="baseline" gap={4}>
+							<Text
+								fw={800}
+								className="text-2xl text-slate-800 tabular-nums leading-none"
+							>
+								{totalBillableWords}
+							</Text>
+							<Text size="sm" fw={700} c="dimmed">
+								words
+							</Text>
+						</Group>
+					</Stack>
 				</Box>
 
-				<Button
-					variant="filled"
-					color="studio"
-					onClick={handleOpenAddModal}
-					disabled={!someSelected}
-					radius="md"
-					className="shadow-sm shadow-studio-100 mt-2"
-				>
-					{targetItemId
-						? targetItemName
-							? `Add to ${targetItemName}`
-							: "Add to this item"
-						: "Add to Invoice"}
-				</Button>
-				{someSelected && (
-					<Text size="xs" c="dimmed" ta="center" mt="xs" fw={500}>
-						{selectedScriptIds.size} selected ·{" "}
-						<span className="text-slate-700 font-bold">
-							{selectedWords} words
-						</span>
-					</Text>
-				)}
+				<Stack gap="xs">
+					<Button
+						variant="filled"
+						color="studio"
+						size="lg"
+						onClick={handleOpenAddModal}
+						disabled={!someSelected}
+						radius="xl"
+						className="shadow-xl shadow-studio-100 h-14 hover:scale-[1.02] transition-transform"
+					>
+						{targetItemId
+							? targetItemName
+								? `Add to ${targetItemName}`
+								: "Add to this item"
+							: "Generate Invoice Items"}
+					</Button>
+					{someSelected && (
+						<Text
+							size="xs"
+							c="dimmed"
+							ta="center"
+							fw={700}
+							tt="uppercase"
+							lts={1}
+							className="mt-1"
+						>
+							{selectedScriptIds.size} Selected ·{" "}
+							<span className="text-studio-600 font-black">
+								{selectedWords} words
+							</span>
+						</Text>
+					)}
+				</Stack>
 			</Stack>
 
 			<Modal

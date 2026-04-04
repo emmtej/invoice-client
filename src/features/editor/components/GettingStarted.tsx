@@ -3,6 +3,7 @@ import {
 	Button,
 	FileButton,
 	Flex,
+	Grid,
 	Group,
 	Paper,
 	Stack,
@@ -33,128 +34,143 @@ export function GettingStarted({
 	return (
 		<Box className="flex flex-col h-full bg-white">
 			<Stack
-				gap="xl"
-				p={32}
-				className="flex-1 overflow-hidden max-w-[1000px] mx-auto w-full"
+				gap={48}
+				p={48}
+				className="flex-1 overflow-y-auto max-w-[1100px] mx-auto w-full"
 			>
-				{/* Top Header */}
-				<Group gap={28} align="center" wrap="nowrap">
-					<Box className="p-4 rounded-2xl bg-studio-50 text-studio-600 shadow-sm shrink-0 border border-studio-100">
-						<FileText size={42} strokeWidth={1.5} />
+				{/* Premium Top Header */}
+				<Group gap={32} align="center" wrap="nowrap">
+					<Box className="p-4 rounded-2xl bg-studio-50 text-studio-600 shrink-0 border border-studio-100">
+						<FileText size={32} strokeWidth={1.5} />
 					</Box>
-					<Stack gap={4}>
+					<Stack gap={8}>
 						<Title
 							order={1}
 							fw={800}
-							lts={-0.8}
+							lts={-1}
 							className="text-slate-900 text-3xl"
 						>
-							Script Editor
+							Script Intelligence
 						</Title>
-						<Text c="dimmed" size="md" className="leading-relaxed font-medium">
-							Upload documents or paste script content to calculate
-							<span className="text-studio-600 font-bold mx-1">
-								billable dialogue word counts
+						<Text
+							c="dimmed"
+							size="md"
+							fw={500}
+							className="leading-relaxed max-w-[600px]"
+						>
+							Transform your scripts into precise
+							<span className="text-studio-600 font-extrabold mx-1.5 underline decoration-studio-200 underline-offset-4">
+								billable word counts
 							</span>
-							for your invoices.
+							instantly. Upload your documents or start with a quick draft.
 						</Text>
 					</Stack>
 				</Group>
 
-				{/* Unified Workflow Area */}
-				<Stack gap="lg" className="flex-1 min-h-0">
-					{/* Action Bar: Quick Upload */}
-					<Paper
-						withBorder
-						p={20}
-						radius="2xl"
-						className="bg-slate-50/50 border-dashed border-studio-200 hover:border-studio-400 transition-colors group cursor-pointer"
-					>
-						<Group justify="space-between" align="center">
-							<Group gap="md">
-								<Box className="p-2.5 rounded-xl bg-studio-50 text-studio-500 group-hover:bg-studio-100 transition-colors">
-									<CloudUpload size={22} />
-								</Box>
-								<Box>
-									<Text fw={700} size="sm" className="text-slate-800">
-										Upload Word Documents
-									</Text>
-									<Text size="xs" c="dimmed" fw={500}>
-										Import multiple .docx files to parse them simultaneously
-									</Text>
-								</Box>
-							</Group>
-							<FileButton
-								onChange={onFileChange}
-								accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-								multiple
-							>
-								{(props) => (
-									<Button
-										{...props}
-										variant="filled"
-										color="studio"
-										size="md"
-										radius="lg"
-										className="shadow-md shadow-studio-100 px-6"
-									>
-										Choose Files
-									</Button>
-								)}
-							</FileButton>
-						</Group>
-					</Paper>
-
-					{/* Editor Section: Quick Paste */}
-					<Box className="flex-1 flex flex-col min-h-0 mt-2">
-						<Box className="mb-2 px-1">
-							<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
-								Quick Paste Draft
-							</Text>
-						</Box>
-						<Paper
-							withBorder
-							radius="2xl"
-							className="flex-1 overflow-hidden flex flex-col bg-white shadow-sm hover:shadow-md transition-shadow"
-						>
-							<TextEditor
-								content={pastedContent}
-								onContentChange={setPastedContent}
-								placeholder="Simply paste your script here (Command+V) to analyze it instantly..."
-								additionalMenu={
-									<Flex gap="xs" align="center">
-										{pastedContent.trim() && (
-											<Button
-												variant="filled"
-												size="xs"
-												color="studio"
-												leftSection={<Plus size={14} />}
-												onClick={handleCreateFromPaste}
-												radius="sm"
-												className="shadow-sm"
-											>
-												Process Paste
-											</Button>
-										)}
-									</Flex>
-								}
-							/>
-						</Paper>
-					</Box>
-
-					{/* Helpful Tip Section */}
-					<Box className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 mt-2">
-						<Group gap="sm" wrap="nowrap">
-							<Box className="p-1 rounded bg-slate-200 text-slate-500 shrink-0">
-								<Plus size={12} strokeWidth={3} />
+				{/* Dynamic Action Area */}
+				<Grid gutter={32}>
+					{/* Left: Upload Card */}
+					<Grid.Col span={{ base: 12, md: 5 }}>
+						<Stack gap="lg">
+							<Box className="px-2">
+								<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={2}>
+									Direct Import
+								</Text>
 							</Box>
-							<Text size="xs" fw={600} className="text-slate-500">
-								Tip: Scripts are parsed for dialogue lines only. Action lines
-								and scene markers are identified but not billed.
-							</Text>
-						</Group>
-					</Box>
-				</Stack>
+							<Paper
+								withBorder
+								p={32}
+								radius="lg"
+								className="bg-white border border-slate-200 hover:border-slate-300 transition-colors group cursor-pointer h-full min-h-[250px] flex flex-col justify-center items-center text-center gap-4"
+							>
+								<Box className="p-5 rounded-3xl bg-white text-studio-600 shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all">
+									<CloudUpload size={42} strokeWidth={1.5} />
+								</Box>
+								<Stack gap={8}>
+									<Text fw={900} size="xl" className="text-slate-800">
+										Upload Word Docs
+									</Text>
+									<Text size="sm" c="dimmed" fw={500} maw={240}>
+										Support for multiple .docx files with automatic dialogue
+										extraction.
+									</Text>
+								</Stack>
+								<FileButton
+									onChange={onFileChange}
+									accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+									multiple
+								>
+									{(props) => (
+										<Button
+											{...props}
+											variant="filled"
+											color="studio"
+											size="lg"
+											radius="xl"
+											className="shadow-xl shadow-studio-100 px-8"
+										>
+											Select Documents
+										</Button>
+									)}
+								</FileButton>
+							</Paper>
+						</Stack>
+					</Grid.Col>
+
+					{/* Right: Quick Paste Card */}
+					<Grid.Col span={{ base: 12, md: 7 }}>
+						<Stack gap="lg" h="100%">
+							<Box className="px-2">
+								<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={2}>
+									Smart Draft
+								</Text>
+							</Box>
+							<Paper
+								withBorder
+								radius="lg"
+								className="flex-1 overflow-hidden flex flex-col bg-white shadow-sm border border-slate-200 hover:border-slate-300 transition-colors"
+							>
+								<TextEditor
+									content={pastedContent}
+									onContentChange={setPastedContent}
+									placeholder="Paste your script text here to analyze it instantly (Dialogue: Speaker: Text)..."
+									additionalMenu={
+										<Flex gap="xs" align="center">
+											{pastedContent.trim() && (
+												<Button
+													variant="filled"
+													size="sm"
+													color="studio"
+													leftSection={<Plus size={16} />}
+													onClick={handleCreateFromPaste}
+													radius="md"
+													className="shadow-md"
+												>
+													Process Content
+												</Button>
+											)}
+										</Flex>
+									}
+								/>
+							</Paper>
+						</Stack>
+					</Grid.Col>
+				</Grid>
+
+				{/* Professional Footer Insight */}
+				<Box className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+					<Group gap={16} wrap="nowrap">
+						<Box className="p-2 rounded-xl bg-white text-studio-500 shadow-sm shrink-0 border border-slate-100">
+							<Plus size={16} strokeWidth={3} />
+						</Box>
+						<Text size="sm" fw={600} className="text-slate-600 leading-relaxed">
+							<span className="text-studio-700 font-bold">Pro Tip:</span> Our
+							parser identifies dialogue, action lines, and scene markers
+							automatically. Only dialogue lines contribute to the billable word
+							count.
+						</Text>
+					</Group>
+				</Box>
 			</Stack>
 		</Box>
 	);

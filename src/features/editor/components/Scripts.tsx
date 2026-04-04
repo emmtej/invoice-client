@@ -1,9 +1,9 @@
 import {
 	ActionIcon,
+	Badge,
 	Box,
 	Flex,
 	Group,
-	NavLink,
 	ScrollArea,
 	Stack,
 	Text,
@@ -41,8 +41,6 @@ export default function Scripts() {
 	const [activeScriptId, setActiveScriptId] = useState<string | null>(null);
 	const [editingScriptId, setEditingScriptId] = useState<string | null>(null);
 	const [initialSelectDone, setInitialSelectDone] = useState(false);
-
-	const scriptIds = scripts.map((s) => s.id).join(",");
 
 	useEffect(() => {
 		if (!docFiles || docFiles.length === 0) return;
@@ -136,155 +134,193 @@ export default function Scripts() {
 	return (
 		<Flex
 			h="100%"
+			direction="column"
 			gap={0}
-			className="overflow-hidden bg-white border border-slate-200 rounded-2xl shadow-sm"
+			className="overflow-hidden bg-transparent"
 		>
-			{/* Left Sidebar: Navigation */}
-			<Box
-				w={220}
-				className="border-r border-slate-100 flex flex-col bg-slate-50/30"
-			>
-				<Stack gap="xs" p="md" className="flex-1 overflow-hidden">
-					<Group justify="space-between" px="xs" mb="xs">
-						<Text fw={800} size="xs" c="dimmed" tt="uppercase" lts={0.5}>
-							Documents
-						</Text>
-						<Tooltip label="Add new document" position="right">
-							<ActionIcon
-								variant="light"
-								color="studio"
-								size="sm"
-								radius="md"
-								onClick={() => setActiveScriptId(null)}
-							>
-								<Plus size={16} />
-							</ActionIcon>
-						</Tooltip>
-					</Group>
-
-					<ScrollArea className="flex-1" type="hover" offsetScrollbars>
-						<Stack gap={4}>
-							{!hasScripts && (
-								<NavLink
+			{/* Top Header: Horizontal Navigation - Only shown if scripts exist */}
+			{hasScripts && (
+				<Box className="border-b border-slate-100 bg-white px-4 py-2 shrink-0">
+					<Group justify="space-between" align="center" wrap="nowrap" gap="xl">
+						<ScrollArea
+							className="flex-1"
+							type="hover"
+							scrollbars="x"
+							offsetScrollbars={false}
+							styles={{ viewport: { paddingBottom: 4 } }}
+						>
+							<Group gap={4} wrap="nowrap" align="center">
+								<Tooltip
 									label="Getting Started"
-									leftSection={<LayoutDashboard size={18} strokeWidth={1.5} />}
-									active={activeScriptId === null}
-									onClick={() => setActiveScriptId(null)}
-									variant="filled"
-									color="studio"
-									className="rounded-lg py-2.5 transition-all"
-									styles={{
-										label: { fontWeight: 600 },
-									}}
-								/>
-							)}
+									position="bottom"
+									openDelay={500}
+								>
+									<Box
+										onClick={() => setActiveScriptId(null)}
+										className={`
+    								px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 border-b-2
+    								${
+											activeScriptId === null
+												? "bg-slate-50 text-slate-900 border-slate-900"
+												: "bg-transparent text-slate-500 hover:text-slate-800 border-transparent hover:bg-slate-50"
+										}
+    							`}
+									>
+										<LayoutDashboard
+											size={16}
+											strokeWidth={activeScriptId === null ? 2.5 : 2}
+										/>
+										<span>Getting Started</span>
+									</Box>
+								</Tooltip>
 
-							{hasScripts && (
-								<Stack gap={4}>
+								<Box className="w-px h-5 bg-slate-200 mx-2" />
+
+								<Group gap={4} wrap="nowrap">
 									{scripts.map((script) => (
-										<NavLink
+										<Tooltip
 											key={script.id}
 											label={script.name}
-											leftSection={<FileText size={18} strokeWidth={1.5} />}
-											active={activeScriptId === script.id}
-											onClick={() => setActiveScriptId(script.id)}
-											variant="filled"
-											color="studio"
-											className="rounded-lg py-2.5 group"
-											styles={{
-												label: {
-													fontWeight: activeScriptId === script.id ? 700 : 500,
-													whiteSpace: "nowrap",
-													overflow: "hidden",
-													textOverflow: "ellipsis",
-													fontSize: "var(--mantine-font-size-sm)",
-												},
-											}}
-											rightSection={
+											position="bottom"
+											openDelay={800}
+										>
+											<Box
+												onClick={() => setActiveScriptId(script.id)}
+												className={`
+    											px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 border-b-2 group
+    											${
+														activeScriptId === script.id
+															? "bg-slate-50 text-slate-900 border-slate-900"
+															: "bg-transparent text-slate-500 hover:text-slate-800 border-transparent hover:bg-slate-50"
+													}
+    										`}
+											>
+												<FileText
+													size={16}
+													strokeWidth={activeScriptId === script.id ? 2.5 : 2}
+												/>
+												<span className="max-w-[150px] truncate">
+													{script.name}
+												</span>
 												<ActionIcon
 													variant="subtle"
-													color="gray"
+													color={
+														activeScriptId === script.id ? "studio" : "gray"
+													}
 													size="xs"
-													className="opacity-0 group-hover:opacity-100 transition-opacity"
+													className={`
+    												transition-all rounded-md
+    												${
+															activeScriptId === script.id
+																? "opacity-100 hover:bg-studio-50"
+																: "opacity-0 group-hover:opacity-100"
+														}
+    											`}
 													onClick={(e) => {
 														e.stopPropagation();
 														removeScript(script.id);
-														if (activeScriptId === script.id) {
-															// Selection logic is now handled by useEffect effects
-														}
 													}}
 												>
 													<Trash2 size={12} />
 												</ActionIcon>
-											}
-										/>
+											</Box>
+										</Tooltip>
 									))}
-								</Stack>
-							)}
-						</Stack>
-					</ScrollArea>
-				</Stack>
-			</Box>
-
-			{/* Main Content Area */}
-			<Box className="flex-1 flex flex-col min-w-0 bg-white">
-				{activeScript ? (
-					<ScriptEditor
-						script={activeScript}
-						isEditing={editingScriptId === activeScript.id}
-						onStartEdit={handleStartEdit}
-						onStopEdit={handleStopEdit}
-					/>
-				) : (
-					<GettingStarted
-						onFileChange={(files) => handleFileChange(files)}
-						onPasteProcessed={handlePasteProcessed}
-					/>
-				)}
-			</Box>
-
-			{/* Right Sidebar: Summary & Overview */}
-			{(hasScripts || hasInvoiceItems) && (
-				<Box
-					w={320}
-					className="border-l border-slate-100 flex flex-col bg-slate-50/30"
-					visibleFrom="md"
-				>
-					<Stack gap="xl" p="lg" className="flex-1 overflow-y-auto">
-						{hasScripts && (
-							<Box>
-								<Group gap="xs" mb="sm">
-									<Layers size={16} className="text-studio-500" />
-									<Text fw={800} size="xs" c="dimmed" tt="uppercase" lts={0.5}>
-										Parsing Overview
-									</Text>
 								</Group>
-								<UploadDocumentsOverview
-									scripts={scripts}
-									onAddedToInvoice={(addedIds) => {
-										removeScripts(addedIds);
-									}}
-								/>
-							</Box>
-						)}
 
-						{hasInvoiceItems && (
-							<Box>
-								<Group gap="xs" mb="sm">
-									<FilePlus size={16} className="text-wave-500" />
-									<Text fw={800} size="xs" c="dimmed" tt="uppercase" lts={0.5}>
-										Invoice Summary
-									</Text>
-								</Group>
-								<InvoiceSummary
-									invoiceTitle={loadInvoiceDefaults().invoiceTitle}
-									invoiceDate={loadInvoiceDefaults().invoiceDate}
-								/>
-							</Box>
-						)}
-					</Stack>
+								<Tooltip label="Upload new document" position="bottom">
+									<ActionIcon
+										variant="subtle"
+										color="studio"
+										size={32}
+										radius="md"
+										onClick={() => setActiveScriptId(null)}
+										className="ml-2 hover:bg-studio-50 transition-all"
+									>
+										<Plus size={18} />
+									</ActionIcon>
+								</Tooltip>
+							</Group>
+						</ScrollArea>
+
+						<Group gap="xs" visibleFrom="xs">
+							<Badge
+								variant="dot"
+								color="studio"
+								size="md"
+								radius="md"
+								className="bg-white border-slate-200 text-slate-600 px-3 h-8"
+							>
+								{scripts.length} Documents
+							</Badge>
+						</Group>
+					</Group>
 				</Box>
 			)}
+
+			{/* Main Content & Sidebar */}
+
+			<Flex className="flex-1 min-h-0">
+				{/* Main Content Area */}
+				<Box className="flex-1 flex flex-col min-w-0 bg-white">
+					{activeScript ? (
+						<ScriptEditor
+							script={activeScript}
+							isEditing={editingScriptId === activeScript.id}
+							onStartEdit={handleStartEdit}
+							onStopEdit={handleStopEdit}
+						/>
+					) : (
+						<GettingStarted
+							onFileChange={(files) => handleFileChange(files)}
+							onPasteProcessed={handlePasteProcessed}
+						/>
+					)}
+				</Box>
+
+				{/* Right Sidebar: Summary & Overview */}
+				{(hasScripts || hasInvoiceItems) && (
+					<Box
+						w={300}
+						className="border-l border-slate-100 flex flex-col bg-gray-0"
+						visibleFrom="md"
+					>
+						<Stack gap="xl" p="lg" className="flex-1 overflow-y-auto">
+							{hasScripts && (
+								<Box>
+									<Group gap="sm" mb="md" px={4}>
+										<Layers size={18} className="text-studio-600" />
+										<Text fw={900} size="xs" c="slate.6" tt="uppercase" lts={2}>
+											Document Inspector
+										</Text>
+									</Group>
+									<UploadDocumentsOverview
+										scripts={scripts}
+										onAddedToInvoice={(addedIds) => {
+											removeScripts(addedIds);
+										}}
+									/>
+								</Box>
+							)}
+
+							{hasInvoiceItems && (
+								<Box>
+									<Group gap="sm" mb="md" px={4}>
+										<FilePlus size={18} className="text-wave-600" />
+										<Text fw={900} size="xs" c="slate.6" tt="uppercase" lts={2}>
+											Invoice Summary
+										</Text>
+									</Group>
+									<InvoiceSummary
+										invoiceTitle={loadInvoiceDefaults().invoiceTitle}
+										invoiceDate={loadInvoiceDefaults().invoiceDate}
+									/>
+								</Box>
+							)}
+						</Stack>
+					</Box>
+				)}
+			</Flex>
 		</Flex>
 	);
 }

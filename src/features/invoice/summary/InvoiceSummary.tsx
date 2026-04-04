@@ -136,12 +136,7 @@ export const InvoiceSummary = memo(
 					labelPosition="left"
 				/>
 
-				<Paper
-					withBorder
-					p="md"
-					radius="md"
-					bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7))"
-				>
+				<Box p={0}>
 					<Stack gap="md">
 						<Flex justify="space-between" align="flex-start">
 							<Box>
@@ -339,7 +334,7 @@ export const InvoiceSummary = memo(
 							</Button>
 						</Group>
 					</Stack>
-				</Paper>
+				</Box>
 
 				{activeItemId && (
 					<AddDocumentsToItemModal
