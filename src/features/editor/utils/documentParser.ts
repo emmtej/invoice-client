@@ -8,9 +8,7 @@ import { generateId } from "@/utils/id";
 import type { DocFile } from "../hooks/useFileUpload";
 import { generateHtmlFromScript } from "./formatParsedLines";
 import { parseHtmlToDocument } from "./parseHtmlToDocument";
-import { getScriptOverview } from "./scriptParser";
 
-// Groups Time (H:MM:SS or MM:SS) -> Speaker -> Colon -> Content
 const MAIN_PATTERN = /^(\d{1,2}(?::\d{1,2}){1,2})\s+([^:]+):\s*(.*)$/;
 const TIMESTAMP_START_PATTERN = /^(\d{1,2}(?::\d{1,2}){1,2})\s+(.+)$/;
 const NOTES_PATTERN = /\((.*?)\)/g;
@@ -37,9 +35,6 @@ export const documentLineParser = (line: string): ParsedLine | null => {
 
 	cleanLine = cleanLine.trim();
 	if (!cleanLine) {
-		// If line only contained notes, it might be an action, but without a timestamp/speaker context here,
-		// we check if we should return it as action or if it's just invalid.
-		// Usually, standalone notes in parentheses are markers or actions.
 		return { type: "invalid", source: line };
 	}
 
@@ -109,14 +104,41 @@ export const documentLineParser = (line: string): ParsedLine | null => {
 	return { type: "invalid", source: line };
 };
 
-export function reparseHtmlToScript(html: string): {
-	lines: ParsedLine[];
-	overview: ScriptOverview;
-	html: string;
-} {
-	const doc = parseHtmlToDocument(html);
-	const nodes = Array.from(doc.body.querySelectorAll("p, h3"));
-	const lines = nodes
+export const getScriptOverview = (lines: ParsedLine[]): ScriptOverview => {
+	const overview: ScriptOverview = {
+		validLines: [],
+		invalidLines: [],
+		actionLines: [],
+		scenes: [],
+		wordCount: 0,
+		totalLines: 0,
+	};
+
+	return lines.reduce((acc, line, index) => {
+		acc.totalLines++;
+		switch (line.type) {
+			case "action": {
+				acc.actionLines.push(index);
+				break;
+			}
+			case "dialogue": {
+				acc.validLines.push(index);
+				acc.wordCount += line.metadata.wordCount;
+				break;
+			}
+			case "marker": {
+				acc.scenes.push(index);
+				break;
+			}
+			default:
+				acc.invalidLines.push(index);
+		}
+		return acc;
+	}, overview);
+};
+
+function parseLinesFromNodes(nodes: Iterable<Element>): ParsedLine[] {
+	return Array.from(nodes)
 		.flatMap((node) => {
 			const text = (node.textContent ?? "").trim();
 			if (!text) return [];
@@ -126,49 +148,38 @@ export function reparseHtmlToScript(html: string): {
 				.filter(Boolean)
 				.map((line) => documentLineParser(line));
 		})
-		.filter((line): line is ParsedLine => line !== null);
+		.filter((line): line is ParsedLine => line !== null)
+		.map((line) => ({ ...line, id: generateId() }));
+}
 
-	const linesWithId = lines.map((line) => ({
-		...line,
-		id: generateId(),
-	}));
-	const overview = getScriptOverview(linesWithId);
-	const generatedHtml = generateHtmlFromScript(linesWithId);
-	return { lines: linesWithId, overview, html: generatedHtml };
+export function reparseHtmlToScript(html: string): {
+	lines: ParsedLine[];
+	overview: ScriptOverview;
+	html: string;
+} {
+	const doc = parseHtmlToDocument(html);
+	const lines = parseLinesFromNodes(doc.body.querySelectorAll("p, h3"));
+	return {
+		lines,
+		overview: getScriptOverview(lines),
+		html: generateHtmlFromScript(lines),
+	};
 }
 
 export function processDocuments(documents: DocFile[]): Script[] {
-	const parsedScripts: Script[] = documents.map((doc) => {
-		const paragraphs = Array.from(
+	return documents.map((doc) => {
+		const lines = parseLinesFromNodes(
 			doc.document.querySelectorAll(
 				"p, h1, h2, h3, h4, h5, h6, blockquote, li, div",
 			),
 		);
-
-		const parsedLines = paragraphs
-			.flatMap((p) =>
-				(p.textContent ?? "")
-					.split("\n")
-					.map((line) => line.trim())
-					.filter((line) => line.length > 0)
-					.map((line) => documentLineParser(line)),
-			)
-			.filter((line): line is ParsedLine => line !== null);
-
-		const linesWithId: ParsedLine[] = parsedLines.map((line) => ({
-			...line,
-			id: generateId(),
-		}));
-
 		return {
 			id: generateId(),
 			name: doc.name,
 			source: doc.document,
-			lines: linesWithId,
-			overview: getScriptOverview(linesWithId),
-			html: generateHtmlFromScript(linesWithId),
+			lines,
+			overview: getScriptOverview(lines),
+			html: generateHtmlFromScript(lines),
 		};
 	});
-
-	return parsedScripts;
 }

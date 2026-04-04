@@ -55,5 +55,23 @@ export const appTheme = createTheme({
 				radius: "md",
 			},
 		},
+		Modal: {
+			defaultProps: {
+				centered: true,
+				radius: "lg",
+				withinPortal: true,
+				overlayProps: {
+					blur: 3,
+					backgroundOpacity: 0.55,
+				},
+			},
+		},
+		Table: {
+			defaultProps: {
+				verticalSpacing: "sm",
+				horizontalSpacing: "md",
+				highlightOnHover: true,
+			},
+		},
 	},
 });
