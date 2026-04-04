@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Group, Input, PasswordInput, TextInput } from "@mantine/core";
 import { AtSign } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { FormField } from "@/components/ui/form/FormField";
 import {
 	type RegistrationSchema,
 	registrationSchema,
 } from "@/utils/validation/authentication";
-import { ErrorMessage } from "./ErrorMessage";
 
 export function Register() {
 	const {
@@ -22,75 +22,49 @@ export function Register() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+		<form onSubmit={handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column" }}>
 			<Group grow align="flex-start" gap="md" mb="sm">
-				<Input.Wrapper
-					label="First Name"
-					error={<ErrorMessage message={errors.firstname?.message} />}
-					required={true}
-				>
+				<FormField label="First Name" error={errors.firstname?.message} required>
 					<TextInput
 						type="text"
 						placeholder="John"
 						{...register("firstname")}
 					/>
-				</Input.Wrapper>
-				<Input.Wrapper
-					label="Last Name"
-					error={<ErrorMessage message={errors.lastname?.message} />}
-					required={true}
-				>
+				</FormField>
+				<FormField label="Last Name" error={errors.lastname?.message} required>
 					<TextInput
 						type="text"
 						placeholder="Smith"
 						{...register("lastname")}
 					/>
-				</Input.Wrapper>
+				</FormField>
 			</Group>
-			<Input.Wrapper
-				label="Email"
-				error={<ErrorMessage message={errors.email?.message} />}
-				required={true}
-				mb="sm"
-			>
+			<FormField label="Email" error={errors.email?.message} required mb="sm">
 				<Input
 					type="email"
 					placeholder="Email"
 					{...register("email")}
 					leftSection={<AtSign size={16} />}
 				/>
-			</Input.Wrapper>
-			<Input.Wrapper
-				label="Confirm Email"
-				error={<ErrorMessage message={errors.confirmEmail?.message} />}
-				required={true}
-				mb="sm"
-			>
+			</FormField>
+			<FormField label="Confirm Email" error={errors.confirmEmail?.message} required mb="sm">
 				<Input
 					type="email"
 					{...register("confirmEmail")}
 					leftSection={<AtSign size={16} />}
 				/>
-			</Input.Wrapper>
+			</FormField>
 			<Group grow gap="md" mb="sm">
-				<Input.Wrapper
-					label="Password"
-					error={<ErrorMessage message={errors.password?.message} />}
-					required={true}
-				>
+				<FormField label="Password" error={errors.password?.message} required>
 					<PasswordInput
 						type="password"
 						{...register("password")}
 						placeholder="Length must be 8 to 128 characters"
 					/>
-				</Input.Wrapper>
-				<Input.Wrapper
-					label="Confirm Password"
-					error={<ErrorMessage message={errors.confirmPassword?.message} />}
-					required={true}
-				>
+				</FormField>
+				<FormField label="Confirm Password" error={errors.confirmPassword?.message} required>
 					<PasswordInput type="password" {...register("confirmPassword")} />
-				</Input.Wrapper>
+				</FormField>
 			</Group>
 			<Button
 				loaderProps={{ type: "dots" }}

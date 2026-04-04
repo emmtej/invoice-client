@@ -1,13 +1,6 @@
-import {
-	Button,
-	Divider,
-	Group,
-	Paper,
-	Select,
-	Stack,
-	Text,
-	TextInput,
-} from "@mantine/core";
+import { Button, Group, Select, Stack, Text, TextInput } from "@mantine/core";
+import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
+import { SectionDivider } from "@/components/ui/divider/SectionDivider";
 import { AtSign, Pencil, Save, Star, User, X } from "lucide-react";
 import { ActiveProfileDisplay } from "./ActiveProfileDisplay";
 import {
@@ -58,21 +51,15 @@ export function ProfileSection({
 	const hasProfiles = profilesState.profiles.length > 0;
 
 	return (
-		<Paper p="lg" radius="md" className="bg-white border border-slate-100">
+		<SurfaceCard>
 			<Stack gap="sm">
 				<Group mb="sm">
-					<Divider
-						label={
-							<Group gap="xs">
-								<User size={16} strokeWidth={1.5} />
-								<Text fw={800} size="sm" tt="uppercase" lts={1}>
-									Profile
-								</Text>
-							</Group>
-						}
-						labelPosition="left"
+					<SectionDivider
+						icon={<User size={16} strokeWidth={1.5} />}
 						style={{ flex: 1 }}
-					/>
+					>
+						Profile
+					</SectionDivider>
 					<Group gap="xs" align="center">
 						{hasProfiles && (
 							<Select
@@ -215,6 +202,6 @@ export function ProfileSection({
 						<ActiveProfileDisplay profile={activeProfileForSummary} />
 					)}
 			</Stack>
-		</Paper>
+		</SurfaceCard>
 	);
 }

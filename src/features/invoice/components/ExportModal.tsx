@@ -1,4 +1,5 @@
-import { Button, Group, Modal, Stack, Text } from "@mantine/core";
+import { Button, Group, Stack, Text } from "@mantine/core";
+import { AppModal } from "@/components/ui/modal/AppModal";
 import { useClipboard } from "@mantine/hooks";
 import { Copy, FileDown } from "lucide-react";
 import type { InvoiceItem } from "../store/invoiceStore";
@@ -41,7 +42,7 @@ export const ExportModal = ({
 	};
 
 	return (
-		<Modal opened={opened} onClose={onClose} title="Export Invoice" centered>
+		<AppModal opened={opened} onClose={onClose} title="Export Invoice">
 			<Stack gap="md">
 				<Text size="sm" c="dimmed">
 					Choose how you would like to export your invoice summary.
@@ -68,6 +69,6 @@ export const ExportModal = ({
 					</Button>
 				</Group>
 			</Stack>
-		</Modal>
+		</AppModal>
 	);
 };

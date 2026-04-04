@@ -1,7 +1,6 @@
 import {
 	Button,
 	Group,
-	Modal,
 	NumberInput,
 	type NumberInputProps,
 	Stack,
@@ -9,6 +8,7 @@ import {
 	type TextInputProps,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
+import { AppModal } from "@/components/ui/modal/AppModal";
 
 interface EditValueModalProps {
 	opened: boolean;
@@ -50,7 +50,7 @@ export function EditValueModal({
 	};
 
 	return (
-		<Modal opened={opened} onClose={onClose} title={title} centered size="sm">
+		<AppModal opened={opened} onClose={onClose} title={title} size="sm">
 			<Stack gap="md">
 				{inputType === "text" ? (
 					<TextInput
@@ -92,6 +92,6 @@ export function EditValueModal({
 					</Button>
 				</Group>
 			</Stack>
-		</Modal>
+		</AppModal>
 	);
 }

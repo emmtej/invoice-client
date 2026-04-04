@@ -1,5 +1,7 @@
-import { Button, Divider, Group, Paper, Text, TextInput } from "@mantine/core";
+import { Button, Group, TextInput } from "@mantine/core";
 import { List, Plus } from "lucide-react";
+import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
+import { SectionDivider } from "@/components/ui/divider/SectionDivider";
 
 interface InvoiceItemAdderProps {
 	newItemName: string;
@@ -13,24 +15,10 @@ export function InvoiceItemAdder({
 	handleAddItem,
 }: InvoiceItemAdderProps) {
 	return (
-		<Paper
-			p="lg"
-			radius="md"
-			mt="xl"
-			className="bg-white border border-slate-100"
-		>
-			<Divider
-				mb="sm"
-				label={
-					<Group gap="xs">
-						<List size={16} strokeWidth={1.5} />
-						<Text fw={800} size="sm" tt="uppercase" lts={1}>
-							Items
-						</Text>
-					</Group>
-				}
-				labelPosition="left"
-			/>
+		<SurfaceCard mt="xl">
+			<SectionDivider icon={<List size={16} strokeWidth={1.5} />} mb="sm">
+				Items
+			</SectionDivider>
 			<Group align="flex-end" gap="lg">
 				<TextInput
 					label="Add Invoice Item(s)"
@@ -54,6 +42,6 @@ export function InvoiceItemAdder({
 					Add item
 				</Button>
 			</Group>
-		</Paper>
+		</SurfaceCard>
 	);
 }

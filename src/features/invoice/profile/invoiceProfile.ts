@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { loadFromStorage, saveToStorage } from "@/utils/storage";
 
 export type InvoiceProfile = {
 	firstName: string;
@@ -28,6 +29,24 @@ export type ProfilesState = {
 };
 
 const PROFILES_STORAGE_KEY = "invoice-profiles";
+
+const profileStorageSchema = z.object({
+	profiles: z.array(
+		z.object({
+			id: z.string().default(""),
+			label: z.string().default(""),
+			isDefault: z.boolean().default(false),
+			profile: z
+				.object({
+					firstName: z.string().default(""),
+					lastName: z.string().default(""),
+					email: z.string().default(""),
+				})
+				.default({ firstName: "", lastName: "", email: "" }),
+		}),
+	),
+	defaultProfileId: z.string().optional(),
+});
 
 export const getTodayDateString = () => {
 	const today = new Date();
@@ -97,88 +116,36 @@ export const getDefaultProfileFromState = (
 	return state.profiles[0] ?? null;
 };
 
+const EMPTY_STATE: ProfilesState = { profiles: [] };
+
 export const loadProfilesFromStorage = (): ProfilesState => {
-	if (typeof window === "undefined") {
-		return { profiles: [] };
-	}
+	const parsed = loadFromStorage(PROFILES_STORAGE_KEY, EMPTY_STATE, profileStorageSchema);
+	if (!parsed.profiles.length) return EMPTY_STATE;
 
-	try {
-		const raw = window.localStorage.getItem(PROFILES_STORAGE_KEY);
-		if (!raw) {
-			return { profiles: [] };
-		}
+	const profiles: InvoiceProfileWithMeta[] = parsed.profiles.map((p) => ({
+		id: p.id || createProfileId(),
+		label: p.label.trim() || deriveProfileLabel(p.profile),
+		isDefault: p.isDefault,
+		profile: p.profile,
+	}));
 
-		const parsed = JSON.parse(raw) as ProfilesState | null;
-		if (
-			!parsed ||
-			typeof parsed !== "object" ||
-			!Array.isArray(parsed.profiles)
-		) {
-			return { profiles: [] };
-		}
+	const defaultProfile = getDefaultProfileFromState({
+		profiles,
+		defaultProfileId: parsed.defaultProfileId,
+	});
 
-		const profiles: InvoiceProfileWithMeta[] = parsed.profiles
-			.filter((p): p is InvoiceProfileWithMeta => !!p && typeof p === "object")
-			.map((p) => {
-				const baseProfile: InvoiceProfile = {
-					firstName:
-						typeof p.profile?.firstName === "string" ? p.profile.firstName : "",
-					lastName:
-						typeof p.profile?.lastName === "string" ? p.profile.lastName : "",
-					email: typeof p.profile?.email === "string" ? p.profile.email : "",
-				};
-
-				return {
-					id: typeof p.id === "string" && p.id ? p.id : createProfileId(),
-					label:
-						typeof p.label === "string" && p.label.trim()
-							? p.label.trim()
-							: deriveProfileLabel(baseProfile),
-					isDefault: Boolean(p.isDefault),
-					profile: baseProfile,
-				};
-			});
-
-		if (!profiles.length) {
-			return { profiles: [] };
-		}
-
-		const defaultProfile = getDefaultProfileFromState({
-			profiles,
-			defaultProfileId:
-				typeof parsed.defaultProfileId === "string"
-					? parsed.defaultProfileId
-					: undefined,
-		});
-
-		return {
-			profiles,
-			defaultProfileId: defaultProfile?.id,
-		};
-	} catch {
-		return { profiles: [] };
-	}
+	return {
+		profiles,
+		defaultProfileId: defaultProfile?.id,
+	};
 };
 
 export const saveProfilesToStorage = (state: ProfilesState) => {
-	if (typeof window === "undefined") return;
-
-	try {
-		const serializable: ProfilesState = {
-			profiles: state.profiles.map((p) => ({
-				...p,
-				profile: {
-					...p.profile,
-				},
-			})),
-			defaultProfileId: state.defaultProfileId,
-		};
-
-		window.localStorage.setItem(
-			PROFILES_STORAGE_KEY,
-			JSON.stringify(serializable),
-		);
-	} catch {
-		// Ignore storage errors to avoid breaking the UI
-	}
+	saveToStorage(PROFILES_STORAGE_KEY, {
+		profiles: state.profiles.map((p) => ({
+			...p,
+			profile: { ...p.profile },
+		})),
+		defaultProfileId: state.defaultProfileId,
+	});
 };

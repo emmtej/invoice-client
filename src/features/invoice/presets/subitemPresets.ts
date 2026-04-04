@@ -1,9 +1,10 @@
+import { z } from "zod";
 import { generateId } from "@/utils/id";
+import {
+	loadFromStorage,
+	saveToStorage,
+} from "@/utils/storage";
 
-/**
- * Preset for subitem label + rate (e.g. "Translation" at 6 per 1000 words).
- * Stored in localStorage for now; can be replaced with API fetch later.
- */
 export interface InvoiceSubitemPreset {
 	id: string;
 	subitemLabel: string;
@@ -13,56 +14,41 @@ export interface InvoiceSubitemPreset {
 
 const STORAGE_KEY = "invoice-subitem-presets";
 
-function loadFromStorage(): InvoiceSubitemPreset[] {
-	try {
-		const raw = localStorage.getItem(STORAGE_KEY);
-		if (!raw) return [];
-		const parsed = JSON.parse(raw) as unknown;
-		if (!Array.isArray(parsed)) return [];
-		return parsed.filter(
-			(p): p is InvoiceSubitemPreset =>
-				typeof p === "object" &&
-				p !== null &&
-				typeof (p as InvoiceSubitemPreset).id === "string" &&
-				typeof (p as InvoiceSubitemPreset).subitemLabel === "string" &&
-				typeof (p as InvoiceSubitemPreset).rateAmount === "number" &&
-				typeof (p as InvoiceSubitemPreset).ratePerWords === "number",
-		);
-	} catch {
-		return [];
-	}
+const presetSchema = z.array(
+	z.object({
+		id: z.string(),
+		subitemLabel: z.string(),
+		rateAmount: z.number(),
+		ratePerWords: z.number(),
+	}),
+);
+
+function loadPresets(): InvoiceSubitemPreset[] {
+	return loadFromStorage(STORAGE_KEY, [], presetSchema);
 }
 
-function saveToStorage(presets: InvoiceSubitemPreset[]): void {
-	localStorage.setItem(STORAGE_KEY, JSON.stringify(presets));
-}
-
-/** Get all presets. Use API later: return fetchPresetsFromApi() ?? loadFromStorage(). */
 export function getPresets(): InvoiceSubitemPreset[] {
-	return loadFromStorage();
+	return loadPresets();
 }
 
-/** Save a new preset. Use API later: await savePresetToApi(preset) then invalidate local cache. */
 export function savePreset(
 	preset: Omit<InvoiceSubitemPreset, "id">,
 ): InvoiceSubitemPreset {
-	const presets = loadFromStorage();
+	const presets = loadPresets();
 	const withId: InvoiceSubitemPreset = {
 		...preset,
 		id: generateId(),
 	};
 	presets.push(withId);
-	saveToStorage(presets);
+	saveToStorage(STORAGE_KEY, presets);
 	return withId;
 }
 
-/** Remove a preset by id. Use API later when presets come from API. */
 export function removePreset(id: string): void {
-	const presets = loadFromStorage().filter((p) => p.id !== id);
-	saveToStorage(presets);
+	const presets = loadPresets().filter((p) => p.id !== id);
+	saveToStorage(STORAGE_KEY, presets);
 }
 
-/** User-readable summary for dropdown (e.g. "Translation — 6 per 1000 words"). */
 export function presetSummary(preset: InvoiceSubitemPreset): string {
 	return `${preset.subitemLabel} — ${preset.rateAmount} per ${preset.ratePerWords} words`;
 }

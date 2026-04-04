@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, PasswordInput, TextInput } from "@mantine/core";
+import { Button, PasswordInput, TextInput } from "@mantine/core";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { FormField } from "@/components/ui/form/FormField";
 import { useUserStore } from "@/store/userStore";
 import {
 	type LoginSchema,
 	loginSchema,
 } from "@/utils/validation/authentication";
-import { ErrorMessage } from "./ErrorMessage";
 
 export function Login() {
 	const {
@@ -44,24 +44,14 @@ export function Login() {
 		}
 	};
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-			<Input.Wrapper
-				label="Email"
-				error={<ErrorMessage message={errors.email?.message} />}
-				required={true}
-				mb="sm"
-			>
+		<form onSubmit={handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column" }}>
+			<FormField label="Email" error={errors.email?.message} required mb="sm">
 				<TextInput type="email" placeholder="Email" {...register("email")} />
-			</Input.Wrapper>
+			</FormField>
 
-			<Input.Wrapper
-				label="Password"
-				error={<ErrorMessage message={errors.password?.message} />}
-				required={true}
-				mb="sm"
-			>
+			<FormField label="Password" error={errors.password?.message} required mb="sm">
 				<PasswordInput type="password" {...register("password")} />
-			</Input.Wrapper>
+			</FormField>
 
 			<Button
 				loaderProps={{ type: "dots" }}

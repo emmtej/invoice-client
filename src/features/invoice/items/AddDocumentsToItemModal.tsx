@@ -1,5 +1,7 @@
-import { Box, Button, FileButton, Modal, Stack, Text } from "@mantine/core";
+import { Box, Stack, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
+import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
+import { AppModal } from "@/components/ui/modal/AppModal";
 import { UploadDocumentsOverview } from "@/features/editor/components/UploadDocumentsOverview";
 import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
 import { processDocuments } from "@/features/editor/utils/documentParser";
@@ -53,43 +55,23 @@ export function AddDocumentsToItemModal({
 	}, [docFiles]);
 
 	return (
-		<Modal
+		<AppModal
 			opened={opened}
 			onClose={onClose}
-			title={
-				<Text fw={800} lts={-0.5}>
-					Upload Documents for {itemName}
-				</Text>
-			}
+			title={`Upload Documents for ${itemName}`}
 			size="lg"
-			centered
-			radius="lg"
-			withinPortal
-			overlayProps={{
-				blur: 3,
-				backgroundOpacity: 0.55,
-			}}
 		>
 			<Stack gap="md">
-				<FileButton
+				<DocxUploadButton
 					onChange={handleFileChange}
-					accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 					multiple
+					size="md"
+					radius="lg"
+					fullWidth
+					className="shadow-sm shadow-studio-100"
 				>
-					{(props) => (
-						<Button
-							{...props}
-							variant="filled"
-							color="studio"
-							size="md"
-							radius="lg"
-							fullWidth
-							className="shadow-sm shadow-studio-100"
-						>
-							Upload Document(s)
-						</Button>
-					)}
-				</FileButton>
+					Upload Document(s)
+				</DocxUploadButton>
 				{isLoading && (
 					<Text size="sm" c="dimmed">
 						Processing documents…
@@ -118,6 +100,6 @@ export function AddDocumentsToItemModal({
 					onAddedToInvoice={onClose}
 				/>
 			</Stack>
-		</Modal>
+		</AppModal>
 	);
 }

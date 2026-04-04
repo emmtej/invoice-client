@@ -1,5 +1,7 @@
-import { Group, Paper, Stack, Text, TextInput } from "@mantine/core";
+import { Group, Stack, TextInput } from "@mantine/core";
 import { Calendar } from "lucide-react";
+import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
+import { SectionLabel } from "@/components/ui/text/SectionLabel";
 
 interface InvoiceDetailsSectionProps {
 	invoiceTitle: string;
@@ -15,16 +17,9 @@ export function InvoiceDetailsSection({
 	setInvoiceDate,
 }: InvoiceDetailsSectionProps) {
 	return (
-		<Paper
-			p="lg"
-			radius="md"
-			mt="md"
-			className="bg-white border border-slate-100"
-		>
+		<SurfaceCard mt="md">
 			<Stack gap="sm">
-				<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
-					Invoice details
-				</Text>
+				<SectionLabel>Invoice details</SectionLabel>
 				<Group grow align="flex-end">
 					<TextInput
 						label="Invoice title"
@@ -43,6 +38,6 @@ export function InvoiceDetailsSection({
 					/>
 				</Group>
 			</Stack>
-		</Paper>
+		</SurfaceCard>
 	);
 }

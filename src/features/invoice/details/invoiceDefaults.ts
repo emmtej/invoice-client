@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { loadFromStorage, saveToStorage } from "@/utils/storage";
 import { getTodayDateString } from "../profile";
 
 export type InvoiceDefaults = {
@@ -5,7 +7,12 @@ export type InvoiceDefaults = {
 	invoiceDate: string;
 };
 
-const INVOICE_DEFAULTS_STORAGE_KEY = "invoice-defaults";
+const STORAGE_KEY = "invoice-defaults";
+
+const invoiceDefaultsSchema = z.object({
+	invoiceTitle: z.string().trim().min(1).default("Invoice"),
+	invoiceDate: z.string().trim().min(1).default(""),
+});
 
 function getFallbackDefaults(): InvoiceDefaults {
 	return {
@@ -15,37 +22,13 @@ function getFallbackDefaults(): InvoiceDefaults {
 }
 
 export function loadInvoiceDefaults(): InvoiceDefaults {
-	if (typeof window === "undefined") {
-		return getFallbackDefaults();
+	const result = loadFromStorage(STORAGE_KEY, getFallbackDefaults(), invoiceDefaultsSchema);
+	if (!result.invoiceDate) {
+		result.invoiceDate = getTodayDateString();
 	}
-	try {
-		const raw = window.localStorage.getItem(INVOICE_DEFAULTS_STORAGE_KEY);
-		if (!raw) return getFallbackDefaults();
-		const parsed = JSON.parse(raw) as Partial<InvoiceDefaults> | null;
-		if (!parsed || typeof parsed !== "object") return getFallbackDefaults();
-		return {
-			invoiceTitle:
-				typeof parsed.invoiceTitle === "string" && parsed.invoiceTitle.trim()
-					? parsed.invoiceTitle.trim()
-					: "Invoice",
-			invoiceDate:
-				typeof parsed.invoiceDate === "string" && parsed.invoiceDate.trim()
-					? parsed.invoiceDate.trim()
-					: getTodayDateString(),
-		};
-	} catch {
-		return getFallbackDefaults();
-	}
+	return result;
 }
 
 export function saveInvoiceDefaults(defaults: InvoiceDefaults): void {
-	if (typeof window === "undefined") return;
-	try {
-		window.localStorage.setItem(
-			INVOICE_DEFAULTS_STORAGE_KEY,
-			JSON.stringify(defaults),
-		);
-	} catch {
-		// Ignore storage errors
-	}
+	saveToStorage(STORAGE_KEY, defaults);
 }
