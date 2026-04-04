@@ -140,10 +140,10 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 		<Stack gap={0} h="100%" className="bg-white overflow-hidden">
 			{/* Modern Dashboard Header */}
 			<Box
-				p="xl"
+				p="lg"
 				className="border-b border-slate-100 bg-white sticky top-0 z-20"
 			>
-				<Flex justify="space-between" align="center" mb={40} gap="xl">
+				<Flex justify="space-between" align="flex-start" mb={24} gap="xl">
 					<Group gap={20}>
 						<Stack gap={4}>
 							<Group gap="sm">
@@ -167,13 +167,9 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 								)}
 							</Group>
 							<Group gap="xs">
-								<Text size="xs" c="dimmed" fw={700} tt="uppercase" lts={1.5}>
-									Document Analysis
-								</Text>
-								<Box className="w-1 h-1 rounded-full bg-slate-300" />
-								<Text size="xs" c="studio.6" fw={800} tt="uppercase" lts={1.5}>
-									{overview.totalLines} Lines Total
-								</Text>
+								<Badge variant="dot" color="studio" size="sm">
+									{overview.totalLines} Lines
+								</Badge>
 							</Group>
 						</Stack>
 					</Group>
