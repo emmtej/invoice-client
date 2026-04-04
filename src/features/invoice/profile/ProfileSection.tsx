@@ -1,8 +1,8 @@
 import {
+	Box,
 	Button,
 	Divider,
 	Group,
-	Paper,
 	Select,
 	Stack,
 	Text,
@@ -65,19 +65,14 @@ export function ProfileSection({
 	const hasProfiles = profilesState.profiles.length > 0;
 
 	return (
-		<Paper
-			withBorder
-			p="lg"
-			radius="md"
-			bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7))"
-		>
+		<Box p="lg" radius="md" className="bg-white border border-slate-100">
 			<Stack gap="sm">
 				<Group mb="sm">
 					<Divider
 						label={
 							<Group gap="xs">
-								<IconUser size={20} />
-								<Text fw={700} size="lg">
+								<IconUser size={16} stroke={1.5} />
+								<Text fw={800} size="sm" tt="uppercase" lts={1}>
 									Profile
 								</Text>
 							</Group>
@@ -194,7 +189,8 @@ export function ProfileSection({
 								value={editingProfile.firstName}
 								onChange={handleProfileChange("firstName")}
 								required
-								leftSection={<IconUser size={16} />}
+								size="sm"
+								leftSection={<IconUser size={14} stroke={1.5} />}
 							/>
 							<TextInput
 								label="Last name"
@@ -202,6 +198,7 @@ export function ProfileSection({
 								value={editingProfile.lastName}
 								onChange={handleProfileChange("lastName")}
 								required
+								size="sm"
 							/>
 						</Group>
 						<TextInput
@@ -211,8 +208,9 @@ export function ProfileSection({
 							value={editingProfile.email}
 							onChange={handleProfileChange("email")}
 							required
-							leftSection={<IconAt size={16} />}
-						/>
+							size="sm"
+							leftSection={<IconAt size={14} stroke={1.5} />}
+						/>{" "}
 					</Stack>
 				)}
 
@@ -224,6 +222,6 @@ export function ProfileSection({
 						<ActiveProfileDisplay profile={activeProfileForSummary} />
 					)}
 			</Stack>
-		</Paper>
+		</Box>
 	);
 }

@@ -1,7 +1,7 @@
 import {
+	Box,
 	Button,
 	Group,
-	Paper,
 	Stack,
 	Text,
 	ThemeIcon,
@@ -12,30 +12,33 @@ import { Link } from "@tanstack/react-router";
 
 export default function Profile() {
 	return (
-		<Stack gap="lg">
+		<Stack gap="md">
 			<div>
-				<Title order={2}>Profile</Title>
+				<Title order={2} fw={800} size="h3">
+					Profile
+				</Title>
 				<Text c="dimmed" size="sm" mt={4}>
 					Account settings and defaults will live here. For now, open the editor
 					or invoices to keep working.
 				</Text>
 			</div>
 
-			<Paper
-				withBorder
-				p="xl"
+			<Box
+				p="lg"
 				radius="md"
 				maw={480}
-				bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7))"
+				className="bg-white border border-slate-100"
 			>
 				<Stack gap="md">
-					<Group gap="md">
-						<ThemeIcon size={48} radius="md" variant="light" color="wave">
-							<IconUser size={28} stroke={1.5} />
+					<Group gap="sm">
+						<ThemeIcon size={32} radius="md" variant="light" color="wave">
+							<IconUser size={18} stroke={1.5} />
 						</ThemeIcon>
 						<div>
-							<Text fw={600}>Voice workflow</Text>
-							<Text size="sm" c="dimmed">
+							<Text fw={600} size="sm">
+								Voice workflow
+							</Text>
+							<Text size="xs" c="dimmed">
 								Parse scripts and build invoices from the same workspace.
 							</Text>
 						</div>
@@ -45,12 +48,14 @@ export default function Profile() {
 						to="/editor"
 						variant="light"
 						color="wave"
-						leftSection={<IconMicrophone2 size={18} />}
+						size="sm"
+						leftSection={<IconMicrophone2 size={16} />}
+						radius="md"
 					>
 						Open script editor
 					</Button>
 				</Stack>
-			</Paper>
+			</Box>
 		</Stack>
 	);
 }

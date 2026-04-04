@@ -150,14 +150,16 @@ export default function Scripts() {
 							styles={{ viewport: { paddingBottom: 4 } }}
 						>
 							<Group gap={4} wrap="nowrap" align="center">
-								<Tooltip
-									label="Getting Started"
-									position="bottom"
-									openDelay={500}
-								>
-									<Box
-										onClick={() => setActiveScriptId(null)}
-										className={`
+								{!hasScripts && (
+									<>
+										<Tooltip
+											label="Getting Started"
+											position="bottom"
+											openDelay={500}
+										>
+											<Box
+												onClick={() => setActiveScriptId(null)}
+												className={`
     								px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 border-b-2
     								${
 											activeScriptId === null
@@ -165,16 +167,18 @@ export default function Scripts() {
 												: "bg-transparent text-slate-500 hover:text-slate-800 border-transparent hover:bg-slate-50"
 										}
     							`}
-									>
-										<LayoutDashboard
-											size={16}
-											strokeWidth={activeScriptId === null ? 2.5 : 2}
-										/>
-										<span>Getting Started</span>
-									</Box>
-								</Tooltip>
+											>
+												<LayoutDashboard
+													size={16}
+													strokeWidth={activeScriptId === null ? 2.5 : 2}
+												/>
+												<span>Getting Started</span>
+											</Box>
+										</Tooltip>
 
-								<Box className="w-px h-5 bg-slate-200 mx-2" />
+										<Box className="w-px h-5 bg-slate-200 mx-2" />
+									</>
+								)}
 
 								<Group gap={4} wrap="nowrap">
 									{scripts.map((script) => (

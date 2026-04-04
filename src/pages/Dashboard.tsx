@@ -1,7 +1,7 @@
 import {
+	Box,
 	Button,
 	Group,
-	Paper,
 	Stack,
 	Text,
 	ThemeIcon,
@@ -12,29 +12,32 @@ import { Link } from "@tanstack/react-router";
 
 export default function Dashboard() {
 	return (
-		<Stack gap="lg">
+		<Stack gap="md">
 			<div>
-				<Title order={2}>Dashboard</Title>
+				<Title order={2} fw={800} size="h3">
+					Dashboard
+				</Title>
 				<Text c="dimmed" size="sm" mt={4}>
 					Welcome back. Jump into invoicing or review your recent work.
 				</Text>
 			</div>
 
-			<Paper
-				withBorder
-				p="xl"
+			<Box
+				p="lg"
 				radius="md"
 				maw={480}
-				bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7))"
+				className="bg-white border border-slate-100"
 			>
 				<Stack gap="md">
-					<Group gap="md">
-						<ThemeIcon size={48} radius="md" variant="light" color="studio">
-							<IconGauge size={28} stroke={1.5} />
+					<Group gap="sm">
+						<ThemeIcon size={32} radius="md" variant="light" color="studio">
+							<IconGauge size={18} stroke={1.5} />
 						</ThemeIcon>
 						<div>
-							<Text fw={600}>Get started</Text>
-							<Text size="sm" c="dimmed">
+							<Text fw={600} size="sm">
+								Get started
+							</Text>
+							<Text size="xs" c="dimmed">
 								Create an invoice from your script line items and word counts.
 							</Text>
 						</div>
@@ -43,12 +46,14 @@ export default function Dashboard() {
 						component={Link}
 						to="/invoice"
 						color="studio"
-						leftSection={<IconReceipt size={18} />}
+						size="sm"
+						leftSection={<IconReceipt size={16} />}
+						radius="md"
 					>
 						Create invoice
 					</Button>
 				</Stack>
-			</Paper>
+			</Box>
 		</Stack>
 	);
 }

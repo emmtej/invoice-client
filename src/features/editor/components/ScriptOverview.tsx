@@ -141,7 +141,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 				p="lg"
 				className="border-b border-slate-100 bg-white sticky top-0 z-20"
 			>
-				<Flex justify="space-between" align="flex-start" mb={24} gap="xl">
+				<Flex justify="space-between" align="center" mb={16} gap="xl">
 					<Group gap={20}>
 						<Stack gap={4}>
 							<Group gap="sm">
@@ -172,95 +172,82 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						</Stack>
 					</Group>
 
-					<Group gap="md">
-						<Select
-							placeholder="Filter content"
-							data={availableTypes}
-							value={typeFilter}
-							onChange={setTypeFilter}
-							clearable
-							size="sm"
-							radius="md"
-							leftSection={<Filter size={14} className="text-slate-400" />}
-							variant="filled"
-							w={180}
-							styles={{
-								input: {
-									backgroundColor: "var(--mantine-color-slate-50)",
-									border: "1px solid var(--mantine-color-slate-100)",
-								},
-							}}
-						/>
-						{onEdit && (
-							<Button
-								variant="filled"
-								color="studio"
-								size="sm"
-								leftSection={<Edit3 size={16} />}
-								onClick={onEdit}
-								radius="md"
-								className="hover:scale-[1.01] transition-transform"
-							>
-								Edit Script
-							</Button>
-						)}
+					{/* Notion-style Property Bar: Horizontal */}
+					<Group gap="xl" wrap="nowrap" align="center">
+						<Group gap={8} wrap="nowrap">
+							<Box className="flex items-center gap-1.5 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+								<MessageSquare size={12} strokeWidth={2.5} />
+								<span>Words</span>
+							</Box>
+							<Text fw={800} size="sm" className="text-studio-600 tabular-nums">
+								{overview.wordCount}
+							</Text>
+						</Group>
+
+						<Group gap={8} wrap="nowrap">
+							<Box className="flex items-center gap-1.5 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+								<Zap size={12} strokeWidth={2.5} />
+								<span>Valid</span>
+							</Box>
+							<Text fw={700} size="sm" className="text-slate-800">
+								{overview.validLines.length}
+							</Text>
+						</Group>
+
+						<Group gap={8} wrap="nowrap">
+							<Box className="flex items-center gap-1.5 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+								<Search size={12} strokeWidth={2.5} />
+								<span>Health</span>
+							</Box>
+							<Group gap={6}>
+								{overview.invalidLines.length > 0 ? (
+									<Text fw={700} size="sm" color="orange.6">
+										{overview.invalidLines.length} Issues
+									</Text>
+								) : (
+									<Text fw={700} size="sm" color="emerald.6">
+										Ready
+									</Text>
+								)}
+							</Group>
+						</Group>
 					</Group>
 				</Flex>
 
-				{/* Notion-style Property Bar */}
-				<Stack gap={8} className="max-w-md">
-					<Group gap={0} wrap="nowrap" className="text-xs">
-						<Box
-							w={140}
-							className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider"
+				{/* Actions Row */}
+				<Group gap="md">
+					<Select
+						placeholder="Filter content"
+						data={availableTypes}
+						value={typeFilter}
+						onChange={setTypeFilter}
+						clearable
+						size="sm"
+						radius="md"
+						leftSection={<Filter size={14} className="text-slate-400" />}
+						variant="filled"
+						w={180}
+						styles={{
+							input: {
+								backgroundColor: "var(--mantine-color-slate-50)",
+								border: "1px solid var(--mantine-color-slate-100)",
+							},
+						}}
+					/>
+					{onEdit && (
+						<Button
+							variant="filled"
+							color="studio"
+							size="sm"
+							leftSection={<Edit3 size={16} />}
+							onClick={onEdit}
+							radius="md"
+							className="hover:scale-[1.01] transition-transform"
 						>
-							<MessageSquare size={14} strokeWidth={2} />
-							<span>Billable Words</span>
-						</Box>
-						<Text fw={800} size="sm" className="text-studio-600 tabular-nums">
-							{overview.wordCount} words
-						</Text>
-					</Group>
-
-					<Group gap={0} wrap="nowrap" className="text-xs">
-						<Box
-							w={140}
-							className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider"
-						>
-							<Zap size={14} strokeWidth={2} />
-							<span>Valid Content</span>
-						</Box>
-						<Text fw={700} size="sm" className="text-slate-800">
-							{overview.validLines.length} dialogue lines
-						</Text>
-					</Group>
-
-					<Group gap={0} wrap="nowrap" className="text-xs">
-						<Box
-							w={140}
-							className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider"
-						>
-							<Search size={14} strokeWidth={2} />
-							<span>Health Check</span>
-						</Box>
-						<Group gap={6}>
-							{overview.invalidLines.length > 0 ? (
-								<>
-									<Text fw={700} size="sm" color="orange.6">
-										{overview.invalidLines.length} issues
-									</Text>
-									<Text c="dimmed" size="xs">
-										(requires review)
-									</Text>
-								</>
-							) : (
-								<Text fw={700} size="sm" color="emerald.6">
-									100% Ready
-								</Text>
-							)}
-						</Group>
-					</Group>
-				</Stack>
+							Edit Script
+						</Button>
+					)}
+				</Group>
 			</Box>
 
 			{/* Enhanced Script Table Section */}
@@ -288,7 +275,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 							horizontalSpacing={32}
 							className="border-separate border-spacing-0"
 						>
-							<Table.Thead className="bg-slate-50/50 sticky top-0 z-10 backdrop-blur-md">
+							<Table.Thead className="bg-white sticky top-0 z-10">
 								<Table.Tr>
 									<Table.Th className="border-b border-slate-100 py-5">
 										<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={2}>

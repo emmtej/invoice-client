@@ -1,27 +1,8 @@
 .header {
 	height: 60px;
 	width: 100%;
-	background-color: light-dark(
-		color-mix(
-			in srgb,
-			var(--mantine-color-body) 92%,
-			var(--mantine-color-primary-0)
-		),
-		var(--mantine-color-body)
-	);
-	border-bottom: 1px solid
-		light-dark(
-			color-mix(
-				in srgb,
-				var(--mantine-color-gray-3) 88%,
-				var(--mantine-color-primary-2)
-			),
-			var(--mantine-color-dark-4)
-		);
-	box-shadow: light-dark(
-		0 1px 0 color-mix(in srgb, var(--mantine-color-primary-3) 12%, transparent),
-		none
-	);
+	background-color: var(--mantine-color-white);
+	border-bottom: 1px solid var(--mantine-color-slate-100);
 	padding-left: var(--mantine-spacing-lg);
 	padding-right: var(--mantine-spacing-lg);
 }

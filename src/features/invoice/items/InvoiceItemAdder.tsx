@@ -1,4 +1,4 @@
-import { Button, Divider, Group, Paper, Text, TextInput } from "@mantine/core";
+import { Box, Button, Divider, Group, Text, TextInput } from "@mantine/core";
 import { IconList, IconPlus } from "@tabler/icons-react";
 
 interface InvoiceItemAdderProps {
@@ -13,19 +13,18 @@ export function InvoiceItemAdder({
 	handleAddItem,
 }: InvoiceItemAdderProps) {
 	return (
-		<Paper
-			withBorder
+		<Box
 			p="lg"
 			radius="md"
 			mt="xl"
-			bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7))"
+			className="bg-white border border-slate-100"
 		>
 			<Divider
 				mb="sm"
 				label={
 					<Group gap="xs">
-						<IconList size={20} />
-						<Text fw={700} size="lg">
+						<IconList size={16} stroke={1.5} />
+						<Text fw={800} size="sm" tt="uppercase" lts={1}>
 							Items
 						</Text>
 					</Group>
@@ -48,12 +47,13 @@ export function InvoiceItemAdder({
 					onClick={handleAddItem}
 					variant="filled"
 					color="studio"
-					size="md"
+					size="sm"
 					disabled={!newItemName.trim()}
+					radius="md"
 				>
 					Add item
 				</Button>
 			</Group>
-		</Paper>
+		</Box>
 	);
 }

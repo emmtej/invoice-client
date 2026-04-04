@@ -1,12 +1,4 @@
-import {
-	Anchor,
-	Box,
-	Card,
-	Container,
-	Divider,
-	Flex,
-	Title,
-} from "@mantine/core";
+import { Anchor, Box, Container, Divider, Flex, Title } from "@mantine/core";
 import { Link, useLocation } from "@tanstack/react-router";
 import { useId } from "react";
 import { Login } from "@/components/auth/Login";
@@ -31,7 +23,7 @@ function Authentication() {
 				position: "relative",
 				overflow: "hidden",
 				background:
-					"linear-gradient(165deg, color-mix(in srgb, var(--mantine-color-studio-2) 42%, var(--app-bg)) 0%, color-mix(in srgb, var(--mantine-color-wave-2) 38%, var(--app-bg)) 45%, var(--app-bg) 100%)",
+					"linear-gradient(165deg, color-mix(in srgb, var(--mantine-color-studio-1) 20%, var(--app-bg)) 0%, color-mix(in srgb, var(--mantine-color-wave-1) 15%, var(--app-bg)) 45%, var(--app-bg) 100%)",
 			}}
 		>
 			<Box
@@ -72,22 +64,20 @@ function Authentication() {
 
 			<Container size="xs" style={{ position: "relative", zIndex: 1 }}>
 				<Flex justify="center" align="center" py="xl">
-					<Card
+					<Box
 						p="xl"
 						maw={400}
 						w="100%"
-						withBorder
-						shadow="md"
-						radius="lg"
-						bg="light-dark(var(--mantine-color-body), var(--mantine-color-dark-7))"
+						radius="md"
+						className="bg-white border border-slate-100 shadow-sm"
 					>
-						<Card.Section>
-							<Title order={2} mb="lg">
+						<Box>
+							<Title order={2} fw={800} size="h3" mb="lg">
 								{isRegistering ? "Sign Up" : "Login"}
 							</Title>
 							{activeTab}
-						</Card.Section>
-						<Card.Section py="xs" mt="md">
+						</Box>
+						<Box py="xs" mt="md">
 							<Anchor
 								component={Link}
 								to={isRegistering ? "/login" : "/register"}
@@ -99,10 +89,10 @@ function Authentication() {
 									? "Already have an account? Login"
 									: "Don't have an account? Sign up"}
 							</Anchor>
-						</Card.Section>
+						</Box>
 						<Divider my="md" label="Or continue with" />
 						<OAuthProviders />
-					</Card>
+					</Box>
 				</Flex>
 			</Container>
 		</Box>

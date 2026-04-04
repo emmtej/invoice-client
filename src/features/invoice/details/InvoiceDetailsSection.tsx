@@ -1,4 +1,4 @@
-import { Group, Paper, Stack, Text, TextInput } from "@mantine/core";
+import { Box, Group, Stack, Text, TextInput } from "@mantine/core";
 import { IconCalendar } from "@tabler/icons-react";
 
 interface InvoiceDetailsSectionProps {
@@ -15,15 +15,14 @@ export function InvoiceDetailsSection({
 	setInvoiceDate,
 }: InvoiceDetailsSectionProps) {
 	return (
-		<Paper
-			withBorder
+		<Box
 			p="lg"
 			radius="md"
 			mt="md"
-			bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7))"
+			className="bg-white border border-slate-100"
 		>
 			<Stack gap="sm">
-				<Text size="sm" fw={600} c="dimmed">
+				<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
 					Invoice details
 				</Text>
 				<Group grow align="flex-end">
@@ -32,16 +31,18 @@ export function InvoiceDetailsSection({
 						placeholder="Invoice"
 						value={invoiceTitle}
 						onChange={(e) => setInvoiceTitle(e.currentTarget.value)}
+						size="sm"
 					/>
 					<TextInput
 						label="Invoice date"
 						type="date"
 						value={invoiceDate}
 						onChange={(e) => setInvoiceDate(e.currentTarget.value)}
-						leftSection={<IconCalendar size={16} />}
+						leftSection={<IconCalendar size={14} stroke={1.5} />}
+						size="sm"
 					/>
 				</Group>
 			</Stack>
-		</Paper>
+		</Box>
 	);
 }
