@@ -1,7 +1,6 @@
 import { Avatar, Box, Group, Text, UnstyledButton } from "@mantine/core";
 import { ChevronRight } from "lucide-react";
 import type { UserProfile } from "@/store/userStore";
-import classes from "./UserButton.module.css";
 
 interface UserButtonProps {
 	user: UserProfile;
@@ -9,7 +8,17 @@ interface UserButtonProps {
 
 export function UserButton({ user }: UserButtonProps) {
 	return (
-		<UnstyledButton className={classes.user}>
+		<UnstyledButton
+			w="100%"
+			p="md"
+			display="block"
+			style={{
+				color: "var(--mantine-color-black)",
+				"&:hover": {
+					backgroundColor: "var(--mantine-color-primary-0)",
+				},
+			}}
+		>
 			<Group>
 				<Avatar src={user.profileImgUrl} radius="xl" />
 				<Box flex={1}>

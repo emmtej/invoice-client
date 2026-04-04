@@ -1,11 +1,9 @@
-import { Anchor, Avatar, Group, Text } from "@mantine/core";
+import { Anchor, Avatar, Box, Group, Text, UnstyledButton } from "@mantine/core";
 import { Link, useLocation } from "@tanstack/react-router";
 import { Receipt } from "lucide-react";
 import { useUserStore } from "@/store/userStore";
 import { LinkButton } from "../button/ButtonLink";
-import classes from "./Navbar.module.css";
 
-// TODO: Create single repo for navlinks
 const links = [{ link: "/invoice", label: "Invoices" }];
 
 export function Navbar() {
@@ -16,20 +14,46 @@ export function Navbar() {
 		const isActive =
 			pathname === link.link || pathname.startsWith(`${link.link}/`);
 		return (
-			<Anchor
+			<UnstyledButton
 				key={link.label}
 				component={Link}
 				to={link.link}
-				className={`${classes.link} ${isActive ? classes.linkActive : ""}`}
+				py="xs"
+				px="sm"
+				fz="sm"
+				fw={500}
+				style={(theme) => ({
+					borderRadius: theme.radius.sm,
+					color: isActive
+						? "var(--mantine-color-primary-6)"
+						: "var(--mantine-color-gray-7)",
+					backgroundColor: isActive
+						? "var(--mantine-color-primary-0)"
+						: undefined,
+					"&:hover": {
+						backgroundColor: isActive
+							? "var(--mantine-color-primary-1)"
+							: "var(--mantine-color-gray-0)",
+					},
+				})}
 			>
 				{link.label}
-			</Anchor>
+			</UnstyledButton>
 		);
 	});
 
 	return (
-		<header className={classes.header}>
-			<div className={classes.inner}>
+		<Box
+			component="header"
+			h={60}
+			w="100%"
+			bg="white"
+			px="lg"
+			style={{
+				borderBottom: "1px solid var(--mantine-color-gray-2)",
+			}}
+		>
+			<Group h={60} justify="space-between" align="center" gap="md">
 				<Group gap="sm">
 					<Receipt
 						size={24}
@@ -43,7 +67,7 @@ export function Navbar() {
 
 				{user === null ? (
 					<Group gap="sm">
-						<Group gap="xs" className={classes.links} visibleFrom="sm">
+						<Group gap="xs" visibleFrom="sm">
 							{items}
 						</Group>
 						<LinkButton to="/login" variant="default">
@@ -63,7 +87,7 @@ export function Navbar() {
 						</Group>
 					</Anchor>
 				)}
-			</div>
-		</header>
+			</Group>
+		</Box>
 	);
 }

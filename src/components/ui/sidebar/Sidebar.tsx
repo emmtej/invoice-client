@@ -1,8 +1,7 @@
-import { ScrollArea } from "@mantine/core";
+import { Box, ScrollArea } from "@mantine/core";
 import { FileText, LayoutDashboard, Receipt, User } from "lucide-react";
 import { useUserStore } from "@/store/userStore";
 import { LinksGroup } from "./NavLinksGroup";
-import classes from "./Sidebar.module.css";
 import { UserButton } from "./UserButton";
 
 const navlinks = [
@@ -17,7 +16,6 @@ const navlinks = [
 	{
 		label: "Script Tools",
 		icon: FileText,
-
 		links: [{ label: "Editor", link: "/editor" }],
 	},
 ];
@@ -30,16 +28,34 @@ export function Sidebar() {
 	));
 
 	return (
-		<nav className={classes.navbar}>
-			<ScrollArea className={classes.links}>
+		<Box
+			component="nav"
+			bg="white"
+			h="100%"
+			w={240}
+			p="md"
+			display="flex"
+			style={{
+				flexDirection: "column",
+				borderRight: "1px solid var(--mantine-color-gray-2)",
+			}}
+		>
+			<ScrollArea flex={1} mx={`calc(var(--mantine-spacing-md) * -1)`}>
 				<div>{links}</div>
 			</ScrollArea>
 
 			{user && (
-				<div className={classes.footer}>
+				<Box
+					mx={`calc(var(--mantine-spacing-md) * -1)`}
+					p="md"
+					style={{
+						borderTop:
+							"1px solid var(--mantine-color-gray-3)",
+					}}
+				>
 					<UserButton user={user} />
-				</div>
+				</Box>
 			)}
-		</nav>
+		</Box>
 	);
 }
