@@ -1,4 +1,12 @@
-import { Anchor, Box, Container, Divider, Flex, Title } from "@mantine/core";
+import {
+	Anchor,
+	Box,
+	Container,
+	Divider,
+	Flex,
+	Paper,
+	Title,
+} from "@mantine/core";
 import { Link, useLocation } from "@tanstack/react-router";
 import { useId } from "react";
 import { Login } from "@/components/auth/Login";
@@ -64,7 +72,7 @@ function Authentication() {
 
 			<Container size="xs" style={{ position: "relative", zIndex: 1 }}>
 				<Flex justify="center" align="center" py="xl">
-					<Box
+					<Paper
 						p="xl"
 						maw={400}
 						w="100%"
@@ -92,7 +100,7 @@ function Authentication() {
 						</Box>
 						<Divider my="md" label="Or continue with" />
 						<OAuthProviders />
-					</Box>
+					</Paper>
 				</Flex>
 			</Container>
 		</Box>

@@ -46,8 +46,11 @@ describe("scriptEditorStore", () => {
 
 		// Lines should be updated (reparsed)
 		expect(updatedScript.lines.length).toBe(1);
-		expect(updatedScript.lines[0].type).toBe("dialogue");
-		expect((updatedScript.lines[0] as any).content).toBe("Hello World");
+		const firstLine = updatedScript.lines[0];
+		expect(firstLine.type).toBe("dialogue");
+		if (firstLine.type === "dialogue") {
+			expect(firstLine.content).toBe("Hello World");
+		}
 
 		// Overview should be updated
 		expect(updatedScript.overview.wordCount).toBe(2);

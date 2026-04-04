@@ -7,7 +7,7 @@ import {
 	processDocuments,
 	reparseHtmlToScript,
 } from "./documentParser";
-import { xmlParser } from "./xmlParser";
+import { parseHtmlToDocument } from "./parseHtmlToDocument";
 
 describe("documentLineParser", () => {
 	it("should parse valid dialogue with H:MM:SS timestamp", () => {
@@ -147,8 +147,8 @@ describe("reparseHtmlToScript", () => {
 
 describe("processDocuments", () => {
 	it("should process multiple documents", async () => {
-		const doc1 = xmlParser("<p>00:01 Alice: Hello</p>");
-		const doc2 = xmlParser("<p>00:02 Bob: Bye</p>");
+		const doc1 = parseHtmlToDocument("<p>00:01 Alice: Hello</p>");
+		const doc2 = parseHtmlToDocument("<p>00:02 Bob: Bye</p>");
 
 		const documents = [
 			{ name: "Doc 1", document: doc1 },

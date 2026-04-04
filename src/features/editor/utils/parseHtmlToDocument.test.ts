@@ -2,12 +2,12 @@
  * @vitest-environment jsdom
  */
 import { describe, expect, it } from "vitest";
-import { xmlParser } from "./xmlParser";
+import { parseHtmlToDocument } from "./parseHtmlToDocument";
 
-describe("xmlParser", () => {
+describe("parseHtmlToDocument", () => {
 	it("should parse a valid HTML string into a Document", () => {
 		const html = "<div><p>Hello World</p></div>";
-		const doc = xmlParser(html);
+		const doc = parseHtmlToDocument(html);
 
 		expect(doc).toBeInstanceOf(Document);
 		expect(doc.body.innerHTML).toContain("<p>Hello World</p>");
@@ -15,14 +15,14 @@ describe("xmlParser", () => {
 	});
 
 	it("should handle empty strings", () => {
-		const doc = xmlParser("");
+		const doc = parseHtmlToDocument("");
 		expect(doc).toBeInstanceOf(Document);
 		expect(doc.body.innerHTML).toBe("");
 	});
 
 	it("should parse multiple elements", () => {
 		const html = "<h3>Title</h3><p>Content</p>";
-		const doc = xmlParser(html);
+		const doc = parseHtmlToDocument(html);
 
 		expect(doc.querySelectorAll("h3")).toHaveLength(1);
 		expect(doc.querySelectorAll("p")).toHaveLength(1);

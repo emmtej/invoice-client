@@ -5,7 +5,6 @@ import {
 	Divider,
 	Flex,
 	Group,
-	Paper,
 	Stack,
 	Table,
 	Text,
@@ -14,6 +13,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
 import { Fragment, memo, useCallback, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { EditValueModal, ExportModal } from "../components";
 import { AddDocumentsToItemModal } from "../items";
 import { getTodayDateString, type InvoiceProfile } from "../profile";
@@ -39,7 +39,16 @@ export const InvoiceSummary = memo(
 			updateSubitemRate,
 			updateSubitemLabel,
 			updateItemName,
-		} = useInvoiceStore();
+		} = useInvoiceStore(
+			useShallow((s) => ({
+				invoice: s.invoice,
+				removeItem: s.removeItem,
+				removeSubitem: s.removeSubitem,
+				updateSubitemRate: s.updateSubitemRate,
+				updateSubitemLabel: s.updateSubitemLabel,
+				updateItemName: s.updateItemName,
+			})),
+		);
 		const [modalOpened, { open, close }] = useDisclosure(false);
 		const [exportModalOpened, { open: openExport, close: closeExport }] =
 			useDisclosure(false);

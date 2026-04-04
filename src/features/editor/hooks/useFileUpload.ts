@@ -1,6 +1,6 @@
 import mammoth from "mammoth";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { xmlParser } from "../utils/xmlParser";
+import { parseHtmlToDocument } from "../utils/parseHtmlToDocument";
 
 export interface DocFile {
 	name: string;
@@ -40,7 +40,7 @@ export function useFileUpload(): UseFileUpload {
 				const arrayBuffer = await file.arrayBuffer();
 				const { value } = await mammoth.convertToHtml({ arrayBuffer });
 
-				const document = xmlParser(value);
+				const document = parseHtmlToDocument(value);
 
 				return {
 					name: file.name,

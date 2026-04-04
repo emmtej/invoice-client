@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { generateId } from "@/utils/id";
 
 export interface InvoiceSubitem {
 	id: string;
@@ -21,13 +22,6 @@ export interface Invoice {
 	id: string;
 	defaultRatePerWord: number;
 	items: InvoiceItem[];
-}
-
-function generateId(): string {
-	if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-		return crypto.randomUUID();
-	}
-	return `id_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
 export interface ScriptForInvoice {
@@ -70,22 +64,22 @@ interface InvoiceStoreActions {
 
 type InvoiceStore = InvoiceStoreState & InvoiceStoreActions;
 
-const createOneSubitem = (
+function createOneSubitem(
 	scriptIds: string[],
 	scripts: ScriptForInvoice[],
 	subitemLabel: string,
 	ratePerWord: number,
-): InvoiceSubitem | null => {
+): InvoiceSubitem | null {
 	const scriptMap = new Map(scripts.map((s) => [s.id, s]));
 	const matched = scriptIds.filter((id) => scriptMap.has(id));
 	if (matched.length === 0) return null;
 	const totalWordCount = matched.reduce(
-		(sum, id) => sum + (scriptMap.get(id)!.overview.wordCount ?? 0),
+		(sum, id) => sum + (scriptMap.get(id)?.overview.wordCount ?? 0),
 		0,
 	);
 	const amount = totalWordCount * ratePerWord;
 	const firstScriptId = matched[0];
-	const scriptNames = matched.map((id) => scriptMap.get(id)!.name).join(", ");
+	const scriptNames = matched.map((id) => scriptMap.get(id)?.name).join(", ");
 	return {
 		id: generateId(),
 		label: subitemLabel,
@@ -95,7 +89,7 @@ const createOneSubitem = (
 		ratePerWord,
 		amount,
 	};
-};
+}
 
 export const useInvoiceStore = create<InvoiceStore>((set) => ({
 	invoice: {

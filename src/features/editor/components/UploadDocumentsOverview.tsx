@@ -16,6 +16,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { Bookmark, FileText } from "lucide-react";
 import { memo, useCallback, useEffect, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { useSubitemPresets } from "@/features/invoice/presets/useSubitemPresets";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import type { Script } from "@/types/Script";
@@ -56,8 +57,13 @@ function UploadDocumentsOverviewInner({
 	const [selectedPresetId, setSelectedPresetId] = useState<string | null>(null);
 	const [addError, setAddError] = useState<string | null>(null);
 
-	const { invoice, addSubitemsToItem, addSubitemsAsNewItem } =
-		useInvoiceStore();
+	const { invoice, addSubitemsToItem, addSubitemsAsNewItem } = useInvoiceStore(
+		useShallow((s) => ({
+			invoice: s.invoice,
+			addSubitemsToItem: s.addSubitemsToItem,
+			addSubitemsAsNewItem: s.addSubitemsAsNewItem,
+		})),
+	);
 	const { presetOptions, addPreset, getPresetById } = useSubitemPresets();
 	const defaultRatePerWord = invoice.defaultRatePerWord;
 	const hasItems = invoice.items.length > 0;
@@ -65,9 +71,11 @@ function UploadDocumentsOverviewInner({
 		? getPresetById(selectedPresetId)
 		: null;
 
+	const scriptIdsKey = scripts.map((s) => s.id).join(",");
+
 	useEffect(() => {
 		setSelectedScriptIds(new Set(scripts.map((s) => s.id)));
-	}, [scripts.map]); // Only reset if IDs change (new upload/deletion), not if HTML/content changes
+	}, [scriptIdsKey, scripts]); // Reset if IDs change or scripts list reference changes
 
 	const toggleScript = useCallback((scriptId: string) => {
 		setSelectedScriptIds((prev) => {

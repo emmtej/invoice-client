@@ -1,5 +1,6 @@
 import { Box, Stack, Text, Title } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import {
 	InvoiceDetailsSection,
@@ -11,7 +12,12 @@ import { ProfileSection, useProfileManager } from "../profile";
 import { InvoiceSummary } from "../summary";
 
 export default function InvoicePage() {
-	const { invoice, addEmptyItem } = useInvoiceStore();
+	const { invoice, addEmptyItem } = useInvoiceStore(
+		useShallow((s) => ({
+			invoice: s.invoice,
+			addEmptyItem: s.addEmptyItem,
+		})),
+	);
 	const [newItemName, setNewItemName] = useState<string>("");
 
 	const profileManager = useProfileManager();

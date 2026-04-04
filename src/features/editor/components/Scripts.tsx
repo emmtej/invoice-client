@@ -1,5 +1,6 @@
 import {
 	ActionIcon,
+	Alert,
 	Badge,
 	Box,
 	Flex,
@@ -10,6 +11,7 @@ import {
 	Tooltip,
 } from "@mantine/core";
 import {
+	AlertCircle,
 	FilePlus,
 	FileText,
 	Layers,
@@ -18,6 +20,7 @@ import {
 	Trash2,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { loadInvoiceDefaults } from "@/features/invoice/details";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import { InvoiceSummary } from "@/features/invoice/summary";
@@ -31,33 +34,32 @@ import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
 export default function Scripts() {
 	const { docFiles, handleFileChange, reset } = useFileUpload();
 
-	const scripts = useScriptStore((s) => s.scripts);
-	const addScripts = useScriptStore((s) => s.addScripts);
-	const removeScript = useScriptStore((s) => s.removeScript);
-	const removeScripts = useScriptStore((s) => s.removeScripts);
+	const { scripts, addScripts, removeScript, removeScripts } = useScriptStore(
+		useShallow((s) => ({
+			scripts: s.scripts,
+			addScripts: s.addScripts,
+			removeScript: s.removeScript,
+			removeScripts: s.removeScripts,
+		})),
+	);
 
-	const { invoice } = useInvoiceStore();
+	const invoiceItemsLength = useInvoiceStore((s) => s.invoice.items.length);
 
 	const [activeScriptId, setActiveScriptId] = useState<string | null>(null);
 	const [editingScriptId, setEditingScriptId] = useState<string | null>(null);
 	const [initialSelectDone, setInitialSelectDone] = useState(false);
+	const [pasteError, setPasteError] = useState<string | null>(null);
 
 	useEffect(() => {
 		if (!docFiles || docFiles.length === 0) return;
-		let cancelled = false;
-		processDocuments(docFiles).then((s) => {
-			if (!cancelled) {
-				addScripts(s);
-				if (s.length > 0) {
-					setActiveScriptId(s[0].id);
-					setInitialSelectDone(true);
-				}
-				reset(); // Clear the temporary docFiles from hook
-			}
-		});
-		return () => {
-			cancelled = true;
-		};
+
+		const s = processDocuments(docFiles);
+		addScripts(s);
+		if (s.length > 0) {
+			setActiveScriptId(s[0].id);
+			setInitialSelectDone(true);
+		}
+		reset(); // Clear the temporary docFiles from hook
 	}, [docFiles, addScripts, reset]);
 
 	// Auto-select first script if none selected but scripts exist (initial load)
@@ -80,7 +82,8 @@ export default function Scripts() {
 	// Clear editing state when active script changes
 	useEffect(() => {
 		setEditingScriptId(null);
-	}, []);
+		setPasteError(null);
+	}, [activeScriptId]);
 
 	// Effect to handle selection fallback if the active one is removed
 	useEffect(() => {
@@ -105,15 +108,14 @@ export default function Scripts() {
 			const { lines, overview, html: parsedHtml } = reparseHtmlToScript(html);
 
 			if (lines.length === 0) {
-				alert(
+				setPasteError(
 					"No billable dialogue or lines were found in the pasted content. Please check the format.",
 				);
 				return;
 			}
 
-			const newId = `pasted-${Date.now()}`;
 			const newScript = {
-				id: newId,
+				id: `pasted-${Date.now()}`,
 				name: `Pasted Content ${scripts.length + 1}`,
 				source: document.implementation.createHTMLDocument(),
 				lines,
@@ -122,14 +124,15 @@ export default function Scripts() {
 			};
 
 			addScripts([newScript]);
-			setActiveScriptId(newId);
+			setActiveScriptId(newScript.id);
+			setPasteError(null);
 		},
 		[scripts.length, addScripts],
 	);
 
 	const activeScript = scripts.find((s) => s.id === activeScriptId);
 	const hasScripts = scripts.length > 0;
-	const hasInvoiceItems = invoice.items.length > 0;
+	const hasInvoiceItems = invoiceItemsLength > 0;
 
 	return (
 		<Flex
@@ -150,16 +153,14 @@ export default function Scripts() {
 							styles={{ viewport: { paddingBottom: 4 } }}
 						>
 							<Group gap={4} wrap="nowrap" align="center">
-								{!hasScripts && (
-									<>
-										<Tooltip
-											label="Getting Started"
-											position="bottom"
-											openDelay={500}
-										>
-											<Box
-												onClick={() => setActiveScriptId(null)}
-												className={`
+								<Tooltip
+									label="Getting Started"
+									position="bottom"
+									openDelay={500}
+								>
+									<Box
+										onClick={() => setActiveScriptId(null)}
+										className={`
     								px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 border-b-2
     								${
 											activeScriptId === null
@@ -167,18 +168,16 @@ export default function Scripts() {
 												: "bg-transparent text-slate-500 hover:text-slate-800 border-transparent hover:bg-slate-50"
 										}
     							`}
-											>
-												<LayoutDashboard
-													size={16}
-													strokeWidth={activeScriptId === null ? 2.5 : 2}
-												/>
-												<span>Getting Started</span>
-											</Box>
-										</Tooltip>
+									>
+										<LayoutDashboard
+											size={16}
+											strokeWidth={activeScriptId === null ? 2.5 : 2}
+										/>
+										<span>Getting Started</span>
+									</Box>
+								</Tooltip>
 
-										<Box className="w-px h-5 bg-slate-200 mx-2" />
-									</>
-								)}
+								<Box className="w-px h-5 bg-slate-200 mx-2" />
 
 								<Group gap={4} wrap="nowrap">
 									{scripts.map((script) => (
@@ -267,6 +266,20 @@ export default function Scripts() {
 			<Flex className="flex-1 min-h-0">
 				{/* Main Content Area */}
 				<Box className="flex-1 flex flex-col min-w-0 bg-white">
+					{pasteError && (
+						<Box px="lg" pt="md">
+							<Alert
+								icon={<AlertCircle size={16} />}
+								title="Paste Error"
+								color="red"
+								withCloseButton
+								onClose={() => setPasteError(null)}
+								radius="md"
+							>
+								{pasteError}
+							</Alert>
+						</Box>
+					)}
 					{activeScript ? (
 						<ScriptEditor
 							script={activeScript}

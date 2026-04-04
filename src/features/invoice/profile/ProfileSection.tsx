@@ -1,8 +1,8 @@
 import {
-	Box,
 	Button,
 	Divider,
 	Group,
+	Paper,
 	Select,
 	Stack,
 	Text,
@@ -65,7 +65,7 @@ export function ProfileSection({
 	const hasProfiles = profilesState.profiles.length > 0;
 
 	return (
-		<Box p="lg" radius="md" className="bg-white border border-slate-100">
+		<Paper p="lg" radius="md" className="bg-white border border-slate-100">
 			<Stack gap="sm">
 				<Group mb="sm">
 					<Divider
@@ -222,6 +222,6 @@ export function ProfileSection({
 						<ActiveProfileDisplay profile={activeProfileForSummary} />
 					)}
 			</Stack>
-		</Box>
+		</Paper>
 	);
 }

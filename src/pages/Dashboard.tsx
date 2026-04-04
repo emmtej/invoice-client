@@ -1,7 +1,7 @@
 import {
-	Box,
 	Button,
 	Group,
+	Paper,
 	Stack,
 	Text,
 	ThemeIcon,
@@ -22,7 +22,7 @@ export default function Dashboard() {
 				</Text>
 			</div>
 
-			<Box
+			<Paper
 				p="lg"
 				radius="md"
 				maw={480}
@@ -53,7 +53,7 @@ export default function Dashboard() {
 						Create invoice
 					</Button>
 				</Stack>
-			</Box>
+			</Paper>
 		</Stack>
 	);
 }

@@ -4,10 +4,11 @@ import type {
 	Script,
 	ScriptOverview,
 } from "@/types/Script";
+import { generateId } from "@/utils/id";
 import type { DocFile } from "../hooks/useFileUpload";
 import { generateHtmlFromScript } from "./formatParsedLines";
+import { parseHtmlToDocument } from "./parseHtmlToDocument";
 import { getScriptOverview } from "./scriptParser";
-import { xmlParser } from "./xmlParser";
 
 // Groups Time (H:MM:SS or MM:SS) -> Speaker -> Colon -> Content
 const MAIN_PATTERN = /^(\d{1,2}(?::\d{1,2}){1,2})\s+([^:]+):\s*(.*)$/;
@@ -113,7 +114,7 @@ export function reparseHtmlToScript(html: string): {
 	overview: ScriptOverview;
 	html: string;
 } {
-	const doc = xmlParser(html);
+	const doc = parseHtmlToDocument(html);
 	const nodes = Array.from(doc.body.querySelectorAll("p, h3"));
 	const lines = nodes
 		.flatMap((node) => {
@@ -126,20 +127,18 @@ export function reparseHtmlToScript(html: string): {
 				.map((line) => documentLineParser(line));
 		})
 		.filter((line): line is ParsedLine => line !== null);
-	const timestamp = Date.now();
-	const linesWithId = lines.map((line, idx) => ({
+
+	const linesWithId = lines.map((line) => ({
 		...line,
-		id: `line-${timestamp}-${idx}`,
+		id: generateId(),
 	}));
 	const overview = getScriptOverview(linesWithId);
 	const generatedHtml = generateHtmlFromScript(linesWithId);
 	return { lines: linesWithId, overview, html: generatedHtml };
 }
 
-export const processDocuments = async (
-	documents: DocFile[],
-): Promise<Script[]> => {
-	const parsedScripts: Script[] = documents.map((doc, i) => {
+export function processDocuments(documents: DocFile[]): Script[] {
+	const parsedScripts: Script[] = documents.map((doc) => {
 		const paragraphs = Array.from(doc.document.querySelectorAll("p"));
 
 		const parsedLines = paragraphs
@@ -151,13 +150,14 @@ export const processDocuments = async (
 					.map((line) => documentLineParser(line)),
 			)
 			.filter((line): line is ParsedLine => line !== null);
-		const linesWithId: ParsedLine[] = parsedLines.map((line, idx) => ({
+
+		const linesWithId: ParsedLine[] = parsedLines.map((line) => ({
 			...line,
-			id: `${i}-${doc.name}-line-${idx}`,
+			id: generateId(),
 		}));
 
 		return {
-			id: `${i}-${doc.name}`,
+			id: generateId(),
 			name: doc.name,
 			source: doc.document,
 			lines: linesWithId,
@@ -167,4 +167,4 @@ export const processDocuments = async (
 	});
 
 	return parsedScripts;
-};
+}

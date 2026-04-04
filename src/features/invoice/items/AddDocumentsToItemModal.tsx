@@ -37,25 +37,19 @@ export function AddDocumentsToItemModal({
 			setProcessingError(null);
 			return;
 		}
-		let cancelled = false;
 		setProcessingError(null);
-		processDocuments(docFiles)
-			.then((s) => {
-				if (!cancelled) setScripts(s);
-			})
-			.catch((err) => {
-				if (cancelled) return;
-				const message =
-					err instanceof Error
-						? err.message
-						: typeof err === "string"
-							? err
-							: "Failed to process documents.";
-				setProcessingError(message);
-			});
-		return () => {
-			cancelled = true;
-		};
+		try {
+			const s = processDocuments(docFiles);
+			setScripts(s);
+		} catch (err) {
+			const message =
+				err instanceof Error
+					? err.message
+					: typeof err === "string"
+						? err
+						: "Failed to process documents.";
+			setProcessingError(message);
+		}
 	}, [docFiles]);
 
 	return (

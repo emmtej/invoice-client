@@ -1,4 +1,4 @@
-import { Box, Group, Stack, Text, TextInput } from "@mantine/core";
+import { Group, Paper, Stack, Text, TextInput } from "@mantine/core";
 import { IconCalendar } from "@tabler/icons-react";
 
 interface InvoiceDetailsSectionProps {
@@ -15,7 +15,7 @@ export function InvoiceDetailsSection({
 	setInvoiceDate,
 }: InvoiceDetailsSectionProps) {
 	return (
-		<Box
+		<Paper
 			p="lg"
 			radius="md"
 			mt="md"
@@ -43,6 +43,6 @@ export function InvoiceDetailsSection({
 					/>
 				</Group>
 			</Stack>
-		</Box>
+		</Paper>
 	);
 }

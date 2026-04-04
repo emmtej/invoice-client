@@ -1,22 +1,34 @@
 import type { ParsedLine } from "@/types/Script";
 
+const escapeHtml = (text: string): string => {
+	const map: Record<string, string> = {
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		'"': "&quot;",
+		"'": "&#039;",
+	};
+	return text.replace(/[&<>"']/g, (m) => map[m]);
+};
+
 export const generateHtmlFromScript = (lines: ParsedLine[]): string => {
 	return lines
 		.map((line) => {
+			const source = escapeHtml(line.source);
 			switch (line.type) {
 				case "action":
-					return `<p><mark>${line.source}</mark></p>`;
+					return `<p><mark>${source}</mark></p>`;
 				case "dialogue":
-					return `<p>${line.source}</p>`;
+					return `<p>${source}</p>`;
 				case "marker":
-					return `<p></p><h3>${line.source}</h3>`;
+					return `<p></p><h3>${source}</h3>`;
 				case "malformed":
-					return `<p><strong>${line.source}</strong></p>`;
+					return `<p><strong>${source}</strong></p>`;
 				case "invalid":
-					return `<p><s>${line.source}</s></p>`;
+					return `<p><s>${source}</s></p>`;
 				default:
 					// Fallback incase incorrect parse
-					return `<p>${(line as { source?: string }).source || ""}</p>`;
+					return `<p>${source}</p>`;
 			}
 		})
 		.join("");

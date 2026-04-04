@@ -24,7 +24,7 @@ export function TextEditor({
 	placeholder = "Paste your script here or upload several to start...",
 }: TextEditorProps) {
 	const editor = useEditor({
-		shouldRerenderOnTransaction: true,
+		shouldRerenderOnTransaction: false,
 		extensions: [
 			StarterKit.configure({ link: false }),
 			Link,

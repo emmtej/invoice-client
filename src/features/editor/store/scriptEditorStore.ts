@@ -72,10 +72,14 @@ export const useScriptStore = create<ScriptStore>((set) => ({
 			const finalHtml = shouldUpdateHtml ? newHtml : html;
 
 			// Optimization: if nothing changed, don't trigger a state update
-			if (
-				existingScript.html === finalHtml &&
-				JSON.stringify(existingScript.lines) === JSON.stringify(lines)
-			) {
+			const hasStructureChanged =
+				existingScript.lines.length !== lines.length ||
+				existingScript.overview.wordCount !== overview.wordCount ||
+				existingScript.lines[0]?.source !== lines[0]?.source ||
+				existingScript.lines[existingScript.lines.length - 1]?.source !==
+					lines[lines.length - 1]?.source;
+
+			if (existingScript.html === finalHtml && !hasStructureChanged) {
 				return state;
 			}
 
