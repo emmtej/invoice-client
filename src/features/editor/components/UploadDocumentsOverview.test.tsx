@@ -56,9 +56,21 @@ const createMockScript = (
 	id,
 	name,
 	lines: [],
-	overview: { wordCount, totalLines, title: name },
+	overview: {
+		wordCount,
+		totalLines,
+		validLines: [],
+		invalidLines: [],
+		actionLines: [],
+		scenes: [],
+	},
 	html: "",
-	source: { name, type: "text/plain", size: 1024, lastModified: Date.now() },
+	source: {
+		name,
+		type: "text/plain",
+		size: 1024,
+		lastModified: Date.now(),
+	} as unknown as Document,
 });
 
 describe("UploadDocumentsOverview", () => {
