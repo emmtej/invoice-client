@@ -132,6 +132,10 @@ export default function Scripts() {
 
 	const activeScript = scripts.find((s) => s.id === activeScriptId);
 	const hasScripts = scripts.length > 0;
+	/** No scripts in the persisted store (file import and paste both add scripts). */
+	const hasNoScripts = !hasScripts;
+	/** Tab strip: show Getting Started only in the empty state. */
+	const showGettingStartedTab = hasNoScripts;
 	const hasInvoiceItems = invoiceItemsLength > 0;
 
 	return (
@@ -141,7 +145,32 @@ export default function Scripts() {
 			gap={0}
 			className="overflow-hidden bg-transparent"
 		>
-			{/* Top Header: Horizontal Navigation - Only shown if scripts exist */}
+			{showGettingStartedTab && (
+				<Box
+					bg="white"
+					px="md"
+					py="xs"
+					style={{
+						borderBottom: "1px solid var(--mantine-color-gray-2)",
+						flexShrink: 0,
+					}}
+				>
+					<Group gap={4} wrap="nowrap" align="center">
+						<Tooltip label="Getting Started" position="bottom" openDelay={500}>
+							<Box
+								data-testid="getting-started-tab"
+								aria-current="page"
+								className="px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shrink-0 border-b-2 bg-slate-50 text-slate-900 border-slate-900"
+							>
+								<LayoutDashboard size={16} strokeWidth={2.5} />
+								<span>Getting Started</span>
+							</Box>
+						</Tooltip>
+					</Group>
+				</Box>
+			)}
+
+			{/* Top Header: Horizontal Navigation — script tabs once documents exist */}
 			{hasScripts && (
 				<Box
 					bg="white"
@@ -161,43 +190,16 @@ export default function Scripts() {
 							styles={{ viewport: { paddingBottom: 4 } }}
 						>
 							<Group gap={4} wrap="nowrap" align="center">
-								<Tooltip
-									label="Getting Started"
-									position="bottom"
-									openDelay={500}
-								>
-									<Box
-										onClick={() => setActiveScriptId(null)}
-										className={`
-    								px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 border-b-2
-    								${
-											activeScriptId === null
-												? "bg-slate-50 text-slate-900 border-slate-900"
-												: "bg-transparent text-slate-500 hover:text-slate-800 border-transparent hover:bg-slate-50"
-										}
-    							`}
+								{scripts.map((script) => (
+									<Tooltip
+										key={script.id}
+										label={script.name}
+										position="bottom"
+										openDelay={800}
 									>
-										<LayoutDashboard
-											size={16}
-											strokeWidth={activeScriptId === null ? 2.5 : 2}
-										/>
-										<span>Getting Started</span>
-									</Box>
-								</Tooltip>
-
-								<Box className="w-px h-5 bg-slate-200 mx-2" />
-
-								<Group gap={4} wrap="nowrap">
-									{scripts.map((script) => (
-										<Tooltip
-											key={script.id}
-											label={script.name}
-											position="bottom"
-											openDelay={800}
-										>
-											<Box
-												onClick={() => setActiveScriptId(script.id)}
-												className={`
+										<Box
+											onClick={() => setActiveScriptId(script.id)}
+											className={`
     											px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 border-b-2 group
     											${
 														activeScriptId === script.id
@@ -205,21 +207,19 @@ export default function Scripts() {
 															: "bg-transparent text-slate-500 hover:text-slate-800 border-transparent hover:bg-slate-50"
 													}
     										`}
-											>
-												<FileText
-													size={16}
-													strokeWidth={activeScriptId === script.id ? 2.5 : 2}
-												/>
-												<span className="max-w-[150px] truncate">
-													{script.name}
-												</span>
-												<ActionIcon
-													variant="subtle"
-													color={
-														activeScriptId === script.id ? "studio" : "gray"
-													}
-													size="xs"
-													className={`
+										>
+											<FileText
+												size={16}
+												strokeWidth={activeScriptId === script.id ? 2.5 : 2}
+											/>
+											<span className="max-w-[150px] truncate">
+												{script.name}
+											</span>
+											<ActionIcon
+												variant="subtle"
+												color={activeScriptId === script.id ? "studio" : "gray"}
+												size="xs"
+												className={`
     												transition-all rounded-md
     												${
 															activeScriptId === script.id
@@ -227,17 +227,16 @@ export default function Scripts() {
 																: "opacity-0 group-hover:opacity-100"
 														}
     											`}
-													onClick={(e) => {
-														e.stopPropagation();
-														removeScript(script.id);
-													}}
-												>
-													<Trash2 size={12} />
-												</ActionIcon>
-											</Box>
-										</Tooltip>
-									))}
-								</Group>
+												onClick={(e) => {
+													e.stopPropagation();
+													removeScript(script.id);
+												}}
+											>
+												<Trash2 size={12} />
+											</ActionIcon>
+										</Box>
+									</Tooltip>
+								))}
 
 								<Tooltip label="Upload new document" position="bottom">
 									<ActionIcon
