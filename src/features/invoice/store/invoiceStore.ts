@@ -262,7 +262,7 @@ export const useInvoiceStore = create<InvoiceStore>()(
 		{
 			name: "invoice-store",
 			storage: createJSONStorage(() => {
-				if (typeof window !== "undefined" && window.localStorage) return window.localStorage;
+				if (window?.localStorage) return window.localStorage;
 				return { getItem: () => null, setItem: () => {}, removeItem: () => {} };
 			}),
 		},

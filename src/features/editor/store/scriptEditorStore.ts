@@ -102,9 +102,9 @@ export const useScriptStore = create<ScriptStore>()(
 		{
 			name: "script-editor-store",
 			storage: createJSONStorage(() => {
-			if (typeof window !== "undefined" && window.localStorage) return window.localStorage;
-			return { getItem: () => null, setItem: () => {}, removeItem: () => {} };
-		}),
+				if (window?.localStorage) return window.localStorage;
+				return { getItem: () => null, setItem: () => {}, removeItem: () => {} };
+			}),
 			partialize: (state) => ({
 				...state,
 				scripts: state.scripts.map(({ source, ...rest }) => rest as Script),
