@@ -22,6 +22,8 @@ import {
 	Zap,
 } from "lucide-react";
 import { memo, useMemo, useState } from "react";
+import { EmptyState } from "@/components/ui/feedback/EmptyState";
+import { SectionLabel } from "@/components/ui/text/SectionLabel";
 import type { ParsedLine, Script } from "@/types/Script";
 
 const TYPE_CONFIG = {
@@ -89,7 +91,9 @@ const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 				<Group justify="space-between" wrap="nowrap" align="center" gap="xl">
 					<Text
 						size="md"
-						className="text-slate-800 leading-relaxed font-medium"
+						c="dark.7"
+						fw={500}
+						className="leading-relaxed"
 						style={{ flex: 1 }}
 					>
 						{line.source}
@@ -134,23 +138,31 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 		return script.lines.filter((line) => line.type === typeFilter);
 	}, [script.lines, typeFilter]);
 
+	const headerStickyStyle = {
+		borderBottom: "1px solid var(--mantine-color-gray-2)",
+		position: "sticky" as const,
+		top: 0,
+		zIndex: 20,
+	};
+	const tableHeadStickyStyle = {
+		position: "sticky" as const,
+		top: 0,
+		zIndex: 10,
+		backgroundColor: "var(--mantine-color-white)",
+	};
+	const tableThBorderStyle = {
+		borderBottom: "1px solid var(--mantine-color-gray-2)",
+	} as const;
+
 	return (
-		<Stack gap={0} h="100%" className="bg-white overflow-hidden">
+		<Stack gap={0} h="100%" bg="white" style={{ overflow: "hidden" }}>
 			{/* Modern Dashboard Header */}
-			<Box
-				p="lg"
-				className="border-b border-slate-100 bg-white sticky top-0 z-20"
-			>
+			<Box p="lg" bg="white" style={headerStickyStyle}>
 				<Flex justify="space-between" align="center" mb={16} gap="xl">
 					<Group gap={20}>
 						<Stack gap={4}>
 							<Group gap="sm">
-								<Title
-									order={2}
-									fw={900}
-									lts={-1.2}
-									className="text-slate-900 text-3xl"
-								>
+								<Title order={2} fw={900} lts={-1.2} c="dark.9" fz="h2">
 									{script.name}
 								</Title>
 								{overview.invalidLines.length === 0 && (
@@ -175,7 +187,10 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 					{/* Notion-style Property Bar: Horizontal */}
 					<Group gap="xl" wrap="nowrap" align="center">
 						<Group gap={8} wrap="nowrap">
-							<Box className="flex items-center gap-1.5 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+							<Box
+								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
+								c="dimmed"
+							>
 								<MessageSquare size={12} strokeWidth={2.5} />
 								<span>Words</span>
 							</Box>
@@ -185,17 +200,23 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						</Group>
 
 						<Group gap={8} wrap="nowrap">
-							<Box className="flex items-center gap-1.5 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+							<Box
+								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
+								c="dimmed"
+							>
 								<Zap size={12} strokeWidth={2.5} />
 								<span>Valid</span>
 							</Box>
-							<Text fw={700} size="sm" className="text-slate-800">
+							<Text fw={700} size="sm" c="dark.7">
 								{overview.validLines.length}
 							</Text>
 						</Group>
 
 						<Group gap={8} wrap="nowrap">
-							<Box className="flex items-center gap-1.5 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+							<Box
+								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
+								c="dimmed"
+							>
 								<Search size={12} strokeWidth={2.5} />
 								<span>Health</span>
 							</Box>
@@ -224,7 +245,15 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						clearable
 						size="sm"
 						radius="md"
-						leftSection={<Filter size={14} className="text-slate-400" />}
+						leftSection={
+							<Box
+								component="span"
+								c="dimmed"
+								style={{ display: "flex", alignItems: "center" }}
+							>
+								<Filter size={14} />
+							</Box>
+						}
 						variant="filled"
 						w={180}
 						styles={{
@@ -251,41 +280,28 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 			</Box>
 
 			{/* Enhanced Script Table Section */}
-			<Box className="flex-1 min-h-0 bg-white">
+			<Box flex={1} mih={0} bg="white">
 				<ScrollArea h="100%" scrollbars="y" type="hover" offsetScrollbars>
 					{filteredLines.length === 0 ? (
-						<Stack align="center" py={120} gap="xl">
-							<Box className="p-8 rounded-[40px] bg-slate-50 text-slate-200">
-								<Search size={64} strokeWidth={1} />
-							</Box>
-							<Stack gap={8} align="center">
-								<Text fw={800} size="lg" className="text-slate-700">
-									No lines match your filter
-								</Text>
-								<Text c="dimmed" ta="center" size="sm" fw={500} maw={320}>
-									We couldn't find any script lines matching your current
-									selection. Try adjusting the filter or clearing it to see all
-									content.
-								</Text>
-							</Stack>
-						</Stack>
+						<EmptyState
+							icon={<Search size={64} strokeWidth={1} />}
+							title="No lines match your filter"
+							description="We couldn't find any script lines matching your current selection. Try adjusting the filter or clearing it to see all content."
+							maxDescriptionWidth={320}
+						/>
 					) : (
 						<Table
 							verticalSpacing="lg"
 							horizontalSpacing={32}
 							className="border-separate border-spacing-0"
 						>
-							<Table.Thead className="bg-white sticky top-0 z-10">
+							<Table.Thead bg="white" style={tableHeadStickyStyle}>
 								<Table.Tr>
-									<Table.Th className="border-b border-slate-100 py-5">
-										<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={2}>
-											Category
-										</Text>
+									<Table.Th py="lg" style={tableThBorderStyle}>
+										<SectionLabel letterSpacing={2}>Category</SectionLabel>
 									</Table.Th>
-									<Table.Th className="border-b border-slate-100 py-5">
-										<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={2}>
-											Script Content
-										</Text>
+									<Table.Th py="lg" style={tableThBorderStyle}>
+										<SectionLabel letterSpacing={2}>Script Content</SectionLabel>
 									</Table.Th>
 								</Table.Tr>
 							</Table.Thead>

@@ -1,4 +1,4 @@
-import { Box, Button, Group } from "@mantine/core";
+import { Button, Flex, Group } from "@mantine/core";
 import { ArrowLeft, Check, RotateCcw } from "lucide-react";
 import { memo, useCallback, useEffect, useState } from "react";
 import type { Script } from "@/types/Script";
@@ -70,14 +70,14 @@ function ScriptEditorInner({
 
 	if (!isEditing) {
 		return (
-			<Box className="flex-1 flex flex-col min-h-0">
+			<Flex direction="column" flex={1} mih={0}>
 				<ScriptOverview script={script} onEdit={handleStartEditClick} />
-			</Box>
+			</Flex>
 		);
 	}
 
 	return (
-		<Box className="flex-1 flex flex-col min-h-0 bg-white">
+		<Flex direction="column" flex={1} mih={0} bg="white">
 			<TextEditor
 				content={script.html}
 				onContentChange={handleContentChange}
@@ -117,7 +117,7 @@ function ScriptEditorInner({
 					</Group>
 				}
 			/>
-		</Box>
+		</Flex>
 	);
 }
 

@@ -3,7 +3,6 @@ import {
 	Button,
 	Checkbox,
 	Group,
-	Modal,
 	NumberInput,
 	Paper,
 	Radio,
@@ -17,12 +16,22 @@ import { useDisclosure } from "@mantine/hooks";
 import { Bookmark, FileText } from "lucide-react";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { EmptyState } from "@/components/ui/feedback/EmptyState";
+import { AppModal } from "@/components/ui/modal/AppModal";
+import { SectionLabel } from "@/components/ui/text/SectionLabel";
 import { useSubitemPresets } from "@/features/invoice/presets/useSubitemPresets";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import type { Script } from "@/types/Script";
 
 const paperOverflowStyle = { overflow: "hidden" as const };
 const tableLayoutStyle = { tableLayout: "fixed" as const, width: "100%" };
+const borderBottomGray2 = {
+	borderBottom: "1px solid var(--mantine-color-gray-2)",
+} as const;
+const borderBottomGray1 = {
+	borderBottom: "1px solid var(--mantine-color-gray-1)",
+} as const;
+const borderGray2 = { border: "1px solid var(--mantine-color-gray-2)" } as const;
 const numberInputFlexStyle = { flex: 1 };
 const numberInputWidthStyle = { width: 100 };
 
@@ -204,22 +213,11 @@ function UploadDocumentsOverviewInner({
 	);
 	if (scripts.length === 0) {
 		return (
-			<Paper py="xl" px="md" bg="transparent">
-				<Stack gap="md" align="center">
-					<Box className="p-3 rounded-full bg-slate-50 text-slate-200">
-						<FileText size={32} strokeWidth={1} />
-					</Box>
-					<Stack gap={4} ta="center">
-						<Text fw={700} size="sm" className="text-slate-600">
-							No documents analyzed
-						</Text>
-						<Text size="xs" c="dimmed" maw={200}>
-							Analyze your scripts to see dialogue word counts and add them to
-							your invoice.
-						</Text>
-					</Stack>
-				</Stack>
-			</Paper>
+			<EmptyState
+				icon={<FileText size={32} strokeWidth={1} />}
+				title="No documents analyzed"
+				description="Analyze your scripts to see dialogue word counts and add them to your invoice."
+			/>
 		);
 	}
 
@@ -227,26 +225,19 @@ function UploadDocumentsOverviewInner({
 		<>
 			<Stack gap="xl">
 				<Stack gap="md">
-					<Box className="px-2">
-						<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={2}>
-							Selected Documents
-						</Text>
+					<Box px="xs">
+						<SectionLabel letterSpacing={2}>Selected Documents</SectionLabel>
 					</Box>
-					<Paper
-						radius="md"
-						p={0}
-						style={paperOverflowStyle}
-						className="bg-transparent"
-					>
+					<Paper radius="md" p={0} bg="transparent" style={paperOverflowStyle}>
 						<Table
 							verticalSpacing="sm"
 							horizontalSpacing="md"
 							highlightOnHover
 							style={tableLayoutStyle}
 						>
-							<Table.Thead className="bg-slate-50/80">
+							<Table.Thead bg="gray.0">
 								<Table.Tr>
-									<Table.Th w={48} className="py-4 border-b border-slate-100">
+									<Table.Th w={48} py="md" style={borderBottomGray2}>
 										<Checkbox
 											checked={allSelected}
 											indeterminate={someSelected && !allSelected}
@@ -258,22 +249,11 @@ function UploadDocumentsOverviewInner({
 											color="studio"
 										/>
 									</Table.Th>
-									<Table.Th className="py-4 border-b border-slate-100">
-										<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1}>
-											Title
-										</Text>
+									<Table.Th py="md" style={borderBottomGray2}>
+										<SectionLabel>Title</SectionLabel>
 									</Table.Th>
-									<Table.Th w={80} className="py-4 border-b border-slate-100">
-										<Text
-											size="xs"
-											fw={800}
-											c="dimmed"
-											tt="uppercase"
-											lts={1}
-											ta="right"
-										>
-											Words
-										</Text>
+									<Table.Th w={80} py="md" style={borderBottomGray2}>
+										<SectionLabel ta="right">Words</SectionLabel>
 									</Table.Th>
 								</Table.Tr>
 							</Table.Thead>
@@ -283,7 +263,7 @@ function UploadDocumentsOverviewInner({
 										key={script.id}
 										className="transition-colors hover:bg-slate-50/50"
 									>
-										<Table.Td className="border-b border-slate-50">
+										<Table.Td style={borderBottomGray1}>
 											<Checkbox
 												checked={selectedScriptIds.has(script.id)}
 												onChange={() => toggleScript(script.id)}
@@ -292,23 +272,13 @@ function UploadDocumentsOverviewInner({
 												color="studio"
 											/>
 										</Table.Td>
-										<Table.Td className="border-b border-slate-50">
-											<Text
-												fw={600}
-												size="xs"
-												lineClamp={1}
-												className="text-slate-700"
-											>
+										<Table.Td style={borderBottomGray1}>
+											<Text fw={600} size="xs" lineClamp={1} c="dark.5">
 												{script.name}
 											</Text>
 										</Table.Td>
-										<Table.Td className="border-b border-slate-50">
-											<Text
-												size="xs"
-												fw={800}
-												className="text-slate-900"
-												ta="right"
-											>
+										<Table.Td style={borderBottomGray1}>
+											<Text size="xs" fw={800} c="dark.9" ta="right">
 												{script.overview.wordCount}
 											</Text>
 										</Table.Td>
@@ -319,15 +289,21 @@ function UploadDocumentsOverviewInner({
 					</Paper>
 				</Stack>
 
-				<Box className="p-4 rounded-md bg-slate-50 border border-slate-100">
+				<Box
+					p="md"
+					bg="gray.0"
+					style={{ ...borderGray2, borderRadius: "var(--mantine-radius-md)" }}
+				>
 					<Stack gap="xs">
-						<Text size="xs" c="slate.6" fw={800} tt="uppercase" lts={2}>
+						<SectionLabel letterSpacing={2} c="dark.4">
 							Total Billable Volume
-						</Text>
+						</SectionLabel>
 						<Group align="baseline" gap={4}>
 							<Text
 								fw={800}
-								className="text-2xl text-slate-800 tabular-nums leading-none"
+								size="xl"
+								c="dark.7"
+								className="tabular-nums leading-none"
 							>
 								{totalBillableWords}
 							</Text>
@@ -362,7 +338,7 @@ function UploadDocumentsOverviewInner({
 							fw={700}
 							tt="uppercase"
 							lts={1}
-							className="mt-1"
+							mt="xs"
 						>
 							{selectedScriptIds.size} Selected ·{" "}
 							<span className="text-studio-600 font-black">
@@ -373,25 +349,16 @@ function UploadDocumentsOverviewInner({
 				</Stack>
 			</Stack>
 
-			<Modal
+			<AppModal
 				opened={addModalOpened}
 				onClose={closeAddModal}
 				title={
-					<Text fw={800} lts={-0.5}>
-						{targetItemId
-							? targetItemName
-								? `Add to ${targetItemName}`
-								: "Add to this item"
-							: "Add to invoice"}
-					</Text>
+					targetItemId
+						? targetItemName
+							? `Add to ${targetItemName}`
+							: "Add to this item"
+						: "Add to invoice"
 				}
-				centered
-				radius="lg"
-				withinPortal
-				overlayProps={{
-					blur: 3,
-					backgroundOpacity: 0.55,
-				}}
 			>
 				<Stack gap="md">
 					{!targetItemId && hasItems ? (
@@ -474,11 +441,18 @@ function UploadDocumentsOverviewInner({
 					/>
 
 					{selectedPreset ? (
-						<Box className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+						<Box
+							p="sm"
+							bg="gray.0"
+							style={{
+								...borderGray2,
+								borderRadius: "var(--mantine-radius-md)",
+							}}
+						>
 							<Text size="xs" fw={700} c="dimmed" tt="uppercase" mb={4}>
 								Applied Rate
 							</Text>
-							<Text size="sm" fw={600} className="text-slate-800">
+							<Text size="sm" fw={600} c="dark.7">
 								{selectedPreset.rateAmount} per {selectedPreset.ratePerWords}{" "}
 								words
 							</Text>
@@ -587,7 +561,7 @@ function UploadDocumentsOverviewInner({
 						</Button>
 					</Group>
 				</Stack>
-			</Modal>
+			</AppModal>
 		</>
 	);
 }

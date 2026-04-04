@@ -7,7 +7,6 @@ import {
 	Group,
 	ScrollArea,
 	Stack,
-	Text,
 	Tooltip,
 } from "@mantine/core";
 import {
@@ -21,6 +20,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { SectionLabel } from "@/components/ui/text/SectionLabel";
 import { loadInvoiceDefaults } from "@/features/invoice/details";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import { InvoiceSummary } from "@/features/invoice/summary";
@@ -143,7 +143,15 @@ export default function Scripts() {
 		>
 			{/* Top Header: Horizontal Navigation - Only shown if scripts exist */}
 			{hasScripts && (
-				<Box className="border-b border-slate-100 bg-white px-4 py-2 shrink-0">
+				<Box
+					bg="white"
+					px="md"
+					py="xs"
+					style={{
+						borderBottom: "1px solid var(--mantine-color-gray-2)",
+						flexShrink: 0,
+					}}
+				>
 					<Group justify="space-between" align="center" wrap="nowrap" gap="xl">
 						<ScrollArea
 							className="flex-1"
@@ -263,9 +271,9 @@ export default function Scripts() {
 
 			{/* Main Content & Sidebar */}
 
-			<Flex className="flex-1 min-h-0">
+			<Flex flex={1} mih={0}>
 				{/* Main Content Area */}
-				<Box className="flex-1 flex flex-col min-w-0 bg-white">
+				<Flex direction="column" flex={1} miw={0} bg="white">
 					{pasteError && (
 						<Box px="lg" pt="md">
 							<Alert
@@ -293,23 +301,28 @@ export default function Scripts() {
 							onPasteProcessed={handlePasteProcessed}
 						/>
 					)}
-				</Box>
+				</Flex>
 
 				{/* Right Sidebar: Summary & Overview */}
 				{(hasScripts || hasInvoiceItems) && (
 					<Box
 						w={300}
-						className="border-l border-slate-100 flex flex-col bg-gray-0"
+						bg="gray.0"
 						visibleFrom="md"
+						style={{
+							borderLeft: "1px solid var(--mantine-color-gray-2)",
+							display: "flex",
+							flexDirection: "column",
+						}}
 					>
 						<Stack gap="xl" p="lg" className="flex-1 overflow-y-auto">
 							{hasScripts && (
 								<Box>
 									<Group gap="sm" mb="md" px={4}>
 										<Layers size={18} className="text-studio-600" />
-										<Text fw={900} size="xs" c="slate.6" tt="uppercase" lts={2}>
+										<SectionLabel letterSpacing={2}>
 											Document Inspector
-										</Text>
+										</SectionLabel>
 									</Group>
 									<UploadDocumentsOverview
 										scripts={scripts}
@@ -324,9 +337,9 @@ export default function Scripts() {
 								<Box>
 									<Group gap="sm" mb="md" px={4}>
 										<FilePlus size={18} className="text-wave-600" />
-										<Text fw={900} size="xs" c="slate.6" tt="uppercase" lts={2}>
+										<SectionLabel letterSpacing={2}>
 											Invoice Summary
-										</Text>
+										</SectionLabel>
 									</Group>
 									<InvoiceSummary
 										invoiceTitle={loadInvoiceDefaults().invoiceTitle}
