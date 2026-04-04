@@ -313,7 +313,7 @@ export default function Scripts() {
 									</Group>
 									<UploadDocumentsOverview
 										scripts={scripts}
-										onAddedToInvoice={(addedIds) => {
+										onAddedToInvoice={(addedIds: string[]) => {
 											removeScripts(addedIds);
 										}}
 									/>

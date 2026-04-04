@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Bookmark, FileText } from "lucide-react";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useSubitemPresets } from "@/features/invoice/presets/useSubitemPresets";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
@@ -70,8 +70,6 @@ function UploadDocumentsOverviewInner({
 	const selectedPreset = selectedPresetId
 		? getPresetById(selectedPresetId)
 		: null;
-
-	const _scriptIdsKey = scripts.map((s) => s.id).join(",");
 
 	useEffect(() => {
 		setSelectedScriptIds(new Set(scripts.map((s) => s.id)));
