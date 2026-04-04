@@ -14,9 +14,7 @@ import {
 } from "@mantine/core";
 import {
 	AlertCircle,
-	CheckCircle2,
 	Edit3,
-	FileText,
 	Filter,
 	MessageSquare,
 	Search,
@@ -181,11 +179,11 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 							value={typeFilter}
 							onChange={setTypeFilter}
 							clearable
-							size="md"
-							radius="xl"
-							leftSection={<Filter size={16} className="text-slate-400" />}
+							size="sm"
+							radius="md"
+							leftSection={<Filter size={14} className="text-slate-400" />}
 							variant="filled"
-							w={200}
+							w={180}
 							styles={{
 								input: {
 									backgroundColor: "var(--mantine-color-slate-50)",
@@ -197,11 +195,11 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 							<Button
 								variant="filled"
 								color="studio"
-								size="md"
-								leftSection={<Edit3 size={18} />}
+								size="sm"
+								leftSection={<Edit3 size={16} />}
 								onClick={onEdit}
-								radius="xl"
-								className="shadow-lg shadow-studio-100 hover:scale-[1.02] transition-transform"
+								radius="md"
+								className="hover:scale-[1.01] transition-transform"
 							>
 								Edit Script
 							</Button>
@@ -209,100 +207,60 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 					</Group>
 				</Flex>
 
-				{/* High-Impact Stat Section */}
-				<Box className="p-1 rounded-[24px] bg-slate-100/50 border border-slate-200 shadow-inner">
-					<Flex gap={1} wrap="nowrap" className="bg-slate-200/50">
-						{/* Hero Stat: Word Count */}
-						<Box className="flex-[1.5] p-6 bg-white rounded-l-[22px]">
-							<Group gap="xl" wrap="nowrap">
-								<Stack gap={4}>
-									<Text size="xs" c="dimmed" fw={800} tt="uppercase" lts={2}>
-										Billable Dialogue
-									</Text>
-									<Group gap="xs" align="baseline">
-										<Text
-											fw={800}
-											className="text-3xl text-slate-800 tabular-nums leading-none"
-										>
-											{overview.wordCount}
-										</Text>
-										<Text size="md" fw={700} c="dimmed">
-											words
-										</Text>
-									</Group>
-								</Stack>
-							</Group>
+				{/* Notion-style Property Bar */}
+				<Stack gap={8} className="max-w-md">
+					<Group gap={0} wrap="nowrap" className="text-xs">
+						<Box
+							w={140}
+							className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider"
+						>
+							<MessageSquare size={14} strokeWidth={2} />
+							<span>Billable Words</span>
 						</Box>
+						<Text fw={800} size="sm" className="text-studio-600 tabular-nums">
+							{overview.wordCount} words
+						</Text>
+					</Group>
 
-						{/* Secondary Stat: Lines */}
-						<Box className="flex-1 p-6 bg-white">
-							<Stack gap={4}>
-								<Text size="xs" c="dimmed" fw={800} tt="uppercase" lts={2}>
-									Dialogue Lines
-								</Text>
-								<Group gap="xs" align="baseline">
-									<Text
-										fw={800}
-										className="text-4xl text-slate-800 tabular-nums"
-									>
-										{overview.validLines.length}
-									</Text>
-									<Text size="xs" fw={700} c="dimmed" tt="uppercase">
-										Valid
-									</Text>
-								</Group>
-							</Stack>
+					<Group gap={0} wrap="nowrap" className="text-xs">
+						<Box
+							w={140}
+							className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider"
+						>
+							<Zap size={14} strokeWidth={2} />
+							<span>Valid Content</span>
 						</Box>
+						<Text fw={700} size="sm" className="text-slate-800">
+							{overview.validLines.length} dialogue lines
+						</Text>
+					</Group>
 
-						{/* Tertiary Stat: Validation Status */}
-						<Box className="flex-1 p-6 bg-white rounded-r-[22px]">
-							<Stack gap={4}>
-								<Text size="xs" c="dimmed" fw={800} tt="uppercase" lts={2}>
-									Health Check
-								</Text>
-								<Group gap={12} mt={4}>
-									{overview.invalidLines.length > 0 ? (
-										<>
-											<Box className="p-2 rounded-lg bg-amber-50 text-amber-500">
-												<AlertCircle size={24} strokeWidth={2.5} />
-											</Box>
-											<Stack gap={0}>
-												<Text
-													size="lg"
-													fw={800}
-													className="text-amber-600 leading-tight"
-												>
-													{overview.invalidLines.length} Issues
-												</Text>
-												<Text size="xs" fw={600} c="dimmed">
-													Requires attention
-												</Text>
-											</Stack>
-										</>
-									) : (
-										<>
-											<Box className="p-2 rounded-lg bg-emerald-50 text-emerald-500">
-												<CheckCircle2 size={24} strokeWidth={2.5} />
-											</Box>
-											<Stack gap={0}>
-												<Text
-													size="lg"
-													fw={800}
-													className="text-emerald-600 leading-tight"
-												>
-													100% Valid
-												</Text>
-												<Text size="xs" fw={600} c="dimmed">
-													Ready for invoice
-												</Text>
-											</Stack>
-										</>
-									)}
-								</Group>
-							</Stack>
+					<Group gap={0} wrap="nowrap" className="text-xs">
+						<Box
+							w={140}
+							className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider"
+						>
+							<Search size={14} strokeWidth={2} />
+							<span>Health Check</span>
 						</Box>
-					</Flex>
-				</Box>
+						<Group gap={6}>
+							{overview.invalidLines.length > 0 ? (
+								<>
+									<Text fw={700} size="sm" color="orange.6">
+										{overview.invalidLines.length} issues
+									</Text>
+									<Text c="dimmed" size="xs">
+										(requires review)
+									</Text>
+								</>
+							) : (
+								<Text fw={700} size="sm" color="emerald.6">
+									100% Ready
+								</Text>
+							)}
+						</Group>
+					</Group>
+				</Stack>
 			</Box>
 
 			{/* Enhanced Script Table Section */}
