@@ -3,12 +3,15 @@ import {
 	Alert,
 	Badge,
 	Box,
+	Button,
 	Flex,
 	Group,
 	ScrollArea,
 	Stack,
+	Text,
 	Tooltip,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
 	AlertCircle,
 	FilePlus,
@@ -20,6 +23,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { AppModal } from "@/components/ui/modal/AppModal";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
 import { loadInvoiceDefaults } from "@/features/invoice/details";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
@@ -34,14 +38,16 @@ import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
 export default function Scripts() {
 	const { docFiles, handleFileChange, reset } = useFileUpload();
 
-	const { scripts, addScripts, removeScript, removeScripts } = useScriptStore(
-		useShallow((s) => ({
-			scripts: s.scripts,
-			addScripts: s.addScripts,
-			removeScript: s.removeScript,
-			removeScripts: s.removeScripts,
-		})),
-	);
+	const { scripts, addScripts, removeScript, removeScripts, setScripts } =
+		useScriptStore(
+			useShallow((s) => ({
+				scripts: s.scripts,
+				addScripts: s.addScripts,
+				removeScript: s.removeScript,
+				removeScripts: s.removeScripts,
+				setScripts: s.setScripts,
+			})),
+		);
 
 	const invoiceItemsLength = useInvoiceStore((s) => s.invoice.items.length);
 
@@ -49,6 +55,21 @@ export default function Scripts() {
 	const [editingScriptId, setEditingScriptId] = useState<string | null>(null);
 	const [initialSelectDone, setInitialSelectDone] = useState(false);
 	const [pasteError, setPasteError] = useState<string | null>(null);
+
+	const [
+		clearAllModalOpened,
+		{ open: openClearAllModal, close: closeClearAllModal },
+	] = useDisclosure(false);
+
+	const handleConfirmClearAllDocuments = useCallback(() => {
+		setScripts([]);
+		reset();
+		setActiveScriptId(null);
+		setInitialSelectDone(false);
+		setEditingScriptId(null);
+		setPasteError(null);
+		closeClearAllModal();
+	}, [setScripts, reset, closeClearAllModal]);
 
 	useEffect(() => {
 		if (!docFiles || docFiles.length === 0) return;
@@ -173,6 +194,7 @@ export default function Scripts() {
 			{/* Top Header: Horizontal Navigation — script tabs once documents exist */}
 			{hasScripts && (
 				<Box
+					data-testid="scripts-tabs-bar"
 					bg="white"
 					px="md"
 					py="xs"
@@ -253,16 +275,31 @@ export default function Scripts() {
 							</Group>
 						</ScrollArea>
 
-						<Group gap="xs" visibleFrom="xs">
+						<Group gap="xs" wrap="nowrap" justify="flex-end">
 							<Badge
 								variant="dot"
 								color="studio"
 								size="md"
 								radius="md"
 								className="bg-white border-slate-200 text-slate-600 px-3 h-8"
+								visibleFrom="xs"
 							>
 								{scripts.length} Documents
 							</Badge>
+							<Tooltip label="Clear all documents" position="bottom">
+								<ActionIcon
+									data-testid="clear-all-documents-trigger"
+									variant="subtle"
+									color="gray"
+									size={32}
+									radius="md"
+									aria-label="Clear all documents"
+									onClick={openClearAllModal}
+									className="shrink-0 hover:bg-red-50 text-red-700"
+								>
+									<Trash2 size={18} />
+								</ActionIcon>
+							</Tooltip>
 						</Group>
 					</Group>
 				</Box>
@@ -350,6 +387,38 @@ export default function Scripts() {
 					</Box>
 				)}
 			</Flex>
+
+			<AppModal
+				opened={clearAllModalOpened}
+				onClose={closeClearAllModal}
+				title="Clear all documents?"
+				size="sm"
+			>
+				<Stack gap="md">
+					<Text size="sm" c="dimmed">
+						This removes every document from the workspace, including pasted
+						scripts. Invoice line items you already created are not removed.
+					</Text>
+					<Group justify="flex-end" gap="xs" mt="xs">
+						<Button
+							variant="subtle"
+							color="gray"
+							onClick={closeClearAllModal}
+							radius="md"
+						>
+							Cancel
+						</Button>
+						<Button
+							data-testid="clear-all-documents-confirm"
+							color="red"
+							onClick={handleConfirmClearAllDocuments}
+							radius="md"
+						>
+							Clear all
+						</Button>
+					</Group>
+				</Stack>
+			</AppModal>
 		</Flex>
 	);
 }
