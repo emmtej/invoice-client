@@ -1,23 +1,22 @@
 import {
+	Box,
 	Button,
 	Group,
 	Paper,
 	Stack,
 	Text,
 	ThemeIcon,
-	Title,
 } from "@mantine/core";
 import { Link } from "@tanstack/react-router";
+import { PageTitle } from "@/components/ui/text/PageTitle";
 import { Gauge, Receipt } from "lucide-react";
 
 export default function Dashboard() {
 	return (
 		<Stack gap="md">
 			<Box mb="xl">
-				<Title order={1} size="48px" className="tracking-tight text-balance">
-					Dashboard
-				</Title>
-				<Text c="gray.5" size="lg" mt={4} className="text-pretty">
+				<PageTitle>Dashboard</PageTitle>
+				<Text c="gray.5" size="lg" mt={4} className="page-subtitle">
 					Welcome back. Jump into invoicing or review your recent work.
 				</Text>
 			</Box>
@@ -25,7 +24,7 @@ export default function Dashboard() {
 			<Paper p="lg" maw={480} bg="white">
 				<Stack gap="md">
 					<Group gap="sm">
-						<ThemeIcon size={32} radius="md" variant="light" color="wave">
+						<ThemeIcon size={32} variant="light" color="wave">
 							<Gauge size={18} strokeWidth={1.5} />
 						</ThemeIcon>
 						<div>
@@ -43,7 +42,6 @@ export default function Dashboard() {
 						color="wave"
 						size="sm"
 						leftSection={<Receipt size={16} />}
-						radius="md"
 					>
 						Create invoice
 					</Button>

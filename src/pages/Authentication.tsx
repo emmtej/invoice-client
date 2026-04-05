@@ -6,11 +6,12 @@ import {
 	Flex,
 	Paper,
 	SegmentedControl,
-	Title,
+	Text,
 } from "@mantine/core";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { OAuthProviders } from "@/components/auth/OAuthProviders";
+import { PageTitle } from "@/components/ui/text/PageTitle";
 
 function Authentication() {
 	const { pathname } = useLocation();
@@ -45,14 +46,8 @@ function Authentication() {
 							style={{ flexDirection: "column", justifyContent: "center" }}
 						>
 							<Box mb={40}>
-								<Title
-									order={1}
-									size="42px"
-									className="tracking-tight text-balance"
-								>
-									Get Started with InVoice
-								</Title>
-								<Text c="gray.5" mt="sm" size="lg" className="text-pretty">
+								<PageTitle size="42px">Get Started with InVoice</PageTitle>
+								<Text c="gray.5" mt="sm" size="lg" className="page-subtitle">
 									Professional script management and word-count based invoicing
 									for voice artists.
 								</Text>
@@ -67,7 +62,6 @@ function Authentication() {
 								]}
 								fullWidth
 								mb="xl"
-								radius="lg"
 								size="md"
 							/>
 							<AuthForm mode={isRegistering ? "register" : "login"} />
@@ -117,13 +111,13 @@ function Authentication() {
 									role="img"
 								>
 									<title>Image Placeholder</title>
-									<rect width="18" height="18" x="3" y="3" rx="2" ry="2" />{" "}
+									<rect width="18" height="18" x="3" y="3" rx="0" ry="0" />{" "}
 									<circle cx="9" cy="9" r="2" />
 									<path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
 								</svg>
-								<Title order={4} fw={500} c="gray.5">
+								<Text size="lg" fw={600} c="gray.5">
 									Image Placeholder
-								</Title>
+								</Text>
 							</Flex>
 						</Box>
 					</Paper>
