@@ -89,7 +89,6 @@ function ScriptEditorInner({
 							size="xs"
 							leftSection={<ArrowLeft size={14} />}
 							onClick={onStopEdit}
-							radius="md"
 						>
 							Back to overview
 						</Button>
@@ -99,7 +98,6 @@ function ScriptEditorInner({
 							size="xs"
 							leftSection={<RotateCcw size={14} />}
 							onClick={handleReset}
-							radius="md"
 						>
 							Reset Changes
 						</Button>
@@ -109,7 +107,6 @@ function ScriptEditorInner({
 							variant="filled"
 							leftSection={<Check size={14} />}
 							onClick={handleSubmit}
-							radius="md"
 							className="shadow-sm shadow-wave-100"
 						>
 							Finish Editing

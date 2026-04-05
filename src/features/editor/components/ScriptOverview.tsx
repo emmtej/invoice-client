@@ -83,7 +83,7 @@ const TypeBadge = memo(({ type }: { type: ParsedLine["type"] }) => {
 
 const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 	return (
-		<Table.Tr className="hover:bg-slate-50/50 transition-colors">
+		<Table.Tr className="transition-colors hover:bg-gray-50/70">
 			<Table.Td py="sm" w={180}>
 				<TypeBadge type={line.type} />
 			</Table.Td>
@@ -101,13 +101,12 @@ const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 					{line.type === "dialogue" && (
 						<Badge
 							variant="outline"
-							color="slate.2"
+							color="gray"
 							size="sm"
-							radius="md"
 							className="border-dashed bg-white shrink-0"
 							styles={{
 								label: {
-									color: "var(--mantine-color-slate-600)",
+									color: "var(--mantine-color-gray-6)",
 									fontWeight: 700,
 								},
 							}}
@@ -172,9 +171,9 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 								{overview.invalidLines.length === 0 && (
 									<Badge
 										variant="dot"
-										color="emerald"
+										color="wave"
 										size="sm"
-										className="bg-emerald-50 text-emerald-700 border-emerald-100"
+										className="border-wave-100 bg-wave-50 text-wave-700"
 									>
 										Verified
 									</Badge>
@@ -230,7 +229,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 										{overview.invalidLines.length} Issues
 									</Text>
 								) : (
-									<Text fw={600} size="sm" color="emerald.6">
+									<Text fw={600} size="sm" c="wave.7">
 										Ready
 									</Text>
 								)}
@@ -248,7 +247,6 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						onChange={setTypeFilter}
 						clearable
 						size="sm"
-						radius="md"
 						leftSection={
 							<Box
 								component="span"
@@ -262,8 +260,8 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						w={180}
 						styles={{
 							input: {
-								backgroundColor: "var(--mantine-color-slate-50)",
-								border: "1px solid var(--mantine-color-slate-100)",
+								backgroundColor: "var(--mantine-color-gray-0)",
+								border: "1px solid var(--mantine-color-gray-2)",
 							},
 						}}
 					/>
@@ -274,7 +272,6 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 							size="sm"
 							leftSection={<Edit3 size={16} />}
 							onClick={onEdit}
-							radius="md"
 							className="hover:scale-[1.01] transition-transform"
 						>
 							Edit Script

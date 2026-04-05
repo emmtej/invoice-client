@@ -230,7 +230,7 @@ function UploadDocumentsOverviewInner({
 					<Box px="xs">
 						<SectionLabel letterSpacing={2}>Selected Documents</SectionLabel>
 					</Box>
-					<Paper radius="md" p={0} bg="transparent" style={paperOverflowStyle}>
+					<Paper p={0} bg="transparent" style={paperOverflowStyle}>
 						<Table
 							verticalSpacing="sm"
 							horizontalSpacing="md"
@@ -263,7 +263,7 @@ function UploadDocumentsOverviewInner({
 								{scripts.map((script) => (
 									<Table.Tr
 										key={script.id}
-										className="transition-colors hover:bg-slate-50/50"
+										className="transition-colors hover:bg-gray-50/70"
 									>
 										<Table.Td style={borderBottomGray1}>
 											<Checkbox
@@ -294,7 +294,7 @@ function UploadDocumentsOverviewInner({
 				<Box
 					p="md"
 					bg="gray.0"
-					style={{ ...borderGray2, borderRadius: "var(--mantine-radius-md)" }}
+					style={borderGray2}
 				>
 					<Stack gap="xs">
 						<SectionLabel letterSpacing={2} c="gray.5">
@@ -323,7 +323,6 @@ function UploadDocumentsOverviewInner({
 						size="lg"
 						onClick={handleOpenAddModal}
 						disabled={!someSelected}
-						radius="xl"
 						className="shadow-xl shadow-wave-100 h-14 hover:scale-[1.02] transition-transform"
 					>
 						{targetItemId
@@ -397,7 +396,6 @@ function UploadDocumentsOverviewInner({
 								label: item.name,
 							}))}
 							placeholder="Select item"
-							radius="md"
 						/>
 					)}
 
@@ -407,7 +405,6 @@ function UploadDocumentsOverviewInner({
 							placeholder="e.g. Episode 1"
 							value={newItemName}
 							onChange={(e) => setNewItemName(e.currentTarget.value)}
-							radius="md"
 						/>
 					)}
 
@@ -426,7 +423,6 @@ function UploadDocumentsOverviewInner({
 								setRatePerWords(preset.ratePerWords);
 							}
 						}}
-						radius="md"
 					/>
 
 					<TextInput
@@ -439,17 +435,13 @@ function UploadDocumentsOverviewInner({
 							setSelectedPresetId(null);
 						}}
 						required
-						radius="md"
 					/>
 
 					{selectedPreset ? (
 						<Box
 							p="sm"
 							bg="gray.0"
-							style={{
-								...borderGray2,
-								borderRadius: "var(--mantine-radius-md)",
-							}}
+							style={borderGray2}
 						>
 							<Text size="xs" fw={600} c="gray.5" tt="uppercase" mb={4}>
 								Applied Rate
@@ -480,7 +472,6 @@ function UploadDocumentsOverviewInner({
 										decimalScale={2}
 										step={0.5}
 										style={numberInputFlexStyle}
-										radius="md"
 									/>
 									<Text size="sm" c="gray.5" fw={600}>
 										per
@@ -495,7 +486,6 @@ function UploadDocumentsOverviewInner({
 										min={1}
 										step={1}
 										style={numberInputWidthStyle}
-										radius="md"
 									/>
 									<Text size="sm" c="gray.5" fw={600}>
 										words
@@ -521,7 +511,6 @@ function UploadDocumentsOverviewInner({
 											});
 											setSelectedPresetId(created.id);
 										}}
-										radius="md"
 									>
 										Save as preset
 									</Button>
@@ -540,7 +529,6 @@ function UploadDocumentsOverviewInner({
 							variant="subtle"
 							color="gray"
 							onClick={closeAddModal}
-							radius="md"
 						>
 							Cancel
 						</Button>
@@ -556,7 +544,6 @@ function UploadDocumentsOverviewInner({
 										? !selectedItemId
 										: !newItemName.trim())
 							}
-							radius="md"
 							className="shadow-sm shadow-wave-100"
 						>
 							{targetItemId ? "Add to Item" : "Confirm & Add"}

@@ -181,7 +181,7 @@ export default function Scripts() {
 							<Box
 								data-testid="getting-started-tab"
 								aria-current="page"
-								className="px-4 py-2 rounded-none text-sm font-bold flex items-center gap-2 shrink-0 border-b-2 bg-slate-50 text-slate-900 border-slate-900"
+								className="flex shrink-0 items-center gap-2 border-b-2 border-gray-900 bg-gray-50 px-4 py-2 text-sm font-bold text-gray-900"
 							>
 								<LayoutDashboard size={16} strokeWidth={2.5} />
 								<span>Get Started</span>
@@ -222,11 +222,11 @@ export default function Scripts() {
 										<Box
 											onClick={() => setActiveScriptId(script.id)}
 											className={`
-    											px-4 py-2 rounded-none text-sm font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 border-b-2 group
+    											flex shrink-0 cursor-pointer items-center gap-2 border-b-2 px-4 py-2 text-sm font-bold transition-all group
     											${
 														activeScriptId === script.id
-															? "bg-slate-50 text-slate-900 border-slate-900"
-															: "bg-transparent text-slate-500 hover:text-slate-800 border-transparent hover:bg-slate-50"
+															? "border-gray-900 bg-gray-50 text-gray-900"
+															: "border-transparent bg-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-800"
 													}
     										`}
 										>
@@ -242,7 +242,7 @@ export default function Scripts() {
 												color={activeScriptId === script.id ? "wave" : "gray"}
 												size="xs"
 												className={`
-    												transition-all rounded-md
+    												transition-all
     												${
 															activeScriptId === script.id
 																? "opacity-100 hover:bg-wave-50"
@@ -265,7 +265,6 @@ export default function Scripts() {
 										variant="subtle"
 										color="wave"
 										size={32}
-										radius="md"
 										onClick={() => setActiveScriptId(null)}
 										className="ml-2 hover:bg-wave-50 transition-all"
 									>
@@ -280,8 +279,7 @@ export default function Scripts() {
 								variant="dot"
 								color="wave"
 								size="md"
-								radius="md"
-								className="bg-white border-slate-200 text-slate-600 px-3 h-8"
+								className="h-8 border-gray-200 bg-white px-3 text-gray-600"
 								visibleFrom="xs"
 							>
 								{scripts.length} Documents
@@ -292,7 +290,6 @@ export default function Scripts() {
 									variant="subtle"
 									color="gray"
 									size={32}
-									radius="md"
 									aria-label="Clear all documents"
 									onClick={openClearAllModal}
 									className="shrink-0 hover:bg-red-50 text-red-700"
@@ -318,7 +315,6 @@ export default function Scripts() {
 								color="red"
 								withCloseButton
 								onClose={() => setPasteError(null)}
-								radius="md"
 							>
 								{pasteError}
 							</Alert>
@@ -404,7 +400,6 @@ export default function Scripts() {
 							variant="subtle"
 							color="gray"
 							onClick={closeClearAllModal}
-							radius="md"
 						>
 							Cancel
 						</Button>
@@ -412,7 +407,6 @@ export default function Scripts() {
 							data-testid="clear-all-documents-confirm"
 							color="red"
 							onClick={handleConfirmClearAllDocuments}
-							radius="md"
 						>
 							Clear all
 						</Button>

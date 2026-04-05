@@ -18,7 +18,7 @@ export default function EditorPage() {
 						<ChevronRight
 							size={14}
 							strokeWidth={2.5}
-							className="text-slate-300"
+							className="text-gray-300"
 						/>
 					}
 					separatorMargin="md"

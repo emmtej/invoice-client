@@ -41,17 +41,15 @@ export function GettingStarted({
 						<Paper
 							withBorder
 							p="md"
-							radius="lg"
 							bg="white"
-							className="border-slate-200 hover:border-slate-300 transition-colors group"
+							className="border-gray-200 hover:border-gray-300 transition-colors group"
 						>
 							<Group justify="space-between" align="center" wrap="nowrap">
 								<Group gap="md" wrap="nowrap">
 									<Box
 										p="sm"
 										bg="white"
-										className="text-wave-700 shadow-sm group-hover:scale-105 transition-all border border-slate-100"
-										style={{ borderRadius: "var(--mantine-radius-md)" }}
+										className="border border-gray-100 text-wave-700 shadow-sm transition-all group-hover:scale-105"
 									>
 										<CloudUpload size={24} strokeWidth={1.5} />
 									</Box>
@@ -69,7 +67,6 @@ export function GettingStarted({
 									onChange={onFileChange}
 									multiple
 									size="sm"
-									radius="md"
 									className="shadow-sm shadow-wave-100 px-6"
 								>
 									Select Documents
@@ -84,10 +81,9 @@ export function GettingStarted({
 						</Box>
 						<Paper
 							withBorder
-							radius="lg"
 							bg="white"
 							mih={400}
-							className="overflow-hidden flex flex-col shadow-sm border-slate-200 hover:border-slate-300 transition-colors"
+							className="overflow-hidden flex flex-col border-gray-200 shadow-sm transition-colors hover:border-gray-300"
 						>
 							<TextEditor
 								content={pastedContent}
@@ -102,7 +98,6 @@ export function GettingStarted({
 												color="wave"
 												leftSection={<Plus size={16} />}
 												onClick={handleCreateFromPaste}
-												radius="md"
 												className="shadow-md"
 											>
 												Process Script
@@ -121,7 +116,6 @@ export function GettingStarted({
 					bg="gray.0"
 					style={{
 						border: "1px solid var(--mantine-color-gray-2)",
-						borderRadius: "var(--mantine-radius-xl)",
 					}}
 				>
 					<Group gap={16} wrap="nowrap">
@@ -131,7 +125,6 @@ export function GettingStarted({
 							className="text-wave-600 shadow-sm shrink-0"
 							style={{
 								border: "1px solid var(--mantine-color-gray-2)",
-								borderRadius: "var(--mantine-radius-md)",
 							}}
 						>
 							<Plus size={16} strokeWidth={3} />
