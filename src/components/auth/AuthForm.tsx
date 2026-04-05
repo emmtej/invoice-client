@@ -52,11 +52,16 @@ export function LoginFields() {
       style={{ display: "flex", flexDirection: "column" }}
     >
       <FormField label="Email" error={errors.email?.message} required mb="sm">
-        <TextInput type="email" placeholder="Email" {...register("email")} />
+        <TextInput
+          type="email"
+          placeholder="Email"
+          size="md"
+          {...register("email")}
+        />
       </FormField>
 
       <FormField label="Password" error={errors.password?.message} required>
-        <PasswordInput type="password" {...register("password")} />
+        <PasswordInput type="password" size="md" {...register("password")} />
       </FormField>
 
       <ErrorMessage message={errors.root?.message} />
@@ -66,6 +71,8 @@ export function LoginFields() {
         type="submit"
         loading={isSubmitting}
         variant="filled"
+        size="md"
+        mt="lg"
       >
         Login
       </Button>
@@ -127,6 +134,7 @@ export function RegisterFields() {
           <TextInput
             type="text"
             placeholder="John"
+            size="md"
             {...register("firstname")}
           />
         </FormField>
@@ -134,12 +142,18 @@ export function RegisterFields() {
           <TextInput
             type="text"
             placeholder="Smith"
+            size="md"
             {...register("lastname")}
           />
         </FormField>
       </Group>
       <FormField label="Email" error={errors.email?.message} required mb="sm">
-        <TextInput type="email" placeholder="Email" {...register("email")} />
+        <TextInput
+          type="email"
+          placeholder="Email"
+          size="md"
+          {...register("email")}
+        />
       </FormField>
       <FormField
         label="Confirm Email"
@@ -147,12 +161,13 @@ export function RegisterFields() {
         required
         mb="sm"
       >
-        <TextInput type="email" {...register("confirmEmail")} />
+        <TextInput type="email" size="md" {...register("confirmEmail")} />
       </FormField>
       <Group grow gap="md" mb="sm">
         <FormField label="Password" error={errors.password?.message} required>
           <PasswordInput
             type="password"
+            size="md"
             {...register("password")}
             placeholder="8 to 128 chars"
           />
@@ -162,7 +177,11 @@ export function RegisterFields() {
           error={errors.confirmPassword?.message}
           required
         >
-          <PasswordInput type="password" {...register("confirmPassword")} />
+          <PasswordInput
+            type="password"
+            size="md"
+            {...register("confirmPassword")}
+          />
         </FormField>
       </Group>
 
@@ -173,6 +192,8 @@ export function RegisterFields() {
         type="submit"
         loading={isSubmitting}
         variant="filled"
+        size="md"
+        mt="lg"
       >
         Register
       </Button>

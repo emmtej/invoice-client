@@ -29,10 +29,9 @@ function Authentication() {
     <Box>
       {/* TODO: ADD BREADCRUMB */}
       <Container style={{ position: "relative", zIndex: 1 }} size={"xl"}>
-        <Flex justify="center" align="center" py="xl">
+        <Flex justify="center" align="center" py={60}>
           <Paper
-            radius="md"
-            className="bg-white border border-slate-100 shadow-sm"
+            bg="white"
             display="flex"
             style={{ overflow: "hidden", minHeight: 650 }}
             w="100%"
@@ -45,7 +44,13 @@ function Authentication() {
               display="flex"
               style={{ flexDirection: "column", justifyContent: "center" }}
             >
-              <Title order={2} fw={800} size="h3" mb="lg">
+              <Title
+                order={2}
+                fw={800}
+                size="h2"
+                mb="lg"
+                className="tracking-tight text-balance"
+              >
                 Get Started with InVoice
               </Title>
               <SegmentedControl
@@ -65,7 +70,7 @@ function Authentication() {
                   to={isRegistering ? "/login" : "/register"}
                   display="block"
                   size="sm"
-                  c="studio.6"
+                  c="wave.7"
                 >
                   {isRegistering
                     ? "Already have an account? Login"
@@ -85,7 +90,7 @@ function Authentication() {
               <Flex
                 h="100%"
                 w="100%"
-                bg="gray.1"
+                bg="gray.0"
                 direction="column"
                 align="center"
                 justify="center"
