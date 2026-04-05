@@ -19,6 +19,13 @@ export interface UserLoginCredentials {
 	password: string;
 }
 
+export interface UserRegistrationCredentials {
+	firstname: string;
+	lastname: string;
+	email: string;
+	password: string;
+}
+
 export interface AuthResponse {
 	success: boolean;
 	message?: string;
@@ -29,6 +36,7 @@ interface UserState {
 	isLoading: boolean;
 	error: string | null;
 	login: (credentials: UserLoginCredentials) => Promise<AuthResponse>;
+	register: (credentials: UserRegistrationCredentials) => Promise<AuthResponse>;
 	logout: () => void;
 	getIsLoggedIn: () => boolean;
 }
@@ -52,6 +60,22 @@ const simulateLogin = async (credentials: UserLoginCredentials) => {
 	throw new Error("Invalid credentials");
 };
 
+const simulateRegister = async (credentials: UserRegistrationCredentials) => {
+	await new Promise((resolve) => setTimeout(resolve, 1000));
+	if (credentials.email === "test@example.com") {
+		throw new Error("User already exists");
+	}
+	return {
+		user: {
+			firstname: credentials.firstname,
+			lastname: credentials.lastname,
+			email: credentials.email,
+			role: "USER" as UserRole,
+			profileImgUrl: "",
+		},
+	};
+};
+
 export const useUserStore = create<UserState>()(
 	persist(
 		(set, get) => ({
@@ -66,6 +90,23 @@ export const useUserStore = create<UserState>()(
 
 				try {
 					const { user } = await simulateLogin(credentials);
+					set({ user, isLoading: false });
+					return { success: true };
+				} catch (error) {
+					const message =
+						error instanceof Error
+							? error.message
+							: "An unknown error occurred";
+					set({ error: message, isLoading: false });
+					return { success: false, message };
+				}
+			},
+
+			register: async (credentials) => {
+				set({ isLoading: true, error: null });
+
+				try {
+					const { user } = await simulateRegister(credentials);
 					set({ user, isLoading: false });
 					return { success: true };
 				} catch (error) {
@@ -102,6 +143,7 @@ export const useUserActions = () =>
 	useUserStore(
 		useShallow((state) => ({
 			login: state.login,
+			register: state.register,
 			logout: state.logout,
 		})),
 	);

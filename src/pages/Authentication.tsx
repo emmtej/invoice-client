@@ -1,110 +1,122 @@
-import {
-	Anchor,
-	Box,
-	Container,
-	Divider,
-	Flex,
-	Paper,
-	Title,
-} from "@mantine/core";
-import { Link, useLocation } from "@tanstack/react-router";
-import { useId } from "react";
-import { Login } from "@/components/auth/Login";
+import { AuthForm } from "@/components/auth/AuthForm";
 import { OAuthProviders } from "@/components/auth/OAuthProviders";
-import { Register } from "@/components/auth/Register";
-
-const waveformPath =
-	"M0,50 Q40,12 80,44 T160,28 T240,52 T320,20 T400,40 L400,80 L0,80 Z";
+import {
+  Anchor,
+  Box,
+  Container,
+  Divider,
+  Flex,
+  Paper,
+  SegmentedControl,
+  Title,
+} from "@mantine/core";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 
 function Authentication() {
-	const authWaveGradId = useId().replace(/:/g, "");
-	const { pathname } = useLocation();
-	const isRegistering = pathname.includes("register");
-	const activeTab = isRegistering ? <Register /> : <Login />;
-	return (
-		<Box
-			style={{
-				minHeight: "100dvh",
-				display: "flex",
-				alignItems: "center",
-				justifyContent: "center",
-				position: "relative",
-				overflow: "hidden",
-				background:
-					"linear-gradient(165deg, color-mix(in srgb, var(--mantine-color-studio-1) 20%, var(--app-bg)) 0%, color-mix(in srgb, var(--mantine-color-wave-1) 15%, var(--app-bg)) 45%, var(--app-bg) 100%)",
-			}}
-		>
-			<Box
-				pos="absolute"
-				bottom={0}
-				left={0}
-				right={0}
-				h={140}
-				style={{ pointerEvents: "none", opacity: 0.18 }}
-			>
-				<svg
-					width="100%"
-					height="100%"
-					viewBox="0 0 400 80"
-					preserveAspectRatio="none"
-					aria-hidden
-				>
-					<title>Decoration</title>
-					<defs>
-						<linearGradient
-							id={authWaveGradId}
-							x1="0%"
-							y1="0%"
-							x2="100%"
-							y2="0%"
-						>
-							<stop offset="0%" stopColor="var(--mantine-color-studio-5)" />
-							<stop offset="100%" stopColor="var(--mantine-color-wave-5)" />
-						</linearGradient>
-					</defs>
-					<path
-						d={waveformPath}
-						fill={`url(#${authWaveGradId})`}
-						opacity={0.9}
-					/>
-				</svg>
-			</Box>
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const isRegistering = pathname.includes("register");
 
-			<Container size="xs" style={{ position: "relative", zIndex: 1 }}>
-				<Flex justify="center" align="center" py="xl">
-					<Paper
-						p="xl"
-						maw={400}
-						w="100%"
-						radius="md"
-						className="bg-white border border-slate-100 shadow-sm"
-					>
-						<Box>
-							<Title order={2} fw={800} size="h3" mb="lg">
-								{isRegistering ? "Sign Up" : "Login"}
-							</Title>
-							{activeTab}
-						</Box>
-						<Box py="xs" mt="md">
-							<Anchor
-								component={Link}
-								to={isRegistering ? "/login" : "/register"}
-								display="block"
-								size="sm"
-								c="studio.6"
-							>
-								{isRegistering
-									? "Already have an account? Login"
-									: "Don't have an account? Sign up"}
-							</Anchor>
-						</Box>
-						<Divider my="md" label="Or continue with" />
-						<OAuthProviders />
-					</Paper>
-				</Flex>
-			</Container>
-		</Box>
-	);
+  const handleModeChange = (value: string) => {
+    if (value === "login") {
+      navigate({ to: "/login", replace: true });
+    } else {
+      navigate({ to: "/register", replace: true });
+    }
+  };
+
+  return (
+    <Box>
+      {/* TODO: ADD BREADCRUMB */}
+      <Container style={{ position: "relative", zIndex: 1 }} size={"xl"}>
+        <Flex justify="center" align="center" py="xl">
+          <Paper
+            radius="md"
+            className="bg-white border border-slate-100 shadow-sm"
+            display="flex"
+            style={{ overflow: "hidden", minHeight: 650 }}
+            w="100%"
+            maw={1000}
+          >
+            {/* Left Form Column */}
+            <Box
+              p={{ base: "xl", md: 40 }}
+              w={{ base: "100%", md: "50%" }}
+              display="flex"
+              style={{ flexDirection: "column", justifyContent: "center" }}
+            >
+              <Title order={2} fw={800} size="h3" mb="lg">
+                Get Started with InVoice
+              </Title>
+              <SegmentedControl
+                value={isRegistering ? "register" : "login"}
+                onChange={handleModeChange}
+                data={[
+                  { label: "Log in", value: "login" },
+                  { label: "Sign up", value: "register" },
+                ]}
+                fullWidth
+                mb="xl"
+              />
+              <AuthForm mode={isRegistering ? "register" : "login"} />
+              <Box py="xs" mt="sm">
+                <Anchor
+                  component={Link}
+                  to={isRegistering ? "/login" : "/register"}
+                  display="block"
+                  size="sm"
+                  c="studio.6"
+                >
+                  {isRegistering
+                    ? "Already have an account? Login"
+                    : "Don't have an account? Sign up"}
+                </Anchor>
+              </Box>
+              <Divider my="md" label="Or continue with" />
+              <OAuthProviders />
+            </Box>
+
+            {/* Right Image Column */}
+            <Box
+              w={{ base: "0%", md: "50%" }}
+              display={{ base: "none", md: "block" }}
+              style={{ position: "relative" }}
+            >
+              <Flex
+                h="100%"
+                w="100%"
+                bg="gray.1"
+                direction="column"
+                align="center"
+                justify="center"
+                style={{ color: "var(--mantine-color-gray-4)" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ marginBottom: "1rem" }}
+                >
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                  <circle cx="9" cy="9" r="2" />
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                </svg>
+                <Title order={4} fw={500} c="gray.5">
+                  Image Placeholder
+                </Title>
+              </Flex>
+            </Box>
+          </Paper>
+        </Flex>
+      </Container>
+    </Box>
+  );
 }
 
 export default Authentication;
