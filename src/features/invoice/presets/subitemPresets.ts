@@ -1,9 +1,6 @@
 import { z } from "zod";
 import { generateId } from "@/utils/id";
-import {
-	loadFromStorage,
-	saveToStorage,
-} from "@/utils/storage";
+import { loadFromStorage, saveToStorage } from "@/utils/storage";
 
 export interface InvoiceSubitemPreset {
 	id: string;

@@ -22,7 +22,11 @@ function getFallbackDefaults(): InvoiceDefaults {
 }
 
 export function loadInvoiceDefaults(): InvoiceDefaults {
-	const result = loadFromStorage(STORAGE_KEY, getFallbackDefaults(), invoiceDefaultsSchema);
+	const result = loadFromStorage(
+		STORAGE_KEY,
+		getFallbackDefaults(),
+		invoiceDefaultsSchema,
+	);
 	if (!result.invoiceDate) {
 		result.invoiceDate = getTodayDateString();
 	}

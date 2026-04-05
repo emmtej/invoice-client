@@ -31,7 +31,9 @@ const borderBottomGray2 = {
 const borderBottomGray1 = {
 	borderBottom: "1px solid var(--mantine-color-gray-1)",
 } as const;
-const borderGray2 = { border: "1px solid var(--mantine-color-gray-2)" } as const;
+const borderGray2 = {
+	border: "1px solid var(--mantine-color-gray-2)",
+} as const;
 const numberInputFlexStyle = { flex: 1 };
 const numberInputWidthStyle = { width: 100 };
 

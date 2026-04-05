@@ -1,7 +1,7 @@
 import { Button, Group, Select, Stack, Text, TextInput } from "@mantine/core";
+import { AtSign, Pencil, Save, Star, User, X } from "lucide-react";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
 import { SectionDivider } from "@/components/ui/divider/SectionDivider";
-import { AtSign, Pencil, Save, Star, User, X } from "lucide-react";
 import { ActiveProfileDisplay } from "./ActiveProfileDisplay";
 import {
 	getDefaultProfileFromState,

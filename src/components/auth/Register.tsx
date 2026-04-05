@@ -22,9 +22,16 @@ export function Register() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column" }}>
+		<form
+			onSubmit={handleSubmit(onSubmit)}
+			style={{ display: "flex", flexDirection: "column" }}
+		>
 			<Group grow align="flex-start" gap="md" mb="sm">
-				<FormField label="First Name" error={errors.firstname?.message} required>
+				<FormField
+					label="First Name"
+					error={errors.firstname?.message}
+					required
+				>
 					<TextInput
 						type="text"
 						placeholder="John"
@@ -47,7 +54,12 @@ export function Register() {
 					leftSection={<AtSign size={16} />}
 				/>
 			</FormField>
-			<FormField label="Confirm Email" error={errors.confirmEmail?.message} required mb="sm">
+			<FormField
+				label="Confirm Email"
+				error={errors.confirmEmail?.message}
+				required
+				mb="sm"
+			>
 				<Input
 					type="email"
 					{...register("confirmEmail")}
@@ -62,7 +74,11 @@ export function Register() {
 						placeholder="Length must be 8 to 128 characters"
 					/>
 				</FormField>
-				<FormField label="Confirm Password" error={errors.confirmPassword?.message} required>
+				<FormField
+					label="Confirm Password"
+					error={errors.confirmPassword?.message}
+					required
+				>
 					<PasswordInput type="password" {...register("confirmPassword")} />
 				</FormField>
 			</Group>

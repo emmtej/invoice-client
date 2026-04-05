@@ -22,14 +22,13 @@ export function DocxUploadButton({
 	};
 
 	return (
-		<FileButton onChange={handleChange} accept={DOCX_ACCEPT} multiple={multiple}>
+		<FileButton
+			onChange={handleChange}
+			accept={DOCX_ACCEPT}
+			multiple={multiple}
+		>
 			{(fileProps) => (
-				<Button
-					{...fileProps}
-					variant="filled"
-					color="studio"
-					{...buttonProps}
-				>
+				<Button {...fileProps} variant="filled" color="studio" {...buttonProps}>
 					{children}
 				</Button>
 			)}

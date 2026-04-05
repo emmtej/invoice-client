@@ -12,7 +12,14 @@ export function SectionLabel({
 	...rest
 }: SectionLabelProps) {
 	return (
-		<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={letterSpacing} {...rest}>
+		<Text
+			size="xs"
+			fw={800}
+			c="dimmed"
+			tt="uppercase"
+			lts={letterSpacing}
+			{...rest}
+		>
 			{children}
 		</Text>
 	);

@@ -119,7 +119,11 @@ export const getDefaultProfileFromState = (
 const EMPTY_STATE: ProfilesState = { profiles: [] };
 
 export const loadProfilesFromStorage = (): ProfilesState => {
-	const parsed = loadFromStorage(PROFILES_STORAGE_KEY, EMPTY_STATE, profileStorageSchema);
+	const parsed = loadFromStorage(
+		PROFILES_STORAGE_KEY,
+		EMPTY_STATE,
+		profileStorageSchema,
+	);
 	if (!parsed.profiles.length) return EMPTY_STATE;
 
 	const profiles: InvoiceProfileWithMeta[] = parsed.profiles.map((p) => ({

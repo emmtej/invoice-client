@@ -301,7 +301,9 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 										<SectionLabel letterSpacing={2}>Category</SectionLabel>
 									</Table.Th>
 									<Table.Th py="lg" style={tableThBorderStyle}>
-										<SectionLabel letterSpacing={2}>Script Content</SectionLabel>
+										<SectionLabel letterSpacing={2}>
+											Script Content
+										</SectionLabel>
 									</Table.Th>
 								</Table.Tr>
 							</Table.Thead>

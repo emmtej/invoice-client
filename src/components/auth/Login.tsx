@@ -44,12 +44,20 @@ export function Login() {
 		}
 	};
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column" }}>
+		<form
+			onSubmit={handleSubmit(onSubmit)}
+			style={{ display: "flex", flexDirection: "column" }}
+		>
 			<FormField label="Email" error={errors.email?.message} required mb="sm">
 				<TextInput type="email" placeholder="Email" {...register("email")} />
 			</FormField>
 
-			<FormField label="Password" error={errors.password?.message} required mb="sm">
+			<FormField
+				label="Password"
+				error={errors.password?.message}
+				required
+				mb="sm"
+			>
 				<PasswordInput type="password" {...register("password")} />
 			</FormField>
 

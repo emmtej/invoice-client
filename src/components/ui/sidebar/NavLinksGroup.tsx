@@ -131,11 +131,7 @@ export function LinksGroup({
 					</Flex>
 
 					{hasLinks && (
-						<ChevronRight
-							strokeWidth={1.5}
-							size={16}
-							style={chevronStyle}
-						/>
+						<ChevronRight strokeWidth={1.5} size={16} style={chevronStyle} />
 					)}
 				</Group>
 			</UnstyledButton>

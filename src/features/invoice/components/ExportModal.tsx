@@ -1,7 +1,7 @@
 import { Button, Group, Stack, Text } from "@mantine/core";
-import { AppModal } from "@/components/ui/modal/AppModal";
 import { useClipboard } from "@mantine/hooks";
 import { Copy, FileDown } from "lucide-react";
+import { AppModal } from "@/components/ui/modal/AppModal";
 import type { InvoiceItem } from "../store/invoiceStore";
 
 type ExportModalProps = {
