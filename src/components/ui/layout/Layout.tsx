@@ -44,8 +44,8 @@ export function Layout({ children }: LayoutProps) {
         <Container
           maw={1200}
           size="lg"
-          py="md"
-          px="lg"
+          py="xs"
+          px="xs"
           flex={1}
           w="100%"
           style={{ display: "flex", flexDirection: "column", minHeight: 0 }}
