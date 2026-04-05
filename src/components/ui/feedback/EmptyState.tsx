@@ -26,11 +26,11 @@ export function EmptyState({
 					{icon}
 				</Box>
 				<Stack gap={4} ta="center">
-					<Text fw={700} size="sm" c="dark.4">
+					<Text fw={600} size="sm" c="gray.5">
 						{title}
 					</Text>
 					{description && (
-						<Text size="xs" c="dimmed" maw={maxDescriptionWidth}>
+						<Text size="xs" c="gray.5" maw={maxDescriptionWidth}>
 							{description}
 						</Text>
 					)}

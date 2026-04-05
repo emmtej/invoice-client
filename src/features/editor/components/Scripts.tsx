@@ -395,7 +395,7 @@ export default function Scripts() {
 				size="sm"
 			>
 				<Stack gap="md">
-					<Text size="sm" c="dimmed">
+					<Text size="sm" c="gray.5">
 						This removes every document from the workspace, including pasted
 						scripts. Invoice line items you already created are not removed.
 					</Text>

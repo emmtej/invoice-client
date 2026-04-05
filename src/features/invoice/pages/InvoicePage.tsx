@@ -59,11 +59,11 @@ export default function InvoicePage() {
 				flexDirection: "column",
 			}}
 		>
-			<Stack gap={4} mb="md">
-				<Title order={1} fw={800} size="h3">
+			<Stack gap={4} mb="xl">
+				<Title order={1} size="48px" className="tracking-tight text-balance">
 					Invoice
 				</Title>
-				<Text size="sm" c="dimmed">
+				<Text size="lg" c="gray.5" className="text-pretty">
 					Build line items from scripts, set rates, and export a clear summary
 					for clients.
 				</Text>

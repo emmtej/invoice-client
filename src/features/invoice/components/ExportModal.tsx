@@ -44,7 +44,7 @@ export const ExportModal = ({
 	return (
 		<AppModal opened={opened} onClose={onClose} title="Export Invoice">
 			<Stack gap="md">
-				<Text size="sm" c="dimmed">
+				<Text size="sm" c="gray.5">
 					Choose how you would like to export your invoice summary.
 				</Text>
 

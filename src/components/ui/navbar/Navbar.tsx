@@ -22,19 +22,17 @@ export function Navbar() {
 				py="xs"
 				px="sm"
 				fz="sm"
-				fw={500}
+				fw={600}
 				style={(theme) => ({
-					borderRadius: theme.radius.sm,
-					color: isActive
-						? "var(--mantine-color-primary-6)"
-						: "var(--mantine-color-gray-7)",
-					backgroundColor: isActive
-						? "var(--mantine-color-primary-0)"
-						: undefined,
+					borderRadius: theme.radius.md,
+					color: isActive ? "#185a52" : "#4B5563",
+					backgroundColor: isActive ? "rgba(24, 90, 82, 0.08)" : "transparent",
+					transition: "all 150ms ease",
 					"&:hover": {
 						backgroundColor: isActive
-							? "var(--mantine-color-primary-1)"
-							: "var(--mantine-color-gray-0)",
+							? "rgba(24, 90, 82, 0.12)"
+							: "rgba(249, 250, 251, 0.8)",
+						color: isActive ? "#134a44" : "#1F2937",
 					},
 				})}
 			>
@@ -52,12 +50,14 @@ export function Navbar() {
 			flex={1}
 		>
 			<Group gap="sm">
-				<Receipt
-					size={24}
-					strokeWidth={1.5}
-					style={{ color: "var(--mantine-color-primary-6)" }}
-				/>
-				<Text size="sm" fw={600} c="dark.9" visibleFrom="xs">
+				<Receipt size={28} strokeWidth={2} style={{ color: "#185a52" }} />
+				<Text
+					size="xl"
+					fw={800}
+					c="gray.8"
+					className="tracking-tighter"
+					visibleFrom="xs"
+				>
 					InVoice
 				</Text>
 			</Group>

@@ -12,24 +12,22 @@ export function UserButton({ user }: UserButtonProps) {
 			w="100%"
 			p="md"
 			display="block"
+			className="rounded-xl transition-colors hover:bg-gray-50"
 			style={{
 				color: "var(--mantine-color-black)",
-				"&:hover": {
-					backgroundColor: "var(--mantine-color-primary-0)",
-				},
 			}}
 		>
 			<Group>
-				<Avatar src={user.profileImgUrl} radius="xl" />
+				<Avatar src={user.profileImgUrl} radius="xl" color="wave" />
 				<Box flex={1}>
-					<Text size="sm" fw={500}>
+					<Text size="sm" fw={600} c="gray.8">
 						{user.firstname} {user.lastname}
 					</Text>
-					<Text c="dimmed" size="xs">
+					<Text c="gray.5" size="xs">
 						{user.email}
 					</Text>
 				</Box>
-				<ChevronRight size={14} strokeWidth={1.5} />
+				<ChevronRight size={14} strokeWidth={1.5} className="text-gray-400" />
 			</Group>
 		</UnstyledButton>
 	);

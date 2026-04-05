@@ -157,7 +157,7 @@ export function ProfileSection({
 				{(!hasProfiles || isEditingProfile) && (
 					<Stack gap="sm">
 						{!hasProfiles && (
-							<Text size="xs" c="dimmed">
+							<Text size="xs" c="gray.5">
 								Create your first invoice profile. It will be saved and can be
 								reused later.
 							</Text>

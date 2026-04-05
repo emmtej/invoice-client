@@ -131,7 +131,7 @@ function HeroPreviewMock() {
 					<Badge variant="light" color="wave" size="lg">
 						Invoice & sessions
 					</Badge>
-					<Text size="xs" c="dimmed" fw={500}>
+					<Text size="xs" c="gray.5" fw={500}>
 						Preview
 					</Text>
 				</Group>
@@ -195,10 +195,10 @@ function HeroPreviewMock() {
 							radius="sm"
 							bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
 						>
-							<Text size="xs" fw={600} c="dimmed" tt="uppercase">
+							<Text size="xs" fw={600} c="gray.5" tt="uppercase">
 								{label}
 							</Text>
-							<Text size="sm" fw={700}>
+							<Text size="sm" fw={600}>
 								—
 							</Text>
 						</Paper>
@@ -230,7 +230,7 @@ export default function App() {
 			<Text fz="lg" mt="sm" fw={500}>
 				{feature.title}
 			</Text>
-			<Text c="dimmed" fz="sm" lh={1.6}>
+			<Text c="gray.5" fz="sm" lh={1.6}>
 				{feature.description}
 			</Text>
 		</div>
@@ -260,7 +260,7 @@ export default function App() {
 					<Text fw={600} size="sm">
 						{tool.title}
 					</Text>
-					<Text size="xs" c="dimmed">
+					<Text size="xs" c="gray.5">
 						{tool.description}
 					</Text>
 				</div>
@@ -291,7 +291,7 @@ export default function App() {
 								</Title>
 							</div>
 
-							<Text c="dimmed" size="lg" lh={1.6}>
+							<Text c="gray.5" size="lg" lh={1.6}>
 								InVoice helps you go from script to line items with less
 								friction: parse dialogue, track word counts, and send clear
 								invoices that match how you actually work.
@@ -330,10 +330,16 @@ export default function App() {
 			<section>
 				<Stack gap="xl">
 					<div>
-						<Title order={2} size="h3" mb="xs">
+						<Title
+							order={2}
+							size="32px"
+							className="tracking-tight text-balance"
+						>
 							Quick access
 						</Title>
-						<Text c="dimmed">Jump straight into your workflow</Text>
+						<Text c="gray.5" size="lg" className="text-pretty">
+							Jump straight into your workflow
+						</Text>
 					</div>
 					<SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
 						{toolItems}
@@ -344,10 +350,15 @@ export default function App() {
 			<section>
 				<Grid gutter={60}>
 					<Grid.Col span={{ base: 12, md: 5 }}>
-						<Title order={2} mb="md">
+						<Title
+							order={2}
+							size="32px"
+							className="tracking-tight text-balance"
+							mb="md"
+						>
 							Everything you need to bill with confidence
 						</Title>
-						<Text c="dimmed" mb="lg" size="md">
+						<Text c="gray.5" mb="lg" size="lg" className="text-pretty">
 							Whether you are recording from a home booth or a studio session,
 							InVoice keeps your script data and invoice math aligned—without
 							switching between a dozen browser tabs.
@@ -357,7 +368,7 @@ export default function App() {
 							variant="outline"
 							color="wave"
 							size="md"
-							radius="md"
+							radius="lg"
 							component={Link}
 							to="/dashboard"
 						>
@@ -377,20 +388,16 @@ export default function App() {
 				<Grid gutter={40}>
 					<Grid.Col span={{ base: 12, md: 4 }}>
 						<Group gap="xs" mb="md">
-							<Receipt
-								size={30}
-								strokeWidth={1.5}
-								style={{ color: "var(--mantine-color-primary-6)" }}
-							/>
-							<Text size="xl" fw={700}>
+							<Receipt size={30} strokeWidth={2} style={{ color: "#185a52" }} />
+							<Text size="xl" fw={800} c="gray.8" className="tracking-tighter">
 								InVoice
 							</Text>
 						</Group>
-						<Text size="sm" c="dimmed" maw={300} mb="xl">
+						<Text size="sm" c="gray.5" maw={300} mb="xl">
 							Billing and script tools for voice actors—soft on the eyes, sharp
 							on the details.
 						</Text>
-						<Text size="xs" c="dimmed">
+						<Text size="xs" c="gray.5">
 							© 2026 InVoice Platform. All rights reserved.
 						</Text>
 					</Grid.Col>
@@ -398,7 +405,7 @@ export default function App() {
 						<SimpleGrid cols={{ base: 2, sm: 3 }}>
 							{footerLinks.map((group) => (
 								<Stack key={group.title} gap="xs">
-									<Text fw={700} size="sm" mb="xs">
+									<Text fw={600} size="sm" mb="xs">
 										{group.title}
 									</Text>
 									{group.links.map((link) => (
@@ -407,7 +414,7 @@ export default function App() {
 											component={Link}
 											to={link.to}
 											size="sm"
-											c="dimmed"
+											c="gray.5"
 											underline="hover"
 										>
 											{link.label}

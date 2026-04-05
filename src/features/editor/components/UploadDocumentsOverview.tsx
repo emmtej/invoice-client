@@ -275,12 +275,12 @@ function UploadDocumentsOverviewInner({
 											/>
 										</Table.Td>
 										<Table.Td style={borderBottomGray1}>
-											<Text fw={600} size="xs" lineClamp={1} c="dark.5">
+											<Text fw={600} size="xs" lineClamp={1} c="gray.6">
 												{script.name}
 											</Text>
 										</Table.Td>
 										<Table.Td style={borderBottomGray1}>
-											<Text size="xs" fw={800} c="dark.9" ta="right">
+											<Text size="xs" fw={800} c="gray.8" ta="right">
 												{script.overview.wordCount}
 											</Text>
 										</Table.Td>
@@ -297,19 +297,19 @@ function UploadDocumentsOverviewInner({
 					style={{ ...borderGray2, borderRadius: "var(--mantine-radius-md)" }}
 				>
 					<Stack gap="xs">
-						<SectionLabel letterSpacing={2} c="dark.4">
+						<SectionLabel letterSpacing={2} c="gray.5">
 							Total Billable Volume
 						</SectionLabel>
 						<Group align="baseline" gap={4}>
 							<Text
 								fw={800}
 								size="xl"
-								c="dark.7"
+								c="gray.8"
 								className="tabular-nums leading-none"
 							>
 								{totalBillableWords}
 							</Text>
-							<Text size="sm" fw={700} c="dimmed">
+							<Text size="sm" fw={600} c="gray.5">
 								words
 							</Text>
 						</Group>
@@ -335,9 +335,9 @@ function UploadDocumentsOverviewInner({
 					{someSelected && (
 						<Text
 							size="xs"
-							c="dimmed"
+							c="gray.5"
 							ta="center"
-							fw={700}
+							fw={600}
 							tt="uppercase"
 							lts={1}
 							mt="xs"
@@ -379,7 +379,7 @@ function UploadDocumentsOverviewInner({
 							</Stack>
 						</Radio.Group>
 					) : !targetItemId && !hasItems ? (
-						<Text size="sm" c="dimmed">
+						<Text size="sm" c="gray.5">
 							No invoice items yet. Create a new item for the selected scripts.
 						</Text>
 					) : null}
@@ -451,10 +451,10 @@ function UploadDocumentsOverviewInner({
 								borderRadius: "var(--mantine-radius-md)",
 							}}
 						>
-							<Text size="xs" fw={700} c="dimmed" tt="uppercase" mb={4}>
+							<Text size="xs" fw={600} c="gray.5" tt="uppercase" mb={4}>
 								Applied Rate
 							</Text>
-							<Text size="sm" fw={600} c="dark.7">
+							<Text size="sm" fw={600} c="gray.8">
 								{selectedPreset.rateAmount} per {selectedPreset.ratePerWords}{" "}
 								words
 							</Text>
@@ -465,7 +465,7 @@ function UploadDocumentsOverviewInner({
 								<Text size="sm" fw={600} mb={4} component="label">
 									Rate (optional)
 								</Text>
-								<Text size="xs" c="dimmed" mb="xs">
+								<Text size="xs" c="gray.5" mb="xs">
 									e.g. 6 per 100 words. Default: {defaultRatePerWord} per word.
 								</Text>
 								<Group gap="xs" align="flex-end">
@@ -482,7 +482,7 @@ function UploadDocumentsOverviewInner({
 										style={numberInputFlexStyle}
 										radius="md"
 									/>
-									<Text size="sm" c="dimmed" fw={600}>
+									<Text size="sm" c="gray.5" fw={600}>
 										per
 									</Text>
 									<NumberInput
@@ -497,7 +497,7 @@ function UploadDocumentsOverviewInner({
 										style={numberInputWidthStyle}
 										radius="md"
 									/>
-									<Text size="sm" c="dimmed" fw={600}>
+									<Text size="sm" c="gray.5" fw={600}>
 										words
 									</Text>
 								</Group>

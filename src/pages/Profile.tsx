@@ -17,7 +17,7 @@ export default function Profile() {
 				<Title order={2} fw={800} size="h3">
 					Profile
 				</Title>
-				<Text c="dimmed" size="sm" mt={4}>
+				<Text c="gray.5" size="sm" mt={4}>
 					Account settings and defaults will live here. For now, open the editor
 					or invoices to keep working.
 				</Text>
@@ -38,7 +38,7 @@ export default function Profile() {
 							<Text fw={600} size="sm">
 								Voice workflow
 							</Text>
-							<Text size="xs" c="dimmed">
+							<Text size="xs" c="gray.5">
 								Parse scripts and build invoices from the same workspace.
 							</Text>
 						</div>

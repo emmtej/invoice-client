@@ -13,14 +13,14 @@ import { Gauge, Receipt } from "lucide-react";
 export default function Dashboard() {
 	return (
 		<Stack gap="md">
-			<div>
-				<Title order={2} fw={800} size="h3">
+			<Box mb="xl">
+				<Title order={1} size="48px" className="tracking-tight text-balance">
 					Dashboard
 				</Title>
-				<Text c="dimmed" size="sm" mt={4}>
+				<Text c="gray.5" size="lg" mt={4} className="text-pretty">
 					Welcome back. Jump into invoicing or review your recent work.
 				</Text>
-			</div>
+			</Box>
 
 			<Paper p="lg" maw={480} bg="white">
 				<Stack gap="md">
@@ -32,7 +32,7 @@ export default function Dashboard() {
 							<Text fw={600} size="sm">
 								Get started
 							</Text>
-							<Text size="xs" c="dimmed">
+							<Text size="xs" c="gray.5">
 								Create an invoice from your script line items and word counts.
 							</Text>
 						</div>

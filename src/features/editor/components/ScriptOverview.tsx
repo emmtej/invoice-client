@@ -74,7 +74,7 @@ const TypeBadge = memo(({ type }: { type: ParsedLine["type"] }) => {
 			<ThemeIcon variant="transparent" color={config.color} size="sm">
 				<Icon size={14} strokeWidth={2.5} />
 			</ThemeIcon>
-			<Text size="xs" fw={700} c="dimmed" tt="uppercase" lts="0.05em">
+			<Text size="xs" fw={600} c="gray.5" tt="uppercase" lts="0.05em">
 				{config.label}
 			</Text>
 		</Group>
@@ -91,7 +91,7 @@ const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 				<Group justify="space-between" wrap="nowrap" align="center" gap="xl">
 					<Text
 						size="md"
-						c="dark.7"
+						c="gray.8"
 						fw={500}
 						className="leading-relaxed"
 						style={{ flex: 1 }}
@@ -162,7 +162,11 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 					<Group gap={20}>
 						<Stack gap={4}>
 							<Group gap="sm">
-								<Title order={2} fw={900} lts={-1.2} c="dark.9" fz="h2">
+								<Title
+									order={1}
+									size="42px"
+									className="tracking-tight text-balance"
+								>
 									{script.name}
 								</Title>
 								{overview.invalidLines.length === 0 && (
@@ -189,7 +193,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						<Group gap={8} wrap="nowrap">
 							<Box
 								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
-								c="dimmed"
+								c="gray.5"
 							>
 								<MessageSquare size={12} strokeWidth={2.5} />
 								<span>Words</span>
@@ -202,12 +206,12 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						<Group gap={8} wrap="nowrap">
 							<Box
 								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
-								c="dimmed"
+								c="gray.5"
 							>
 								<Zap size={12} strokeWidth={2.5} />
 								<span>Valid</span>
 							</Box>
-							<Text fw={700} size="sm" c="dark.7">
+							<Text fw={600} size="sm" c="gray.8">
 								{overview.validLines.length}
 							</Text>
 						</Group>
@@ -215,18 +219,18 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						<Group gap={8} wrap="nowrap">
 							<Box
 								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
-								c="dimmed"
+								c="gray.5"
 							>
 								<Search size={12} strokeWidth={2.5} />
 								<span>Health</span>
 							</Box>
 							<Group gap={6}>
 								{overview.invalidLines.length > 0 ? (
-									<Text fw={700} size="sm" color="orange.6">
+									<Text fw={600} size="sm" color="orange.6">
 										{overview.invalidLines.length} Issues
 									</Text>
 								) : (
-									<Text fw={700} size="sm" color="emerald.6">
+									<Text fw={600} size="sm" color="emerald.6">
 										Ready
 									</Text>
 								)}
@@ -248,7 +252,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						leftSection={
 							<Box
 								component="span"
-								c="dimmed"
+								c="gray.5"
 								style={{ display: "flex", alignItems: "center" }}
 							>
 								<Filter size={14} />

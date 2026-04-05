@@ -23,10 +23,10 @@ export default function EditorPage() {
 					}
 					separatorMargin="md"
 				>
-					<Text size="xs" fw={800} tt="uppercase" lts={1.5} c="dimmed">
+					<Text size="xs" fw={800} tt="uppercase" lts={1.5} c="gray.5">
 						Script Tools
 					</Text>
-					<Text size="xs" fw={900} tt="uppercase" lts={1.5} c="dark.9">
+					<Text size="xs" fw={900} tt="uppercase" lts={1.5} c="gray.8">
 						Editor
 					</Text>
 				</Breadcrumbs>

@@ -19,9 +19,6 @@ import { AddDocumentsToItemModal } from "../items";
 import { getTodayDateString, type InvoiceProfile } from "../profile";
 import { useInvoiceStore } from "../store/invoiceStore";
 
-const borderTopStyle = {
-	borderTop: "1px solid var(--mantine-color-gray-2)",
-};
 const flexOneStyle = { flex: 1 };
 
 type InvoiceSummaryProps = {
@@ -138,7 +135,7 @@ export const InvoiceSummary = memo(
 				<Divider
 					mb="md"
 					label={
-						<Text fw={700} size="lg">
+						<Text fw={600} size="lg">
 							Summary
 						</Text>
 					}
@@ -149,33 +146,42 @@ export const InvoiceSummary = memo(
 					<Stack gap="md">
 						<Flex justify="space-between" align="flex-start">
 							<Box>
-								<Text size="xl" fw={800} tt="uppercase" lts={1}>
-									{invoiceTitle}
+								<Text
+									size="xs"
+									fw={600}
+									tt="uppercase"
+									lts="0.1em"
+									c="gray.5"
+									mb={4}
+								>
+									Project Invoice
 								</Text>
-								<Text size="sm" c="dimmed">
+								<Title
+									order={2}
+									size="h1"
+									className="tracking-tight text-balance"
+								>
+									{invoiceTitle}
+								</Title>
+								<Text size="sm" c="gray.6" mt={4}>
 									Date: {invoiceDate || getTodayDateString()}
 								</Text>
 							</Box>
 							{profile && (
 								<Box style={{ textAlign: "right" }}>
-									<Text fw={700}>
+									<Text fw={600} c="gray.8">
 										{profile.firstName} {profile.lastName}
 									</Text>
-									<Text size="sm" c="dimmed">
+									<Text size="sm" c="gray.5">
 										{profile.email}
 									</Text>
 								</Box>
 							)}
 						</Flex>
 
-						<Table>
+						<Table verticalSpacing="lg">
 							<Table.Thead>
-								<Table.Tr
-									style={{
-										backgroundColor:
-											"light-dark(var(--mantine-color-primary-0), var(--mantine-color-dark-6))",
-									}}
-								>
+								<Table.Tr>
 									<Table.Th style={flexOneStyle}>Description</Table.Th>
 									<Table.Th w={120} style={{ textAlign: "right" }}>
 										Words
@@ -192,15 +198,12 @@ export const InvoiceSummary = memo(
 							<Table.Tbody>
 								{items.map((item) => (
 									<Fragment key={item.id}>
-										<Table.Tr
-											style={{
-												backgroundColor:
-													"light-dark(var(--mantine-color-wave-0), var(--mantine-color-dark-6))",
-											}}
-										>
+										<Table.Tr className="hover:bg-wave-50/30">
 											<Table.Td>
 												<Group gap="xs">
-													<Text fw={700}>{item.name}</Text>
+													<Text fw={600} size="md" c="gray.8">
+														{item.name}
+													</Text>
 													<Tooltip label="Edit item name">
 														<ActionIcon
 															size="xs"
@@ -221,6 +224,7 @@ export const InvoiceSummary = memo(
 														<ActionIcon
 															variant="light"
 															color="wave"
+															radius="md"
 															onClick={() =>
 																handleOpenUpload(item.id, item.name)
 															}
@@ -232,6 +236,7 @@ export const InvoiceSummary = memo(
 														<ActionIcon
 															variant="light"
 															color="red"
+															radius="md"
 															onClick={() => removeItem(item.id)}
 														>
 															<Trash2 size={16} />
@@ -241,21 +246,15 @@ export const InvoiceSummary = memo(
 											</Table.Td>
 										</Table.Tr>
 
-										{item.subitems.map((sub, subIdx) => (
-											<Table.Tr
-												key={sub.id}
-												style={{
-													backgroundColor:
-														subIdx % 2 === 0
-															? "light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))"
-															: undefined,
-												}}
-											>
+										{item.subitems.map((sub) => (
+											<Table.Tr key={sub.id} className="hover:bg-gray-50/50">
 												<Table.Td
-													style={{ paddingLeft: "var(--mantine-spacing-lg)" }}
+													style={{ paddingLeft: "var(--mantine-spacing-xl)" }}
 												>
-													<Group gap={4} wrap="nowrap">
-														<Text size="sm">{sub.label || sub.scriptName}</Text>
+													<Group gap={8} wrap="nowrap">
+														<Text size="sm" c="gray.7">
+															{sub.label || sub.scriptName}
+														</Text>
 														<ActionIcon
 															size="xs"
 															variant="subtle"
@@ -272,13 +271,21 @@ export const InvoiceSummary = memo(
 													</Group>
 												</Table.Td>
 												<Table.Td style={{ textAlign: "right" }}>
-													<Text size="sm" className="tabular-nums">
+													<Text
+														size="sm"
+														c="gray.7"
+														className="tabular-nums font-medium"
+													>
 														{sub.wordCount.toLocaleString()}
 													</Text>
 												</Table.Td>
 												<Table.Td style={{ textAlign: "right" }}>
 													<Group gap={4} justify="flex-end" wrap="nowrap">
-														<Text size="sm" className="tabular-nums">
+														<Text
+															size="sm"
+															c="gray.7"
+															className="tabular-nums font-medium"
+														>
 															${sub.ratePerWord.toFixed(3)}
 														</Text>
 														<ActionIcon
@@ -297,7 +304,12 @@ export const InvoiceSummary = memo(
 													</Group>
 												</Table.Td>
 												<Table.Td style={{ textAlign: "right" }}>
-													<Text fw={600} size="sm" className="tabular-nums">
+													<Text
+														fw={600}
+														size="sm"
+														c="gray.8"
+														className="tabular-nums"
+													>
 														${sub.amount.toFixed(2)}
 													</Text>
 												</Table.Td>
@@ -322,12 +334,17 @@ export const InvoiceSummary = memo(
 							</Table.Tbody>
 						</Table>
 
-						<Box py="sm" mt="xs" style={borderTopStyle}>
+						<Box py="xl" mt="xs" style={{ borderTop: "2px solid #F3F4F6" }}>
 							<Group justify="flex-end" gap="xl">
-								<Text fw={700} size="lg">
+								<Text fw={600} size="lg" c="gray.5" tt="uppercase" lts="0.05em">
 									Total Amount
 								</Text>
-								<Text fw={800} size="xl" c="wave.7">
+								<Text
+									fw={800}
+									size="32px"
+									c="gray.8"
+									className="tabular-nums tracking-tighter"
+								>
 									${totalAmount.toFixed(2)}
 								</Text>
 							</Group>

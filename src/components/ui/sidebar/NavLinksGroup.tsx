@@ -35,15 +35,17 @@ function getActiveLinkPath(
 
 const controlStyles = {
 	root: {
-		fontWeight: 500,
+		fontWeight: 600,
 		display: "block",
 		width: "100%",
 		padding: "var(--mantine-spacing-sm) var(--mantine-spacing-md)",
-		color: "var(--mantine-color-text)",
+		color: "#4B5563",
 		fontSize: "var(--mantine-font-size-sm)",
+		borderRadius: "var(--mantine-radius-lg)",
+		transition: "all 150ms ease",
 		"&:hover": {
-			backgroundColor: "var(--mantine-color-primary-0)",
-			color: "var(--mantine-color-primary-7)",
+			backgroundColor: "rgba(249, 250, 251, 0.8)",
+			color: "#1F2937",
 		},
 	},
 } as const;
@@ -56,19 +58,20 @@ const linkBaseStyles = {
 	paddingLeft: "var(--mantine-spacing-lg)",
 	marginLeft: "var(--mantine-spacing-xl)",
 	fontSize: "var(--mantine-font-size-sm)",
-	color: "var(--mantine-color-gray-7)",
-	borderLeft: "1px solid var(--mantine-color-gray-3)",
+	color: "#6B7280",
+	borderRadius: "var(--mantine-radius-md)",
+	transition: "all 150ms ease",
 	"&:hover": {
-		backgroundColor: "var(--mantine-color-primary-0)",
-		color: "var(--mantine-color-primary-7)",
+		backgroundColor: "rgba(24, 90, 82, 0.05)",
+		color: "#185a52",
 	},
 } as const;
 
 const linkActiveStyles = {
 	...linkBaseStyles,
-	borderLeftColor: "var(--mantine-color-primary-5)",
-	color: "var(--mantine-color-primary-6)",
-	backgroundColor: "var(--mantine-color-primary-0)",
+	color: "#185a52",
+	backgroundColor: "rgba(24, 90, 82, 0.08)",
+	fontWeight: 600,
 } as const;
 
 interface LinksGroupProps {

@@ -8,14 +8,14 @@ interface SectionLabelProps extends Omit<TextProps, "children"> {
 
 export function SectionLabel({
 	children,
-	letterSpacing = 1,
+	letterSpacing = "0.05em",
 	...rest
 }: SectionLabelProps) {
 	return (
 		<Text
-			size="xs"
-			fw={800}
-			c="dimmed"
+			size="sm"
+			fw={600}
+			c="gray.5"
 			tt="uppercase"
 			lts={letterSpacing}
 			{...rest}

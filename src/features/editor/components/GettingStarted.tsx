@@ -56,10 +56,10 @@ export function GettingStarted({
 										<CloudUpload size={24} strokeWidth={1.5} />
 									</Box>
 									<Stack gap={0}>
-										<Text fw={800} size="sm" c="dark.7" lts={-0.2}>
+										<Text fw={800} size="sm" c="gray.8" lts={-0.2}>
 											Word Documents (.docx)
 										</Text>
-										<Text size="xs" c="dimmed" fw={500}>
+										<Text size="xs" c="gray.5" fw={500}>
 											Upload files to automatically extract and count dialogue
 											lines.
 										</Text>
@@ -136,7 +136,7 @@ export function GettingStarted({
 						>
 							<Plus size={16} strokeWidth={3} />
 						</Box>
-						<Text size="sm" fw={600} c="dark.4" className="leading-relaxed">
+						<Text size="sm" fw={600} c="gray.5" className="leading-relaxed">
 							<span className="text-wave-800 font-bold">Pro Tip:</span> Our
 							parser identifies dialogue, action lines, and scene markers
 							automatically. Only dialogue lines contribute to the billable word

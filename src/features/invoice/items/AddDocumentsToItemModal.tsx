@@ -73,7 +73,7 @@ export function AddDocumentsToItemModal({
 					Upload Document(s)
 				</DocxUploadButton>
 				{isLoading && (
-					<Text size="sm" c="dimmed">
+					<Text size="sm" c="gray.5">
 						Processing documents…
 					</Text>
 				)}
