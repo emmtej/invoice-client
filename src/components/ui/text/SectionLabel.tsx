@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 interface SectionLabelProps extends Omit<TextProps, "children"> {
 	children: ReactNode;
-	letterSpacing?: number;
+	letterSpacing?: string | number;
 }
 
 export function SectionLabel({

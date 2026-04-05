@@ -23,18 +23,23 @@ export function Navbar() {
 				px="sm"
 				fz="sm"
 				fw={600}
-				style={(theme) => ({
-					borderRadius: theme.radius.md,
-					color: isActive ? "#185a52" : "#4B5563",
-					backgroundColor: isActive ? "rgba(24, 90, 82, 0.08)" : "transparent",
+				style={{
+					color: isActive
+						? "var(--mantine-color-wave-8)"
+						: "var(--mantine-color-gray-6)",
+					backgroundColor: isActive
+						? "color-mix(in srgb, var(--mantine-color-wave-8) 8%, white)"
+						: "transparent",
 					transition: "all 150ms ease",
 					"&:hover": {
 						backgroundColor: isActive
-							? "rgba(24, 90, 82, 0.12)"
-							: "rgba(249, 250, 251, 0.8)",
-						color: isActive ? "#134a44" : "#1F2937",
+							? "color-mix(in srgb, var(--mantine-color-wave-8) 12%, white)"
+							: "var(--mantine-color-gray-0)",
+						color: isActive
+							? "var(--mantine-color-wave-9)"
+							: "var(--mantine-color-gray-8)",
 					},
-				})}
+				}}
 			>
 				{link.label}
 			</UnstyledButton>
@@ -50,7 +55,11 @@ export function Navbar() {
 			flex={1}
 		>
 			<Group gap="sm">
-				<Receipt size={28} strokeWidth={2} style={{ color: "#185a52" }} />
+				<Receipt
+					size={28}
+					strokeWidth={2}
+					style={{ color: "var(--mantine-color-wave-8)" }}
+				/>
 				<Text
 					size="xl"
 					fw={800}
@@ -77,7 +86,7 @@ export function Navbar() {
 			) : (
 				<Anchor component={Link} to="/profile">
 					<Group gap="xs">
-						<Avatar radius="xl" />
+						<Avatar />
 						<Text size="sm" fw={500}>
 							{user.firstname} {user.lastname}
 						</Text>

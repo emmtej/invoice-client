@@ -12,13 +12,13 @@ export function UserButton({ user }: UserButtonProps) {
 			w="100%"
 			p="md"
 			display="block"
-			className="rounded-xl transition-colors hover:bg-gray-50"
+			className="transition-colors hover:bg-gray-50"
 			style={{
 				color: "var(--mantine-color-black)",
 			}}
 		>
 			<Group>
-				<Avatar src={user.profileImgUrl} radius="xl" color="wave" />
+				<Avatar src={user.profileImgUrl} color="wave" />
 				<Box flex={1}>
 					<Text size="sm" fw={600} c="gray.8">
 						{user.firstname} {user.lastname}

@@ -39,13 +39,12 @@ const controlStyles = {
 		display: "block",
 		width: "100%",
 		padding: "var(--mantine-spacing-sm) var(--mantine-spacing-md)",
-		color: "#4B5563",
+		color: "var(--mantine-color-gray-6)",
 		fontSize: "var(--mantine-font-size-sm)",
-		borderRadius: "var(--mantine-radius-lg)",
 		transition: "all 150ms ease",
 		"&:hover": {
-			backgroundColor: "rgba(249, 250, 251, 0.8)",
-			color: "#1F2937",
+			backgroundColor: "var(--mantine-color-gray-0)",
+			color: "var(--mantine-color-gray-8)",
 		},
 	},
 } as const;
@@ -58,19 +57,18 @@ const linkBaseStyles = {
 	paddingLeft: "var(--mantine-spacing-lg)",
 	marginLeft: "var(--mantine-spacing-xl)",
 	fontSize: "var(--mantine-font-size-sm)",
-	color: "#6B7280",
-	borderRadius: "var(--mantine-radius-md)",
+	color: "var(--mantine-color-gray-5)",
 	transition: "all 150ms ease",
 	"&:hover": {
-		backgroundColor: "rgba(24, 90, 82, 0.05)",
-		color: "#185a52",
+		backgroundColor: "color-mix(in srgb, var(--mantine-color-wave-8) 5%, white)",
+		color: "var(--mantine-color-wave-8)",
 	},
 } as const;
 
 const linkActiveStyles = {
 	...linkBaseStyles,
-	color: "#185a52",
-	backgroundColor: "rgba(24, 90, 82, 0.08)",
+	color: "var(--mantine-color-wave-8)",
+	backgroundColor: "color-mix(in srgb, var(--mantine-color-wave-8) 8%, white)",
 	fontWeight: 600,
 } as const;
 

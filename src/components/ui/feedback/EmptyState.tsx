@@ -21,7 +21,6 @@ export function EmptyState({
 					p="sm"
 					bg="gray.0"
 					c="gray.3"
-					style={{ borderRadius: "var(--mantine-radius-xl)" }}
 				>
 					{icon}
 				</Box>

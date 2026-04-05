@@ -1,5 +1,5 @@
-import { Paper, type PaperProps } from "@mantine/core";
-import type { ReactNode } from "react";
+import { Paper, type MantineTheme, type PaperProps } from "@mantine/core";
+import type { CSSProperties, ReactNode } from "react";
 
 const surfaceStyle = {
 	border: "1px solid #F3F4F6", // very faint border
@@ -10,16 +10,26 @@ interface SurfaceCardProps extends PaperProps {
 	children: ReactNode;
 }
 
+function isStyleFunction(
+	style: PaperProps["style"],
+): style is (theme: MantineTheme) => CSSProperties {
+	return typeof style === "function";
+}
+
 export function SurfaceCard({ children, style, ...rest }: SurfaceCardProps) {
 	const mergedStyle =
-		typeof style === "object" ? { ...surfaceStyle, ...style } : surfaceStyle;
+		isStyleFunction(style)
+			? (theme: MantineTheme) => ({
+					...surfaceStyle,
+					...style(theme),
+				})
+			: { ...surfaceStyle, ...(style ?? {}) };
 
 	return (
 		<Paper
 			p="xl"
 			bg="white"
 			shadow="sm"
-			radius="xl"
 			style={mergedStyle}
 			{...rest}
 		>
