@@ -20,7 +20,7 @@ import { getTodayDateString, type InvoiceProfile } from "../profile";
 import { useInvoiceStore } from "../store/invoiceStore";
 
 const borderTopStyle = {
-	borderTop: "1px solid var(--mantine-color-default-border)",
+	borderTop: "1px solid var(--mantine-color-gray-2)",
 };
 const flexOneStyle = { flex: 1 };
 
@@ -168,7 +168,7 @@ export const InvoiceSummary = memo(
 							)}
 						</Flex>
 
-						<Table verticalSpacing="sm" highlightOnHover>
+						<Table>
 							<Table.Thead>
 								<Table.Tr
 									style={{
@@ -195,7 +195,7 @@ export const InvoiceSummary = memo(
 										<Table.Tr
 											style={{
 												backgroundColor:
-													"light-dark(var(--mantine-color-studio-0), var(--mantine-color-dark-6))",
+													"light-dark(var(--mantine-color-wave-0), var(--mantine-color-dark-6))",
 											}}
 										>
 											<Table.Td>
@@ -272,13 +272,15 @@ export const InvoiceSummary = memo(
 													</Group>
 												</Table.Td>
 												<Table.Td style={{ textAlign: "right" }}>
-													<Text size="sm">
+													<Text size="sm" className="tabular-nums">
 														{sub.wordCount.toLocaleString()}
 													</Text>
 												</Table.Td>
 												<Table.Td style={{ textAlign: "right" }}>
 													<Group gap={4} justify="flex-end" wrap="nowrap">
-														<Text size="sm">${sub.ratePerWord.toFixed(3)}</Text>
+														<Text size="sm" className="tabular-nums">
+															${sub.ratePerWord.toFixed(3)}
+														</Text>
 														<ActionIcon
 															size="xs"
 															variant="subtle"
@@ -295,7 +297,7 @@ export const InvoiceSummary = memo(
 													</Group>
 												</Table.Td>
 												<Table.Td style={{ textAlign: "right" }}>
-													<Text fw={600} size="sm">
+													<Text fw={600} size="sm" className="tabular-nums">
 														${sub.amount.toFixed(2)}
 													</Text>
 												</Table.Td>
@@ -325,7 +327,7 @@ export const InvoiceSummary = memo(
 								<Text fw={700} size="lg">
 									Total Amount
 								</Text>
-								<Text fw={800} size="xl" c="studio.7">
+								<Text fw={800} size="xl" c="wave.7">
 									${totalAmount.toFixed(2)}
 								</Text>
 							</Group>
@@ -334,7 +336,7 @@ export const InvoiceSummary = memo(
 						<Group justify="flex-end" mt="md">
 							<Button
 								variant="filled"
-								color="studio"
+								color="wave"
 								size="md"
 								onClick={openExport}
 								disabled={items.length === 0}
