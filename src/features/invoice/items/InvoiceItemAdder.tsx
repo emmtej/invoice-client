@@ -37,7 +37,6 @@ export function InvoiceItemAdder({
 					color="wave"
 					size="sm"
 					disabled={!newItemName.trim()}
-					radius="md"
 				>
 					Add item
 				</Button>

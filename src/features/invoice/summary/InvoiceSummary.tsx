@@ -8,6 +8,7 @@ import {
 	Stack,
 	Table,
 	Text,
+	Title,
 	Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -224,7 +225,6 @@ export const InvoiceSummary = memo(
 														<ActionIcon
 															variant="light"
 															color="wave"
-															radius="md"
 															onClick={() =>
 																handleOpenUpload(item.id, item.name)
 															}
@@ -236,7 +236,6 @@ export const InvoiceSummary = memo(
 														<ActionIcon
 															variant="light"
 															color="red"
-															radius="md"
 															onClick={() => removeItem(item.id)}
 														>
 															<Trash2 size={16} />

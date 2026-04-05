@@ -1,5 +1,6 @@
-import { Box, Stack, Text, Title } from "@mantine/core";
+import { Box, Stack, Text } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
+import { PageTitle } from "@/components/ui/text/PageTitle";
 import { useShallow } from "zustand/react/shallow";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import {
@@ -60,10 +61,8 @@ export default function InvoicePage() {
 			}}
 		>
 			<Stack gap={4} mb="xl">
-				<Title order={1} size="48px" className="tracking-tight text-balance">
-					Invoice
-				</Title>
-				<Text size="lg" c="gray.5" className="text-pretty">
+				<PageTitle>Invoice</PageTitle>
+				<Text size="lg" c="gray.5" className="page-subtitle">
 					Build line items from scripts, set rates, and export a clear summary
 					for clients.
 				</Text>

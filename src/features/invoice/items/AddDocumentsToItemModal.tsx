@@ -66,7 +66,6 @@ export function AddDocumentsToItemModal({
 					onChange={handleFileChange}
 					multiple
 					size="md"
-					radius="lg"
 					fullWidth
 					className="shadow-sm shadow-wave-100"
 				>

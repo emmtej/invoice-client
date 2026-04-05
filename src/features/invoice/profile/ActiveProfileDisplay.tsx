@@ -13,12 +13,7 @@ export function ActiveProfileDisplay({ profile }: ActiveProfileDisplayProps) {
 		.join(" ");
 
 	return (
-		<Paper
-			p="md"
-			radius="xl"
-			bg="gray.0"
-			style={{ border: "1px solid #F3F4F6" }}
-		>
+		<Paper p="md" bg="gray.0" style={{ border: "1px solid #F3F4F6" }}>
 			<Stack gap="xs">
 				<Group gap="xs">
 					<User size={16} className="text-gray-400" strokeWidth={2} />
