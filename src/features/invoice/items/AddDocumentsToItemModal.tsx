@@ -68,7 +68,7 @@ export function AddDocumentsToItemModal({
 					size="md"
 					radius="lg"
 					fullWidth
-					className="shadow-sm shadow-studio-100"
+					className="shadow-sm shadow-wave-100"
 				>
 					Upload Document(s)
 				</DocxUploadButton>

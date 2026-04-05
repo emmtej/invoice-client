@@ -124,7 +124,7 @@ export function LinksGroup({
 			<UnstyledButton onClick={handleToggle} styles={controlStyles}>
 				<Group justify="space-between" gap="xs">
 					<Flex align="center">
-						<ThemeIcon variant="light" size={30} color="studio">
+						<ThemeIcon variant="light" size={30} color="wave">
 							<Icon size={18} />
 						</ThemeIcon>
 						<Box ml="md">{label}</Box>

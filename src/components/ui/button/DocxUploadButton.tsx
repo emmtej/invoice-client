@@ -28,7 +28,7 @@ export function DocxUploadButton({
 			multiple={multiple}
 		>
 			{(fileProps) => (
-				<Button {...fileProps} variant="filled" color="studio" {...buttonProps}>
+				<Button {...fileProps} variant="filled" color="wave" {...buttonProps}>
 					{children}
 				</Button>
 			)}
