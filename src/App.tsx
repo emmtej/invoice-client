@@ -14,6 +14,7 @@ import {
 	Title,
 } from "@mantine/core";
 import { Link } from "@tanstack/react-router";
+import { PageTitle } from "@/components/ui/text/PageTitle";
 import {
 	Activity,
 	CircleDashed,
@@ -79,7 +80,7 @@ const tools = [
 		description: "Account and defaults",
 		icon: User,
 		to: "/profile",
-		color: "grape" as const,
+		color: "studio" as const,
 	},
 ];
 
@@ -118,7 +119,6 @@ function HeroPreviewMock() {
 	return (
 		<Paper
 			shadow="xl"
-			radius="lg"
 			withBorder
 			p="md"
 			style={{
@@ -138,7 +138,6 @@ function HeroPreviewMock() {
 				<Box
 					p="md"
 					style={{
-						borderRadius: "var(--mantine-radius-md)",
 						background:
 							"linear-gradient(135deg, color-mix(in srgb, var(--mantine-color-studio-2) 55%, transparent) 0%, color-mix(in srgb, var(--mantine-color-wave-2) 50%, transparent) 100%)",
 					}}
@@ -192,7 +191,6 @@ function HeroPreviewMock() {
 							key={label}
 							p="xs"
 							withBorder
-							radius="sm"
 							bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
 						>
 							<Text size="xs" fw={600} c="gray.5" tt="uppercase">
@@ -210,18 +208,17 @@ function HeroPreviewMock() {
 }
 
 export default function App() {
-	const featureIcons: Array<"studio" | "wave" | "gray" | "grape"> = [
+	const featureIcons: Array<"studio" | "wave" | "gray"> = [
 		"wave",
 		"wave",
 		"gray",
-		"grape",
+		"studio",
 	];
 
 	const featureItems = features.map((feature, i) => (
 		<div key={feature.title}>
 			<ThemeIcon
 				size={44}
-				radius="md"
 				variant="light"
 				color={featureIcons[i] ?? "wave"}
 			>
@@ -243,7 +240,6 @@ export default function App() {
 			to={tool.to}
 			withBorder
 			p="md"
-			radius="md"
 			style={{
 				transition: "transform 200ms ease, box-shadow 200ms ease",
 				cursor: "pointer",
@@ -253,7 +249,7 @@ export default function App() {
 			className="hover:-translate-y-1 hover:shadow-md"
 		>
 			<Group wrap="nowrap">
-				<ThemeIcon color={tool.color} variant="light" size="xl" radius="md">
+				<ThemeIcon color={tool.color} variant="light" size="xl">
 					<tool.icon size={24} />
 				</ThemeIcon>
 				<div>
@@ -278,7 +274,7 @@ export default function App() {
 								<Badge variant="light" color="wave" size="lg" mb="sm">
 									Invoicing for voice actors
 								</Badge>
-								<Title order={1} size={48} fw={900} style={{ lineHeight: 1.1 }}>
+								<PageTitle size={48} fw={900} style={{ lineHeight: 1.1 }}>
 									Invoices and scripts,{" "}
 									<Text
 										component="span"
@@ -288,10 +284,10 @@ export default function App() {
 									>
 										in one calm studio
 									</Text>
-								</Title>
+								</PageTitle>
 							</div>
 
-							<Text c="gray.5" size="lg" lh={1.6}>
+							<Text c="gray.5" size="lg" lh={1.6} className="page-subtitle">
 								InVoice helps you go from script to line items with less
 								friction: parse dialogue, track word counts, and send clear
 								invoices that match how you actually work.
@@ -304,7 +300,6 @@ export default function App() {
 									variant="filled"
 									color="wave"
 									size="lg"
-									radius="md"
 								>
 									Get started
 								</Button>
@@ -314,7 +309,6 @@ export default function App() {
 									variant="light"
 									color="wave"
 									size="lg"
-									radius="md"
 								>
 									Open script editor
 								</Button>
@@ -368,7 +362,6 @@ export default function App() {
 							variant="outline"
 							color="wave"
 							size="md"
-							radius="lg"
 							component={Link}
 							to="/dashboard"
 						>
@@ -388,7 +381,11 @@ export default function App() {
 				<Grid gutter={40}>
 					<Grid.Col span={{ base: 12, md: 4 }}>
 						<Group gap="xs" mb="md">
-							<Receipt size={30} strokeWidth={2} style={{ color: "#185a52" }} />
+							<Receipt
+								size={30}
+								strokeWidth={2}
+								style={{ color: "var(--mantine-color-wave-8)" }}
+							/>
 							<Text size="xl" fw={800} c="gray.8" className="tracking-tighter">
 								InVoice
 							</Text>

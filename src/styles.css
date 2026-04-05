@@ -1,11 +1,44 @@
-@import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap");
+@import "tailwindcss";
 @import "@mantine/core/styles.css";
 @import "@mantine/dropzone/styles.css";
 @import "@mantine/tiptap/styles.css";
 
+@theme {
+	--font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--font-display: "Source Serif 4", Georgia, Cambria, "Times New Roman", serif;
+	--radius-xs: 0px;
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--color-wave-50: var(--mantine-color-wave-0);
+	--color-wave-100: var(--mantine-color-wave-1);
+	--color-wave-200: var(--mantine-color-wave-2);
+	--color-wave-300: var(--mantine-color-wave-3);
+	--color-wave-400: var(--mantine-color-wave-4);
+	--color-wave-500: var(--mantine-color-wave-5);
+	--color-wave-600: var(--mantine-color-wave-6);
+	--color-wave-700: var(--mantine-color-wave-7);
+	--color-wave-800: var(--mantine-color-wave-8);
+	--color-wave-900: var(--mantine-color-wave-9);
+	--color-studio-50: var(--mantine-color-studio-0);
+	--color-studio-100: var(--mantine-color-studio-1);
+	--color-studio-200: var(--mantine-color-studio-2);
+	--color-studio-300: var(--mantine-color-studio-3);
+	--color-studio-400: var(--mantine-color-studio-4);
+	--color-studio-500: var(--mantine-color-studio-5);
+	--color-studio-600: var(--mantine-color-studio-6);
+	--color-studio-700: var(--mantine-color-studio-7);
+	--color-studio-800: var(--mantine-color-studio-8);
+	--color-studio-900: var(--mantine-color-studio-9);
+}
+
 :root {
 	--app-bg: light-dark(#F9FAFB, var(--mantine-color-dark-8));
+	--font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--font-display: "Source Serif 4", Georgia, Cambria, "Times New Roman", serif;
 }
 
 html,
@@ -13,7 +46,7 @@ body {
 	background: var(--app-bg);
 	color: #4b5563;
 	min-height: 100dvh;
-	font-family: "Inter", sans-serif;
+	font-family: var(--font-sans);
 	font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
@@ -29,13 +62,17 @@ body {
 	text-wrap: pretty;
 }
 
-/* Page Title Style Override */
-h1.mantine-Title-root, 
 .page-title {
+	font-family: var(--font-display);
 	font-weight: 800;
 	letter-spacing: -0.025em;
 	line-height: 1.1;
 	color: #1f2937;
+}
+
+.page-subtitle {
+	color: #6b7280;
+	text-wrap: pretty;
 }
 
 body {

@@ -1,5 +1,8 @@
 import { createTheme, type MantineColorsTuple } from "@mantine/core";
 
+const fontSans =
+	"Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif";
+
 /**
  * InVoice design tokens (warm, Gusto-inspired financial aesthetic):
  * - wave: deep teal primary (CTAs, active nav, links, focus rings)
@@ -39,37 +42,40 @@ export const appTheme = createTheme({
 		wave,
 	},
 	black: "#1F2937",
-	defaultRadius: "xl",
+	defaultRadius: 0,
+	radius: {
+		xs: "0px",
+		sm: "0px",
+		md: "0px",
+		lg: "0px",
+		xl: "0px",
+	},
 	shadows: {
 		sm: "0 2px 10px -3px rgba(0, 0, 0, 0.05)",
 		md: "0 4px 15px -5px rgba(0, 0, 0, 0.05)",
 		lg: "0 10px 25px -5px rgba(0, 0, 0, 0.05)",
 	},
-	fontFamily:
-		"Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
+	fontFamily: fontSans,
 	headings: {
-		fontFamily:
-			"Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
+		fontFamily: fontSans,
 		fontWeight: "800",
 	},
 	components: {
 		Paper: {
 			defaultProps: {
-				radius: "xl",
 				shadow: "sm",
 				withBorder: false,
 			},
 		},
 		Button: {
-			defaultProps: {
-				radius: "lg",
-			},
+			defaultProps: { radius: 0 },
 		},
-		Input: {
-			defaultProps: {
-				radius: "lg",
-			},
-		},
+		Input: { defaultProps: { radius: 0 } },
+		ActionIcon: { defaultProps: { radius: 0 } },
+		Badge: { defaultProps: { radius: 0 } },
+		Avatar: { defaultProps: { radius: 0 } },
+		ThemeIcon: { defaultProps: { radius: 0 } },
+		SegmentedControl: { defaultProps: { radius: 0 } },
 		InputWrapper: {
 			styles: {
 				label: {
@@ -85,7 +91,6 @@ export const appTheme = createTheme({
 		Modal: {
 			defaultProps: {
 				centered: true,
-				radius: "xl",
 				withinPortal: true,
 				overlayProps: {
 					blur: 3,
@@ -116,6 +121,13 @@ export const appTheme = createTheme({
 				},
 				td: {
 					borderBottom: "1px solid #F3F4F6",
+				},
+			},
+		},
+		Title: {
+			styles: {
+				root: {
+					color: "#1F2937",
 				},
 			},
 		},
