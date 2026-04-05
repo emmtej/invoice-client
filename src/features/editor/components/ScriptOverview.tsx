@@ -177,7 +177,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 								)}
 							</Group>
 							<Group gap="xs">
-								<Badge variant="dot" color="studio" size="sm">
+								<Badge variant="dot" color="wave" size="sm">
 									{overview.totalLines} Lines
 								</Badge>
 							</Group>
@@ -194,7 +194,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 								<MessageSquare size={12} strokeWidth={2.5} />
 								<span>Words</span>
 							</Box>
-							<Text fw={800} size="sm" className="text-studio-600 tabular-nums">
+							<Text fw={800} size="sm" className="text-wave-700 tabular-nums">
 								{overview.wordCount}
 							</Text>
 						</Group>
@@ -266,7 +266,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 					{onEdit && (
 						<Button
 							variant="filled"
-							color="studio"
+							color="wave"
 							size="sm"
 							leftSection={<Edit3 size={16} />}
 							onClick={onEdit}

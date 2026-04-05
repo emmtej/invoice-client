@@ -50,7 +50,7 @@ export function GettingStarted({
 									<Box
 										p="sm"
 										bg="white"
-										className="text-studio-600 shadow-sm group-hover:scale-105 transition-all border border-slate-100"
+										className="text-wave-700 shadow-sm group-hover:scale-105 transition-all border border-slate-100"
 										style={{ borderRadius: "var(--mantine-radius-md)" }}
 									>
 										<CloudUpload size={24} strokeWidth={1.5} />
@@ -70,7 +70,7 @@ export function GettingStarted({
 									multiple
 									size="sm"
 									radius="md"
-									className="shadow-sm shadow-studio-100 px-6"
+									className="shadow-sm shadow-wave-100 px-6"
 								>
 									Select Documents
 								</DocxUploadButton>
@@ -99,7 +99,7 @@ export function GettingStarted({
 											<Button
 												variant="filled"
 												size="sm"
-												color="studio"
+												color="wave"
 												leftSection={<Plus size={16} />}
 												onClick={handleCreateFromPaste}
 												radius="md"
@@ -128,7 +128,7 @@ export function GettingStarted({
 						<Box
 							p="xs"
 							bg="white"
-							className="text-studio-500 shadow-sm shrink-0"
+							className="text-wave-600 shadow-sm shrink-0"
 							style={{
 								border: "1px solid var(--mantine-color-gray-2)",
 								borderRadius: "var(--mantine-radius-md)",
@@ -137,7 +137,7 @@ export function GettingStarted({
 							<Plus size={16} strokeWidth={3} />
 						</Box>
 						<Text size="sm" fw={600} c="dark.4" className="leading-relaxed">
-							<span className="text-studio-700 font-bold">Pro Tip:</span> Our
+							<span className="text-wave-800 font-bold">Pro Tip:</span> Our
 							parser identifies dialogue, action lines, and scene markers
 							automatically. Only dialogue lines contribute to the billable word
 							count.

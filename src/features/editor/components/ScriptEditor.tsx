@@ -105,12 +105,12 @@ function ScriptEditorInner({
 						</Button>
 						<Button
 							size="xs"
-							color="studio"
+							color="wave"
 							variant="filled"
 							leftSection={<Check size={14} />}
 							onClick={handleSubmit}
 							radius="md"
-							className="shadow-sm shadow-studio-100"
+							className="shadow-sm shadow-wave-100"
 						>
 							Finish Editing
 						</Button>

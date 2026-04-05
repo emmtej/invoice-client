@@ -248,7 +248,7 @@ function UploadDocumentsOverviewInner({
 											}
 											aria-label="Select all"
 											size="xs"
-											color="studio"
+											color="wave"
 										/>
 									</Table.Th>
 									<Table.Th py="md" style={borderBottomGray2}>
@@ -271,7 +271,7 @@ function UploadDocumentsOverviewInner({
 												onChange={() => toggleScript(script.id)}
 												aria-label={`Select ${script.name}`}
 												size="xs"
-												color="studio"
+												color="wave"
 											/>
 										</Table.Td>
 										<Table.Td style={borderBottomGray1}>
@@ -319,12 +319,12 @@ function UploadDocumentsOverviewInner({
 				<Stack gap="xs">
 					<Button
 						variant="filled"
-						color="studio"
+						color="wave"
 						size="lg"
 						onClick={handleOpenAddModal}
 						disabled={!someSelected}
 						radius="xl"
-						className="shadow-xl shadow-studio-100 h-14 hover:scale-[1.02] transition-transform"
+						className="shadow-xl shadow-wave-100 h-14 hover:scale-[1.02] transition-transform"
 					>
 						{targetItemId
 							? targetItemName
@@ -343,7 +343,7 @@ function UploadDocumentsOverviewInner({
 							mt="xs"
 						>
 							{selectedScriptIds.size} Selected ·{" "}
-							<span className="text-studio-600 font-black">
+							<span className="text-wave-700 font-black">
 								{selectedWords} words
 							</span>
 						</Text>
@@ -373,9 +373,9 @@ function UploadDocumentsOverviewInner({
 								<Radio
 									value="existing"
 									label="Existing invoice item"
-									color="studio"
+									color="wave"
 								/>
-								<Radio value="new" label="New invoice item" color="studio" />
+								<Radio value="new" label="New invoice item" color="wave" />
 							</Stack>
 						</Radio.Group>
 					) : !targetItemId && !hasItems ? (
@@ -510,7 +510,7 @@ function UploadDocumentsOverviewInner({
 								Number(ratePerWords) > 0 && (
 									<Button
 										variant="light"
-										color="studio"
+										color="wave"
 										size="xs"
 										leftSection={<Bookmark size={14} />}
 										onClick={() => {
@@ -546,7 +546,7 @@ function UploadDocumentsOverviewInner({
 						</Button>
 						<Button
 							variant="filled"
-							color="studio"
+							color="wave"
 							onClick={handleAddToInvoice}
 							disabled={
 								!subitemLabel.trim() ||
@@ -557,7 +557,7 @@ function UploadDocumentsOverviewInner({
 										: !newItemName.trim())
 							}
 							radius="md"
-							className="shadow-sm shadow-studio-100"
+							className="shadow-sm shadow-wave-100"
 						>
 							{targetItemId ? "Add to Item" : "Confirm & Add"}
 						</Button>

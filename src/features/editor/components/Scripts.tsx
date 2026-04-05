@@ -239,13 +239,13 @@ export default function Scripts() {
 											</span>
 											<ActionIcon
 												variant="subtle"
-												color={activeScriptId === script.id ? "studio" : "gray"}
+												color={activeScriptId === script.id ? "wave" : "gray"}
 												size="xs"
 												className={`
     												transition-all rounded-md
     												${
 															activeScriptId === script.id
-																? "opacity-100 hover:bg-studio-50"
+																? "opacity-100 hover:bg-wave-50"
 																: "opacity-0 group-hover:opacity-100"
 														}
     											`}
@@ -263,11 +263,11 @@ export default function Scripts() {
 								<Tooltip label="Upload new document" position="bottom">
 									<ActionIcon
 										variant="subtle"
-										color="studio"
+										color="wave"
 										size={32}
 										radius="md"
 										onClick={() => setActiveScriptId(null)}
-										className="ml-2 hover:bg-studio-50 transition-all"
+										className="ml-2 hover:bg-wave-50 transition-all"
 									>
 										<Plus size={18} />
 									</ActionIcon>
@@ -278,7 +278,7 @@ export default function Scripts() {
 						<Group gap="xs" wrap="nowrap" justify="flex-end">
 							<Badge
 								variant="dot"
-								color="studio"
+								color="wave"
 								size="md"
 								radius="md"
 								className="bg-white border-slate-200 text-slate-600 px-3 h-8"
@@ -355,7 +355,7 @@ export default function Scripts() {
 							{hasScripts && (
 								<Box>
 									<Group gap="sm" mb="md" px={4}>
-										<Layers size={18} className="text-studio-600" />
+										<Layers size={18} className="text-wave-700" />
 										<SectionLabel letterSpacing={2}>
 											Document Inspector
 										</SectionLabel>
