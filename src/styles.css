@@ -4,12 +4,13 @@
 @import "@mantine/tiptap/styles.css";
 
 :root {
-	--app-bg: light-dark(#f7f6f3, var(--mantine-color-dark-8));
+	--app-bg: light-dark(#F9FAFB, var(--mantine-color-dark-8));
 }
 
 html,
 body {
 	background: var(--app-bg);
+	color: #4b5563;
 	min-height: 100dvh;
 }
 
@@ -17,7 +18,7 @@ body {
 	background-image: radial-gradient(
 		ellipse 120% 80% at 100% -20%,
 		light-dark(
-			color-mix(in srgb, var(--mantine-color-studio-2) 35%, transparent),
+			color-mix(in srgb, var(--mantine-color-studio-1) 35%, transparent),
 			color-mix(in srgb, var(--mantine-color-studio-9) 25%, transparent)
 		),
 		transparent 55%

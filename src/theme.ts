@@ -32,12 +32,17 @@ const wave: MantineColorsTuple = [
 ];
 
 export const appTheme = createTheme({
-	primaryColor: "studio",
+	primaryColor: "wave",
 	colors: {
 		studio,
 		wave,
 	},
-	defaultRadius: "md",
+	defaultRadius: "xl",
+	shadows: {
+		sm: "0 2px 10px -3px rgba(0, 0, 0, 0.05)",
+		md: "0 4px 15px -5px rgba(0, 0, 0, 0.05)",
+		lg: "0 10px 25px -5px rgba(0, 0, 0, 0.05)",
+	},
 	fontFamily:
 		"Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 	headings: {
@@ -47,18 +52,20 @@ export const appTheme = createTheme({
 	components: {
 		Paper: {
 			defaultProps: {
-				radius: "md",
+				radius: "xl",
+				shadow: "sm",
+				withBorder: false,
 			},
 		},
 		Button: {
 			defaultProps: {
-				radius: "md",
+				radius: "lg",
 			},
 		},
 		Modal: {
 			defaultProps: {
 				centered: true,
-				radius: "lg",
+				radius: "xl",
 				withinPortal: true,
 				overlayProps: {
 					blur: 3,
@@ -68,8 +75,8 @@ export const appTheme = createTheme({
 		},
 		Table: {
 			defaultProps: {
-				verticalSpacing: "sm",
-				horizontalSpacing: "md",
+				verticalSpacing: "md",
+				horizontalSpacing: "lg",
 				highlightOnHover: true,
 			},
 		},
