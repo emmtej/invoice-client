@@ -49,6 +49,7 @@ function Authentication() {
                 fw={800}
                 size="h2"
                 mb="lg"
+                c="gray.8"
                 className="tracking-tight text-balance"
               >
                 Get Started with InVoice

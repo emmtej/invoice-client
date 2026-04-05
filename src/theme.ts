@@ -1,9 +1,9 @@
 import { createTheme, type MantineColorsTuple } from "@mantine/core";
 
 /**
- * Voice-studio design tokens (soft Notion-like + Resolve/waveform accents):
- * - studio: warm terracotta primary (CTAs, active nav, key figures)
- * - wave: muted teal secondary (audio / studio moments, links, add actions)
+ * InVoice design tokens (warm, Gusto-inspired financial aesthetic):
+ * - wave: deep teal primary (CTAs, active nav, links, focus rings)
+ * - studio: warm terracotta accent (badges, illustrations, warm tints)
  */
 const studio: MantineColorsTuple = [
 	"#fdf6f3",
@@ -58,6 +58,11 @@ export const appTheme = createTheme({
 			},
 		},
 		Button: {
+			defaultProps: {
+				radius: "lg",
+			},
+		},
+		Input: {
 			defaultProps: {
 				radius: "lg",
 			},
