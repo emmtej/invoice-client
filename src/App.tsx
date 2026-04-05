@@ -58,7 +58,7 @@ const tools = [
 		description: "Parse scripts and track dialogue",
 		icon: Pencil,
 		to: "/editor",
-		color: "studio" as const,
+		color: "wave" as const,
 	},
 	{
 		title: "Invoices",
@@ -211,7 +211,7 @@ function HeroPreviewMock() {
 
 export default function App() {
 	const featureIcons: Array<"studio" | "wave" | "gray" | "grape"> = [
-		"studio",
+		"wave",
 		"wave",
 		"gray",
 		"grape",
@@ -223,7 +223,7 @@ export default function App() {
 				size={44}
 				radius="md"
 				variant="light"
-				color={featureIcons[i] ?? "studio"}
+				color={featureIcons[i] ?? "wave"}
 			>
 				<feature.icon size={26} strokeWidth={1.5} />
 			</ThemeIcon>
@@ -275,7 +275,7 @@ export default function App() {
 					<Grid.Col span={{ base: 12, md: 6 }}>
 						<Stack gap="xl">
 							<div>
-								<Badge variant="light" color="studio" size="lg" mb="sm">
+								<Badge variant="light" color="wave" size="lg" mb="sm">
 									Invoicing for voice actors
 								</Badge>
 								<Title order={1} size={48} fw={900} style={{ lineHeight: 1.1 }}>
@@ -302,7 +302,7 @@ export default function App() {
 									component={Link}
 									to="/register"
 									variant="filled"
-									color="studio"
+									color="wave"
 									size="lg"
 									radius="md"
 								>
@@ -355,7 +355,7 @@ export default function App() {
 
 						<Button
 							variant="outline"
-							color="studio"
+							color="wave"
 							size="md"
 							radius="md"
 							component={Link}

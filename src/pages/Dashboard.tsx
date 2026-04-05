@@ -22,15 +22,10 @@ export default function Dashboard() {
 				</Text>
 			</div>
 
-			<Paper
-				p="lg"
-				radius="md"
-				maw={480}
-				className="bg-white border border-slate-100"
-			>
+			<Paper p="lg" maw={480} bg="white">
 				<Stack gap="md">
 					<Group gap="sm">
-						<ThemeIcon size={32} radius="md" variant="light" color="studio">
+						<ThemeIcon size={32} radius="md" variant="light" color="wave">
 							<Gauge size={18} strokeWidth={1.5} />
 						</ThemeIcon>
 						<div>
@@ -45,7 +40,7 @@ export default function Dashboard() {
 					<Button
 						component={Link}
 						to="/invoice"
-						color="studio"
+						color="wave"
 						size="sm"
 						leftSection={<Receipt size={16} />}
 						radius="md"
