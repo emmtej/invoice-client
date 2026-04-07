@@ -1,6 +1,5 @@
 import {
 	ActionIcon,
-	Badge,
 	Box,
 	Button,
 	Group,
@@ -26,6 +25,7 @@ interface WorkspaceExplorerProps {
 	onSelect: (id: string | null) => void;
 	onRemove: (id: string) => void;
 	onOpenSaveModal: () => void;
+	onOpenClearAll: () => void;
 }
 
 export const WorkspaceExplorer = memo(
@@ -35,6 +35,7 @@ export const WorkspaceExplorer = memo(
 		onSelect,
 		onRemove,
 		onOpenSaveModal,
+		onOpenClearAll,
 	}: WorkspaceExplorerProps) => {
 		const totalWords = useMemo(
 			() => scripts.reduce((acc, s) => acc + s.overview.wordCount, 0),
@@ -85,18 +86,30 @@ export const WorkspaceExplorer = memo(
 							<Layers size={16} className="text-gray-400" />
 							<SectionLabel>Documents ({scripts.length})</SectionLabel>
 						</Group>
-						<Tooltip label="Upload new document">
-							<ActionIcon
-								variant="subtle"
-								color="wave"
-								size="sm"
-								onClick={() => onSelect(null)}
-							>
-								<Plus size={16} />
-							</ActionIcon>
-						</Tooltip>
-					</Group>
-				</Box>
+						<Group gap={4}>
+							<Tooltip label="Clear all documents">
+								<ActionIcon
+									data-testid="clear-all-documents-trigger"
+									variant="subtle"
+									color="gray"
+									size="sm"
+									onClick={onOpenClearAll}
+								>
+									<Trash2 size={16} />
+								</ActionIcon>
+							</Tooltip>
+							<Tooltip label="Upload new document">
+								<ActionIcon
+									variant="subtle"
+									color="wave"
+									size="sm"
+									onClick={() => onSelect(null)}
+								>
+									<Plus size={16} />
+								</ActionIcon>
+							</Tooltip>
+						</Group>
+					</Group>				</Box>
 
 				<ScrollArea flex={1} px="md" pb="lg">
 					<Stack gap={4}>

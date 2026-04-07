@@ -8,7 +8,6 @@ import {
 	render,
 	screen,
 	waitFor,
-	within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { appTheme } from "@/theme";
@@ -94,16 +93,16 @@ describe("Scripts", () => {
 		useScriptStore.setState({ scripts: [] });
 	});
 
-	it("shows Getting Started tab in the header when there are no scripts", () => {
+	it("shows Getting Started when there are no scripts", () => {
 		render(
 			<TestWrapper>
 				<Scripts />
 			</TestWrapper>,
 		);
-		expect(screen.getByTestId("getting-started-tab")).toBeTruthy();
+		expect(screen.getByTestId("getting-started-view")).toBeTruthy();
 	});
 
-	it("does not show Getting Started tab when at least one script exists", () => {
+	it("does not show Getting Started view when at least one script exists", () => {
 		useScriptStore.setState({
 			scripts: [createMockScript("1", "My Script.docx")],
 		});
@@ -112,7 +111,7 @@ describe("Scripts", () => {
 				<Scripts />
 			</TestWrapper>,
 		);
-		expect(screen.queryByTestId("getting-started-tab")).toBeNull();
+		expect(screen.queryByTestId("getting-started-view")).toBeNull();
 		expect(screen.getAllByText("My Script.docx").length).toBeGreaterThan(0);
 	});
 
@@ -126,15 +125,15 @@ describe("Scripts", () => {
 			</TestWrapper>,
 		);
 
-		const toolbar = screen.getByTestId("scripts-tabs-bar");
-		fireEvent.click(within(toolbar).getByTestId("clear-all-documents-trigger"));
+		const clearBtn = screen.getByTestId("clear-all-documents-trigger");
+		fireEvent.click(clearBtn);
 		const confirm = await screen.findByTestId("clear-all-documents-confirm");
 		fireEvent.click(confirm);
 
 		await waitFor(() => {
 			expect(useScriptStore.getState().scripts).toEqual([]);
 		});
-		expect(screen.getByTestId("getting-started-tab")).toBeTruthy();
+		expect(screen.getByTestId("getting-started-view")).toBeTruthy();
 
 		await waitFor(() => {
 			expect(screen.queryByRole("dialog")).toBeNull();

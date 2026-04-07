@@ -4,6 +4,7 @@ import { AlertCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useFileUpload } from "../hooks/useFileUpload";
+import { pgliteStore } from "../store/pgliteStore";
 import { useScriptStore } from "../store/scriptEditorStore";
 import { processDocuments, reparseHtmlToScript } from "../utils/documentParser";
 import { ClearAllScriptsModal } from "./ClearAllScriptsModal";
@@ -12,7 +13,6 @@ import { SaveToStorageModal } from "./SaveToStorageModal";
 import { ScriptEditor } from "./ScriptEditor";
 import { ScriptsLoading } from "./ScriptsLoading";
 import { WorkspaceExplorer } from "./WorkspaceExplorer";
-import { pgliteStore } from "../store/pgliteStore";
 
 /**
  * Main Scripts Feature Component
@@ -57,10 +57,8 @@ export default function Scripts() {
 		{ open: openClearAllModal, close: closeClearAllModal },
 	] = useDisclosure(false);
 
-	const [
-		saveModalOpened,
-		{ open: openSaveModal, close: closeSaveModal },
-	] = useDisclosure(false);
+	const [saveModalOpened, { open: openSaveModal, close: closeSaveModal }] =
+		useDisclosure(false);
 
 	/**
 	 * Logic: File Processing
@@ -219,6 +217,7 @@ export default function Scripts() {
 						onSelect={setActiveScriptId}
 						onRemove={removeScript}
 						onOpenSaveModal={openSaveModal}
+						onOpenClearAll={openClearAllModal}
 					/>
 				)}
 			</Flex>

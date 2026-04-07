@@ -23,7 +23,7 @@ export function GettingStarted({
 	}, [pastedContent, onPasteProcessed]);
 
 	return (
-		<Flex direction="column" h="100%" bg="white">
+		<Flex data-testid="getting-started-view" direction="column" h="100%" bg="white">
 			<Stack
 				gap={48}
 				px={48}
