@@ -3,111 +3,111 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { parseHtmlToDocument } from "../utils/parseHtmlToDocument";
 
 export interface DocFile {
-	name: string;
-	document: Document;
+  name: string;
+  document: Document;
 }
 
 interface UseFileUpload {
-	docFiles: DocFile[];
-	isLoading: boolean;
-	errors: string[];
-	handleFileChange: (e: React.ChangeEvent<HTMLInputElement> | File[]) => void;
-	reset: () => void;
+  docFiles: DocFile[];
+  isLoading: boolean;
+  errors: string[];
+  handleFileChange: (e: React.ChangeEvent<HTMLInputElement> | File[]) => void;
+  reset: () => void;
 }
 
 export function useFileUpload(): UseFileUpload {
-	const [docFiles, setDocFiles] = useState<DocFile[]>([]);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [errors, setErrors] = useState<string[]>([]);
-	const isMountedRef = useRef(true);
+  const [docFiles, setDocFiles] = useState<DocFile[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<string[]>([]);
+  const isMountedRef = useRef(true);
 
-	useEffect(() => {
-		isMountedRef.current = true;
-		return () => {
-			isMountedRef.current = false;
-		};
-	}, []);
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
-	const processFiles = useCallback(async (newFiles: File[]) => {
-		setIsLoading(true);
-		setErrors([]);
+  const processFiles = useCallback(async (newFiles: File[]) => {
+    setIsLoading(true);
+    setErrors([]);
 
-		const filePromises = newFiles.map(async (file): Promise<DocFile> => {
-			if (!file.name.endsWith(".docx")) {
-				throw new Error(`File "${file.name}" is not a .docx file.`);
-			}
-			try {
-				const arrayBuffer = await file.arrayBuffer();
-				const { value } = await mammoth.convertToHtml({ arrayBuffer });
+    const filePromises = newFiles.map(async (file): Promise<DocFile> => {
+      if (!file.name.endsWith(".docx")) {
+        throw new Error(`File "${file.name}" is not a .docx file.`);
+      }
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const { value } = await mammoth.convertToHtml({ arrayBuffer });
 
-				const document = parseHtmlToDocument(value);
+        const document = parseHtmlToDocument(value);
 
-				return {
-					name: file.name,
-					document,
-				};
-			} catch (err) {
-				throw new Error(
-					`Failed to parse ${file.name}: ${err instanceof Error ? err.message : String(err)}`,
-				);
-			}
-		});
+        return {
+          name: file.name,
+          document,
+        };
+      } catch (err) {
+        throw new Error(
+          `Failed to parse ${file.name}: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+    });
 
-		const results = await Promise.allSettled(filePromises);
-		if (!isMountedRef.current) return;
+    const results = await Promise.allSettled(filePromises);
+    if (!isMountedRef.current) return;
 
-		const successfulDocs: DocFile[] = [];
-		const newErrors: string[] = [];
+    const successfulDocs: DocFile[] = [];
+    const newErrors: string[] = [];
 
-		results.forEach((result) => {
-			if (result.status === "fulfilled") {
-				successfulDocs.push(result.value);
-			} else {
-				console.error(result.reason);
-				newErrors.push(result.reason.message);
-			}
-		});
+    results.forEach((result) => {
+      if (result.status === "fulfilled") {
+        successfulDocs.push(result.value);
+      } else {
+        console.error(result.reason);
+        newErrors.push(result.reason.message);
+      }
+    });
 
-		if (newErrors.length > 0) {
-			setErrors((prev) => [...prev, ...newErrors]);
-		}
+    if (newErrors.length > 0) {
+      setErrors((prev) => [...prev, ...newErrors]);
+    }
 
-		if (successfulDocs.length > 0) {
-			setDocFiles((prev) => [...prev, ...successfulDocs]);
-		}
+    if (successfulDocs.length > 0) {
+      setDocFiles((prev) => [...prev, ...successfulDocs]);
+    }
 
-		setIsLoading(false);
-	}, []);
+    setIsLoading(false);
+  }, []);
 
-	const handleFileChange = useCallback(
-		(input: React.ChangeEvent<HTMLInputElement> | File[]) => {
-			let incomingFiles: File[] = [];
+  const handleFileChange = useCallback(
+    (input: React.ChangeEvent<HTMLInputElement> | File[]) => {
+      let incomingFiles: File[] = [];
 
-			if (Array.isArray(input)) {
-				incomingFiles = input;
-			} else if (input.target?.files) {
-				incomingFiles = Array.from(input.target.files);
-			}
+      if (Array.isArray(input)) {
+        incomingFiles = input;
+      } else if (input.target?.files) {
+        incomingFiles = Array.from(input.target.files);
+      }
 
-			if (incomingFiles.length > 0) {
-				processFiles(incomingFiles);
-			}
-		},
-		[processFiles],
-	);
+      if (incomingFiles.length > 0) {
+        processFiles(incomingFiles);
+      }
+    },
+    [processFiles],
+  );
 
-	// Resets
-	const reset = useCallback(() => {
-		setDocFiles([]);
-		setErrors([]);
-		setIsLoading(false);
-	}, []);
+  // Resets
+  const reset = useCallback(() => {
+    setDocFiles([]);
+    setErrors([]);
+    setIsLoading(false);
+  }, []);
 
-	return {
-		docFiles,
-		isLoading,
-		errors,
-		handleFileChange,
-		reset,
-	};
+  return {
+    docFiles,
+    isLoading,
+    errors,
+    handleFileChange,
+    reset,
+  };
 }

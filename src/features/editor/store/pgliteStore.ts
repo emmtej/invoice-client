@@ -1,4 +1,4 @@
-import type { Script, ScriptOverview, ParsedLine } from "@/types/Script";
+import type { ParsedLine, Script, ScriptOverview } from "@/types/Script";
 
 // Singleton instance for the database
 let db: any = null;

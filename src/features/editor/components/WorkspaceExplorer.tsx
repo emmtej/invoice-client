@@ -59,7 +59,6 @@ export const WorkspaceExplorer = memo(
 						<LayoutDashboard size={18} className="text-wave-700" />
 						<SectionLabel letterSpacing={2}>Workspace Overview</SectionLabel>
 					</Group>
-
 					<Box
 						p="md"
 						bg="wave.0"
@@ -80,7 +79,6 @@ export const WorkspaceExplorer = memo(
 							</Text>
 						</Stack>
 					</Box>
-
 					<Group justify="space-between" align="center" mb="md">
 						<Group gap="xs">
 							<Layers size={16} className="text-gray-400" />
@@ -109,7 +107,8 @@ export const WorkspaceExplorer = memo(
 								</ActionIcon>
 							</Tooltip>
 						</Group>
-					</Group>				</Box>
+					</Group>{" "}
+				</Box>
 
 				<ScrollArea flex={1} px="md" pb="lg">
 					<Stack gap={4}>
