@@ -22,6 +22,8 @@ export const initDb = async () => {
       html TEXT NOT NULL,
       overview JSONB NOT NULL,
       lines JSONB NOT NULL,
+      group_name TEXT,
+      label TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `);
@@ -40,10 +42,14 @@ export const getDb = () => {
 export const pgliteStore = {
 	async getAllScripts(): Promise<Script[]> {
 		const database = await initDb();
-		const result = await database.query("SELECT * FROM scripts ORDER BY created_at DESC;");
+		const result = await database.query(
+			"SELECT * FROM scripts ORDER BY created_at DESC;",
+		);
 
 		return result.rows.map((row: any) => ({
 			...row,
+			groupName: row.group_name,
+			label: row.label,
 			// PGLite with query/exec might return JSONB as parsed objects already
 			overview: (typeof row.overview === "string"
 				? JSON.parse(row.overview)
@@ -58,17 +64,27 @@ export const pgliteStore = {
 
 	async saveScript(script: Script): Promise<void> {
 		const database = await initDb();
-		const { id, name, html, overview, lines } = script;
+		const { id, name, html, overview, lines, groupName, label } = script;
 
 		await database.query(
-			`INSERT INTO scripts (id, name, html, overview, lines)
-       VALUES ($1, $2, $3, $4, $5)
+			`INSERT INTO scripts (id, name, html, overview, lines, group_name, label)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        ON CONFLICT (id) DO UPDATE SET
          name = EXCLUDED.name,
          html = EXCLUDED.html,
          overview = EXCLUDED.overview,
-         lines = EXCLUDED.lines;`,
-			[id, name, html, JSON.stringify(overview), JSON.stringify(lines)],
+         lines = EXCLUDED.lines,
+         group_name = EXCLUDED.group_name,
+         label = EXCLUDED.label;`,
+			[
+				id,
+				name,
+				html,
+				JSON.stringify(overview),
+				JSON.stringify(lines),
+				groupName ?? null,
+				label ?? null,
+			],
 		);
 	},
 

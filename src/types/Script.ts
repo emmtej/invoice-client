@@ -13,6 +13,8 @@ export interface Script {
 	lines: ParsedLine[];
 	overview: ScriptOverview;
 	html: string;
+	groupName?: string;
+	label?: string;
 }
 
 export interface BaseLine {
