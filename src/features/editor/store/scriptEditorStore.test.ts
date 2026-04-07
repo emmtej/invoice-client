@@ -3,28 +3,52 @@
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("zustand/middleware", () => ({
-	persist: (config: unknown) => config,
-	createJSONStorage: () => ({}),
+// Mock PGLite and pgliteStore
+vi.mock("./pgliteStore", () => ({
+	pgliteStore: {
+		getAllScripts: vi.fn().mockResolvedValue([]),
+		saveScript: vi.fn().mockResolvedValue(undefined),
+		saveScripts: vi.fn().mockResolvedValue(undefined),
+		deleteScript: vi.fn().mockResolvedValue(undefined),
+		deleteScripts: vi.fn().mockResolvedValue(undefined),
+	},
 }));
 
 import { useScriptStore } from "./scriptEditorStore";
+import { pgliteStore } from "./pgliteStore";
 
 describe("scriptEditorStore", () => {
 	beforeEach(() => {
-		Object.defineProperty(window, "localStorage", {
-			value: {
-				getItem: vi.fn(() => null),
-				setItem: vi.fn(),
-				removeItem: vi.fn(),
-				clear: vi.fn(),
-			},
-			writable: true,
+		vi.clearAllMocks();
+		useScriptStore.setState({
+			scripts: [],
+			isDbReady: false,
+			isLoading: false,
+			persistenceEnabled: true,
 		});
-		useScriptStore.setState({ scripts: [] });
 	});
 
-	it("should update lines and overview but preserve html when shouldUpdateHtml is false", () => {
+	it("should initialize the store from PGLite", async () => {
+		const mockScripts = [
+			{
+				id: "1",
+				name: "Stored Script",
+				html: "<p>00:01 Speaker: Hello</p>",
+				lines: [],
+				overview: { wordCount: 0 },
+				source: document.implementation.createHTMLDocument(),
+			},
+		];
+		(pgliteStore.getAllScripts as any).mockResolvedValue(mockScripts);
+
+		await useScriptStore.getState().init();
+
+		expect(useScriptStore.getState().scripts).toEqual(mockScripts);
+		expect(useScriptStore.getState().isDbReady).toBe(true);
+		expect(pgliteStore.getAllScripts).toHaveBeenCalled();
+	});
+
+	it("should update lines and overview but preserve html when shouldUpdateHtml is false", async () => {
 		const initialHtml = "<p>00:01 Speaker: Hello</p>";
 		const initialScript = {
 			id: "1",
@@ -46,11 +70,11 @@ describe("scriptEditorStore", () => {
 
 		const updatedHtmlFromEditor = "<p>00:01 Speaker: Hello World</p>";
 
-		// Update store with current editor HTML first (simulating onUpdate from Tiptap)
-		useScriptStore.getState().updateHtml("1", updatedHtmlFromEditor);
+		// Update store with current editor HTML first
+		await useScriptStore.getState().updateHtml("1", updatedHtmlFromEditor);
 
 		// Now trigger debounced reparse with shouldUpdateHtml = false
-		useScriptStore
+		await useScriptStore
 			.getState()
 			.updateScriptFromHtml("1", updatedHtmlFromEditor, false);
 
@@ -69,9 +93,10 @@ describe("scriptEditorStore", () => {
 
 		// Overview should be updated
 		expect(updatedScript.overview.wordCount).toBe(2);
+		expect(pgliteStore.saveScript).toHaveBeenCalled();
 	});
 
-	it("should update HTML when shouldUpdateHtml is true (default)", () => {
+	it("should update HTML when shouldUpdateHtml is true (default)", async () => {
 		const initialHtml = "<p>Original</p>";
 		const initialScript = {
 			id: "1",
@@ -91,15 +116,14 @@ describe("scriptEditorStore", () => {
 
 		useScriptStore.setState({ scripts: [initialScript] });
 
-		// This HTML would be reformatted by reparseHtmlToScript (stripped or wrapped in <s> if invalid)
+		// This HTML would be reformatted by reparseHtmlToScript
 		const dirtyHtml = "<p>  00:01 Speaker: Clean  </p>";
 
-		useScriptStore.getState().updateScriptFromHtml("1", dirtyHtml, true);
+		await useScriptStore.getState().updateScriptFromHtml("1", dirtyHtml, true);
 
 		const updatedScript = useScriptStore.getState().scripts[0];
 
 		// The HTML should be formatted/cleaned by generateHtmlFromScript
-		// reparseHtmlToScript will trim it and produce <p>00:01 Speaker: Clean</p>
 		expect(updatedScript.html).toBe("<p>00:01 Speaker: Clean</p>");
 	});
 });
