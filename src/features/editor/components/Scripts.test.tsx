@@ -48,15 +48,6 @@ vi.mock("../hooks/useFileUpload", () => ({
 	}),
 }));
 
-vi.mock("@/features/invoice/store/invoiceStore", () => ({
-	useInvoiceStore: (
-		selector: (s: { invoice: { items: unknown[] } }) => unknown,
-	) =>
-		selector({
-			invoice: { items: [] },
-		}),
-}));
-
 import { useScriptStore } from "../store/scriptEditorStore";
 import Scripts from "./Scripts";
 

@@ -13,7 +13,7 @@ import {
 	TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Bookmark, FileText } from "lucide-react";
+import { Bookmark, FileText, Plus } from "lucide-react";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { EmptyState } from "@/components/ui/feedback/EmptyState";
@@ -323,6 +323,7 @@ function UploadDocumentsOverviewInner({
 						size="lg"
 						onClick={handleOpenAddModal}
 						disabled={!someSelected}
+						leftSection={<Plus size={18} />}
 						className="shadow-xl shadow-wave-100 h-14 hover:scale-[1.02] transition-transform"
 					>
 						{targetItemId

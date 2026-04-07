@@ -6,6 +6,7 @@ import {
 	Button,
 	Flex,
 	Group,
+	Loader,
 	ScrollArea,
 	Stack,
 	Text,
@@ -38,16 +39,31 @@ import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
 export default function Scripts() {
 	const { docFiles, handleFileChange, reset } = useFileUpload();
 
-	const { scripts, addScripts, removeScript, removeScripts, setScripts } =
-		useScriptStore(
-			useShallow((s) => ({
-				scripts: s.scripts,
-				addScripts: s.addScripts,
-				removeScript: s.removeScript,
-				removeScripts: s.removeScripts,
-				setScripts: s.setScripts,
-			})),
-		);
+	const {
+		scripts,
+		addScripts,
+		removeScript,
+		removeScripts,
+		init,
+		isLoading,
+		persistenceEnabled,
+		togglePersistence,
+	} = useScriptStore(
+		useShallow((s) => ({
+			scripts: s.scripts,
+			addScripts: s.addScripts,
+			removeScript: s.removeScript,
+			removeScripts: s.removeScripts,
+			init: s.init,
+			isLoading: s.isLoading,
+			persistenceEnabled: s.persistenceEnabled,
+			togglePersistence: s.togglePersistence,
+		})),
+	);
+
+	useEffect(() => {
+		init();
+	}, [init]);
 
 	const invoiceItemsLength = useInvoiceStore((s) => s.invoice.items.length);
 
@@ -61,15 +77,15 @@ export default function Scripts() {
 		{ open: openClearAllModal, close: closeClearAllModal },
 	] = useDisclosure(false);
 
-	const handleConfirmClearAllDocuments = useCallback(() => {
-		setScripts([]);
+	const handleConfirmClearAllDocuments = useCallback(async () => {
+		await removeScripts(scripts.map((s) => s.id));
 		reset();
 		setActiveScriptId(null);
 		setInitialSelectDone(false);
 		setEditingScriptId(null);
 		setPasteError(null);
 		closeClearAllModal();
-	}, [setScripts, reset, closeClearAllModal]);
+	}, [scripts, removeScripts, reset, closeClearAllModal]);
 
 	useEffect(() => {
 		if (!docFiles || docFiles.length === 0) return;
@@ -150,6 +166,26 @@ export default function Scripts() {
 		},
 		[scripts.length, addScripts],
 	);
+
+	if (isLoading) {
+		return (
+			<Flex h="100%" align="center" justify="center">
+				<Stack align="center" gap="xs">
+					<Loader size="sm" color="wave" />
+					<Text size="sm" fw={700} c="gray.6" tt="uppercase" lts={1}>
+						{persistenceEnabled
+							? "Initializing Workspace..."
+							: "Optimizing Workspace..."}
+					</Text>
+					<Text size="xs" c="gray.5">
+						{persistenceEnabled
+							? "Preparing your local secure database"
+							: "Setting up your secure offline environment"}
+					</Text>
+				</Stack>
+			</Flex>
+		);
+	}
 
 	const activeScript = scripts.find((s) => s.id === activeScriptId);
 	const hasScripts = scripts.length > 0;
@@ -350,12 +386,22 @@ export default function Scripts() {
 						<Stack gap="xl" p="lg" className="flex-1 overflow-y-auto">
 							{hasScripts && (
 								<Box>
-									<Group gap="sm" mb="md" px={4}>
-										<Layers size={18} className="text-wave-700" />
-										<SectionLabel letterSpacing={2}>
-											Document Inspector
-										</SectionLabel>
+									<Group justify="space-between" align="center" mb="md" px={4}>
+										<Group gap="sm">
+											<Layers size={18} className="text-wave-700" />
+											<SectionLabel letterSpacing={2}>
+												Document Inspector
+											</SectionLabel>
+										</Group>
+										{persistenceEnabled && (
+											<Tooltip label="Securely saved in your browser" position="bottom" withArrow>
+												<Badge size="xs" color="wave" variant="light" className="cursor-help">
+													Saved
+												</Badge>
+											</Tooltip>
+										)}
 									</Group>
+
 									<UploadDocumentsOverview
 										scripts={scripts}
 										onAddedToInvoice={(addedIds: string[]) => {
@@ -369,9 +415,7 @@ export default function Scripts() {
 								<Box>
 									<Group gap="sm" mb="md" px={4}>
 										<FilePlus size={18} className="text-wave-600" />
-										<SectionLabel letterSpacing={2}>
-											Invoice Summary
-										</SectionLabel>
+										<SectionLabel letterSpacing={2}>Invoice Summary</SectionLabel>
 									</Group>
 									<InvoiceSummary
 										invoiceTitle={loadInvoiceDefaults().invoiceTitle}
@@ -396,11 +440,7 @@ export default function Scripts() {
 						scripts. Invoice line items you already created are not removed.
 					</Text>
 					<Group justify="flex-end" gap="xs" mt="xs">
-						<Button
-							variant="subtle"
-							color="gray"
-							onClick={closeClearAllModal}
-						>
+						<Button variant="subtle" color="gray" onClick={closeClearAllModal}>
 							Cancel
 						</Button>
 						<Button

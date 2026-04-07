@@ -24,25 +24,6 @@ import { appTheme } from "@/theme";
 import type { Script } from "@/types/Script";
 import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
 
-// Mock Zustand stores
-vi.mock("@/features/invoice/store/invoiceStore", () => ({
-	useInvoiceStore: vi.fn((selector) =>
-		selector({
-			invoice: { items: [], defaultRatePerWord: 0.1 },
-			addSubitemsToItem: vi.fn(),
-			addSubitemsAsNewItem: vi.fn(),
-		}),
-	),
-}));
-
-vi.mock("@/features/invoice/presets/useSubitemPresets", () => ({
-	useSubitemPresets: () => ({
-		presetOptions: [],
-		addPreset: vi.fn(),
-		getPresetById: vi.fn(),
-	}),
-}));
-
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 	<MantineProvider theme={appTheme}>{children}</MantineProvider>
 );
