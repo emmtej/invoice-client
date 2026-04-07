@@ -1,41 +1,23 @@
-import {
-	ActionIcon,
-	Alert,
-	Badge,
-	Box,
-	Button,
-	Flex,
-	Group,
-	Loader,
-	ScrollArea,
-	Stack,
-	Text,
-	Tooltip,
-} from "@mantine/core";
+import { Alert, Box, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-	AlertCircle,
-	FilePlus,
-	FileText,
-	Layers,
-	LayoutDashboard,
-	Plus,
-	Trash2,
-} from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { AppModal } from "@/components/ui/modal/AppModal";
-import { SectionLabel } from "@/components/ui/text/SectionLabel";
-import { loadInvoiceDefaults } from "@/features/invoice/details";
-import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
-import { InvoiceSummary } from "@/features/invoice/summary";
 import { useFileUpload } from "../hooks/useFileUpload";
 import { useScriptStore } from "../store/scriptEditorStore";
 import { processDocuments, reparseHtmlToScript } from "../utils/documentParser";
+import { ClearAllScriptsModal } from "./ClearAllScriptsModal";
 import { GettingStarted } from "./GettingStarted";
+import { SaveToStorageModal } from "./SaveToStorageModal";
 import { ScriptEditor } from "./ScriptEditor";
-import { UploadDocumentsOverview } from "./UploadDocumentsOverview";
+import { ScriptsLoading } from "./ScriptsLoading";
+import { WorkspaceExplorer } from "./WorkspaceExplorer";
+import { pgliteStore } from "../store/pgliteStore";
 
+/**
+ * Main Scripts Feature Component
+ * Manages the collection of scripts, their selection, and the editor layout.
+ */
 export default function Scripts() {
 	const { docFiles, handleFileChange, reset } = useFileUpload();
 
@@ -47,7 +29,6 @@ export default function Scripts() {
 		init,
 		isLoading,
 		persistenceEnabled,
-		togglePersistence,
 	} = useScriptStore(
 		useShallow((s) => ({
 			scripts: s.scripts,
@@ -57,16 +38,15 @@ export default function Scripts() {
 			init: s.init,
 			isLoading: s.isLoading,
 			persistenceEnabled: s.persistenceEnabled,
-			togglePersistence: s.togglePersistence,
 		})),
 	);
 
+	// Initial store initialization
 	useEffect(() => {
 		init();
 	}, [init]);
 
-	const invoiceItemsLength = useInvoiceStore((s) => s.invoice.items.length);
-
+	// Local UI State
 	const [activeScriptId, setActiveScriptId] = useState<string | null>(null);
 	const [editingScriptId, setEditingScriptId] = useState<string | null>(null);
 	const [initialSelectDone, setInitialSelectDone] = useState(false);
@@ -77,29 +57,32 @@ export default function Scripts() {
 		{ open: openClearAllModal, close: closeClearAllModal },
 	] = useDisclosure(false);
 
-	const handleConfirmClearAllDocuments = useCallback(async () => {
-		await removeScripts(scripts.map((s) => s.id));
-		reset();
-		setActiveScriptId(null);
-		setInitialSelectDone(false);
-		setEditingScriptId(null);
-		setPasteError(null);
-		closeClearAllModal();
-	}, [scripts, removeScripts, reset, closeClearAllModal]);
+	const [
+		saveModalOpened,
+		{ open: openSaveModal, close: closeSaveModal },
+	] = useDisclosure(false);
 
+	/**
+	 * Logic: File Processing
+	 * Converts uploaded DocFiles into Scripts and adds them to the store.
+	 */
 	useEffect(() => {
 		if (!docFiles || docFiles.length === 0) return;
 
-		const s = processDocuments(docFiles);
-		addScripts(s);
-		if (s.length > 0) {
-			setActiveScriptId(s[0].id);
+		const processed = processDocuments(docFiles);
+		addScripts(processed);
+
+		if (processed.length > 0) {
+			setActiveScriptId(processed[0].id);
 			setInitialSelectDone(true);
 		}
-		reset(); // Clear the temporary docFiles from hook
+		reset(); // Clear temporary file state
 	}, [docFiles, addScripts, reset]);
 
-	// Auto-select first script if none selected but scripts exist (initial load)
+	/**
+	 * Logic: Auto-selection Fallback
+	 * Ensures a script is selected if available.
+	 */
 	useEffect(() => {
 		if (
 			!initialSelectDone &&
@@ -110,19 +93,15 @@ export default function Scripts() {
 			setActiveScriptId(scripts[0].id);
 			setInitialSelectDone(true);
 		} else if (scripts.length === 0 && activeScriptId !== null) {
-			// Clear active ID if all scripts were deleted
 			setActiveScriptId(null);
 			setInitialSelectDone(false);
 		}
 	}, [scripts, activeScriptId, docFiles.length, initialSelectDone]);
 
-	// Clear editing state when active script changes
-	useEffect(() => {
-		setEditingScriptId(null);
-		setPasteError(null);
-	}, []);
-
-	// Effect to handle selection fallback if the active one is removed
+	/**
+	 * Logic: Selection Sync
+	 * Handles cases where the active script is removed from the list.
+	 */
 	useEffect(() => {
 		if (activeScriptId !== null && scripts.length > 0) {
 			const exists = scripts.some((s) => s.id === activeScriptId);
@@ -132,13 +111,16 @@ export default function Scripts() {
 		}
 	}, [activeScriptId, scripts]);
 
-	const handleStopEdit = useCallback(() => {
+	// Handlers
+	const handleConfirmClearAll = useCallback(async () => {
+		await removeScripts(scripts.map((s) => s.id));
+		reset();
+		setActiveScriptId(null);
+		setInitialSelectDone(false);
 		setEditingScriptId(null);
-	}, []);
-
-	const handleStartEdit = useCallback((scriptId: string) => {
-		setEditingScriptId(scriptId);
-	}, []);
+		setPasteError(null);
+		closeClearAllModal();
+	}, [scripts, removeScripts, reset, closeClearAllModal]);
 
 	const handlePasteProcessed = useCallback(
 		(html: string) => {
@@ -167,33 +149,29 @@ export default function Scripts() {
 		[scripts.length, addScripts],
 	);
 
+	const handleSaveToStorage = useCallback(
+		async (ids: string[], groupName: string, label: string) => {
+			const selectedScripts = scripts
+				.filter((s) => ids.includes(s.id))
+				.map((s) => ({
+					...s,
+					groupName,
+					label,
+				}));
+
+			if (persistenceEnabled) {
+				await pgliteStore.saveScripts(selectedScripts);
+			}
+		},
+		[scripts, persistenceEnabled],
+	);
+
 	if (isLoading) {
-		return (
-			<Flex h="100%" align="center" justify="center">
-				<Stack align="center" gap="xs">
-					<Loader size="sm" color="wave" />
-					<Text size="sm" fw={700} c="gray.6" tt="uppercase" lts={1}>
-						{persistenceEnabled
-							? "Initializing Workspace..."
-							: "Optimizing Workspace..."}
-					</Text>
-					<Text size="xs" c="gray.5">
-						{persistenceEnabled
-							? "Preparing your local secure database"
-							: "Setting up your secure offline environment"}
-					</Text>
-				</Stack>
-			</Flex>
-		);
+		return <ScriptsLoading persistenceEnabled={persistenceEnabled} />;
 	}
 
 	const activeScript = scripts.find((s) => s.id === activeScriptId);
 	const hasScripts = scripts.length > 0;
-	/** No scripts in the persisted store (file import and paste both add scripts). */
-	const hasNoScripts = !hasScripts;
-	/** Tab strip: show Getting Started only in the empty state. */
-	const showGettingStartedTab = hasNoScripts;
-	const hasInvoiceItems = invoiceItemsLength > 0;
 
 	return (
 		<Flex
@@ -202,146 +180,8 @@ export default function Scripts() {
 			gap={0}
 			className="overflow-hidden bg-transparent"
 		>
-			{showGettingStartedTab && (
-				<Box
-					bg="white"
-					px="md"
-					py="xs"
-					style={{
-						borderBottom: "1px solid var(--mantine-color-gray-2)",
-						flexShrink: 0,
-					}}
-				>
-					<Group gap={4} wrap="nowrap" align="center">
-						<Tooltip label="Getting Started" position="bottom" openDelay={500}>
-							<Box
-								data-testid="getting-started-tab"
-								aria-current="page"
-								className="flex shrink-0 items-center gap-2 border-b-2 border-gray-900 bg-gray-50 px-4 py-2 text-sm font-bold text-gray-900"
-							>
-								<LayoutDashboard size={16} strokeWidth={2.5} />
-								<span>Get Started</span>
-							</Box>
-						</Tooltip>
-					</Group>
-				</Box>
-			)}
-
-			{/* Top Header: Horizontal Navigation — script tabs once documents exist */}
-			{hasScripts && (
-				<Box
-					data-testid="scripts-tabs-bar"
-					bg="white"
-					px="md"
-					py="xs"
-					style={{
-						borderBottom: "1px solid var(--mantine-color-gray-2)",
-						flexShrink: 0,
-					}}
-				>
-					<Group justify="space-between" align="center" wrap="nowrap" gap="xl">
-						<ScrollArea
-							className="flex-1"
-							type="hover"
-							scrollbars="x"
-							offsetScrollbars={false}
-							styles={{ viewport: { paddingBottom: 4 } }}
-						>
-							<Group gap={4} wrap="nowrap" align="center">
-								{scripts.map((script) => (
-									<Tooltip
-										key={script.id}
-										label={script.name}
-										position="bottom"
-										openDelay={800}
-									>
-										<Box
-											onClick={() => setActiveScriptId(script.id)}
-											className={`
-    											flex shrink-0 cursor-pointer items-center gap-2 border-b-2 px-4 py-2 text-sm font-bold transition-all group
-    											${
-														activeScriptId === script.id
-															? "border-gray-900 bg-gray-50 text-gray-900"
-															: "border-transparent bg-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-800"
-													}
-    										`}
-										>
-											<FileText
-												size={16}
-												strokeWidth={activeScriptId === script.id ? 2.5 : 2}
-											/>
-											<span className="max-w-[150px] truncate">
-												{script.name}
-											</span>
-											<ActionIcon
-												variant="subtle"
-												color={activeScriptId === script.id ? "wave" : "gray"}
-												size="xs"
-												className={`
-    												transition-all
-    												${
-															activeScriptId === script.id
-																? "opacity-100 hover:bg-wave-50"
-																: "opacity-0 group-hover:opacity-100"
-														}
-    											`}
-												onClick={(e) => {
-													e.stopPropagation();
-													removeScript(script.id);
-												}}
-											>
-												<Trash2 size={12} />
-											</ActionIcon>
-										</Box>
-									</Tooltip>
-								))}
-
-								<Tooltip label="Upload new document" position="bottom">
-									<ActionIcon
-										variant="subtle"
-										color="wave"
-										size={32}
-										onClick={() => setActiveScriptId(null)}
-										className="ml-2 hover:bg-wave-50 transition-all"
-									>
-										<Plus size={18} />
-									</ActionIcon>
-								</Tooltip>
-							</Group>
-						</ScrollArea>
-
-						<Group gap="xs" wrap="nowrap" justify="flex-end">
-							<Badge
-								variant="dot"
-								color="wave"
-								size="md"
-								className="h-8 border-gray-200 bg-white px-3 text-gray-600"
-								visibleFrom="xs"
-							>
-								{scripts.length} Documents
-							</Badge>
-							<Tooltip label="Clear all documents" position="bottom">
-								<ActionIcon
-									data-testid="clear-all-documents-trigger"
-									variant="subtle"
-									color="gray"
-									size={32}
-									aria-label="Clear all documents"
-									onClick={openClearAllModal}
-									className="shrink-0 hover:bg-red-50 text-red-700"
-								>
-									<Trash2 size={18} />
-								</ActionIcon>
-							</Tooltip>
-						</Group>
-					</Group>
-				</Box>
-			)}
-
-			{/* Main Content & Sidebar */}
-
 			<Flex flex={1} mih={0}>
-				{/* Main Content Area */}
+				{/* Main Editor Area */}
 				<Flex direction="column" flex={1} miw={0} bg="white">
 					{pasteError && (
 						<Box px="lg" pt="md">
@@ -360,99 +200,41 @@ export default function Scripts() {
 						<ScriptEditor
 							script={activeScript}
 							isEditing={editingScriptId === activeScript.id}
-							onStartEdit={handleStartEdit}
-							onStopEdit={handleStopEdit}
+							onStartEdit={setEditingScriptId}
+							onStopEdit={() => setEditingScriptId(null)}
 						/>
 					) : (
 						<GettingStarted
-							onFileChange={(files) => handleFileChange(files)}
+							onFileChange={handleFileChange}
 							onPasteProcessed={handlePasteProcessed}
 						/>
 					)}
 				</Flex>
 
-				{/* Right Sidebar: Summary & Overview */}
-				{(hasScripts || hasInvoiceItems) && (
-					<Box
-						w={300}
-						bg="gray.0"
-						visibleFrom="md"
-						style={{
-							borderLeft: "1px solid var(--mantine-color-gray-2)",
-							display: "flex",
-							flexDirection: "column",
-						}}
-					>
-						<Stack gap="xl" p="lg" className="flex-1 overflow-y-auto">
-							{hasScripts && (
-								<Box>
-									<Group justify="space-between" align="center" mb="md" px={4}>
-										<Group gap="sm">
-											<Layers size={18} className="text-wave-700" />
-											<SectionLabel letterSpacing={2}>
-												Document Inspector
-											</SectionLabel>
-										</Group>
-										{persistenceEnabled && (
-											<Tooltip label="Securely saved in your browser" position="bottom" withArrow>
-												<Badge size="xs" color="wave" variant="light" className="cursor-help">
-													Saved
-												</Badge>
-											</Tooltip>
-										)}
-									</Group>
-
-									<UploadDocumentsOverview
-										scripts={scripts}
-										onAddedToInvoice={(addedIds: string[]) => {
-											removeScripts(addedIds);
-										}}
-									/>
-								</Box>
-							)}
-
-							{hasInvoiceItems && (
-								<Box>
-									<Group gap="sm" mb="md" px={4}>
-										<FilePlus size={18} className="text-wave-600" />
-										<SectionLabel letterSpacing={2}>Invoice Summary</SectionLabel>
-									</Group>
-									<InvoiceSummary
-										invoiceTitle={loadInvoiceDefaults().invoiceTitle}
-										invoiceDate={loadInvoiceDefaults().invoiceDate}
-									/>
-								</Box>
-							)}
-						</Stack>
-					</Box>
+				{/* Right Sidebar: Workspace Explorer */}
+				{hasScripts && (
+					<WorkspaceExplorer
+						scripts={scripts}
+						activeScriptId={activeScriptId}
+						onSelect={setActiveScriptId}
+						onRemove={removeScript}
+						onOpenSaveModal={openSaveModal}
+					/>
 				)}
 			</Flex>
 
-			<AppModal
+			<ClearAllScriptsModal
 				opened={clearAllModalOpened}
 				onClose={closeClearAllModal}
-				title="Clear all documents?"
-				size="sm"
-			>
-				<Stack gap="md">
-					<Text size="sm" c="gray.5">
-						This removes every document from the workspace, including pasted
-						scripts. Invoice line items you already created are not removed.
-					</Text>
-					<Group justify="flex-end" gap="xs" mt="xs">
-						<Button variant="subtle" color="gray" onClick={closeClearAllModal}>
-							Cancel
-						</Button>
-						<Button
-							data-testid="clear-all-documents-confirm"
-							color="red"
-							onClick={handleConfirmClearAllDocuments}
-						>
-							Clear all
-						</Button>
-					</Group>
-				</Stack>
-			</AppModal>
+				onConfirm={handleConfirmClearAll}
+			/>
+
+			<SaveToStorageModal
+				opened={saveModalOpened}
+				onClose={closeSaveModal}
+				scripts={scripts}
+				onConfirm={handleSaveToStorage}
+			/>
 		</Flex>
 	);
 }
