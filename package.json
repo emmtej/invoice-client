@@ -12,6 +12,7 @@
 		"check": "biome check"
 	},
 	"dependencies": {
+		"@electric-sql/pglite": "^0.4.3",
 		"@hookform/resolvers": "^5.2.2",
 		"@mantine/core": "^8.3.14",
 		"@mantine/dropzone": "^8.3.14",

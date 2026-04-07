@@ -22,7 +22,24 @@ export default defineConfig(({ mode }) => {
 				},
 			}),
 			tailwindcss(),
+			{
+				name: "import-meta-resolve-polyfill",
+				transform(code, _id) {
+					if (code.includes("import.meta.resolve")) {
+						return {
+							code: code.replace(
+								/import\.meta\.resolve/g,
+								"((s, p) => new URL(s, p || import.meta.url).href)",
+							),
+							map: null,
+						};
+					}
+				},
+			},
 		],
+		optimizeDeps: {
+			exclude: ["@electric-sql/pglite"],
+		},
 		resolve: {
 			alias: {
 				"@": fileURLToPath(new URL("./src", import.meta.url)),
