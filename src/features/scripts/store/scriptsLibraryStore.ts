@@ -79,15 +79,26 @@ export const useScriptsLibraryStore = create<ScriptsLibraryStore>()(
 		},
 
 		deleteFolder: async (folderId) => {
+			set({
+				folders: get().folders.filter((f) => f.id !== folderId),
+				selectedScript:
+					get().selectedScript?.folderId === folderId
+						? null
+						: get().selectedScript,
+			});
 			await folderQueries.deleteFolder(folderId);
-			if (get().selectedScript?.folderId === folderId)
-				set({ selectedScript: null });
 			await get().refresh();
 		},
 
 		deleteScript: async (scriptId) => {
+			set({
+				scripts: get().scripts.filter((s) => s.id !== scriptId),
+				selectedScript:
+					get().selectedScript?.id === scriptId
+						? null
+						: get().selectedScript,
+			});
 			await scriptsQueries.deleteScript(scriptId);
-			if (get().selectedScript?.id === scriptId) set({ selectedScript: null });
 			await get().refresh();
 		},
 
