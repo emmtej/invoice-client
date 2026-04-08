@@ -1,5 +1,11 @@
 import { Box, ScrollArea } from "@mantine/core";
-import { FileText, LayoutDashboard, Receipt, User } from "lucide-react";
+import {
+	FileText,
+	FolderOpen,
+	LayoutDashboard,
+	Receipt,
+	User,
+} from "lucide-react";
 import { useUserStore } from "@/store/userStore";
 import { LinksGroup } from "./NavLinksGroup";
 import { UserButton } from "./UserButton";
@@ -13,6 +19,7 @@ const navlinks = [
 		initiallyOpened: true,
 		links: [{ label: "Overview", link: "/invoice" }],
 	},
+	{ label: "Scripts", icon: FolderOpen, href: "/scripts" },
 	{
 		label: "Script Tools",
 		icon: FileText,
