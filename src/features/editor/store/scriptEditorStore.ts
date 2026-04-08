@@ -7,34 +7,34 @@ import { pgliteStore } from "./pgliteStore";
 const PERSISTENCE_KEY = "invoice-editor-persistence-enabled";
 
 interface ScriptStoreProps {
-  scripts: Script[];
-  isDbReady: boolean;
-  isLoading: boolean;
-  persistenceEnabled: boolean;
+	scripts: Script[];
+	isDbReady: boolean;
+	isLoading: boolean;
+	persistenceEnabled: boolean;
 }
 
 interface ScriptStoreActions {
-  init: () => Promise<void>;
-  togglePersistence: (enabled: boolean) => Promise<void>;
-  setScripts: (newScripts: Script[]) => void;
-  addScripts: (newScripts: Script[]) => Promise<void>;
-  removeScript: (id: string) => Promise<void>;
-  removeScripts: (ids: string[]) => Promise<void>;
-  updateHtml: (id: string, html: string) => Promise<void>;
-  resetScript: (id: string) => Promise<void>;
-  updateScriptFromHtml: (
-    id: string,
-    html: string,
-    shouldUpdateHtml?: boolean,
-  ) => Promise<void>;
+	init: () => Promise<void>;
+	togglePersistence: (enabled: boolean) => Promise<void>;
+	setScripts: (newScripts: Script[]) => void;
+	addScripts: (newScripts: Script[]) => Promise<void>;
+	removeScript: (id: string) => Promise<void>;
+	removeScripts: (ids: string[]) => Promise<void>;
+	updateHtml: (id: string, html: string) => Promise<void>;
+	resetScript: (id: string) => Promise<void>;
+	updateScriptFromHtml: (
+		id: string,
+		html: string,
+		shouldUpdateHtml?: boolean,
+	) => Promise<void>;
 }
 
 type ScriptStore = ScriptStoreProps & ScriptStoreActions;
 
 export const useScriptStore = create<ScriptStore>()((set, get) => ({
-  scripts: [],
-  isDbReady: false,
-  isLoading: false,
+	scripts: [],
+	isDbReady: false,
+	isLoading: false,
 	persistenceEnabled:
 		typeof localStorage !== "undefined" &&
 		typeof localStorage.getItem === "function"
@@ -85,10 +85,10 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 		}
 	},
 
-  setScripts: (scripts) =>
-    set({
-      scripts,
-    }),
+	setScripts: (scripts) =>
+		set({
+			scripts,
+		}),
 
 	addScripts: async (newScripts) => {
 		const existingIds = new Set(get().scripts.map((s) => s.id));
@@ -109,94 +109,94 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 		}
 	},
 
-  removeScript: async (id) => {
-    if (get().persistenceEnabled) {
-      await pgliteStore.deleteScript(id);
-    }
-    set((state) => ({
-      scripts: state.scripts.filter((s) => s.id !== id),
-    }));
-  },
+	removeScript: async (id) => {
+		if (get().persistenceEnabled) {
+			await pgliteStore.deleteScript(id);
+		}
+		set((state) => ({
+			scripts: state.scripts.filter((s) => s.id !== id),
+		}));
+	},
 
-  removeScripts: async (ids) => {
-    if (get().persistenceEnabled) {
-      await pgliteStore.deleteScripts(ids);
-    }
-    const idsToRemove = new Set(ids);
-    set((state) => ({
-      scripts: state.scripts.filter((s) => !idsToRemove.has(s.id)),
-    }));
-  },
+	removeScripts: async (ids) => {
+		if (get().persistenceEnabled) {
+			await pgliteStore.deleteScripts(ids);
+		}
+		const idsToRemove = new Set(ids);
+		set((state) => ({
+			scripts: state.scripts.filter((s) => !idsToRemove.has(s.id)),
+		}));
+	},
 
-  updateHtml: async (id, html) => {
-    const existingScript = get().scripts.find((s) => s.id === id);
-    if (!existingScript) return;
+	updateHtml: async (id, html) => {
+		const existingScript = get().scripts.find((s) => s.id === id);
+		if (!existingScript) return;
 
-    const updatedScript = { ...existingScript, html };
-    if (get().persistenceEnabled) {
-      await pgliteStore.saveScript(updatedScript);
-    }
+		const updatedScript = { ...existingScript, html };
+		if (get().persistenceEnabled) {
+			await pgliteStore.saveScript(updatedScript);
+		}
 
-    set((state) => ({
-      scripts: state.scripts.map((s) => (s.id === id ? updatedScript : s)),
-    }));
-  },
+		set((state) => ({
+			scripts: state.scripts.map((s) => (s.id === id ? updatedScript : s)),
+		}));
+	},
 
-  resetScript: async (id) => {
-    const existingScript = get().scripts.find((s) => s.id === id);
-    if (!existingScript) return;
+	resetScript: async (id) => {
+		const existingScript = get().scripts.find((s) => s.id === id);
+		if (!existingScript) return;
 
-    const updatedScript = {
-      ...existingScript,
-      html: generateHtmlFromScript(existingScript.lines),
-    };
-    if (get().persistenceEnabled) {
-      await pgliteStore.saveScript(updatedScript);
-    }
+		const updatedScript = {
+			...existingScript,
+			html: generateHtmlFromScript(existingScript.lines),
+		};
+		if (get().persistenceEnabled) {
+			await pgliteStore.saveScript(updatedScript);
+		}
 
-    set((state) => ({
-      scripts: state.scripts.map((s) => (s.id === id ? updatedScript : s)),
-    }));
-  },
+		set((state) => ({
+			scripts: state.scripts.map((s) => (s.id === id ? updatedScript : s)),
+		}));
+	},
 
-  updateScriptFromHtml: async (
-    id: string,
-    html: string,
-    shouldUpdateHtml = true,
-  ) => {
-    const { lines, overview, html: newHtml } = reparseHtmlToScript(html);
-    const existingScript = get().scripts.find((s) => s.id === id);
+	updateScriptFromHtml: async (
+		id: string,
+		html: string,
+		shouldUpdateHtml = true,
+	) => {
+		const { lines, overview, html: newHtml } = reparseHtmlToScript(html);
+		const existingScript = get().scripts.find((s) => s.id === id);
 
-    if (!existingScript) return;
+		if (!existingScript) return;
 
-    // If we shouldn't update the HTML field (to avoid disrupting the editor),
-    // we keep the HTML that was passed in (which should be the current editor HTML).
-    const finalHtml = shouldUpdateHtml ? newHtml : html;
+		// If we shouldn't update the HTML field (to avoid disrupting the editor),
+		// we keep the HTML that was passed in (which should be the current editor HTML).
+		const finalHtml = shouldUpdateHtml ? newHtml : html;
 
-    // Optimization: if nothing changed, don't trigger a state update
-    const hasStructureChanged =
-      existingScript.lines.length !== lines.length ||
-      existingScript.overview.wordCount !== overview.wordCount ||
-      existingScript.lines[0]?.source !== lines[0]?.source ||
-      existingScript.lines[existingScript.lines.length - 1]?.source !==
-        lines[lines.length - 1]?.source;
+		// Optimization: if nothing changed, don't trigger a state update
+		const hasStructureChanged =
+			existingScript.lines.length !== lines.length ||
+			existingScript.overview.wordCount !== overview.wordCount ||
+			existingScript.lines[0]?.source !== lines[0]?.source ||
+			existingScript.lines[existingScript.lines.length - 1]?.source !==
+				lines[lines.length - 1]?.source;
 
-    if (existingScript.html === finalHtml && !hasStructureChanged) {
-      return;
-    }
+		if (existingScript.html === finalHtml && !hasStructureChanged) {
+			return;
+		}
 
-    const updatedScript = {
-      ...existingScript,
-      lines,
-      overview,
-      html: finalHtml,
-    };
-    if (get().persistenceEnabled) {
-      await pgliteStore.saveScript(updatedScript);
-    }
+		const updatedScript = {
+			...existingScript,
+			lines,
+			overview,
+			html: finalHtml,
+		};
+		if (get().persistenceEnabled) {
+			await pgliteStore.saveScript(updatedScript);
+		}
 
-    set((state) => ({
-      scripts: state.scripts.map((s) => (s.id === id ? updatedScript : s)),
-    }));
-  },
+		set((state) => ({
+			scripts: state.scripts.map((s) => (s.id === id ? updatedScript : s)),
+		}));
+	},
 }));

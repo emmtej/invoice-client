@@ -17,11 +17,7 @@ export function EmptyState({
 	return (
 		<Paper py="xl" px="md" bg="transparent">
 			<Stack gap="md" align="center">
-				<Box
-					p="sm"
-					bg="gray.0"
-					c="gray.3"
-				>
+				<Box p="sm" bg="gray.0" c="gray.3">
 					{icon}
 				</Box>
 				<Stack gap={4} ta="center">

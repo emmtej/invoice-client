@@ -1,11 +1,4 @@
-import {
-	Button,
-	Group,
-	Paper,
-	Stack,
-	Text,
-	ThemeIcon,
-} from "@mantine/core";
+import { Button, Group, Paper, Stack, Text, ThemeIcon } from "@mantine/core";
 import { Link } from "@tanstack/react-router";
 import { PageTitle } from "@/components/ui/text/PageTitle";
 import { Mic, User } from "lucide-react";

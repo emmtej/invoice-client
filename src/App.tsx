@@ -217,11 +217,7 @@ export default function App() {
 
 	const featureItems = features.map((feature, i) => (
 		<div key={feature.title}>
-			<ThemeIcon
-				size={44}
-				variant="light"
-				color={featureIcons[i] ?? "wave"}
-			>
+			<ThemeIcon size={44} variant="light" color={featureIcons[i] ?? "wave"}>
 				<feature.icon size={26} strokeWidth={1.5} />
 			</ThemeIcon>
 			<Text fz="lg" mt="sm" fw={500}>

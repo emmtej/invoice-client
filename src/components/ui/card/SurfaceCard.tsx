@@ -17,22 +17,15 @@ function isStyleFunction(
 }
 
 export function SurfaceCard({ children, style, ...rest }: SurfaceCardProps) {
-	const mergedStyle =
-		isStyleFunction(style)
-			? (theme: MantineTheme) => ({
-					...surfaceStyle,
-					...style(theme),
-				})
-			: { ...surfaceStyle, ...(style ?? {}) };
+	const mergedStyle = isStyleFunction(style)
+		? (theme: MantineTheme) => ({
+				...surfaceStyle,
+				...style(theme),
+			})
+		: { ...surfaceStyle, ...(style ?? {}) };
 
 	return (
-		<Paper
-			p="xl"
-			bg="white"
-			shadow="sm"
-			style={mergedStyle}
-			{...rest}
-		>
+		<Paper p="xl" bg="white" shadow="sm" style={mergedStyle} {...rest}>
 			{children}
 		</Paper>
 	);
