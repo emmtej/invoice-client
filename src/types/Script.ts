@@ -15,6 +15,7 @@ export interface Script {
 	html: string;
 	groupName?: string;
 	label?: string;
+	folderId?: string | null;
 }
 
 export interface BaseLine {
