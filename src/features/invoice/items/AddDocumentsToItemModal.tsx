@@ -2,7 +2,7 @@ import { Box, Stack, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 import { AppModal } from "@/components/ui/modal/AppModal";
-import { UploadDocumentsOverview } from "@/features/editor/components/UploadDocumentsOverview";
+
 import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
 import { processDocuments } from "@/features/editor/utils/documentParser";
 import type { Script } from "@/types/Script";
@@ -92,12 +92,12 @@ export function AddDocumentsToItemModal({
 						</Text>
 					</Box>
 				)}
-				<UploadDocumentsOverview
-					scripts={scripts}
-					targetItemId={itemId}
-					targetItemName={itemName}
-					onAddedToInvoice={onClose}
-				/>
+				{/* <UploadDocumentsOverview
+          scripts={scripts}
+          targetItemId={itemId}
+          targetItemName={itemName}
+          onAddedToInvoice={onClose}
+        /> */}
 			</Stack>
 		</AppModal>
 	);
