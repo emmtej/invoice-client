@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { AlertCircle, ChevronRight, FolderPlus } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 import { PageTitle } from "@/components/ui/text/PageTitle";
@@ -79,22 +79,23 @@ export default function ScriptsPage() {
     init();
   }, [init]);
 
-  const handleUploadedFiles = useCallback(async () => {
-    if (docFiles.length === 0) return;
-    const newScripts = processDocuments(docFiles).map((s) => ({
-      ...s,
-      folderId: currentFolderId,
-    }));
-    await pgliteStore.saveScripts(newScripts);
-    resetUpload();
-    await refresh();
-  }, [docFiles, currentFolderId, resetUpload, refresh]);
-
   useEffect(() => {
-    if (docFiles.length > 0) {
-      handleUploadedFiles();
-    }
-  }, [docFiles, handleUploadedFiles]);
+    if (docFiles.length === 0) return;
+    let cancelled = false;
+
+    (async () => {
+      const newScripts = processDocuments(docFiles).map((s) => ({
+        ...s,
+        folderId: currentFolderId,
+      }));
+      await pgliteStore.saveScripts(newScripts);
+      if (cancelled) return;
+      await refresh();
+      resetUpload();
+    })();
+
+    return () => { cancelled = true; };
+  }, [docFiles]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isRoot = currentFolderId === null;
   const isEmpty = folders.length === 0 && scripts.length === 0;
