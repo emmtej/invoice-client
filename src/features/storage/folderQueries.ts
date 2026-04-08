@@ -115,3 +115,13 @@ function mapRowToFolder(row: FolderRow): Folder {
 		createdAt: new Date(row.created_at),
 	};
 }
+
+export const folderQueries = {
+	initSchema,
+	getFoldersAtLevel,
+	getAllFolders,
+	createFolder,
+	deleteFolder,
+	getFolderBreadcrumb,
+	getScriptCountInFolder,
+};
