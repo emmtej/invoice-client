@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mockExec = vi.fn().mockResolvedValue(undefined);
-const mockQuery = vi.fn();
+const { mockExec, mockQuery } = vi.hoisted(() => ({
+	mockExec: vi.fn().mockResolvedValue(undefined),
+	mockQuery: vi.fn(),
+}));
 
 vi.mock("./pgliteClient", () => ({
-	getDb: () => ({ exec: mockExec, query: mockQuery }),
+	initDb: vi.fn().mockResolvedValue({ exec: mockExec, query: mockQuery }),
 }));
 
 import {
@@ -23,11 +25,12 @@ describe("folderQueries", () => {
 	});
 
 	describe("initSchema", () => {
-		it("creates folders table and adds folder_id column to scripts", async () => {
+		it("creates scripts table, folders table, and adds folder_id column", async () => {
 			await initSchema();
-			expect(mockExec).toHaveBeenCalledTimes(2);
-			expect(mockExec.mock.calls[0][0]).toContain("CREATE TABLE IF NOT EXISTS folders");
-			expect(mockExec.mock.calls[1][0]).toContain("ALTER TABLE scripts ADD COLUMN IF NOT EXISTS folder_id");
+			expect(mockExec).toHaveBeenCalledTimes(3);
+			expect(mockExec.mock.calls[0][0]).toContain("CREATE TABLE IF NOT EXISTS scripts");
+			expect(mockExec.mock.calls[1][0]).toContain("CREATE TABLE IF NOT EXISTS folders");
+			expect(mockExec.mock.calls[2][0]).toContain("ALTER TABLE scripts ADD COLUMN IF NOT EXISTS folder_id");
 		});
 	});
 

@@ -1,8 +1,22 @@
 import type { Folder, FolderRow } from "./types";
-import { getDb } from "./pgliteClient";
+import { initDb } from "./pgliteClient";
 
 export async function initSchema(): Promise<void> {
-	const db = getDb();
+	const db = await initDb();
+
+	await db.exec(`
+		CREATE TABLE IF NOT EXISTS scripts (
+			id TEXT PRIMARY KEY,
+			name TEXT NOT NULL,
+			html TEXT NOT NULL,
+			overview JSONB NOT NULL,
+			lines JSONB NOT NULL,
+			group_name TEXT,
+			label TEXT,
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		);
+	`);
+
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS folders (
 			id TEXT PRIMARY KEY,
@@ -11,6 +25,7 @@ export async function initSchema(): Promise<void> {
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		);
 	`);
+
 	await db.exec(`
 		ALTER TABLE scripts ADD COLUMN IF NOT EXISTS folder_id TEXT REFERENCES folders(id) ON DELETE CASCADE;
 	`);
@@ -19,7 +34,7 @@ export async function initSchema(): Promise<void> {
 export async function getFoldersAtLevel(
 	parentId: string | null,
 ): Promise<Folder[]> {
-	const db = getDb();
+	const db = await initDb();
 	const result = parentId
 		? await db.query(
 				"SELECT * FROM folders WHERE parent_id = $1 ORDER BY name ASC;",
@@ -32,7 +47,7 @@ export async function getFoldersAtLevel(
 }
 
 export async function getAllFolders(): Promise<Folder[]> {
-	const db = getDb();
+	const db = await initDb();
 	const result = await db.query(
 		"SELECT * FROM folders ORDER BY parent_id NULLS FIRST, name ASC;",
 	);
@@ -44,7 +59,7 @@ export async function createFolder(
 	name: string,
 	parentId: string | null,
 ): Promise<Folder> {
-	const db = getDb();
+	const db = await initDb();
 
 	if (parentId) {
 		const parentResult = await db.query(
@@ -67,14 +82,14 @@ export async function createFolder(
 }
 
 export async function deleteFolder(id: string): Promise<void> {
-	const db = getDb();
+	const db = await initDb();
 	await db.query("DELETE FROM folders WHERE id = $1;", [id]);
 }
 
 export async function getFolderBreadcrumb(
 	folderId: string,
 ): Promise<{ id: string; name: string }[]> {
-	const db = getDb();
+	const db = await initDb();
 	const crumbs: { id: string; name: string }[] = [];
 	let currentId: string | null = folderId;
 
@@ -95,7 +110,7 @@ export async function getFolderBreadcrumb(
 export async function getScriptCountInFolder(
 	folderId: string | null,
 ): Promise<number> {
-	const db = getDb();
+	const db = await initDb();
 	const result = folderId
 		? await db.query(
 				"SELECT COUNT(*)::int AS count FROM scripts WHERE folder_id = $1;",
