@@ -4,7 +4,6 @@ import { AlertCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useFileUpload } from "../hooks/useFileUpload";
-import { pgliteStore } from "../store/pgliteStore";
 import { useScriptStore } from "../store/scriptEditorStore";
 import { processDocuments, reparseHtmlToScript } from "../utils/documentParser";
 import { ClearAllScriptsModal } from "./ClearAllScriptsModal";
@@ -29,6 +28,7 @@ export default function Scripts() {
 		init,
 		isLoading,
 		persistenceEnabled,
+		promoteScriptsToLibrary,
 	} = useScriptStore(
 		useShallow((s) => ({
 			scripts: s.scripts,
@@ -38,6 +38,7 @@ export default function Scripts() {
 			init: s.init,
 			isLoading: s.isLoading,
 			persistenceEnabled: s.persistenceEnabled,
+			promoteScriptsToLibrary: s.promoteScriptsToLibrary,
 		})),
 	);
 
@@ -148,20 +149,10 @@ export default function Scripts() {
 	);
 
 	const handleSaveToStorage = useCallback(
-		async (ids: string[], groupName: string, label: string) => {
-			const selectedScripts = scripts
-				.filter((s) => ids.includes(s.id))
-				.map((s) => ({
-					...s,
-					groupName,
-					label,
-				}));
-
-			if (persistenceEnabled) {
-				await pgliteStore.saveScripts(selectedScripts);
-			}
+		async (ids: string[], folderId: string | null) => {
+			await promoteScriptsToLibrary(ids, folderId);
 		},
-		[scripts, persistenceEnabled],
+		[promoteScriptsToLibrary],
 	);
 
 	if (isLoading) {

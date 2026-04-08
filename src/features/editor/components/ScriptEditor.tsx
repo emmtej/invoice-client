@@ -19,9 +19,8 @@ function ScriptEditorInner({
 	onStartEdit,
 	onStopEdit,
 }: ScriptEditorProps) {
-	const updateHtml = useScriptStore((s) => s.updateHtml);
 	const resetScript = useScriptStore((s) => s.resetScript);
-	const updateScriptFromHtml = useScriptStore((s) => s.updateScriptFromHtml);
+	const syncScriptFromHtml = useScriptStore((s) => s.syncScriptFromHtml);
 
 	const [localHtml, setLocalHtml] = useState(script.html);
 
@@ -36,13 +35,12 @@ function ScriptEditorInner({
 		if (!isEditing) return;
 
 		const timer = setTimeout(() => {
-			updateHtml(script.id, localHtml);
-			// Pass 'false' to avoid overwriting editor HTML with re-generated/formatted HTML
-			updateScriptFromHtml(script.id, localHtml, false);
+			// One action avoids double-write races during rapid typing.
+			void syncScriptFromHtml(script.id, localHtml, false);
 		}, 500);
 
 		return () => clearTimeout(timer);
-	}, [script.id, localHtml, isEditing, updateHtml, updateScriptFromHtml]);
+	}, [script.id, localHtml, isEditing, syncScriptFromHtml]);
 
 	const handleContentChange = useCallback((html: string) => {
 		setLocalHtml(html);
@@ -59,10 +57,9 @@ function ScriptEditorInner({
 	}, [script.id, resetScript, onStopEdit]);
 
 	const handleSubmit = useCallback(() => {
-		updateHtml(script.id, localHtml);
-		updateScriptFromHtml(script.id, localHtml);
+		void syncScriptFromHtml(script.id, localHtml);
 		onStopEdit();
-	}, [script.id, localHtml, updateHtml, updateScriptFromHtml, onStopEdit]);
+	}, [script.id, localHtml, syncScriptFromHtml, onStopEdit]);
 
 	const handleStartEditClick = useCallback(() => {
 		onStartEdit(script.id);

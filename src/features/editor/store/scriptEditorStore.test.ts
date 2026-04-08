@@ -6,11 +6,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // Mock PGLite and pgliteStore
 vi.mock("./pgliteStore", () => ({
 	pgliteStore: {
-		getAllScripts: vi.fn().mockResolvedValue([]),
-		saveScript: vi.fn().mockResolvedValue(undefined),
-		saveScripts: vi.fn().mockResolvedValue(undefined),
-		deleteScript: vi.fn().mockResolvedValue(undefined),
-		deleteScripts: vi.fn().mockResolvedValue(undefined),
+		getAllDraftScripts: vi.fn().mockResolvedValue([]),
+		saveDraftScript: vi.fn().mockResolvedValue(undefined),
+		saveDraftScripts: vi.fn().mockResolvedValue(undefined),
+		deleteDraftScript: vi.fn().mockResolvedValue(undefined),
+		deleteDraftScripts: vi.fn().mockResolvedValue(undefined),
+		promoteDraftsToScripts: vi.fn().mockResolvedValue(undefined),
 	},
 }));
 
@@ -28,7 +29,7 @@ describe("scriptEditorStore", () => {
 		});
 	});
 
-	it("should initialize the store from PGLite", async () => {
+	it("should initialize the store from draft storage", async () => {
 		const mockScripts = [
 			{
 				id: "1",
@@ -39,13 +40,13 @@ describe("scriptEditorStore", () => {
 				source: document.implementation.createHTMLDocument(),
 			},
 		];
-		(pgliteStore.getAllScripts as any).mockResolvedValue(mockScripts);
+		(pgliteStore.getAllDraftScripts as any).mockResolvedValue(mockScripts);
 
 		await useScriptStore.getState().init();
 
 		expect(useScriptStore.getState().scripts).toEqual(mockScripts);
 		expect(useScriptStore.getState().isDbReady).toBe(true);
-		expect(pgliteStore.getAllScripts).toHaveBeenCalled();
+		expect(pgliteStore.getAllDraftScripts).toHaveBeenCalled();
 	});
 
 	it("should update lines and overview but preserve html when shouldUpdateHtml is false", async () => {
@@ -93,7 +94,7 @@ describe("scriptEditorStore", () => {
 
 		// Overview should be updated
 		expect(updatedScript.overview.wordCount).toBe(2);
-		expect(pgliteStore.saveScript).toHaveBeenCalled();
+		expect(pgliteStore.saveDraftScript).toHaveBeenCalled();
 	});
 
 	it("should update HTML when shouldUpdateHtml is true (default)", async () => {
@@ -125,5 +126,49 @@ describe("scriptEditorStore", () => {
 
 		// The HTML should be formatted/cleaned by generateHtmlFromScript
 		expect(updatedScript.html).toBe("<p>00:01 Speaker: Clean</p>");
+	});
+
+	it("promotes selected drafts and removes them from workspace", async () => {
+		const scripts = [
+			{
+				id: "s1",
+				name: "One",
+				source: document.implementation.createHTMLDocument(),
+				lines: [],
+				overview: {
+					validLines: [],
+					invalidLines: [],
+					actionLines: [],
+					scenes: [],
+					wordCount: 0,
+					totalLines: 0,
+				},
+				html: "<p>one</p>",
+			},
+			{
+				id: "s2",
+				name: "Two",
+				source: document.implementation.createHTMLDocument(),
+				lines: [],
+				overview: {
+					validLines: [],
+					invalidLines: [],
+					actionLines: [],
+					scenes: [],
+					wordCount: 0,
+					totalLines: 0,
+				},
+				html: "<p>two</p>",
+			},
+		];
+
+		useScriptStore.setState({ scripts, persistenceEnabled: true });
+		await useScriptStore.getState().promoteScriptsToLibrary(["s1"], "folder-1");
+
+		expect(pgliteStore.promoteDraftsToScripts).toHaveBeenCalledWith(
+			["s1"],
+			"folder-1",
+		);
+		expect(useScriptStore.getState().scripts.map((s) => s.id)).toEqual(["s2"]);
 	});
 });

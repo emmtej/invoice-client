@@ -13,6 +13,7 @@ import { Layout } from "./components/ui/layout/Layout";
 import { useUserStore } from "./store/userStore";
 
 const EditorPage = lazy(() => import("@/features/editor"));
+const ScriptsPage = lazy(() => import("@/features/scripts"));
 const InvoicePage = lazy(() =>
 	import("@/features/invoice").then((m) => ({ default: m.InvoicePage })),
 );
@@ -140,7 +141,17 @@ const profileRoute = createRoute({
 	),
 });
 
-// Note: /editor and /invoice are intentionally public routes
+// Note: /editor, /scripts, and /invoice are intentionally public routes
+const scriptsRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/scripts",
+	component: () => (
+		<Suspense fallback={<RouteFallback label="scripts" />}>
+			<ScriptsPage />
+		</Suspense>
+	),
+});
+
 const editorRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "/editor",
@@ -163,6 +174,7 @@ const invoiceRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
 	indexRoute,
+	scriptsRoute,
 	editorRoute,
 	invoiceRoute,
 	loginRoute,

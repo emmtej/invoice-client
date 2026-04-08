@@ -73,11 +73,22 @@ const linkActiveStyles = {
 	fontWeight: 600,
 } as const;
 
+const controlActiveStyles = {
+	root: {
+		...controlStyles.root,
+		color: "var(--mantine-color-wave-8)",
+		backgroundColor:
+			"color-mix(in srgb, var(--mantine-color-wave-8) 8%, white)",
+		fontWeight: 700,
+	},
+} as const;
+
 interface LinksGroupProps {
 	icon: LucideIcon;
 	label: string;
 	initiallyOpened?: boolean;
 	links?: { label: string; link: string }[];
+	href?: string;
 }
 
 export function LinksGroup({
@@ -85,8 +96,10 @@ export function LinksGroup({
 	label,
 	initiallyOpened,
 	links,
+	href,
 }: LinksGroupProps) {
 	const hasLinks = Array.isArray(links);
+	const isDirectLink = !hasLinks && !!href;
 	const [opened, setOpened] = useState(initiallyOpened || false);
 	const { pathname } = useLocation();
 
@@ -107,6 +120,11 @@ export function LinksGroup({
 		[hasLinks, links, pathname],
 	);
 
+	const isHrefActive =
+		isDirectLink &&
+		(normalizePath(pathname) === normalizePath(href!) ||
+			normalizePath(pathname).startsWith(`${normalizePath(href!)}/`));
+
 	const items = (hasLinks ? links : []).map((link) => {
 		const isActive = activePath === normalizePath(link.link);
 		return (
@@ -121,22 +139,35 @@ export function LinksGroup({
 		);
 	});
 
+	const content = (
+		<Group justify="space-between" gap="xs">
+			<Flex align="center">
+				<ThemeIcon variant="light" size={30} color="wave">
+					<Icon size={18} />
+				</ThemeIcon>
+				<Box ml="md">{label}</Box>
+			</Flex>
+			{hasLinks && (
+				<ChevronRight strokeWidth={1.5} size={16} style={chevronStyle} />
+			)}
+		</Group>
+	);
+
 	return (
 		<>
-			<UnstyledButton onClick={handleToggle} styles={controlStyles}>
-				<Group justify="space-between" gap="xs">
-					<Flex align="center">
-						<ThemeIcon variant="light" size={30} color="wave">
-							<Icon size={18} />
-						</ThemeIcon>
-						<Box ml="md">{label}</Box>
-					</Flex>
-
-					{hasLinks && (
-						<ChevronRight strokeWidth={1.5} size={16} style={chevronStyle} />
-					)}
-				</Group>
-			</UnstyledButton>
+			{isDirectLink ? (
+				<UnstyledButton
+					component={Link}
+					to={href!}
+					styles={isHrefActive ? controlActiveStyles : controlStyles}
+				>
+					{content}
+				</UnstyledButton>
+			) : (
+				<UnstyledButton onClick={handleToggle} styles={controlStyles}>
+					{content}
+				</UnstyledButton>
+			)}
 			{hasLinks ? <Collapse in={opened}>{items}</Collapse> : null}
 		</>
 	);

@@ -27,6 +27,15 @@ interface ScriptStoreActions {
 		html: string,
 		shouldUpdateHtml?: boolean,
 	) => Promise<void>;
+	syncScriptFromHtml: (
+		id: string,
+		html: string,
+		shouldUpdateHtml?: boolean,
+	) => Promise<void>;
+	promoteScriptsToLibrary: (
+		ids: string[],
+		folderId: string | null,
+	) => Promise<void>;
 }
 
 type ScriptStore = ScriptStoreProps & ScriptStoreActions;
@@ -46,7 +55,7 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 
 		set({ isLoading: true });
 		try {
-			const scripts = await pgliteStore.getAllScripts();
+			const scripts = await pgliteStore.getAllDraftScripts();
 			set({ scripts, isDbReady: true, isLoading: false });
 		} catch (error) {
 			console.error("Failed to initialize PGLite database:", error);
@@ -60,9 +69,9 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 		if (enabled) {
 			set({ isLoading: true });
 			try {
-				// Initialize DB and migrate current scripts
-				await pgliteStore.saveScripts(get().scripts);
-				const scripts = await pgliteStore.getAllScripts();
+				// Initialize DB and migrate current in-memory workspace into drafts.
+				await pgliteStore.saveDraftScripts(get().scripts);
+				const scripts = await pgliteStore.getAllDraftScripts();
 				if (typeof localStorage !== "undefined") {
 					localStorage.setItem(PERSISTENCE_KEY, "true");
 				}
@@ -95,13 +104,13 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 		const uniqueNewScripts = newScripts.filter((s) => !existingIds.has(s.id));
 
 		if (uniqueNewScripts.length > 0) {
-			// Auto-enable persistence on first upload/paste
+			// Auto-enable persistence so drafts survive refresh.
 			if (!get().persistenceEnabled) {
 				await get().togglePersistence(true);
 			}
 
 			if (get().persistenceEnabled) {
-				await pgliteStore.saveScripts(uniqueNewScripts);
+				await pgliteStore.saveDraftScripts(uniqueNewScripts);
 			}
 			set((state) => ({
 				scripts: [...state.scripts, ...uniqueNewScripts],
@@ -111,7 +120,7 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 
 	removeScript: async (id) => {
 		if (get().persistenceEnabled) {
-			await pgliteStore.deleteScript(id);
+			await pgliteStore.deleteDraftScript(id);
 		}
 		set((state) => ({
 			scripts: state.scripts.filter((s) => s.id !== id),
@@ -120,7 +129,7 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 
 	removeScripts: async (ids) => {
 		if (get().persistenceEnabled) {
-			await pgliteStore.deleteScripts(ids);
+			await pgliteStore.deleteDraftScripts(ids);
 		}
 		const idsToRemove = new Set(ids);
 		set((state) => ({
@@ -134,7 +143,7 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 
 		const updatedScript = { ...existingScript, html };
 		if (get().persistenceEnabled) {
-			await pgliteStore.saveScript(updatedScript);
+			await pgliteStore.saveDraftScript(updatedScript);
 		}
 
 		set((state) => ({
@@ -151,7 +160,7 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 			html: generateHtmlFromScript(existingScript.lines),
 		};
 		if (get().persistenceEnabled) {
-			await pgliteStore.saveScript(updatedScript);
+			await pgliteStore.saveDraftScript(updatedScript);
 		}
 
 		set((state) => ({
@@ -160,6 +169,14 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 	},
 
 	updateScriptFromHtml: async (
+		id: string,
+		html: string,
+		shouldUpdateHtml = true,
+	) => {
+		await get().syncScriptFromHtml(id, html, shouldUpdateHtml);
+	},
+
+	syncScriptFromHtml: async (
 		id: string,
 		html: string,
 		shouldUpdateHtml = true,
@@ -192,11 +209,20 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 			html: finalHtml,
 		};
 		if (get().persistenceEnabled) {
-			await pgliteStore.saveScript(updatedScript);
+			await pgliteStore.saveDraftScript(updatedScript);
 		}
 
 		set((state) => ({
 			scripts: state.scripts.map((s) => (s.id === id ? updatedScript : s)),
+		}));
+	},
+
+	promoteScriptsToLibrary: async (ids, folderId) => {
+		if (ids.length === 0 || !get().persistenceEnabled) return;
+		await pgliteStore.promoteDraftsToScripts(ids, folderId);
+		const idsToPromote = new Set(ids);
+		set((state) => ({
+			scripts: state.scripts.filter((script) => !idsToPromote.has(script.id)),
 		}));
 	},
 }));
