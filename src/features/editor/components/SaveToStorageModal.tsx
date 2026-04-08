@@ -154,7 +154,8 @@ export const SaveToStorageModal = memo(
 			>
 				<Stack gap="md">
 					<Text size="sm" c="gray.6">
-						Choose a folder and select which scripts to save.
+						Choose a folder and select which drafts to move to long-term
+						storage.
 					</Text>
 
 					<Box>
