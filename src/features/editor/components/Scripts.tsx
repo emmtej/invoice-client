@@ -148,14 +148,10 @@ export default function Scripts() {
 	);
 
 	const handleSaveToStorage = useCallback(
-		async (ids: string[], groupName: string, label: string) => {
+		async (ids: string[], folderId: string | null) => {
 			const selectedScripts = scripts
 				.filter((s) => ids.includes(s.id))
-				.map((s) => ({
-					...s,
-					groupName,
-					label,
-				}));
+				.map((s) => ({ ...s, folderId }));
 
 			if (persistenceEnabled) {
 				await pgliteStore.saveScripts(selectedScripts);
