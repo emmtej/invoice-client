@@ -28,6 +28,12 @@ export const initDb = async () => {
     );
   `);
 
+	// Migration: safely add columns that might be missing from older DB versions
+	await db.exec(`
+    ALTER TABLE scripts ADD COLUMN IF NOT EXISTS group_name TEXT;
+    ALTER TABLE scripts ADD COLUMN IF NOT EXISTS label TEXT;
+  `);
+
 	return db;
 };
 
