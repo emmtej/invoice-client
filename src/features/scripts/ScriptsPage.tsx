@@ -15,13 +15,17 @@ import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 import { PageTitle } from "@/components/ui/text/PageTitle";
-import { pgliteStore, processDocuments, useFileUpload } from "@/features/editor";
+import { SCRIPT_LIBRARY_LIST_MAX_WIDTH } from "@/components/ui/layout/layout-constants";
+import {
+  pgliteStore,
+  processDocuments,
+  useFileUpload,
+} from "@/features/editor";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { useScriptsLibraryStore } from "./store/scriptsLibraryStore";
 import { BreadcrumbNav } from "./components/BreadcrumbNav";
-import { FolderSection } from "./components/FolderSection";
-import { ScriptSection } from "./components/ScriptSection";
 import { PreviewPanel } from "./components/PreviewPanel";
+import { ScriptsLibraryItems } from "./components/ScriptsLibraryItems";
 import { CreateFolderModal } from "./components/CreateFolderModal";
 import { DeleteFolderModal } from "./components/DeleteFolderModal";
 import { DeleteScriptModal } from "./components/DeleteScriptModal";
@@ -43,6 +47,7 @@ export default function ScriptsPage() {
     deleteScript,
     selectScript,
     clearSelection,
+    refresh,
   } = useScriptsLibraryStore(
     useShallow((s) => ({
       currentFolderId: s.currentFolderId,
@@ -63,7 +68,13 @@ export default function ScriptsPage() {
     })),
   );
 
-  const { docFiles, isLoading: isUploading, errors: uploadErrors, handleFileChange, reset: resetUpload } = useFileUpload();
+  const {
+    docFiles,
+    isLoading: isUploading,
+    errors: uploadErrors,
+    handleFileChange,
+    reset: resetUpload,
+  } = useFileUpload();
 
   const [
     createFolderOpened,
@@ -74,6 +85,7 @@ export default function ScriptsPage() {
   );
   const [deleteScriptTarget, setDeleteScriptTarget] =
     useState<ScriptSummary | null>(null);
+  const [sortAscending, setSortAscending] = useState(true);
 
   useEffect(() => {
     init();
@@ -94,7 +106,9 @@ export default function ScriptsPage() {
       resetUpload();
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [docFiles]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isRoot = currentFolderId === null;
@@ -102,12 +116,19 @@ export default function ScriptsPage() {
   const currentFolderName =
     breadcrumb.length > 0 ? breadcrumb[breadcrumb.length - 1].name : undefined;
 
+  const listColumnProps = {
+    maw: SCRIPT_LIBRARY_LIST_MAX_WIDTH,
+    mx: "auto" as const,
+    w: "100%" as const,
+  };
+
   return (
     <Flex direction="column" h="100%" rowGap={6}>
       {/* Breadcrumb orientation bar */}
       <Box
         px="md"
         py="xs"
+        {...listColumnProps}
         style={(theme) => ({
           borderBottom: `1px solid ${theme.colors.gray[1]}`,
         })}
@@ -132,28 +153,8 @@ export default function ScriptsPage() {
       </Box>
 
       {/* Page header */}
-      <Box px="md" pt="md">
-        <Flex justify="space-between" align="center">
-          <PageTitle>Scripts</PageTitle>
-          <Group gap="sm">
-            <DocxUploadButton
-              onChange={handleFileChange}
-              multiple
-              variant="light"
-              color="wave"
-              loading={isUploading}
-            >
-              Upload Scripts
-            </DocxUploadButton>
-            <Button
-              color="wave"
-              leftSection={<FolderPlus size={16} />}
-              onClick={openCreateFolder}
-            >
-              New Folder
-            </Button>
-          </Group>
-        </Flex>
+      <Box px="md" pt="md" {...listColumnProps}>
+        <PageTitle>Scripts</PageTitle>
         {uploadErrors.length > 0 && (
           <Alert
             color="red"
@@ -163,7 +164,9 @@ export default function ScriptsPage() {
             onClose={resetUpload}
           >
             {uploadErrors.map((err) => (
-              <Text key={err} size="sm">{err}</Text>
+              <Text key={err} size="sm">
+                {err}
+              </Text>
             ))}
           </Alert>
         )}
@@ -171,7 +174,7 @@ export default function ScriptsPage() {
 
       {/* Folder breadcrumb navigation */}
       {breadcrumb.length > 0 && (
-        <Box px="md">
+        <Box px="md" {...listColumnProps}>
           <BreadcrumbNav
             breadcrumb={breadcrumb}
             onNavigate={navigateToFolder}
@@ -185,30 +188,48 @@ export default function ScriptsPage() {
           <Loader color="wave" size="sm" />
         </Center>
       ) : isEmpty ? (
-        <ScriptsEmptyState
-          isRoot={isRoot}
-          onCreateFolder={openCreateFolder}
-          onUpload={handleFileChange}
-          isUploading={isUploading}
-        />
+        <Box flex={1} px="md" {...listColumnProps}>
+          <ScriptsEmptyState
+            isRoot={isRoot}
+            onCreateFolder={openCreateFolder}
+            onUpload={handleFileChange}
+            isUploading={isUploading}
+          />
+        </Box>
       ) : (
         <Flex flex={1} mih={0}>
-          <Box flex={1} p="md" style={{ overflowY: "auto" }}>
-            {folders.length > 0 && (
-              <FolderSection
+          <Box flex={1} p="md" miw={0} style={{ overflowY: "auto" }}>
+            <Box {...listColumnProps}>
+              <ScriptsLibraryItems
                 folders={folders}
-                onNavigate={navigateToFolder}
-                onDelete={(folder) => setDeleteFolderTarget(folder)}
-              />
-            )}
-            {scripts.length > 0 && (
-              <ScriptSection
                 scripts={scripts}
+                sortAscending={sortAscending}
+                onSortAscendingChange={setSortAscending}
                 selectedScriptId={selectedScript?.id ?? null}
-                onSelect={selectScript}
-                onDelete={(script) => setDeleteScriptTarget(script)}
+                onNavigateFolder={navigateToFolder}
+                onDeleteFolder={(folder) => setDeleteFolderTarget(folder)}
+                onSelectScript={selectScript}
+                onDeleteScript={(script) => setDeleteScriptTarget(script)}
               />
-            )}
+              <Group justify="center" gap="sm" wrap="wrap" pt="lg">
+                <DocxUploadButton
+                  onChange={handleFileChange}
+                  multiple
+                  variant="light"
+                  color="wave"
+                  loading={isUploading}
+                >
+                  Upload Scripts
+                </DocxUploadButton>
+                <Button
+                  color="wave"
+                  leftSection={<FolderPlus size={16} />}
+                  onClick={openCreateFolder}
+                >
+                  New Folder
+                </Button>
+              </Group>
+            </Box>
           </Box>
 
           {selectedScript && (
