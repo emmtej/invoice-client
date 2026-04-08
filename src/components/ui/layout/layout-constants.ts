@@ -1,2 +1,3 @@
 export const APP_SHELL_HEADER_HEIGHT = 60;
-export const APP_SHELL_NAVBAR_WIDTH = 240;
+export const APP_SHELL_NAVBAR_WIDTH = 290;
+export const APP_SHELL_MOBILE_BREAKPOINT = "xl";

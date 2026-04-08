@@ -60,7 +60,8 @@ const linkBaseStyles = {
 	color: "var(--mantine-color-gray-5)",
 	transition: "all 150ms ease",
 	"&:hover": {
-		backgroundColor: "color-mix(in srgb, var(--mantine-color-wave-8) 5%, white)",
+		backgroundColor:
+			"color-mix(in srgb, var(--mantine-color-wave-8) 5%, white)",
 		color: "var(--mantine-color-wave-8)",
 	},
 } as const;

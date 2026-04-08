@@ -1,7 +1,6 @@
 import { Box, ScrollArea } from "@mantine/core";
 import { FileText, LayoutDashboard, Receipt, User } from "lucide-react";
 import { useUserStore } from "@/store/userStore";
-import { APP_SHELL_NAVBAR_WIDTH } from "../layout/layout-constants";
 import { LinksGroup } from "./NavLinksGroup";
 import { UserButton } from "./UserButton";
 
@@ -33,11 +32,12 @@ export function Sidebar() {
 			component="nav"
 			bg="white"
 			h="100%"
-			w={APP_SHELL_NAVBAR_WIDTH}
+			w="100%"
 			p="md"
 			display="flex"
 			style={{
 				flexDirection: "column",
+				borderRight: "1px solid var(--mantine-color-gray-3)",
 			}}
 		>
 			<ScrollArea flex={1} mx={`calc(var(--mantine-spacing-md) * -1)`}>
