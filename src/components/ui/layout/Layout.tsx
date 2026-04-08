@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Navbar } from "../navbar/Navbar";
 import { Sidebar } from "../sidebar/Sidebar";
 import {
+	APP_CONTENT_MAX_WIDTH,
 	APP_SHELL_HEADER_HEIGHT,
 	APP_SHELL_MOBILE_BREAKPOINT,
 	APP_SHELL_NAVBAR_WIDTH,
@@ -63,7 +64,7 @@ export function Layout({ children }: LayoutProps) {
 
 			<AppShell.Main display="flex" style={{ flexDirection: "column" }}>
 				<Container
-					maw={1200}
+					maw={APP_CONTENT_MAX_WIDTH}
 					size="lg"
 					py="xs"
 					px="xs"
