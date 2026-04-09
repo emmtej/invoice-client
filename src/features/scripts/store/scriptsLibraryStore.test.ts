@@ -88,9 +88,9 @@ describe("useScriptsLibraryStore", () => {
 		expect(folderQueriesMocks.initSchema).toHaveBeenCalled();
 		expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalledWith(null);
 		expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith(null);
-		expect(folderQueriesMocks.getChildItemCountsForFolders).toHaveBeenCalledWith([
-			"f-root",
-		]);
+		expect(
+			folderQueriesMocks.getChildItemCountsForFolders,
+		).toHaveBeenCalledWith(["f-root"]);
 		expect(useScriptsLibraryStore.getState().folders).toEqual([rootFolder]);
 		expect(useScriptsLibraryStore.getState().scripts).toEqual([scriptSummary]);
 		expect(useScriptsLibraryStore.getState().folderChildItemCounts).toEqual({
@@ -116,7 +116,9 @@ describe("useScriptsLibraryStore", () => {
 		await useScriptsLibraryStore.getState().navigateToFolder("f-root");
 
 		expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalledWith("f-root");
-		expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith("f-root");
+		expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith(
+			"f-root",
+		);
 		expect(folderQueriesMocks.getFolderBreadcrumb).toHaveBeenCalledWith(
 			"f-root",
 		);

@@ -55,4 +55,38 @@ export const scriptsQueries = {
 		const db = await initDb();
 		await db.query("DELETE FROM scripts WHERE id = $1;", [id]);
 	},
+
+	async moveScripts(
+		ids: string[],
+		targetFolderId: string | null,
+	): Promise<void> {
+		const db = await initDb();
+		const placeholders = ids.map((_, i) => `$${i + 2}`).join(", ");
+		await db.query(
+			`UPDATE scripts SET folder_id = $1 WHERE id IN (${placeholders});`,
+			[targetFolderId, ...ids],
+		);
+	},
+
+	async duplicateScript(id: string, newId: string): Promise<void> {
+		const db = await initDb();
+		const result = await db.query("SELECT * FROM scripts WHERE id = $1;", [id]);
+		if (result.rows.length === 0) return;
+		const row = result.rows[0] as any;
+
+		await db.query(
+			`INSERT INTO scripts (id, name, html, overview, lines, group_name, label, folder_id)
+			 VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`,
+			[
+				newId,
+				`${row.name} (Copy)`,
+				row.html,
+				row.overview,
+				row.lines,
+				row.group_name,
+				row.label,
+				row.folder_id,
+			],
+		);
+	},
 };

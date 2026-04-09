@@ -13,14 +13,12 @@ vi.mock("@/features/storage/folderQueries", () => ({
 		initSchema: vi.fn().mockResolvedValue(undefined),
 		getFoldersAtLevel: vi.fn().mockResolvedValue([]),
 		getAllFolders: vi.fn().mockResolvedValue([]),
-		createFolder: vi
-			.fn()
-			.mockResolvedValue({
-				id: "new",
-				name: "New",
-				parentId: null,
-				createdAt: new Date(),
-			}),
+		createFolder: vi.fn().mockResolvedValue({
+			id: "new",
+			name: "New",
+			parentId: null,
+			createdAt: new Date(),
+		}),
 		deleteFolder: vi.fn().mockResolvedValue(undefined),
 		getFolderBreadcrumb: vi.fn().mockResolvedValue([]),
 		getScriptCountInFolder: vi.fn().mockResolvedValue(0),
@@ -183,7 +181,9 @@ describe("ScriptsPage store integration", () => {
 
 		await useScriptsLibraryStore.getState().selectScript("s1");
 
-		expect(useScriptsLibraryStore.getState().selectedScript).toEqual(mockScript);
+		expect(useScriptsLibraryStore.getState().selectedScript).toEqual(
+			mockScript,
+		);
 		expect(useScriptsLibraryStore.getState().isPreviewLoading).toBe(false);
 	});
 

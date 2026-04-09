@@ -135,9 +135,10 @@ export async function getChildItemCountsForFolders(
 ): Promise<Record<string, number>> {
 	if (folderIds.length === 0) return {};
 	const db = await initDb();
-	const counts = Object.fromEntries(
-		folderIds.map((id) => [id, 0]),
-	) as Record<string, number>;
+	const counts = Object.fromEntries(folderIds.map((id) => [id, 0])) as Record<
+		string,
+		number
+	>;
 
 	const placeholders = folderIds.map((_, i) => `$${i + 1}`).join(", ");
 
@@ -162,6 +163,18 @@ export async function getChildItemCountsForFolders(
 	return counts;
 }
 
+export async function moveFolders(
+	ids: string[],
+	targetFolderId: string | null,
+): Promise<void> {
+	const db = await initDb();
+	const placeholders = ids.map((_, i) => `$${i + 2}`).join(", ");
+	await db.query(
+		`UPDATE folders SET parent_id = $1 WHERE id IN (${placeholders});`,
+		[targetFolderId, ...ids],
+	);
+}
+
 function mapRowToFolder(row: FolderRow): Folder {
 	return {
 		id: row.id,
@@ -180,4 +193,5 @@ export const folderQueries = {
 	getFolderBreadcrumb,
 	getScriptCountInFolder,
 	getChildItemCountsForFolders,
+	moveFolders,
 };
