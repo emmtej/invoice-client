@@ -17,6 +17,7 @@ import {
 	deleteFolder,
 	getFolderBreadcrumb,
 	getScriptCountInFolder,
+	getChildItemCountsForFolders,
 } from "./folderQueries";
 
 describe("folderQueries", () => {
@@ -187,6 +188,44 @@ describe("folderQueries", () => {
 			expect(mockQuery).toHaveBeenCalledWith(
 				expect.stringContaining("folder_id IS NULL"),
 			);
+		});
+	});
+
+	describe("getChildItemCountsForFolders", () => {
+		it("returns zeros for ids with no children", async () => {
+			mockQuery
+				.mockResolvedValueOnce({ rows: [] })
+				.mockResolvedValueOnce({ rows: [] });
+
+			const counts = await getChildItemCountsForFolders(["a", "b"]);
+
+			expect(counts).toEqual({ a: 0, b: 0 });
+		});
+
+		it("sums subfolders and scripts per folder id", async () => {
+			mockQuery
+				.mockResolvedValueOnce({
+					rows: [
+						{ parent_id: "f1", c: 2 },
+						{ parent_id: "f2", c: 1 },
+					],
+				})
+				.mockResolvedValueOnce({
+					rows: [
+						{ folder_id: "f1", c: 3 },
+						{ folder_id: "f2", c: 0 },
+					],
+				});
+
+			const counts = await getChildItemCountsForFolders(["f1", "f2"]);
+
+			expect(counts).toEqual({ f1: 5, f2: 1 });
+		});
+
+		it("returns empty object when no ids", async () => {
+			const counts = await getChildItemCountsForFolders([]);
+			expect(counts).toEqual({});
+			expect(mockQuery).not.toHaveBeenCalled();
 		});
 	});
 });

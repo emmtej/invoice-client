@@ -10,6 +10,8 @@ interface ScriptsLibraryState {
 	breadcrumb: { id: string; name: string }[];
 	folders: Folder[];
 	scripts: ScriptSummary[];
+	/** Direct child count per folder id (subfolders + scripts in that folder). */
+	folderChildItemCounts: Record<string, number>;
 	selectedScript: Script | null;
 	isLoading: boolean;
 	isPreviewLoading: boolean;
@@ -28,12 +30,21 @@ interface ScriptsLibraryActions {
 
 type ScriptsLibraryStore = ScriptsLibraryState & ScriptsLibraryActions;
 
+async function loadFolderChildItemCounts(
+	folders: Folder[],
+): Promise<Record<string, number>> {
+	const ids = folders.map((f) => f.id);
+	if (ids.length === 0) return {};
+	return folderQueries.getChildItemCountsForFolders(ids);
+}
+
 export const useScriptsLibraryStore = create<ScriptsLibraryStore>()(
 	(set, get) => ({
 		currentFolderId: null,
 		breadcrumb: [],
 		folders: [],
 		scripts: [],
+		folderChildItemCounts: {},
 		selectedScript: null,
 		isLoading: false,
 		isPreviewLoading: false,
@@ -44,7 +55,9 @@ export const useScriptsLibraryStore = create<ScriptsLibraryStore>()(
 				await folderQueries.initSchema();
 				const folders = await folderQueries.getFoldersAtLevel(null);
 				const scripts = await scriptsQueries.getScriptsInFolder(null);
-				set({ folders, scripts, isLoading: false });
+				const folderChildItemCounts =
+					await loadFolderChildItemCounts(folders);
+				set({ folders, scripts, folderChildItemCounts, isLoading: false });
 			} catch (error) {
 				console.error("Failed to initialize scripts library:", error);
 				set({ isLoading: false });
@@ -59,11 +72,14 @@ export const useScriptsLibraryStore = create<ScriptsLibraryStore>()(
 				const breadcrumb = folderId
 					? await folderQueries.getFolderBreadcrumb(folderId)
 					: [];
+				const folderChildItemCounts =
+					await loadFolderChildItemCounts(folders);
 				set({
 					currentFolderId: folderId,
 					folders,
 					scripts,
 					breadcrumb,
+					folderChildItemCounts,
 					isLoading: false,
 				});
 			} catch (error) {
@@ -119,7 +135,9 @@ export const useScriptsLibraryStore = create<ScriptsLibraryStore>()(
 			const { currentFolderId } = get();
 			const folders = await folderQueries.getFoldersAtLevel(currentFolderId);
 			const scripts = await scriptsQueries.getScriptsInFolder(currentFolderId);
-			set({ folders, scripts });
+			const folderChildItemCounts =
+				await loadFolderChildItemCounts(folders);
+			set({ folders, scripts, folderChildItemCounts });
 		},
 	}),
 );

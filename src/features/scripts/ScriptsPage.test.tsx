@@ -24,6 +24,7 @@ vi.mock("@/features/storage/folderQueries", () => ({
 		deleteFolder: vi.fn().mockResolvedValue(undefined),
 		getFolderBreadcrumb: vi.fn().mockResolvedValue([]),
 		getScriptCountInFolder: vi.fn().mockResolvedValue(0),
+		getChildItemCountsForFolders: vi.fn().mockResolvedValue({}),
 	},
 }));
 
@@ -47,6 +48,7 @@ describe("ScriptsPage store integration", () => {
 			breadcrumb: [],
 			folders: [],
 			scripts: [],
+			folderChildItemCounts: {},
 			selectedScript: null,
 			isLoading: false,
 			isPreviewLoading: false,

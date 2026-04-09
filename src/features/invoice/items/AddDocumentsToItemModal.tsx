@@ -5,44 +5,37 @@ import { AppModal } from "@/components/ui/modal/AppModal";
 
 import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
 import { processDocuments } from "@/features/editor/utils/documentParser";
-import type { Script } from "@/types/Script";
 
 export interface AddDocumentsToItemModalProps {
-	itemId: string;
 	itemName: string;
 	opened: boolean;
 	onClose: () => void;
 }
 
 export function AddDocumentsToItemModal({
-	itemId,
 	itemName,
 	opened,
 	onClose,
 }: AddDocumentsToItemModalProps) {
 	const { docFiles, handleFileChange, isLoading, errors, reset } =
 		useFileUpload();
-	const [scripts, setScripts] = useState<Script[]>([]);
 	const [processingError, setProcessingError] = useState<string | null>(null);
 
 	useEffect(() => {
 		if (!opened) {
 			reset();
-			setScripts([]);
 			setProcessingError(null);
 		}
 	}, [opened, reset]);
 
 	useEffect(() => {
 		if (!docFiles || docFiles.length === 0) {
-			setScripts([]);
 			setProcessingError(null);
 			return;
 		}
 		setProcessingError(null);
 		try {
-			const s = processDocuments(docFiles);
-			setScripts(s);
+			processDocuments(docFiles);
 		} catch (err) {
 			const message =
 				err instanceof Error

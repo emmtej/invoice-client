@@ -94,12 +94,17 @@ export async function getFolderBreadcrumb(
 	let currentId: string | null = folderId;
 
 	while (currentId) {
+		const id = currentId;
 		const result = await db.query(
 			"SELECT id, name, parent_id FROM folders WHERE id = $1;",
-			[currentId],
+			[id],
 		);
 		if (result.rows.length === 0) break;
-		const row = result.rows[0];
+		const row = result.rows[0] as {
+			id: string;
+			name: string;
+			parent_id: string | null;
+		};
 		crumbs.unshift({ id: row.id, name: row.name });
 		currentId = row.parent_id;
 	}
@@ -122,6 +127,41 @@ export async function getScriptCountInFolder(
 	return result.rows[0].count;
 }
 
+/**
+ * For each folder id, total direct children: subfolders plus scripts (not recursive).
+ */
+export async function getChildItemCountsForFolders(
+	folderIds: string[],
+): Promise<Record<string, number>> {
+	if (folderIds.length === 0) return {};
+	const db = await initDb();
+	const counts = Object.fromEntries(
+		folderIds.map((id) => [id, 0]),
+	) as Record<string, number>;
+
+	const placeholders = folderIds.map((_, i) => `$${i + 1}`).join(", ");
+
+	const childRes = await db.query(
+		`SELECT parent_id, COUNT(*)::int AS c FROM folders WHERE parent_id IN (${placeholders}) GROUP BY parent_id;`,
+		folderIds,
+	);
+	const childRows = childRes.rows as { parent_id: string; c: number }[];
+	for (const row of childRows) {
+		counts[row.parent_id] += row.c;
+	}
+
+	const scriptsRes = await db.query(
+		`SELECT folder_id, COUNT(*)::int AS c FROM scripts WHERE folder_id IN (${placeholders}) GROUP BY folder_id;`,
+		folderIds,
+	);
+	const scriptRows = scriptsRes.rows as { folder_id: string; c: number }[];
+	for (const row of scriptRows) {
+		counts[row.folder_id] += row.c;
+	}
+
+	return counts;
+}
+
 function mapRowToFolder(row: FolderRow): Folder {
 	return {
 		id: row.id,
@@ -139,4 +179,5 @@ export const folderQueries = {
 	deleteFolder,
 	getFolderBreadcrumb,
 	getScriptCountInFolder,
+	getChildItemCountsForFolders,
 };

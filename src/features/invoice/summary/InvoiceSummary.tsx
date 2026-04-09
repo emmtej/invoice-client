@@ -365,7 +365,6 @@ export const InvoiceSummary = memo(
 
 				{activeItemId && (
 					<AddDocumentsToItemModal
-						itemId={activeItemId.id}
 						itemName={activeItemId.name}
 						opened={modalOpened}
 						onClose={close}

@@ -7,6 +7,7 @@ export {
 	deleteFolder,
 	getFolderBreadcrumb,
 	getScriptCountInFolder,
+	getChildItemCountsForFolders,
 } from "./folderQueries";
 export type {
 	Folder,

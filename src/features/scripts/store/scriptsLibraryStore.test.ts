@@ -9,6 +9,7 @@ const folderQueriesMocks = vi.hoisted(() => ({
 	getFolderBreadcrumb: vi.fn(),
 	createFolder: vi.fn().mockResolvedValue(undefined),
 	deleteFolder: vi.fn().mockResolvedValue(undefined),
+	getChildItemCountsForFolders: vi.fn().mockResolvedValue({}),
 }));
 
 const scriptsQueriesMocks = vi.hoisted(() => ({
@@ -59,6 +60,7 @@ describe("useScriptsLibraryStore", () => {
 			breadcrumb: [],
 			folders: [],
 			scripts: [],
+			folderChildItemCounts: {},
 			selectedScript: null,
 			isLoading: false,
 			isPreviewLoading: false,
@@ -68,6 +70,7 @@ describe("useScriptsLibraryStore", () => {
 		folderQueriesMocks.getFolderBreadcrumb.mockResolvedValue([]);
 		folderQueriesMocks.createFolder.mockResolvedValue(rootFolder);
 		folderQueriesMocks.deleteFolder.mockResolvedValue(undefined);
+		folderQueriesMocks.getChildItemCountsForFolders.mockResolvedValue({});
 		scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([]);
 		scriptsQueriesMocks.getScriptById.mockResolvedValue(null);
 		scriptsQueriesMocks.deleteScript.mockResolvedValue(undefined);
@@ -76,14 +79,23 @@ describe("useScriptsLibraryStore", () => {
 	it("init loads schema and root folders and scripts", async () => {
 		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([rootFolder]);
 		scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([scriptSummary]);
+		folderQueriesMocks.getChildItemCountsForFolders.mockResolvedValue({
+			"f-root": 2,
+		});
 
 		await useScriptsLibraryStore.getState().init();
 
 		expect(folderQueriesMocks.initSchema).toHaveBeenCalled();
 		expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalledWith(null);
 		expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith(null);
+		expect(folderQueriesMocks.getChildItemCountsForFolders).toHaveBeenCalledWith([
+			"f-root",
+		]);
 		expect(useScriptsLibraryStore.getState().folders).toEqual([rootFolder]);
 		expect(useScriptsLibraryStore.getState().scripts).toEqual([scriptSummary]);
+		expect(useScriptsLibraryStore.getState().folderChildItemCounts).toEqual({
+			"f-root": 2,
+		});
 		expect(useScriptsLibraryStore.getState().isLoading).toBe(false);
 	});
 

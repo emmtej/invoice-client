@@ -37,6 +37,7 @@ export default function ScriptsPage() {
     breadcrumb,
     folders,
     scripts,
+    folderChildItemCounts,
     selectedScript,
     isLoading,
     isPreviewLoading,
@@ -54,6 +55,7 @@ export default function ScriptsPage() {
       breadcrumb: s.breadcrumb,
       folders: s.folders,
       scripts: s.scripts,
+      folderChildItemCounts: s.folderChildItemCounts,
       selectedScript: s.selectedScript,
       isLoading: s.isLoading,
       isPreviewLoading: s.isPreviewLoading,
@@ -123,7 +125,7 @@ export default function ScriptsPage() {
   };
 
   return (
-    <Flex direction="column" h="100%" rowGap={6}>
+    <Flex direction="column" h="100%" rowGap="md">
       {/* Breadcrumb orientation bar */}
       <Box
         px="md"
@@ -203,6 +205,7 @@ export default function ScriptsPage() {
               <ScriptsLibraryItems
                 folders={folders}
                 scripts={scripts}
+                folderItemCounts={folderChildItemCounts}
                 sortAscending={sortAscending}
                 onSortAscendingChange={setSortAscending}
                 selectedScriptId={selectedScript?.id ?? null}
