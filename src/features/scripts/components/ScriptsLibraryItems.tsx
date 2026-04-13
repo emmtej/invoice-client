@@ -1,7 +1,7 @@
 import { Box, Stack, UnstyledButton } from "@mantine/core";
 import { ArrowDown, ArrowUp } from "lucide-react";
-import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
+import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { sortByName } from "../utils/sortByName";
 import { FolderCard } from "./FolderCard";
 import { ScriptLibraryTile } from "./ScriptLibraryTile";
