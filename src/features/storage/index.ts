@@ -1,14 +1,14 @@
-export { initDb, getDb, resetDb } from "./pgliteClient";
 export {
-	initSchema,
-	getFoldersAtLevel,
-	getAllFolders,
 	createFolder,
 	deleteFolder,
-	getFolderBreadcrumb,
-	getScriptCountInFolder,
+	getAllFolders,
 	getChildItemCountsForFolders,
+	getFolderBreadcrumb,
+	getFoldersAtLevel,
+	getScriptCountInFolder,
+	initSchema,
 } from "./folderQueries";
+export { getDb, initDb, resetDb } from "./pgliteClient";
 export type {
 	Folder,
 	FolderRow,

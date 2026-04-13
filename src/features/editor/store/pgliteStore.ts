@@ -1,6 +1,6 @@
-import type { ParsedLine, Script, ScriptOverview } from "@/types/Script";
-import { initDb } from "@/features/storage/pgliteClient";
 import * as folderQueries from "@/features/storage/folderQueries";
+import { initDb } from "@/features/storage/pgliteClient";
+import type { ParsedLine, Script, ScriptOverview } from "@/types/Script";
 
 let editorSchemaReady = false;
 const DRAFT_TTL_HOURS = 24;

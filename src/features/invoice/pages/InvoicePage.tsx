@@ -1,7 +1,7 @@
 import { Box, Stack, Text } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
-import { PageTitle } from "@/components/ui/text/PageTitle";
 import { useShallow } from "zustand/react/shallow";
+import { PageTitle } from "@/components/ui/text/PageTitle";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import {
 	InvoiceDetailsSection,

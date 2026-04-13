@@ -14,7 +14,6 @@ import {
 	Title,
 } from "@mantine/core";
 import { Link } from "@tanstack/react-router";
-import { PageTitle } from "@/components/ui/text/PageTitle";
 import {
 	Activity,
 	CircleDashed,
@@ -25,6 +24,7 @@ import {
 	User,
 } from "lucide-react";
 import { useId } from "react";
+import { PageTitle } from "@/components/ui/text/PageTitle";
 
 const features = [
 	{

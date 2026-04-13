@@ -15,8 +15,8 @@ vi.mock("./pgliteStore", () => ({
 	},
 }));
 
-import { useScriptStore } from "./scriptEditorStore";
 import { pgliteStore } from "./pgliteStore";
+import { useScriptStore } from "./scriptEditorStore";
 
 describe("scriptEditorStore", () => {
 	beforeEach(() => {

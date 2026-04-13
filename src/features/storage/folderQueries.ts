@@ -1,5 +1,5 @@
-import type { Folder, FolderRow } from "./types";
 import { initDb } from "./pgliteClient";
+import type { Folder, FolderRow } from "./types";
 
 export async function initSchema(): Promise<void> {
 	const db = await initDb();

@@ -1,4 +1,4 @@
-import { Paper, type MantineTheme, type PaperProps } from "@mantine/core";
+import { type MantineTheme, Paper, type PaperProps } from "@mantine/core";
 import type { CSSProperties, ReactNode } from "react";
 
 const surfaceStyle = {

@@ -10,14 +10,14 @@ vi.mock("./pgliteClient", () => ({
 }));
 
 import {
-	initSchema,
-	getFoldersAtLevel,
-	getAllFolders,
 	createFolder,
 	deleteFolder,
-	getFolderBreadcrumb,
-	getScriptCountInFolder,
+	getAllFolders,
 	getChildItemCountsForFolders,
+	getFolderBreadcrumb,
+	getFoldersAtLevel,
+	getScriptCountInFolder,
+	initSchema,
 } from "./folderQueries";
 
 describe("folderQueries", () => {

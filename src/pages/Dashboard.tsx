@@ -8,8 +8,8 @@ import {
 	ThemeIcon,
 } from "@mantine/core";
 import { Link } from "@tanstack/react-router";
-import { PageTitle } from "@/components/ui/text/PageTitle";
 import { Gauge, Receipt } from "lucide-react";
+import { PageTitle } from "@/components/ui/text/PageTitle";
 
 export default function Dashboard() {
 	return (
