@@ -131,7 +131,9 @@ export const pgliteStore = {
 
 	async deleteExpiredDrafts(): Promise<void> {
 		const database = await initEditorDb();
-		await database.query("DELETE FROM script_drafts WHERE expires_at <= CURRENT_TIMESTAMP;");
+		await database.query(
+			"DELETE FROM script_drafts WHERE expires_at <= CURRENT_TIMESTAMP;",
+		);
 	},
 
 	async getAllDraftScripts(): Promise<Script[]> {
@@ -183,7 +185,9 @@ export const pgliteStore = {
 
 	async deleteDraftScripts(ids: string[]): Promise<void> {
 		const database = await initEditorDb();
-		await database.query("DELETE FROM script_drafts WHERE id = ANY($1);", [ids]);
+		await database.query("DELETE FROM script_drafts WHERE id = ANY($1);", [
+			ids,
+		]);
 	},
 
 	async clearAllDrafts(): Promise<void> {
@@ -215,7 +219,9 @@ export const pgliteStore = {
            folder_id = EXCLUDED.folder_id;`,
 				[ids, folderId],
 			);
-			await database.query("DELETE FROM script_drafts WHERE id = ANY($1);", [ids]);
+			await database.query("DELETE FROM script_drafts WHERE id = ANY($1);", [
+				ids,
+			]);
 			await database.query("COMMIT;");
 		} catch (error) {
 			await database.query("ROLLBACK;");

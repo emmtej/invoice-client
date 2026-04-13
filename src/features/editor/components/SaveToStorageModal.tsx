@@ -25,10 +25,7 @@ interface SaveToStorageModalProps {
 	opened: boolean;
 	onClose: () => void;
 	scripts: Script[];
-	onConfirm: (
-		selectedIds: string[],
-		folderId: string | null,
-	) => Promise<void>;
+	onConfirm: (selectedIds: string[], folderId: string | null) => Promise<void>;
 }
 
 type FolderListRow =
@@ -166,7 +163,10 @@ export const SaveToStorageModal = memo(
 							p="xs"
 						>
 							{foldersLoading ? (
-								<Box py="md" style={{ display: "flex", justifyContent: "center" }}>
+								<Box
+									py="md"
+									style={{ display: "flex", justifyContent: "center" }}
+								>
 									<Loader color="wave" size="sm" />
 								</Box>
 							) : (
@@ -180,9 +180,7 @@ export const SaveToStorageModal = memo(
 													setSelectedFolderId(row.isRoot ? null : row.id)
 												}
 												className={`w-full rounded-none px-2 py-2 text-left transition-colors ${
-													selected
-														? "bg-wave-50"
-														: "hover:bg-gray-50"
+													selected ? "bg-wave-50" : "hover:bg-gray-50"
 												}`}
 											>
 												{row.isRoot ? (

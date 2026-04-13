@@ -73,8 +73,9 @@ describe("pgliteStore drafts", () => {
 		expect(calls).toContain("COMMIT;");
 		expect(calls.some((q) => q.includes("INSERT INTO scripts"))).toBe(true);
 		expect(
-			calls.some((q) => q.includes("DELETE FROM script_drafts WHERE id = ANY($1);")),
+			calls.some((q) =>
+				q.includes("DELETE FROM script_drafts WHERE id = ANY($1);"),
+			),
 		).toBe(true);
 	});
 });
-

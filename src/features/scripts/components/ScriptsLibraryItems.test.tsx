@@ -74,6 +74,8 @@ describe("ScriptsLibraryItems", () => {
 					onDeleteFolder={vi.fn()}
 					onSelectScript={vi.fn()}
 					onDeleteScript={vi.fn()}
+					selectedIds={[]}
+					onToggleSelection={vi.fn()}
 				/>,
 			),
 		);
@@ -102,6 +104,8 @@ describe("ScriptsLibraryItems", () => {
 					onDeleteFolder={vi.fn()}
 					onSelectScript={vi.fn()}
 					onDeleteScript={vi.fn()}
+					selectedIds={[]}
+					onToggleSelection={vi.fn()}
 				/>,
 			),
 		);
@@ -141,6 +145,8 @@ describe("ScriptsLibraryItems", () => {
 					onDeleteFolder={vi.fn()}
 					onSelectScript={vi.fn()}
 					onDeleteScript={vi.fn()}
+					selectedIds={[]}
+					onToggleSelection={vi.fn()}
 				/>,
 			),
 		);

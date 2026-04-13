@@ -29,16 +29,24 @@ describe("folderQueries", () => {
 		it("creates scripts table, folders table, and adds folder_id column", async () => {
 			await initSchema();
 			expect(mockExec).toHaveBeenCalledTimes(3);
-			expect(mockExec.mock.calls[0][0]).toContain("CREATE TABLE IF NOT EXISTS scripts");
-			expect(mockExec.mock.calls[1][0]).toContain("CREATE TABLE IF NOT EXISTS folders");
-			expect(mockExec.mock.calls[2][0]).toContain("ALTER TABLE scripts ADD COLUMN IF NOT EXISTS folder_id");
+			expect(mockExec.mock.calls[0][0]).toContain(
+				"CREATE TABLE IF NOT EXISTS scripts",
+			);
+			expect(mockExec.mock.calls[1][0]).toContain(
+				"CREATE TABLE IF NOT EXISTS folders",
+			);
+			expect(mockExec.mock.calls[2][0]).toContain(
+				"ALTER TABLE scripts ADD COLUMN IF NOT EXISTS folder_id",
+			);
 		});
 	});
 
 	describe("getFoldersAtLevel", () => {
 		it("queries root folders when parentId is null", async () => {
 			mockQuery.mockResolvedValue({
-				rows: [{ id: "f1", name: "Root", parent_id: null, created_at: "2025-01-01" }],
+				rows: [
+					{ id: "f1", name: "Root", parent_id: null, created_at: "2025-01-01" },
+				],
 			});
 
 			const folders = await getFoldersAtLevel(null);
@@ -47,7 +55,12 @@ describe("folderQueries", () => {
 				expect.stringContaining("parent_id IS NULL"),
 			);
 			expect(folders).toEqual([
-				{ id: "f1", name: "Root", parentId: null, createdAt: new Date("2025-01-01") },
+				{
+					id: "f1",
+					name: "Root",
+					parentId: null,
+					createdAt: new Date("2025-01-01"),
+				},
 			]);
 		});
 
@@ -86,7 +99,9 @@ describe("folderQueries", () => {
 	describe("createFolder", () => {
 		it("creates a root folder", async () => {
 			mockQuery.mockResolvedValue({
-				rows: [{ id: "f1", name: "New", parent_id: null, created_at: "2025-01-01" }],
+				rows: [
+					{ id: "f1", name: "New", parent_id: null, created_at: "2025-01-01" },
+				],
 			});
 
 			const folder = await createFolder("f1", "New", null);
@@ -99,7 +114,14 @@ describe("folderQueries", () => {
 			mockQuery
 				.mockResolvedValueOnce({ rows: [{ parent_id: null }] })
 				.mockResolvedValueOnce({
-					rows: [{ id: "f2", name: "Child", parent_id: "f1", created_at: "2025-01-01" }],
+					rows: [
+						{
+							id: "f2",
+							name: "Child",
+							parent_id: "f1",
+							created_at: "2025-01-01",
+						},
+					],
 				});
 
 			const folder = await createFolder("f2", "Child", "f1");
