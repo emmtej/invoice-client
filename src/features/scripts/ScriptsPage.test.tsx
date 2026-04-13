@@ -31,166 +31,167 @@ vi.mock("./store/scriptsQueries", () => ({
 		getScriptsInFolder: vi.fn().mockResolvedValue([]),
 		getScriptById: vi.fn().mockResolvedValue(null),
 		deleteScript: vi.fn().mockResolvedValue(undefined),
+		duplicateScript: vi.fn().mockResolvedValue(undefined),
 	},
 }));
 
-import { useScriptsLibraryStore } from "./store/scriptsLibraryStore";
 import { folderQueries } from "@/features/storage/folderQueries";
 import { scriptsQueries } from "./store/scriptsQueries";
+import { useScriptsDataStore } from "./store/useScriptsDataStore";
+import { useScriptsUiStore } from "./store/useScriptsUiStore";
 
-describe("ScriptsPage store integration", () => {
+describe("Scripts Library Stores integration", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		useScriptsLibraryStore.setState({
-			currentFolderId: null,
-			breadcrumb: [],
+		useScriptsDataStore.setState({
 			folders: [],
 			scripts: [],
+			breadcrumb: [],
 			folderChildItemCounts: {},
-			selectedScript: null,
 			isLoading: false,
+		});
+		useScriptsUiStore.setState({
+			currentFolderId: null,
+			selectedScript: null,
+			selectedIds: [],
+			lastSelectedId: null,
 			isPreviewLoading: false,
 		});
 	});
 
-	it("should initialize with empty state", async () => {
-		await useScriptsLibraryStore.getState().init();
-		const state = useScriptsLibraryStore.getState();
-		expect(state.isLoading).toBe(false);
-		expect(state.folders).toEqual([]);
-		expect(state.scripts).toEqual([]);
-	});
-
-	it("should load folders and scripts on init", async () => {
-		const mockFolders = [
-			{ id: "f1", name: "Project A", parentId: null, createdAt: new Date() },
-		];
-		const mockScripts = [
-			{
-				id: "s1",
-				name: "Script 1",
-				folderId: null,
-				wordCount: 100,
-				invalidLineCount: 0,
-				createdAt: new Date(),
-			},
-		];
-		(folderQueries.getFoldersAtLevel as any).mockResolvedValue(mockFolders);
-		(scriptsQueries.getScriptsInFolder as any).mockResolvedValue(mockScripts);
-
-		await useScriptsLibraryStore.getState().init();
-
-		expect(useScriptsLibraryStore.getState().folders).toEqual(mockFolders);
-		expect(useScriptsLibraryStore.getState().scripts).toEqual(mockScripts);
-	});
-
-	it("should navigate into a folder and build breadcrumb", async () => {
-		const subFolders = [
-			{ id: "f2", name: "Episode 1", parentId: "f1", createdAt: new Date() },
-		];
-		const scripts = [
-			{
-				id: "s1",
-				name: "Script 1",
-				folderId: "f1",
-				wordCount: 50,
-				invalidLineCount: 1,
-				createdAt: new Date(),
-			},
-		];
-		const crumbs = [{ id: "f1", name: "Project A" }];
-
-		(folderQueries.getFoldersAtLevel as any).mockResolvedValue(subFolders);
-		(scriptsQueries.getScriptsInFolder as any).mockResolvedValue(scripts);
-		(folderQueries.getFolderBreadcrumb as any).mockResolvedValue(crumbs);
-
-		await useScriptsLibraryStore.getState().navigateToFolder("f1");
-
-		const state = useScriptsLibraryStore.getState();
-		expect(state.currentFolderId).toBe("f1");
-		expect(state.breadcrumb).toEqual(crumbs);
-		expect(state.folders).toEqual(subFolders);
-		expect(state.scripts).toEqual(scripts);
-	});
-
-	it("should navigate back to root and clear breadcrumb", async () => {
-		useScriptsLibraryStore.setState({
-			currentFolderId: "f1",
-			breadcrumb: [{ id: "f1", name: "Project A" }],
+	describe("useScriptsDataStore", () => {
+		it("should initialize with empty state", async () => {
+			await useScriptsDataStore.getState().init();
+			const state = useScriptsDataStore.getState();
+			expect(state.isLoading).toBe(false);
+			expect(state.folders).toEqual([]);
+			expect(state.scripts).toEqual([]);
 		});
 
-		await useScriptsLibraryStore.getState().navigateToFolder(null);
+		it("should load folders and scripts on init", async () => {
+			const mockFolders = [
+				{ id: "f1", name: "Project A", parentId: null, createdAt: new Date() },
+			];
+			const mockScripts = [
+				{
+					id: "s1",
+					name: "Script 1",
+					folderId: null,
+					wordCount: 100,
+					invalidLineCount: 0,
+					createdAt: new Date(),
+				},
+			];
+			(folderQueries.getFoldersAtLevel as any).mockResolvedValue(mockFolders);
+			(scriptsQueries.getScriptsInFolder as any).mockResolvedValue(mockScripts);
 
-		expect(useScriptsLibraryStore.getState().currentFolderId).toBeNull();
-		expect(useScriptsLibraryStore.getState().breadcrumb).toEqual([]);
-	});
+			await useScriptsDataStore.getState().init();
 
-	it("should clear selected script when navigating", async () => {
-		useScriptsLibraryStore.setState({ selectedScript: { id: "s1" } as any });
-
-		await useScriptsLibraryStore.getState().navigateToFolder("f1");
-
-		expect(useScriptsLibraryStore.getState().selectedScript).toBeNull();
-	});
-
-	it("should create a folder and refresh", async () => {
-		await useScriptsLibraryStore.getState().createFolder("New Folder", null);
-
-		expect(folderQueries.createFolder).toHaveBeenCalledWith(
-			expect.any(String),
-			"New Folder",
-			null,
-		);
-		expect(folderQueries.getFoldersAtLevel).toHaveBeenCalled();
-	});
-
-	it("should delete a folder and refresh", async () => {
-		await useScriptsLibraryStore.getState().deleteFolder("f1");
-
-		expect(folderQueries.deleteFolder).toHaveBeenCalledWith("f1");
-		expect(folderQueries.getFoldersAtLevel).toHaveBeenCalled();
-	});
-
-	it("should clear selection when deleting the selected script's folder", async () => {
-		useScriptsLibraryStore.setState({
-			selectedScript: { id: "s1", folderId: "f1" } as any,
+			expect(useScriptsDataStore.getState().folders).toEqual(mockFolders);
+			expect(useScriptsDataStore.getState().scripts).toEqual(mockScripts);
 		});
 
-		await useScriptsLibraryStore.getState().deleteFolder("f1");
+		it("should fetch folder data and build breadcrumb", async () => {
+			const subFolders = [
+				{ id: "f2", name: "Episode 1", parentId: "f1", createdAt: new Date() },
+			];
+			const scripts = [
+				{
+					id: "s1",
+					name: "Script 1",
+					folderId: "f1",
+					wordCount: 50,
+					invalidLineCount: 1,
+					createdAt: new Date(),
+				},
+			];
+			const crumbs = [{ id: "f1", name: "Project A" }];
 
-		expect(useScriptsLibraryStore.getState().selectedScript).toBeNull();
+			(folderQueries.getFoldersAtLevel as any).mockResolvedValue(subFolders);
+			(scriptsQueries.getScriptsInFolder as any).mockResolvedValue(scripts);
+			(folderQueries.getFolderBreadcrumb as any).mockResolvedValue(crumbs);
+
+			const result = await useScriptsDataStore.getState().fetchFolderData("f1");
+
+			expect(result.breadcrumb).toEqual(crumbs);
+			expect(result.folders).toEqual(subFolders);
+			expect(result.scripts).toEqual(scripts);
+
+			const state = useScriptsDataStore.getState();
+			expect(state.breadcrumb).toEqual(crumbs);
+			expect(state.folders).toEqual(subFolders);
+		});
+
+		it("should create a folder and refresh", async () => {
+			await useScriptsDataStore.getState().createFolder("New Folder", null);
+
+			expect(folderQueries.createFolder).toHaveBeenCalledWith(
+				expect.any(String),
+				"New Folder",
+				null,
+			);
+			expect(folderQueries.getFoldersAtLevel).toHaveBeenCalled();
+		});
+
+		it("should delete a script", async () => {
+			await useScriptsDataStore.getState().deleteScript("s1");
+			expect(scriptsQueries.deleteScript).toHaveBeenCalledWith("s1");
+		});
 	});
 
-	it("should select a script for preview", async () => {
-		const mockScript = {
-			id: "s1",
-			name: "Test",
-			html: "<p>Hello</p>",
-			lines: [],
-			overview: {
-				wordCount: 1,
-				invalidLines: [],
-				validLines: [],
-				actionLines: [],
-				scenes: [],
-				totalLines: 1,
-			},
-			source: document.implementation.createHTMLDocument(),
-		};
-		(scriptsQueries.getScriptById as any).mockResolvedValue(mockScript);
+	describe("useScriptsUiStore", () => {
+		it("should handle navigation state", () => {
+			useScriptsUiStore.getState().setCurrentFolder("f1");
+			const state = useScriptsUiStore.getState();
+			expect(state.currentFolderId).toBe("f1");
+			expect(state.selectedScript).toBeNull();
+			expect(state.selectedIds).toEqual([]);
+		});
 
-		await useScriptsLibraryStore.getState().selectScript("s1");
+		it("should clear selection when navigating to null", () => {
+			useScriptsUiStore.setState({
+				currentFolderId: "f1",
+				selectedIds: ["s1"],
+			});
 
-		expect(useScriptsLibraryStore.getState().selectedScript).toEqual(
-			mockScript,
-		);
-		expect(useScriptsLibraryStore.getState().isPreviewLoading).toBe(false);
-	});
+			useScriptsUiStore.getState().setCurrentFolder(null);
 
-	it("should delete a script and refresh", async () => {
-		await useScriptsLibraryStore.getState().deleteScript("s1");
+			expect(useScriptsUiStore.getState().currentFolderId).toBeNull();
+			expect(useScriptsUiStore.getState().selectedIds).toEqual([]);
+		});
 
-		expect(scriptsQueries.deleteScript).toHaveBeenCalledWith("s1");
-		expect(scriptsQueries.getScriptsInFolder).toHaveBeenCalled();
+		it("should select a script for preview", async () => {
+			const mockScript = {
+				id: "s1",
+				name: "Test",
+				html: "<p>Hello</p>",
+				lines: [],
+				overview: {
+					wordCount: 1,
+					invalidLines: [],
+					validLines: [],
+					actionLines: [],
+					scenes: [],
+					totalLines: 1,
+				},
+				source: document.implementation.createHTMLDocument(),
+			};
+			(scriptsQueries.getScriptById as any).mockResolvedValue(mockScript);
+
+			await useScriptsUiStore.getState().selectScript("s1");
+
+			expect(useScriptsUiStore.getState().selectedScript).toEqual(mockScript);
+			expect(useScriptsUiStore.getState().isPreviewLoading).toBe(false);
+		});
+
+		it("should clear selection", () => {
+			useScriptsUiStore.setState({
+				selectedIds: ["s1"],
+				selectedScript: {} as any,
+			});
+			useScriptsUiStore.getState().clearSelection();
+			expect(useScriptsUiStore.getState().selectedIds).toEqual([]);
+			expect(useScriptsUiStore.getState().selectedScript).toBeNull();
+		});
 	});
 });

@@ -34,7 +34,8 @@ vi.mock("@/utils/id", () => ({
 	generateId: vi.fn(() => "generated-id"),
 }));
 
-import { useScriptsLibraryStore } from "./scriptsLibraryStore";
+import { useScriptsDataStore } from "./useScriptsDataStore";
+import { useScriptsUiStore } from "./useScriptsUiStore";
 
 const rootFolder = {
 	id: "f-root",
@@ -52,19 +53,24 @@ const scriptSummary = {
 	createdAt: new Date("2025-01-02"),
 };
 
-describe("useScriptsLibraryStore", () => {
+describe("Scripts Library Stores", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		useScriptsLibraryStore.setState({
-			currentFolderId: null,
-			breadcrumb: [],
+		useScriptsDataStore.setState({
 			folders: [],
 			scripts: [],
+			breadcrumb: [],
 			folderChildItemCounts: {},
-			selectedScript: null,
 			isLoading: false,
+		});
+		useScriptsUiStore.setState({
+			currentFolderId: null,
+			selectedScript: null,
+			selectedIds: [],
+			lastSelectedId: null,
 			isPreviewLoading: false,
 		});
+
 		folderQueriesMocks.initSchema.mockResolvedValue(undefined);
 		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([]);
 		folderQueriesMocks.getFolderBreadcrumb.mockResolvedValue([]);
@@ -76,95 +82,107 @@ describe("useScriptsLibraryStore", () => {
 		scriptsQueriesMocks.deleteScript.mockResolvedValue(undefined);
 	});
 
-	it("init loads schema and root folders and scripts", async () => {
-		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([rootFolder]);
-		scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([scriptSummary]);
-		folderQueriesMocks.getChildItemCountsForFolders.mockResolvedValue({
-			"f-root": 2,
+	describe("useScriptsDataStore", () => {
+		it("init loads schema and root folders and scripts", async () => {
+			folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([rootFolder]);
+			scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([scriptSummary]);
+			folderQueriesMocks.getChildItemCountsForFolders.mockResolvedValue({
+				"f-root": 2,
+			});
+
+			await useScriptsDataStore.getState().init();
+
+			expect(folderQueriesMocks.initSchema).toHaveBeenCalled();
+			expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalledWith(null);
+			expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith(null);
+			expect(
+				folderQueriesMocks.getChildItemCountsForFolders,
+			).toHaveBeenCalledWith(["f-root"]);
+			expect(useScriptsDataStore.getState().folders).toEqual([rootFolder]);
+			expect(useScriptsDataStore.getState().scripts).toEqual([scriptSummary]);
+			expect(useScriptsDataStore.getState().folderChildItemCounts).toEqual({
+				"f-root": 2,
+			});
+			expect(useScriptsDataStore.getState().isLoading).toBe(false);
 		});
 
-		await useScriptsLibraryStore.getState().init();
+		it("fetchFolderData loads children, scripts, and breadcrumb", async () => {
+			const childFolder = {
+				id: "f-child",
+				name: "Child",
+				parentId: "f-root",
+				createdAt: new Date("2025-01-03"),
+			};
+			const inFolderScript = { ...scriptSummary, id: "s2", folderId: "f-root" };
+			folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([childFolder]);
+			scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([
+				inFolderScript,
+			]);
+			folderQueriesMocks.getFolderBreadcrumb.mockResolvedValue([
+				{ id: "f-root", name: "Rootish" },
+			]);
 
-		expect(folderQueriesMocks.initSchema).toHaveBeenCalled();
-		expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalledWith(null);
-		expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith(null);
-		expect(
-			folderQueriesMocks.getChildItemCountsForFolders,
-		).toHaveBeenCalledWith(["f-root"]);
-		expect(useScriptsLibraryStore.getState().folders).toEqual([rootFolder]);
-		expect(useScriptsLibraryStore.getState().scripts).toEqual([scriptSummary]);
-		expect(useScriptsLibraryStore.getState().folderChildItemCounts).toEqual({
-			"f-root": 2,
+			const result = await useScriptsDataStore
+				.getState()
+				.fetchFolderData("f-root");
+
+			expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalledWith(
+				"f-root",
+			);
+			expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith(
+				"f-root",
+			);
+			expect(folderQueriesMocks.getFolderBreadcrumb).toHaveBeenCalledWith(
+				"f-root",
+			);
+			expect(result.breadcrumb).toEqual([{ id: "f-root", name: "Rootish" }]);
+			expect(result.folders).toEqual([childFolder]);
+			expect(result.scripts).toEqual([inFolderScript]);
 		});
-		expect(useScriptsLibraryStore.getState().isLoading).toBe(false);
-	});
 
-	it("navigateToFolder loads children, scripts, and breadcrumb inside a folder", async () => {
-		const childFolder = {
-			id: "f-child",
-			name: "Child",
-			parentId: "f-root",
-			createdAt: new Date("2025-01-03"),
-		};
-		const inFolderScript = { ...scriptSummary, id: "s2", folderId: "f-root" };
-		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([childFolder]);
-		scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([inFolderScript]);
-		folderQueriesMocks.getFolderBreadcrumb.mockResolvedValue([
-			{ id: "f-root", name: "Rootish" },
-		]);
+		it("createFolder generates id, creates folder, and refreshes list", async () => {
+			folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([rootFolder]);
 
-		await useScriptsLibraryStore.getState().navigateToFolder("f-root");
+			await useScriptsDataStore.getState().createFolder("New", null);
 
-		expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalledWith("f-root");
-		expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith(
-			"f-root",
-		);
-		expect(folderQueriesMocks.getFolderBreadcrumb).toHaveBeenCalledWith(
-			"f-root",
-		);
-		const state = useScriptsLibraryStore.getState();
-		expect(state.currentFolderId).toBe("f-root");
-		expect(state.breadcrumb).toEqual([{ id: "f-root", name: "Rootish" }]);
-		expect(state.folders).toEqual([childFolder]);
-		expect(state.scripts).toEqual([inFolderScript]);
-		expect(state.selectedScript).toBeNull();
-	});
-
-	it("navigateToFolder(null) clears breadcrumb", async () => {
-		useScriptsLibraryStore.setState({
-			currentFolderId: "f-root",
-			breadcrumb: [{ id: "f-root", name: "Rootish" }],
+			expect(folderQueriesMocks.createFolder).toHaveBeenCalledWith(
+				"generated-id",
+				"New",
+				null,
+			);
+			expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalled();
+			expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalled();
 		});
-		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([]);
-		scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([]);
 
-		await useScriptsLibraryStore.getState().navigateToFolder(null);
+		it("deleteFolder and deleteScript call queries", async () => {
+			await useScriptsDataStore.getState().deleteFolder("f-del");
+			expect(folderQueriesMocks.deleteFolder).toHaveBeenCalledWith("f-del");
 
-		expect(folderQueriesMocks.getFolderBreadcrumb).not.toHaveBeenCalled();
-		expect(useScriptsLibraryStore.getState().breadcrumb).toEqual([]);
-		expect(useScriptsLibraryStore.getState().currentFolderId).toBeNull();
+			await useScriptsDataStore.getState().deleteScript("s-del");
+			expect(scriptsQueriesMocks.deleteScript).toHaveBeenCalledWith("s-del");
+		});
 	});
 
-	it("createFolder generates id, creates folder, and refreshes list", async () => {
-		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([rootFolder]);
+	describe("useScriptsUiStore", () => {
+		it("setCurrentFolder clears selection", () => {
+			useScriptsUiStore.setState({
+				currentFolderId: null,
+				selectedIds: ["s1"],
+				selectedScript: {} as any,
+			});
 
-		await useScriptsLibraryStore.getState().createFolder("New", null);
+			useScriptsUiStore.getState().setCurrentFolder("f1");
 
-		expect(folderQueriesMocks.createFolder).toHaveBeenCalledWith(
-			"generated-id",
-			"New",
-			null,
-		);
-		expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalled();
-		expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalled();
-	});
+			expect(useScriptsUiStore.getState().currentFolderId).toBe("f1");
+			expect(useScriptsUiStore.getState().selectedIds).toEqual([]);
+			expect(useScriptsUiStore.getState().selectedScript).toBeNull();
+		});
 
-	it("deleteFolder clears selected script when it belongs to that folder", async () => {
-		useScriptsLibraryStore.setState({
-			selectedScript: {
-				id: "sx",
-				name: "X",
-				html: "",
+		it("selectScript loads script and clears preview loading", async () => {
+			const loaded = {
+				id: "s-load",
+				name: "Loaded",
+				html: "<p>x</p>",
 				lines: [],
 				overview: {
 					validLines: [],
@@ -175,90 +193,43 @@ describe("useScriptsLibraryStore", () => {
 					totalLines: 0,
 				},
 				source: document.implementation.createHTMLDocument(),
-				folderId: "f-del",
-			},
-		});
-		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([]);
+			};
+			scriptsQueriesMocks.getScriptById.mockResolvedValue(loaded);
 
-		await useScriptsLibraryStore.getState().deleteFolder("f-del");
+			await useScriptsUiStore.getState().selectScript("s-load");
 
-		expect(folderQueriesMocks.deleteFolder).toHaveBeenCalledWith("f-del");
-		expect(useScriptsLibraryStore.getState().selectedScript).toBeNull();
-	});
-
-	it("selectScript loads script and clears preview loading", async () => {
-		const loaded = {
-			id: "s-load",
-			name: "Loaded",
-			html: "<p>x</p>",
-			lines: [],
-			overview: {
-				validLines: [],
-				invalidLines: [],
-				actionLines: [],
-				scenes: [],
-				wordCount: 0,
-				totalLines: 0,
-			},
-			source: document.implementation.createHTMLDocument(),
-		};
-		scriptsQueriesMocks.getScriptById.mockResolvedValue(loaded);
-
-		await useScriptsLibraryStore.getState().selectScript("s-load");
-
-		expect(scriptsQueriesMocks.getScriptById).toHaveBeenCalledWith("s-load");
-		expect(useScriptsLibraryStore.getState().selectedScript).toEqual(loaded);
-		expect(useScriptsLibraryStore.getState().isPreviewLoading).toBe(false);
-	});
-
-	it("clearSelection clears selected script", () => {
-		useScriptsLibraryStore.setState({
-			selectedScript: {
-				id: "s",
-				name: "S",
-				html: "",
-				lines: [],
-				overview: {
-					validLines: [],
-					invalidLines: [],
-					actionLines: [],
-					scenes: [],
-					wordCount: 0,
-					totalLines: 0,
-				},
-				source: document.implementation.createHTMLDocument(),
-			},
+			expect(scriptsQueriesMocks.getScriptById).toHaveBeenCalledWith("s-load");
+			expect(useScriptsUiStore.getState().selectedScript).toEqual(loaded);
+			expect(useScriptsUiStore.getState().isPreviewLoading).toBe(false);
 		});
 
-		useScriptsLibraryStore.getState().clearSelection();
+		it("toggleSelection handles multi and range selection", () => {
+			const allIds = ["1", "2", "3", "4", "5"];
+			const store = useScriptsUiStore.getState();
 
-		expect(useScriptsLibraryStore.getState().selectedScript).toBeNull();
-	});
+			// Single selection
+			store.toggleSelection("1", false, false, allIds);
+			expect(useScriptsUiStore.getState().selectedIds).toEqual(["1"]);
 
-	it("deleteScript clears selection when deleting the selected script", async () => {
-		const doc = document.implementation.createHTMLDocument();
-		useScriptsLibraryStore.setState({
-			selectedScript: {
-				id: "s-del",
-				name: "D",
-				html: "",
-				lines: [],
-				overview: {
-					validLines: [],
-					invalidLines: [],
-					actionLines: [],
-					scenes: [],
-					wordCount: 0,
-					totalLines: 0,
-				},
-				source: doc,
-			},
+			// Multi selection
+			store.toggleSelection("3", true, false, allIds);
+			expect(useScriptsUiStore.getState().selectedIds).toEqual(["1", "3"]);
+
+			// Range selection
+			store.toggleSelection("5", false, true, allIds);
+			expect(useScriptsUiStore.getState().selectedIds).toEqual(["3", "4", "5"]);
 		});
-		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([]);
 
-		await useScriptsLibraryStore.getState().deleteScript("s-del");
+		it("clearSelection clears selected script and IDs", () => {
+			useScriptsUiStore.setState({
+				selectedScript: {} as any,
+				selectedIds: ["s1"],
+			});
 
-		expect(scriptsQueriesMocks.deleteScript).toHaveBeenCalledWith("s-del");
-		expect(useScriptsLibraryStore.getState().selectedScript).toBeNull();
+			useScriptsUiStore.getState().clearSelection();
+
+			expect(useScriptsUiStore.getState().selectedScript).toBeNull();
+			expect(useScriptsUiStore.getState().selectedIds).toEqual([]);
+		});
 	});
 });

@@ -1,10 +1,11 @@
 /**
  * @vitest-environment jsdom
  */
-import type { ReactElement } from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { MantineProvider } from "@mantine/core";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import type { ReactElement } from "react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { appTheme } from "@/theme";
 import { ScriptsLibraryItems } from "./ScriptsLibraryItems";
 
