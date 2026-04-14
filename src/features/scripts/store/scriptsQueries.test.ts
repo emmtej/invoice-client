@@ -16,6 +16,64 @@ describe("scriptsQueries", () => {
 		vi.clearAllMocks();
 	});
 
+	describe("getAllScripts", () => {
+		it("queries all scripts and maps rows correctly", async () => {
+			mockQuery.mockResolvedValue({
+				rows: [
+					{
+						id: "s1",
+						name: "A",
+						folder_id: "f1",
+						overview: JSON.stringify({
+							wordCount: 10,
+							invalidLines: [1, 2],
+						}),
+						created_at: "2025-06-01T00:00:00.000Z",
+					},
+				],
+			});
+
+			const rows = await scriptsQueries.getAllScripts();
+
+			expect(mockQuery).toHaveBeenCalledWith(
+				expect.stringContaining(
+					"SELECT id, name, folder_id, overview, created_at FROM scripts",
+				),
+			);
+			expect(rows).toEqual([
+				{
+					id: "s1",
+					name: "A",
+					folderId: "f1",
+					wordCount: 10,
+					invalidLineCount: 2,
+					createdAt: new Date("2025-06-01T00:00:00.000Z"),
+				},
+			]);
+		});
+
+		it("handles null overview gracefully", async () => {
+			mockQuery.mockResolvedValue({
+				rows: [
+					{
+						id: "s2",
+						name: "B",
+						folder_id: null,
+						overview: null,
+						created_at: "2025-06-02T00:00:00.000Z",
+					},
+				],
+			});
+
+			const rows = await scriptsQueries.getAllScripts();
+
+			expect(rows[0]).toMatchObject({
+				wordCount: 0,
+				invalidLineCount: 0,
+			});
+		});
+	});
+
 	describe("getScriptsInFolder", () => {
 		it("queries scripts for a folder id", async () => {
 			mockQuery.mockResolvedValue({

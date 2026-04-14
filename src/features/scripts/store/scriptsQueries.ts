@@ -2,7 +2,42 @@ import { initDb } from "@/features/storage/pgliteClient";
 import type { ScriptSummary } from "@/features/storage/types";
 import type { ParsedLine, Script, ScriptOverview } from "@/types/Script";
 
+const parseOverview = (overview: any): ScriptOverview => {
+	const defaultOverview: ScriptOverview = {
+		validLines: [],
+		invalidLines: [],
+		actionLines: [],
+		scenes: [],
+		wordCount: 0,
+		totalLines: 0,
+	};
+	if (!overview) return defaultOverview;
+	const parsed = typeof overview === "string" ? JSON.parse(overview) : overview;
+	return {
+		...defaultOverview,
+		...parsed,
+	};
+};
+
 export const scriptsQueries = {
+	async getAllScripts(): Promise<ScriptSummary[]> {
+		const db = await initDb();
+		const result = await db.query(
+			"SELECT id, name, folder_id, overview, created_at FROM scripts ORDER BY name ASC;",
+		);
+		return result.rows.map((row: any) => {
+			const overview = parseOverview(row.overview);
+			return {
+				id: row.id,
+				name: row.name,
+				folderId: row.folder_id ?? null,
+				wordCount: overview.wordCount ?? 0,
+				invalidLineCount: overview.invalidLines?.length ?? 0,
+				createdAt: new Date(row.created_at),
+			};
+		});
+	},
+
 	async getScriptsInFolder(folderId: string | null): Promise<ScriptSummary[]> {
 		const db = await initDb();
 		const result = folderId
@@ -14,10 +49,7 @@ export const scriptsQueries = {
 					"SELECT id, name, folder_id, overview, created_at FROM scripts WHERE folder_id IS NULL ORDER BY name ASC;",
 				);
 		return result.rows.map((row: any) => {
-			const overview =
-				typeof row.overview === "string"
-					? JSON.parse(row.overview)
-					: row.overview;
+			const overview = parseOverview(row.overview);
 			return {
 				id: row.id,
 				name: row.name,
@@ -38,9 +70,7 @@ export const scriptsQueries = {
 			id: row.id,
 			name: row.name,
 			html: row.html,
-			overview: (typeof row.overview === "string"
-				? JSON.parse(row.overview)
-				: row.overview) as ScriptOverview,
+			overview: parseOverview(row.overview),
 			lines: (typeof row.lines === "string"
 				? JSON.parse(row.lines)
 				: row.lines) as ParsedLine[],
