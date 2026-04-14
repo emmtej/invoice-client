@@ -1,26 +1,10 @@
-import {
-	ActionIcon,
-	Box,
-	Button,
-	Divider,
-	Flex,
-	Group,
-	Stack,
-	Table,
-	Text,
-	Title,
-	Tooltip,
-} from "@mantine/core";
+import { Box, Button, Flex, Group, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Pencil, Plus, Trash2 } from "lucide-react";
-import { Fragment, memo, useCallback, useState } from "react";
+import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { EditValueModal, ExportModal } from "../components";
-import { AddDocumentsToItemModal } from "../items";
+import { ExportModal, InvoiceItemCard } from "../components";
 import { getTodayDateString, type InvoiceProfile } from "../profile";
 import { useInvoiceStore } from "../store/invoiceStore";
-
-const flexOneStyle = { flex: 1 };
 
 type InvoiceSummaryProps = {
 	profile?: InvoiceProfile;
@@ -30,58 +14,13 @@ type InvoiceSummaryProps = {
 
 export const InvoiceSummary = memo(
 	({ profile, invoiceTitle, invoiceDate }: InvoiceSummaryProps) => {
-		const {
-			invoice,
-			removeItem,
-			removeSubitem,
-			updateSubitemRate,
-			updateSubitemLabel,
-			updateItemName,
-		} = useInvoiceStore(
+		const { invoice } = useInvoiceStore(
 			useShallow((s) => ({
 				invoice: s.invoice,
-				removeItem: s.removeItem,
-				removeSubitem: s.removeSubitem,
-				updateSubitemRate: s.updateSubitemRate,
-				updateSubitemLabel: s.updateSubitemLabel,
-				updateItemName: s.updateItemName,
 			})),
 		);
-		const [modalOpened, { open, close }] = useDisclosure(false);
 		const [exportModalOpened, { open: openExport, close: closeExport }] =
 			useDisclosure(false);
-		const [activeItemId, setActiveItemId] = useState<{
-			id: string;
-			name: string;
-		} | null>(null);
-
-		const [editModalConfig, setEditModalConfig] = useState<{
-			opened: boolean;
-			title: string;
-			label: string;
-			inputType: "text" | "number";
-			initialValue: string | number;
-			onConfirm: (val: string | number) => void;
-		}>({
-			opened: false,
-			title: "",
-			label: "",
-			inputType: "text",
-			initialValue: "",
-			onConfirm: () => {},
-		});
-
-		const handleOpenUpload = useCallback(
-			(id: string, name: string) => {
-				setActiveItemId({ id, name });
-				open();
-			},
-			[open],
-		);
-
-		const closeEditModal = () => {
-			setEditModalConfig((prev) => ({ ...prev, opened: false }));
-		};
 
 		const items = invoice.items;
 		const totalAmount = items.reduce((sum, item) => {
@@ -89,62 +28,10 @@ export const InvoiceSummary = memo(
 			return sum + itemTotal;
 		}, 0);
 
-		const handleUpdateItemName = (itemId: string, currentName: string) => {
-			setEditModalConfig({
-				opened: true,
-				title: "Edit Item Name",
-				label: "New item name:",
-				inputType: "text",
-				initialValue: currentName,
-				onConfirm: (val) => updateItemName(itemId, val as string),
-			});
-		};
-
-		const handleUpdateSubitemLabel = (
-			itemId: string,
-			subitemId: string,
-			currentLabel: string,
-		) => {
-			setEditModalConfig({
-				opened: true,
-				title: "Edit Label",
-				label: "New label:",
-				inputType: "text",
-				initialValue: currentLabel,
-				onConfirm: (val) =>
-					updateSubitemLabel(itemId, subitemId, val as string),
-			});
-		};
-
-		const handleUpdateSubitemRate = (
-			itemId: string,
-			subitemId: string,
-			currentRate: number,
-		) => {
-			setEditModalConfig({
-				opened: true,
-				title: "Edit Rate",
-				label: "New rate per word ($):",
-				inputType: "number",
-				initialValue: currentRate,
-				onConfirm: (val) => updateSubitemRate(itemId, subitemId, Number(val)),
-			});
-		};
-
 		return (
 			<Box mt="xl">
-				<Divider
-					mb="md"
-					label={
-						<Text fw={600} size="lg">
-							Summary
-						</Text>
-					}
-					labelPosition="left"
-				/>
-
 				<Box p={0}>
-					<Stack gap="md">
+					<Stack gap="xl">
 						<Flex justify="space-between" align="flex-start">
 							<Box>
 								<Text
@@ -180,158 +67,11 @@ export const InvoiceSummary = memo(
 							)}
 						</Flex>
 
-						<Table verticalSpacing="lg">
-							<Table.Thead>
-								<Table.Tr>
-									<Table.Th style={flexOneStyle}>Description</Table.Th>
-									<Table.Th w={120} style={{ textAlign: "right" }}>
-										Words
-									</Table.Th>
-									<Table.Th w={120} style={{ textAlign: "right" }}>
-										Rate ($/w)
-									</Table.Th>
-									<Table.Th w={120} style={{ textAlign: "right" }}>
-										Amount
-									</Table.Th>
-									<Table.Th w={100} />
-								</Table.Tr>
-							</Table.Thead>
-							<Table.Tbody>
-								{items.map((item) => (
-									<Fragment key={item.id}>
-										<Table.Tr className="hover:bg-wave-50/30">
-											<Table.Td>
-												<Group gap="xs">
-													<Text fw={600} size="md" c="gray.8">
-														{item.name}
-													</Text>
-													<Tooltip label="Edit item name">
-														<ActionIcon
-															size="xs"
-															variant="subtle"
-															onClick={() =>
-																handleUpdateItemName(item.id, item.name)
-															}
-														>
-															<Pencil size={12} />
-														</ActionIcon>
-													</Tooltip>
-												</Group>
-											</Table.Td>
-											<Table.Td colSpan={3} />
-											<Table.Td>
-												<Group gap="xs" justify="flex-end">
-													<Tooltip label="Add documents">
-														<ActionIcon
-															variant="light"
-															color="wave"
-															onClick={() =>
-																handleOpenUpload(item.id, item.name)
-															}
-														>
-															<Plus size={16} />
-														</ActionIcon>
-													</Tooltip>
-													<Tooltip label="Remove item">
-														<ActionIcon
-															variant="light"
-															color="red"
-															onClick={() => removeItem(item.id)}
-														>
-															<Trash2 size={16} />
-														</ActionIcon>
-													</Tooltip>
-												</Group>
-											</Table.Td>
-										</Table.Tr>
-
-										{item.subitems.map((sub) => (
-											<Table.Tr key={sub.id} className="hover:bg-gray-50/50">
-												<Table.Td
-													style={{ paddingLeft: "var(--mantine-spacing-xl)" }}
-												>
-													<Group gap={8} wrap="nowrap">
-														<Text size="sm" c="gray.7">
-															{sub.label || sub.scriptName}
-														</Text>
-														<ActionIcon
-															size="xs"
-															variant="subtle"
-															onClick={() =>
-																handleUpdateSubitemLabel(
-																	item.id,
-																	sub.id,
-																	sub.label || sub.scriptName,
-																)
-															}
-														>
-															<Pencil size={10} />
-														</ActionIcon>
-													</Group>
-												</Table.Td>
-												<Table.Td style={{ textAlign: "right" }}>
-													<Text
-														size="sm"
-														c="gray.7"
-														className="tabular-nums font-medium"
-													>
-														{sub.wordCount.toLocaleString()}
-													</Text>
-												</Table.Td>
-												<Table.Td style={{ textAlign: "right" }}>
-													<Group gap={4} justify="flex-end" wrap="nowrap">
-														<Text
-															size="sm"
-															c="gray.7"
-															className="tabular-nums font-medium"
-														>
-															${sub.ratePerWord.toFixed(3)}
-														</Text>
-														<ActionIcon
-															size="xs"
-															variant="subtle"
-															onClick={() =>
-																handleUpdateSubitemRate(
-																	item.id,
-																	sub.id,
-																	sub.ratePerWord,
-																)
-															}
-														>
-															<Pencil size={10} />
-														</ActionIcon>
-													</Group>
-												</Table.Td>
-												<Table.Td style={{ textAlign: "right" }}>
-													<Text
-														fw={600}
-														size="sm"
-														c="gray.8"
-														className="tabular-nums"
-													>
-														${sub.amount.toFixed(2)}
-													</Text>
-												</Table.Td>
-												<Table.Td>
-													<Group justify="flex-end">
-														<Tooltip label="Remove subitem">
-															<ActionIcon
-																size="xs"
-																variant="subtle"
-																color="red"
-																onClick={() => removeSubitem(item.id, sub.id)}
-															>
-																<Trash2 size={12} />
-															</ActionIcon>
-														</Tooltip>
-													</Group>
-												</Table.Td>
-											</Table.Tr>
-										))}
-									</Fragment>
-								))}
-							</Table.Tbody>
-						</Table>
+						<Stack gap="xl">
+							{items.map((item) => (
+								<InvoiceItemCard key={item.id} item={item} />
+							))}
+						</Stack>
 
 						<Box py="xl" mt="xs" style={{ borderTop: "2px solid #F3F4F6" }}>
 							<Group justify="flex-end" gap="xl">
@@ -363,29 +103,11 @@ export const InvoiceSummary = memo(
 					</Stack>
 				</Box>
 
-				{activeItemId && (
-					<AddDocumentsToItemModal
-						itemName={activeItemId.name}
-						opened={modalOpened}
-						onClose={close}
-					/>
-				)}
-
 				<ExportModal
 					opened={exportModalOpened}
 					onClose={closeExport}
 					items={items}
 					onDownloadPDF={() => window.print()}
-				/>
-
-				<EditValueModal
-					opened={editModalConfig.opened}
-					onClose={closeEditModal}
-					onConfirm={editModalConfig.onConfirm}
-					initialValue={editModalConfig.initialValue}
-					title={editModalConfig.title}
-					label={editModalConfig.label}
-					inputType={editModalConfig.inputType}
 				/>
 			</Box>
 		);

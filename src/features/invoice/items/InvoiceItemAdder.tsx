@@ -21,9 +21,8 @@ export function InvoiceItemAdder({
 			</SectionDivider>
 			<Group align="flex-end" gap="lg">
 				<TextInput
-					label="Add Invoice Item(s)"
-					placeholder="e.g. Episode 1, Episode 2, Episode 3"
-					description="Separate multiple items with a comma to add several items at once."
+					label="Add Project Item"
+					placeholder="e.g. Episode 1"
 					value={newItemName}
 					onChange={(e) => setNewItemName(e.currentTarget.value)}
 					onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
