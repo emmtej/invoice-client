@@ -5,13 +5,10 @@ import {
 } from "@/features/editor/utils/documentParser";
 import { generateHtmlFromScript } from "@/features/editor/utils/formatParsedLines";
 import { scriptsQueries } from "@/features/scripts/store/scriptsQueries";
+import type { LineTimingEntry } from "@/features/storage/types";
 import type { Script } from "@/types/Script";
 import { generateId } from "@/utils/id";
-import {
-	type BoothSession,
-	boothQueries,
-} from "./boothQueries";
-import type { LineTimingEntry } from "@/features/storage/types";
+import { type BoothSession, boothQueries } from "./boothQueries";
 
 type BoothStatus = "idle" | "selecting" | "running" | "paused" | "completed";
 
