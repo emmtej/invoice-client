@@ -16,4 +16,6 @@ GEMINI.md
 worktrees/
 .cursor/
 docs/
-.cursor
+
+.claude
+CLAUDE.md

@@ -116,7 +116,10 @@ export function RegisterFields() {
 			}
 		} else {
 			// Fallback if registerUser is not in store yet
-			console.log(data);
+			setError("root", {
+				type: "manual",
+				message: "Registration is not configured.",
+			});
 		}
 	};
 

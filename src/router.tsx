@@ -12,10 +12,14 @@ import App from "./App";
 import { Layout } from "./components/ui/layout/Layout";
 import { useUserStore } from "./store/userStore";
 
+const BoothPage = lazy(() => import("@/features/booth"));
 const EditorPage = lazy(() => import("@/features/editor"));
 const ScriptsPage = lazy(() => import("@/features/scripts"));
 const InvoicePage = lazy(() =>
 	import("@/features/invoice").then((m) => ({ default: m.InvoicePage })),
+);
+const PresetsPage = lazy(() =>
+	import("@/features/invoice").then((m) => ({ default: m.PresetsPage })),
 );
 const Authentication = lazy(() => import("./pages/Authentication"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -78,7 +82,7 @@ const rootRoute = createRootRoute({
 		<ErrorBoundary>
 			<Layout>
 				<Outlet />
-				<TanStackRouterDevtools />
+				{import.meta.env.DEV && <TanStackRouterDevtools />}
 			</Layout>
 		</ErrorBoundary>
 	),
@@ -141,7 +145,17 @@ const profileRoute = createRoute({
 	),
 });
 
-// Note: /editor, /scripts, and /invoice are intentionally public routes
+// Note: /editor, /scripts, /booth, and /invoice are intentionally public routes
+const boothRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/booth",
+	component: () => (
+		<Suspense fallback={<RouteFallback label="booth" />}>
+			<BoothPage />
+		</Suspense>
+	),
+});
+
 const scriptsRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "/scripts",
@@ -172,11 +186,23 @@ const invoiceRoute = createRoute({
 	),
 });
 
+const invoicePresetsRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/invoice/presets",
+	component: () => (
+		<Suspense fallback={<RouteFallback label="invoice presets" />}>
+			<PresetsPage />
+		</Suspense>
+	),
+});
+
 const routeTree = rootRoute.addChildren([
 	indexRoute,
+	boothRoute,
 	scriptsRoute,
 	editorRoute,
 	invoiceRoute,
+	invoicePresetsRoute,
 	loginRoute,
 	registrationRoute,
 	authenticatedRoutes.addChildren([dashboardRoute, profileRoute]),

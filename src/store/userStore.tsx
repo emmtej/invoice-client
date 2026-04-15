@@ -45,6 +45,8 @@ const LOCAL_STORAGE_KEY = "user-storage";
 const VERSION = 1;
 
 const simulateLogin = async (credentials: UserLoginCredentials) => {
+	// DEMO PURPOSE ONLY: Simulates a network request for the portfolio demo.
+	// In a real application, replace this with a secure backend authentication flow.
 	await new Promise((resolve) => setTimeout(resolve, 1000));
 	if (credentials.email === "test@example.com") {
 		return {
@@ -61,6 +63,8 @@ const simulateLogin = async (credentials: UserLoginCredentials) => {
 };
 
 const simulateRegister = async (credentials: UserRegistrationCredentials) => {
+	// DEMO PURPOSE ONLY: Simulates a network request for the portfolio demo.
+	// In a real application, replace this with a secure backend authentication flow.
 	await new Promise((resolve) => setTimeout(resolve, 1000));
 	if (credentials.email === "test@example.com") {
 		throw new Error("User already exists");

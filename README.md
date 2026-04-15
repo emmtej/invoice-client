@@ -28,11 +28,25 @@ The project follows a feature-based directory structure within `src/features/`:
 
 Global state is managed via Zustand stores found in `src/store/` (e.g., `userStore`) or within specific feature directories (e.g., `invoiceStore`).
 
+## Data Privacy & Storage
+
+This application is designed to be **local-first** and privacy-preserving:
+*   **No Server Database:** All user data, including uploaded scripts, parsed content, and invoice profiles, are stored locally on your device.
+*   **Storage Mechanisms:** We use PGLite (Postgres-in-WASM) via IndexedDB for script storage, and `localStorage` for profile/auth persistence.
+*   **Retention:** Data persists as long as your browser keeps the local storage data. You can manually clear this data through your browser settings or by using the app's reset options.
+*   **Note:** Because data stays local, clearing browser data or using incognito mode means your data will not be saved across sessions. Please export any important invoices or scripts manually.
+
 ## Building and Running
 
 ### Prerequisites
 *   Node.js (latest LTS recommended)
 *   npm
+
+### Environment Setup
+Create a `.env.local` file in the root directory based on `.env.example`. A `CLIENT_PORT` is required to run the development server.
+```bash
+cp .env.example .env.local
+```
 
 ### Commands
 *   **Install dependencies:** `npm install`
