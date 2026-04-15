@@ -4,7 +4,6 @@ import { FolderPlus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
-import { SCRIPT_LIBRARY_LIST_MAX_WIDTH } from "@/components/ui/layout/layout-constants";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { BreadcrumbNav } from "./components/BreadcrumbNav";
 import { MultiSelectToolbar } from "./components/MultiSelectToolbar";
@@ -105,19 +104,13 @@ export default function ScriptsPage() {
 	const currentFolderName =
 		breadcrumb.length > 0 ? breadcrumb[breadcrumb.length - 1].name : undefined;
 
-	const listColumnProps = {
-		maw: SCRIPT_LIBRARY_LIST_MAX_WIDTH,
-		mx: "auto" as const,
-		w: "100%" as const,
-	};
-
 	return (
 		<Flex direction="column" h="100%" rowGap="md">
 			<ScriptsHeader uploadErrors={uploadErrors} onResetUpload={resetUpload} />
 
 			{/* Folder breadcrumb navigation */}
 			{breadcrumb.length > 0 && (
-				<Box px="md" {...listColumnProps}>
+				<Box px="md">
 					<BreadcrumbNav breadcrumb={breadcrumb} onNavigate={handleNavigate} />
 				</Box>
 			)}
@@ -128,7 +121,7 @@ export default function ScriptsPage() {
 					<Loader color="wave" size="sm" />
 				</Center>
 			) : isEmpty ? (
-				<Box flex={1} px="md" {...listColumnProps}>
+				<Box flex={1} px="md">
 					<ScriptsEmptyState
 						isRoot={isRoot}
 						onCreateFolder={openCreateFolder}
@@ -139,42 +132,40 @@ export default function ScriptsPage() {
 			) : (
 				<Flex flex={1} mih={0}>
 					<Box flex={1} p="md" miw={0} style={{ overflowY: "auto" }}>
-						<Box {...listColumnProps}>
-							<ScriptsLibraryItems
-								folders={folders}
-								scripts={scripts}
-								folderItemCounts={folderChildItemCounts}
-								sortAscending={sortAscending}
-								onSortAscendingChange={setSortAscending}
-								selectedScriptId={selectedScript?.id ?? null}
-								selectedIds={selectedIds}
-								onNavigateFolder={handleNavigate}
-								onDeleteFolder={(folder) => setDeleteFolderTarget(folder)}
-								onSelectScript={selectScript}
-								onDeleteScript={(script) => setDeleteScriptTarget(script)}
-								onToggleSelection={(id, isMulti, isRange) =>
-									toggleSelection(id, isMulti, isRange, allCurrentIds)
-								}
-							/>
-							<Group justify="center" gap="sm" wrap="wrap" pt="lg">
-								<DocxUploadButton
-									onChange={handleFileChange}
-									multiple
-									variant="light"
-									color="wave"
-									loading={isUploading}
-								>
-									Upload Scripts
-								</DocxUploadButton>
-								<Button
-									color="wave"
-									leftSection={<FolderPlus size={16} />}
-									onClick={openCreateFolder}
-								>
-									New Folder
-								</Button>
-							</Group>
-						</Box>
+						<ScriptsLibraryItems
+							folders={folders}
+							scripts={scripts}
+							folderItemCounts={folderChildItemCounts}
+							sortAscending={sortAscending}
+							onSortAscendingChange={setSortAscending}
+							selectedScriptId={selectedScript?.id ?? null}
+							selectedIds={selectedIds}
+							onNavigateFolder={handleNavigate}
+							onDeleteFolder={(folder) => setDeleteFolderTarget(folder)}
+							onSelectScript={selectScript}
+							onDeleteScript={(script) => setDeleteScriptTarget(script)}
+							onToggleSelection={(id, isMulti, isRange) =>
+								toggleSelection(id, isMulti, isRange, allCurrentIds)
+							}
+						/>
+						<Group justify="center" gap="sm" wrap="wrap" pt="lg">
+							<DocxUploadButton
+								onChange={handleFileChange}
+								multiple
+								variant="light"
+								color="wave"
+								loading={isUploading}
+							>
+								Upload Scripts
+							</DocxUploadButton>
+							<Button
+								color="wave"
+								leftSection={<FolderPlus size={16} />}
+								onClick={openCreateFolder}
+							>
+								New Folder
+							</Button>
+						</Group>
 					</Box>
 
 					{selectedScript && (

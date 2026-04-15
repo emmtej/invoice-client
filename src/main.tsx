@@ -5,6 +5,7 @@ import ReactDOM from "react-dom/client";
 import "./styles.css";
 
 import { MantineProvider } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import { router } from "./router.tsx";
 import { appTheme } from "./theme";
 
@@ -14,7 +15,9 @@ if (rootElement && !rootElement.innerHTML) {
 	root.render(
 		<StrictMode>
 			<MantineProvider theme={appTheme}>
-				<RouterProvider router={router} />
+				<ModalsProvider>
+					<RouterProvider router={router} />
+				</ModalsProvider>
 			</MantineProvider>
 		</StrictMode>,
 	);

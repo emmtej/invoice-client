@@ -1,6 +1,7 @@
 import { AppShell, Burger, Container, Group, Overlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
+import { useInvoicePresetsStore } from "@/features/invoice/store/invoicePresetsStore";
 import { Navbar } from "../navbar/Navbar";
 import { Sidebar } from "../sidebar/Sidebar";
 import {
@@ -16,6 +17,11 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
 	const [opened, { toggle }] = useDisclosure();
+	const migrate = useInvoicePresetsStore((s) => s._migrateFromOldStorage);
+
+	useEffect(() => {
+		migrate();
+	}, [migrate]);
 
 	return (
 		<AppShell
@@ -59,15 +65,22 @@ export function Layout({ children }: LayoutProps) {
 				/>
 			)}
 
-			<AppShell.Main display="flex" style={{ flexDirection: "column" }}>
+			<AppShell.Main
+				display="flex"
+				style={{ flexDirection: "column", height: "100vh" }}
+			>
 				<Container
 					maw={APP_CONTENT_MAX_WIDTH}
 					size="lg"
-					py="xs"
-					px="xs"
+					py="xl"
+					px="md"
 					flex={1}
 					w="100%"
-					style={{ display: "flex", flexDirection: "column", minHeight: 0 }}
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						minHeight: 0,
+					}}
 				>
 					{children}
 				</Container>

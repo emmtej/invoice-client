@@ -1,6 +1,5 @@
 import { Alert, Box, Breadcrumbs, Text } from "@mantine/core";
 import { AlertCircle, ChevronRight } from "lucide-react";
-import { SCRIPT_LIBRARY_LIST_MAX_WIDTH } from "@/components/ui/layout/layout-constants";
 import { PageTitle } from "@/components/ui/text/PageTitle";
 
 interface ScriptsHeaderProps {
@@ -12,19 +11,12 @@ export function ScriptsHeader({
 	uploadErrors,
 	onResetUpload,
 }: ScriptsHeaderProps) {
-	const listColumnProps = {
-		maw: SCRIPT_LIBRARY_LIST_MAX_WIDTH,
-		mx: "auto" as const,
-		w: "100%" as const,
-	};
-
 	return (
 		<>
 			{/* Breadcrumb orientation bar */}
 			<Box
 				px="md"
 				py="xs"
-				{...listColumnProps}
 				style={(theme) => ({
 					borderBottom: `1px solid ${theme.colors.gray[1]}`,
 				})}
@@ -49,7 +41,7 @@ export function ScriptsHeader({
 			</Box>
 
 			{/* Page header */}
-			<Box px="md" pt="md" {...listColumnProps}>
+			<Box px="md" pt="md">
 				<PageTitle>Scripts</PageTitle>
 				{uploadErrors.length > 0 && (
 					<Alert

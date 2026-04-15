@@ -122,8 +122,9 @@ export function LinksGroup({
 
 	const isHrefActive =
 		isDirectLink &&
-		(normalizePath(pathname) === normalizePath(href!) ||
-			normalizePath(pathname).startsWith(`${normalizePath(href!)}/`));
+		href &&
+		(normalizePath(pathname) === normalizePath(href) ||
+			normalizePath(pathname).startsWith(`${normalizePath(href)}/`));
 
 	const items = (hasLinks ? links : []).map((link) => {
 		const isActive = activePath === normalizePath(link.link);
@@ -158,7 +159,7 @@ export function LinksGroup({
 			{isDirectLink ? (
 				<UnstyledButton
 					component={Link}
-					to={href!}
+					to={href || ""}
 					styles={isHrefActive ? controlActiveStyles : controlStyles}
 				>
 					{content}

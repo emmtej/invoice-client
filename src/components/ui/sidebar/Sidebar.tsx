@@ -3,6 +3,7 @@ import {
 	FileText,
 	FolderOpen,
 	LayoutDashboard,
+	Mic,
 	Receipt,
 	User,
 } from "lucide-react";
@@ -11,20 +12,20 @@ import { LinksGroup } from "./NavLinksGroup";
 import { UserButton } from "./UserButton";
 
 const navlinks = [
-	{ label: "Home", icon: LayoutDashboard },
-	{ label: "Profile", icon: User, href: "/profile" },
-	{
-		label: "Invoice",
-		icon: Receipt,
-		initiallyOpened: true,
-		links: [{ label: "Overview", link: "/invoice" }],
-	},
+	{ label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
 	{ label: "Scripts", icon: FolderOpen, href: "/scripts" },
 	{
-		label: "Script Tools",
-		icon: FileText,
-		links: [{ label: "Editor", link: "/editor" }],
+		label: "Invoices",
+		icon: Receipt,
+		initiallyOpened: true,
+		links: [
+			{ label: "Generator", link: "/invoice" },
+			{ label: "Presets", link: "/invoice/presets" },
+		],
 	},
+	{ label: "Booth", icon: Mic, href: "/booth" },
+	{ label: "Editor", icon: FileText, href: "/editor" },
+	{ label: "Profile", icon: User, href: "/profile" },
 ];
 
 export function Sidebar() {
