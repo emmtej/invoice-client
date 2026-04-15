@@ -1,122 +1,119 @@
-import { initDb } from "@/features/storage/pgliteClient";
+import { asc, eq, inArray, isNull } from "drizzle-orm";
+import { initSchema } from "@/features/storage/folderQueries";
+import { getDrizzleDb } from "@/features/storage/pgliteClient";
+import { scripts } from "@/features/storage/schema";
 import type { ScriptSummary } from "@/features/storage/types";
-import type { ParsedLine, Script, ScriptOverview } from "@/types/Script";
-
-const parseOverview = (overview: any): ScriptOverview => {
-	const defaultOverview: ScriptOverview = {
-		validLines: [],
-		invalidLines: [],
-		actionLines: [],
-		scenes: [],
-		wordCount: 0,
-		totalLines: 0,
-	};
-	if (!overview) return defaultOverview;
-	const parsed = typeof overview === "string" ? JSON.parse(overview) : overview;
-	return {
-		...defaultOverview,
-		...parsed,
-	};
-};
+import type { Script } from "@/types/Script";
 
 export const scriptsQueries = {
 	async getAllScripts(): Promise<ScriptSummary[]> {
-		const db = await initDb();
-		const result = await db.query(
-			"SELECT id, name, folder_id, overview, created_at FROM scripts ORDER BY name ASC;",
-		);
-		return result.rows.map((row: any) => {
-			const overview = parseOverview(row.overview);
-			return {
-				id: row.id,
-				name: row.name,
-				folderId: row.folder_id ?? null,
-				wordCount: overview.wordCount ?? 0,
-				invalidLineCount: overview.invalidLines?.length ?? 0,
-				createdAt: new Date(row.created_at),
-			};
-		});
+		await initSchema();
+		const db = await getDrizzleDb();
+		const result = await db.select().from(scripts).orderBy(asc(scripts.name));
+
+		return result.map((row) => ({
+			id: row.id,
+			name: row.name,
+			folderId: row.folderId,
+			wordCount: row.overview.wordCount ?? 0,
+			invalidLineCount: row.overview.invalidLines?.length ?? 0,
+			createdAt: row.createdAt,
+		}));
 	},
 
 	async getScriptsInFolder(folderId: string | null): Promise<ScriptSummary[]> {
-		const db = await initDb();
-		const result = folderId
-			? await db.query(
-					"SELECT id, name, folder_id, overview, created_at FROM scripts WHERE folder_id = $1 ORDER BY name ASC;",
-					[folderId],
-				)
-			: await db.query(
-					"SELECT id, name, folder_id, overview, created_at FROM scripts WHERE folder_id IS NULL ORDER BY name ASC;",
-				);
-		return result.rows.map((row: any) => {
-			const overview = parseOverview(row.overview);
-			return {
-				id: row.id,
-				name: row.name,
-				folderId: row.folder_id ?? null,
-				wordCount: overview.wordCount ?? 0,
-				invalidLineCount: overview.invalidLines?.length ?? 0,
-				createdAt: new Date(row.created_at),
-			};
-		});
+		const db = await getDrizzleDb();
+		const result = await db
+			.select()
+			.from(scripts)
+			.where(
+				folderId ? eq(scripts.folderId, folderId) : isNull(scripts.folderId),
+			)
+			.orderBy(asc(scripts.name));
+
+		return result.map((row) => ({
+			id: row.id,
+			name: row.name,
+			folderId: row.folderId,
+			wordCount: row.overview.wordCount ?? 0,
+			invalidLineCount: row.overview.invalidLines?.length ?? 0,
+			createdAt: row.createdAt,
+		}));
 	},
 
 	async getScriptById(id: string): Promise<Script | null> {
-		const db = await initDb();
-		const result = await db.query("SELECT * FROM scripts WHERE id = $1;", [id]);
-		if (result.rows.length === 0) return null;
-		const row = result.rows[0] as any;
+		const db = await getDrizzleDb();
+		const [row] = await db.select().from(scripts).where(eq(scripts.id, id));
+
+		if (!row) return null;
+
 		return {
-			id: row.id,
-			name: row.name,
-			html: row.html,
-			overview: parseOverview(row.overview),
-			lines: (typeof row.lines === "string"
-				? JSON.parse(row.lines)
-				: row.lines) as ParsedLine[],
-			groupName: row.group_name,
-			label: row.label,
-			folderId: row.folder_id ?? null,
+			...row,
+			groupName: row.groupName ?? undefined,
+			label: row.label ?? undefined,
+			folderId: row.folderId ?? null,
 			source: document.implementation.createHTMLDocument(),
 		};
 	},
 
 	async deleteScript(id: string): Promise<void> {
-		const db = await initDb();
-		await db.query("DELETE FROM scripts WHERE id = $1;", [id]);
+		const db = await getDrizzleDb();
+		await db.delete(scripts).where(eq(scripts.id, id));
 	},
 
 	async moveScripts(
 		ids: string[],
 		targetFolderId: string | null,
 	): Promise<void> {
-		const db = await initDb();
-		const placeholders = ids.map((_, i) => `$${i + 2}`).join(", ");
-		await db.query(
-			`UPDATE scripts SET folder_id = $1 WHERE id IN (${placeholders});`,
-			[targetFolderId, ...ids],
-		);
+		const db = await getDrizzleDb();
+		await db
+			.update(scripts)
+			.set({ folderId: targetFolderId })
+			.where(inArray(scripts.id, ids));
 	},
 
 	async duplicateScript(id: string, newId: string): Promise<void> {
-		const db = await initDb();
-		const result = await db.query("SELECT * FROM scripts WHERE id = $1;", [id]);
-		if (result.rows.length === 0) return;
-		const row = result.rows[0] as any;
+		const db = await getDrizzleDb();
+		const [row] = await db.select().from(scripts).where(eq(scripts.id, id));
 
-		await db.query(
-			`INSERT INTO scripts (id, name, html, overview, lines, group_name, label, folder_id)
-			 VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`,
-			[
-				newId,
-				`${row.name} (Copy)`,
-				row.html,
-				row.overview,
-				row.lines,
-				row.group_name,
-				row.label,
-				row.folder_id,
-			],
-		);
+		if (!row) return;
+
+		await db.insert(scripts).values({
+			...row,
+			id: newId,
+			name: `${row.name} (Copy)`,
+			createdAt: new Date(),
+		});
+	},
+
+	async saveScript(script: Script): Promise<void> {
+		const db = await getDrizzleDb();
+		const { id, name, html, overview, lines, groupName, label, folderId } =
+			script;
+
+		await db
+			.insert(scripts)
+			.values({
+				id,
+				name,
+				html,
+				overview,
+				lines,
+				groupName: groupName ?? null,
+				label: label ?? null,
+				folderId: folderId ?? null,
+			})
+			.onConflictDoUpdate({
+				target: scripts.id,
+				set: {
+					name,
+					html,
+					overview,
+					lines,
+					groupName: groupName ?? null,
+					label: label ?? null,
+					folderId: folderId ?? null,
+				},
+			});
 	},
 };

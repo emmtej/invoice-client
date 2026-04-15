@@ -105,10 +105,15 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((set, get) => ({
 		await scriptsQueries.deleteScript(scriptId);
 	},
 
-	moveItems: async (_ids, _targetFolderId) => {
-		// In a real app, we'd need to know which are folders and which are scripts.
-		// For now, we'll follow the pattern from the old store.
-		// This action is better orchestrated by a hook or component that knows the types.
+	moveItems: async (ids, targetFolderId) => {
+		try {
+			await folderQueries.moveFolders(ids, targetFolderId);
+			await scriptsQueries.moveScripts(ids, targetFolderId);
+			await get().refresh(targetFolderId);
+		} catch (error) {
+			console.error("Failed to move items:", error);
+			throw error;
+		}
 	},
 
 	duplicateItems: async (ids) => {

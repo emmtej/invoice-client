@@ -25,6 +25,11 @@ export interface ScriptSummaryRow {
 	id: string;
 	name: string;
 	folder_id: string | null;
-	overview: any;
+	overview: Record<string, unknown>;
 	created_at: string;
+}
+
+export interface LineTimingEntry {
+	lineIndex: number;
+	elapsedMs: number;
 }
