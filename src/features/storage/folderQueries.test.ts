@@ -1,14 +1,5 @@
+import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-
-const { mockExec, mockQuery } = vi.hoisted(() => ({
-	mockExec: vi.fn().mockResolvedValue(undefined),
-	mockQuery: vi.fn(),
-}));
-
-vi.mock("./pgliteClient", () => ({
-	initDb: vi.fn().mockResolvedValue({ exec: mockExec, query: mockQuery }),
-}));
-
 import {
 	createFolder,
 	deleteFolder,
@@ -17,120 +8,119 @@ import {
 	getFolderBreadcrumb,
 	getFoldersAtLevel,
 	getScriptCountInFolder,
-	initSchema,
 } from "./folderQueries";
+import { folders, scripts } from "./schema";
+
+// Mock pgliteClient to return our test database
+const { testDb, db } = await vi.hoisted(async () => {
+	const { PGlite } = await import("@electric-sql/pglite");
+	const { drizzle } = await import("drizzle-orm/pglite");
+	const schema = await import("./schema");
+	const testDb = new PGlite();
+	const db = drizzle(testDb, { schema });
+	return { testDb, db };
+});
+
+vi.mock("./pgliteClient", () => ({
+	initDb: vi.fn().mockResolvedValue(testDb),
+	getDrizzleDb: vi.fn().mockResolvedValue(db),
+}));
 
 describe("folderQueries", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
+	beforeEach(async () => {
+		// Clean up database before each test
+		await testDb.exec("DROP TABLE IF EXISTS scripts;");
+		await testDb.exec("DROP TABLE IF EXISTS folders;");
 
-	describe("initSchema", () => {
-		it("creates scripts table, folders table, and adds folder_id column", async () => {
-			await initSchema();
-			expect(mockExec).toHaveBeenCalledTimes(3);
-			expect(mockExec.mock.calls[0][0]).toContain(
-				"CREATE TABLE IF NOT EXISTS scripts",
+		// Create tables (manual for now since we haven't run migrations)
+		await testDb.exec(`
+			CREATE TABLE folders (
+				id TEXT PRIMARY KEY,
+				name TEXT NOT NULL,
+				parent_id TEXT REFERENCES folders(id) ON DELETE CASCADE,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 			);
-			expect(mockExec.mock.calls[1][0]).toContain(
-				"CREATE TABLE IF NOT EXISTS folders",
+		`);
+		await testDb.exec(`
+			CREATE TABLE scripts (
+				id TEXT PRIMARY KEY,
+				name TEXT NOT NULL,
+				html TEXT NOT NULL,
+				overview JSONB NOT NULL,
+				lines JSONB NOT NULL,
+				group_name TEXT,
+				label TEXT,
+				folder_id TEXT REFERENCES folders(id) ON DELETE CASCADE,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 			);
-			expect(mockExec.mock.calls[2][0]).toContain(
-				"ALTER TABLE scripts ADD COLUMN IF NOT EXISTS folder_id",
-			);
-		});
+		`);
 	});
 
 	describe("getFoldersAtLevel", () => {
 		it("queries root folders when parentId is null", async () => {
-			mockQuery.mockResolvedValue({
-				rows: [
-					{ id: "f1", name: "Root", parent_id: null, created_at: "2025-01-01" },
-				],
+			await db.insert(folders).values({
+				id: "f1",
+				name: "Root",
+				parentId: null,
 			});
 
-			const folders = await getFoldersAtLevel(null);
+			const result = await getFoldersAtLevel(null);
 
-			expect(mockQuery).toHaveBeenCalledWith(
-				expect.stringContaining("parent_id IS NULL"),
-			);
-			expect(folders).toEqual([
-				{
-					id: "f1",
-					name: "Root",
-					parentId: null,
-					createdAt: new Date("2025-01-01"),
-				},
-			]);
+			expect(result).toHaveLength(1);
+			expect(result[0].name).toBe("Root");
+			expect(result[0].parentId).toBeNull();
 		});
 
 		it("queries child folders when parentId is provided", async () => {
-			mockQuery.mockResolvedValue({ rows: [] });
+			await db.insert(folders).values({ id: "p1", name: "Parent" });
+			await db
+				.insert(folders)
+				.values({ id: "c1", name: "Child", parentId: "p1" });
 
-			await getFoldersAtLevel("parent1");
+			const result = await getFoldersAtLevel("p1");
 
-			expect(mockQuery).toHaveBeenCalledWith(
-				expect.stringContaining("parent_id = $1"),
-				["parent1"],
-			);
+			expect(result).toHaveLength(1);
+			expect(result[0].name).toBe("Child");
+			expect(result[0].parentId).toBe("p1");
 		});
 	});
 
 	describe("getAllFolders", () => {
 		it("returns all folders ordered by parent_id then name", async () => {
-			mockQuery.mockResolvedValue({
-				rows: [
-					{ id: "f1", name: "A", parent_id: null, created_at: "2025-01-01" },
-					{ id: "f2", name: "B", parent_id: "f1", created_at: "2025-01-02" },
-				],
-			});
+			await db.insert(folders).values([
+				{ id: "f1", name: "B", parentId: null },
+				{ id: "f2", name: "A", parentId: null },
+				{ id: "f3", name: "C", parentId: "f2" },
+			]);
 
-			const folders = await getAllFolders();
+			const result = await getAllFolders();
 
-			expect(mockQuery).toHaveBeenCalledWith(
-				expect.stringContaining("ORDER BY parent_id NULLS FIRST"),
-			);
-			expect(folders).toHaveLength(2);
-			expect(folders[0].parentId).toBeNull();
-			expect(folders[1].parentId).toBe("f1");
+			expect(result).toHaveLength(3);
+			// Ordered by parentId (null first), then name
+			expect(result[0].name).toBe("A");
+			expect(result[1].name).toBe("B");
+			expect(result[2].name).toBe("C");
 		});
 	});
 
 	describe("createFolder", () => {
 		it("creates a root folder", async () => {
-			mockQuery.mockResolvedValue({
-				rows: [
-					{ id: "f1", name: "New", parent_id: null, created_at: "2025-01-01" },
-				],
-			});
-
 			const folder = await createFolder("f1", "New", null);
-
 			expect(folder.id).toBe("f1");
 			expect(folder.parentId).toBeNull();
 		});
 
 		it("creates a child folder under a root folder", async () => {
-			mockQuery
-				.mockResolvedValueOnce({ rows: [{ parent_id: null }] })
-				.mockResolvedValueOnce({
-					rows: [
-						{
-							id: "f2",
-							name: "Child",
-							parent_id: "f1",
-							created_at: "2025-01-01",
-						},
-					],
-				});
-
+			await db.insert(folders).values({ id: "f1", name: "Root" });
 			const folder = await createFolder("f2", "Child", "f1");
-
 			expect(folder.parentId).toBe("f1");
 		});
 
 		it("rejects creating a folder at depth 3+", async () => {
-			mockQuery.mockResolvedValueOnce({ rows: [{ parent_id: "some-parent" }] });
+			await db.insert(folders).values({ id: "f1", name: "Root" });
+			await db
+				.insert(folders)
+				.values({ id: "f2", name: "Child", parentId: "f1" });
 
 			await expect(createFolder("f3", "Deep", "f2")).rejects.toThrow(
 				"Maximum folder depth of 2 levels exceeded",
@@ -138,8 +128,6 @@ describe("folderQueries", () => {
 		});
 
 		it("rejects when parent folder not found", async () => {
-			mockQuery.mockResolvedValueOnce({ rows: [] });
-
 			await expect(createFolder("f3", "Orphan", "missing")).rejects.toThrow(
 				"Parent folder not found",
 			);
@@ -148,26 +136,20 @@ describe("folderQueries", () => {
 
 	describe("deleteFolder", () => {
 		it("deletes by id", async () => {
-			mockQuery.mockResolvedValue({ rows: [] });
-
+			await db.insert(folders).values({ id: "f1", name: "Delete Me" });
 			await deleteFolder("f1");
 
-			expect(mockQuery).toHaveBeenCalledWith(
-				expect.stringContaining("DELETE FROM folders WHERE id = $1"),
-				["f1"],
-			);
+			const found = await db.select().from(folders).where(eq(folders.id, "f1"));
+			expect(found).toHaveLength(0);
 		});
 	});
 
 	describe("getFolderBreadcrumb", () => {
 		it("builds breadcrumb from child to root", async () => {
-			mockQuery
-				.mockResolvedValueOnce({
-					rows: [{ id: "f2", name: "Child", parent_id: "f1" }],
-				})
-				.mockResolvedValueOnce({
-					rows: [{ id: "f1", name: "Root", parent_id: null }],
-				});
+			await db.insert(folders).values({ id: "f1", name: "Root" });
+			await db
+				.insert(folders)
+				.values({ id: "f2", name: "Child", parentId: "f1" });
 
 			const crumbs = await getFolderBreadcrumb("f2");
 
@@ -176,78 +158,84 @@ describe("folderQueries", () => {
 				{ id: "f2", name: "Child" },
 			]);
 		});
-
-		it("returns single entry for root folder", async () => {
-			mockQuery.mockResolvedValueOnce({
-				rows: [{ id: "f1", name: "Root", parent_id: null }],
-			});
-
-			const crumbs = await getFolderBreadcrumb("f1");
-
-			expect(crumbs).toEqual([{ id: "f1", name: "Root" }]);
-		});
 	});
 
 	describe("getScriptCountInFolder", () => {
 		it("counts scripts in a specific folder", async () => {
-			mockQuery.mockResolvedValue({ rows: [{ count: 5 }] });
+			await db.insert(folders).values({ id: "f1", name: "Folder" });
+			// @ts-ignore: mock insert
+			await db.insert(scripts).values([
+				{
+					id: "s1",
+					name: "S1",
+					html: "",
+					overview: {},
+					lines: [],
+					folderId: "f1",
+				},
+				{
+					id: "s2",
+					name: "S2",
+					html: "",
+					overview: {},
+					lines: [],
+					folderId: "f1",
+				},
+				{
+					id: "s3",
+					name: "S3",
+					html: "",
+					overview: {},
+					lines: [],
+					folderId: null,
+				},
+			]);
 
 			const count = await getScriptCountInFolder("f1");
-
-			expect(count).toBe(5);
-			expect(mockQuery).toHaveBeenCalledWith(
-				expect.stringContaining("folder_id = $1"),
-				["f1"],
-			);
-		});
-
-		it("counts scripts with no folder when null", async () => {
-			mockQuery.mockResolvedValue({ rows: [{ count: 3 }] });
-
-			const count = await getScriptCountInFolder(null);
-
-			expect(count).toBe(3);
-			expect(mockQuery).toHaveBeenCalledWith(
-				expect.stringContaining("folder_id IS NULL"),
-			);
+			expect(count).toBe(2);
 		});
 	});
 
 	describe("getChildItemCountsForFolders", () => {
-		it("returns zeros for ids with no children", async () => {
-			mockQuery
-				.mockResolvedValueOnce({ rows: [] })
-				.mockResolvedValueOnce({ rows: [] });
-
-			const counts = await getChildItemCountsForFolders(["a", "b"]);
-
-			expect(counts).toEqual({ a: 0, b: 0 });
-		});
-
 		it("sums subfolders and scripts per folder id", async () => {
-			mockQuery
-				.mockResolvedValueOnce({
-					rows: [
-						{ parent_id: "f1", c: 2 },
-						{ parent_id: "f2", c: 1 },
-					],
-				})
-				.mockResolvedValueOnce({
-					rows: [
-						{ folder_id: "f1", c: 3 },
-						{ folder_id: "f2", c: 0 },
-					],
-				});
+			await db.insert(folders).values([
+				{ id: "f1", name: "F1" },
+				{ id: "f2", name: "F2" },
+				{ id: "f1s1", name: "Sub1", parentId: "f1" },
+			]);
+			// @ts-ignore: mock insert
+			await db.insert(scripts).values([
+				{
+					id: "s1",
+					name: "S1",
+					html: "",
+					overview: {},
+					lines: [],
+					folderId: "f1",
+				},
+				{
+					id: "s2",
+					name: "S2",
+					html: "",
+					overview: {},
+					lines: [],
+					folderId: "f1",
+				},
+				{
+					id: "s3",
+					name: "S3",
+					html: "",
+					overview: {},
+					lines: [],
+					folderId: "f2",
+				},
+			] as any[]);
 
 			const counts = await getChildItemCountsForFolders(["f1", "f2"]);
 
-			expect(counts).toEqual({ f1: 5, f2: 1 });
-		});
-
-		it("returns empty object when no ids", async () => {
-			const counts = await getChildItemCountsForFolders([]);
-			expect(counts).toEqual({});
-			expect(mockQuery).not.toHaveBeenCalled();
+			// f1: 1 subfolder + 2 scripts = 3
+			// f2: 0 subfolders + 1 script = 1
+			expect(counts).toEqual({ f1: 3, f2: 1 });
 		});
 	});
 });

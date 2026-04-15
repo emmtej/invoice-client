@@ -82,8 +82,10 @@ describe("Scripts Library Stores integration", () => {
 					createdAt: new Date(),
 				},
 			];
-			(folderQueries.getFoldersAtLevel as any).mockResolvedValue(mockFolders);
-			(scriptsQueries.getScriptsInFolder as any).mockResolvedValue(mockScripts);
+			vi.mocked(folderQueries.getFoldersAtLevel).mockResolvedValue(mockFolders);
+			vi.mocked(scriptsQueries.getScriptsInFolder).mockResolvedValue(
+				mockScripts,
+			);
 
 			await useScriptsDataStore.getState().init();
 
@@ -107,9 +109,9 @@ describe("Scripts Library Stores integration", () => {
 			];
 			const crumbs = [{ id: "f1", name: "Project A" }];
 
-			(folderQueries.getFoldersAtLevel as any).mockResolvedValue(subFolders);
-			(scriptsQueries.getScriptsInFolder as any).mockResolvedValue(scripts);
-			(folderQueries.getFolderBreadcrumb as any).mockResolvedValue(crumbs);
+			vi.mocked(folderQueries.getFoldersAtLevel).mockResolvedValue(subFolders);
+			vi.mocked(scriptsQueries.getScriptsInFolder).mockResolvedValue(scripts);
+			vi.mocked(folderQueries.getFolderBreadcrumb).mockResolvedValue(crumbs);
 
 			const result = await useScriptsDataStore.getState().fetchFolderData("f1");
 
@@ -176,7 +178,7 @@ describe("Scripts Library Stores integration", () => {
 				},
 				source: document.implementation.createHTMLDocument(),
 			};
-			(scriptsQueries.getScriptById as any).mockResolvedValue(mockScript);
+			vi.mocked(scriptsQueries.getScriptById).mockResolvedValue(mockScript);
 
 			await useScriptsUiStore.getState().selectScript("s1");
 
@@ -187,6 +189,7 @@ describe("Scripts Library Stores integration", () => {
 		it("should clear selection", () => {
 			useScriptsUiStore.setState({
 				selectedIds: ["s1"],
+				// biome-ignore lint/suspicious/noExplicitAny: mock bypass
 				selectedScript: {} as any,
 			});
 			useScriptsUiStore.getState().clearSelection();

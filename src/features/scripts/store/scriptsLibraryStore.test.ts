@@ -168,6 +168,7 @@ describe("Scripts Library Stores", () => {
 			useScriptsUiStore.setState({
 				currentFolderId: null,
 				selectedIds: ["s1"],
+				// biome-ignore lint/suspicious/noExplicitAny: mock bypass
 				selectedScript: {} as any,
 			});
 
@@ -222,6 +223,7 @@ describe("Scripts Library Stores", () => {
 
 		it("clearSelection clears selected script and IDs", () => {
 			useScriptsUiStore.setState({
+				// biome-ignore lint/suspicious/noExplicitAny: mock bypass
 				selectedScript: {} as any,
 				selectedIds: ["s1"],
 			});

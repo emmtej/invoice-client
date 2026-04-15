@@ -6,7 +6,7 @@ vi.mock("@electric-sql/pglite", () => ({
 	PGlite: { create: mockCreate },
 }));
 
-import { getDb, initDb, resetDb } from "./pgliteClient";
+import { getDb, getDrizzleDb, initDb, resetDb } from "./pgliteClient";
 
 describe("pgliteClient", () => {
 	beforeEach(() => {
@@ -63,5 +63,15 @@ describe("pgliteClient", () => {
 
 		expect(first).not.toBe(second);
 		expect(mockCreate).toHaveBeenCalledTimes(2);
+	});
+
+	it("getDrizzleDb returns a drizzle instance", async () => {
+		const fakeDb = { query: vi.fn() };
+		mockCreate.mockResolvedValue(fakeDb);
+
+		const result = await getDrizzleDb();
+
+		expect(result).toBeDefined();
+		expect(mockCreate).toHaveBeenCalledTimes(1);
 	});
 });
