@@ -35,16 +35,11 @@ export default function InvoicePage() {
 	}, [invoiceTitle, invoiceDate]);
 
 	const handleAddItem = useCallback(() => {
-		const names = newItemName
-			.split(",")
-			.map((s) => s.trim())
-			.filter(Boolean);
-		if (names.length === 0) {
-			addEmptyItem("New item");
+		const name = newItemName.trim();
+		if (name) {
+			addEmptyItem(name);
 		} else {
-			for (const name of names) {
-				addEmptyItem(name);
-			}
+			addEmptyItem("New item");
 		}
 		setNewItemName("");
 	}, [addEmptyItem, newItemName]);

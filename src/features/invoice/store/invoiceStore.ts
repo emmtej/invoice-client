@@ -2,14 +2,18 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { generateId } from "@/utils/id";
 
+export const DEFAULT_RATE_PER_WORD = 0.1;
+export const DEFAULT_WORDS_PER_UNIT = 1;
+
 export interface InvoiceSubitem {
 	id: string;
 	/** User-defined label for this subitem (e.g. "Episode 1 Dialogue"). When set, used for display instead of scriptName. */
 	label?: string;
-	scriptId: string;
+	scriptIds: string[];
 	scriptName: string;
 	wordCount: number;
 	ratePerWord: number;
+	ratePerWords: number;
 	amount: number;
 }
 
@@ -43,6 +47,7 @@ interface InvoiceStoreActions {
 		scripts: ScriptForInvoice[],
 		subitemLabel: string,
 		ratePerWord?: number,
+		ratePerWords?: number,
 	) => void;
 	addSubitemsAsNewItem: (
 		scriptIds: string[],
@@ -50,9 +55,11 @@ interface InvoiceStoreActions {
 		scripts: ScriptForInvoice[],
 		subitemLabel: string,
 		ratePerWord?: number,
+		ratePerWords?: number,
 	) => void;
 	updateItemName: (itemId: string, name: string) => void;
 	updateSubitemRate: (itemId: string, subitemId: string, rate: number) => void;
+	updateSubitemUnit: (itemId: string, subitemId: string, unit: number) => void;
 	updateSubitemLabel: (
 		itemId: string,
 		subitemId: string,
@@ -65,11 +72,21 @@ interface InvoiceStoreActions {
 
 type InvoiceStore = InvoiceStoreState & InvoiceStoreActions;
 
+function calculateSubitemAmount(
+	wordCount: number,
+	ratePerWord: number,
+	ratePerWords: number = DEFAULT_WORDS_PER_UNIT,
+): number {
+	const unit = Math.max(1, ratePerWords || DEFAULT_WORDS_PER_UNIT);
+	return (wordCount / unit) * ratePerWord;
+}
+
 function createOneSubitem(
 	scriptIds: string[],
 	scripts: ScriptForInvoice[],
 	subitemLabel: string,
 	ratePerWord: number,
+	ratePerWords: number = DEFAULT_WORDS_PER_UNIT,
 ): InvoiceSubitem | null {
 	const scriptMap = new Map(scripts.map((s) => [s.id, s]));
 	const matched = scriptIds.filter((id) => scriptMap.has(id));
@@ -78,16 +95,32 @@ function createOneSubitem(
 		(sum, id) => sum + (scriptMap.get(id)?.overview.wordCount ?? 0),
 		0,
 	);
-	const amount = totalWordCount * ratePerWord;
-	const firstScriptId = matched[0];
-	const scriptNames = matched.map((id) => scriptMap.get(id)?.name).join(", ");
+	const amount = calculateSubitemAmount(
+		totalWordCount,
+		ratePerWord,
+		ratePerWords,
+	);
+
+	const allNames = matched.map(
+		(id) => scriptMap.get(id)?.name || "Unknown Script",
+	);
+	let scriptNames = "";
+	if (allNames.length >= 4) {
+		const firstThree = allNames.slice(0, 3).join(", ");
+		const remainingCount = allNames.length - 3;
+		scriptNames = `${firstThree}, +${remainingCount} more`;
+	} else {
+		scriptNames = allNames.join(", ");
+	}
+
 	return {
 		id: generateId(),
 		label: subitemLabel,
-		scriptId: firstScriptId,
+		scriptIds: matched,
 		scriptName: scriptNames,
 		wordCount: totalWordCount,
 		ratePerWord,
+		ratePerWords,
 		amount,
 	};
 }
@@ -97,7 +130,7 @@ export const useInvoiceStore = create<InvoiceStore>()(
 		(set) => ({
 			invoice: {
 				id: generateId(),
-				defaultRatePerWord: 0.1,
+				defaultRatePerWord: DEFAULT_RATE_PER_WORD,
 				items: [],
 			},
 
@@ -107,6 +140,7 @@ export const useInvoiceStore = create<InvoiceStore>()(
 				scripts,
 				subitemLabel,
 				ratePerWord,
+				ratePerWords,
 			) =>
 				set((state) => {
 					const rate = ratePerWord ?? state.invoice.defaultRatePerWord;
@@ -115,6 +149,7 @@ export const useInvoiceStore = create<InvoiceStore>()(
 						scripts,
 						subitemLabel,
 						rate,
+						ratePerWords,
 					);
 					if (!newSubitem) return state;
 					const itemExists = state.invoice.items.some(
@@ -139,6 +174,7 @@ export const useInvoiceStore = create<InvoiceStore>()(
 				scripts,
 				subitemLabel,
 				ratePerWord,
+				ratePerWords,
 			) =>
 				set((state) => {
 					const rate = ratePerWord ?? state.invoice.defaultRatePerWord;
@@ -147,6 +183,7 @@ export const useInvoiceStore = create<InvoiceStore>()(
 						scripts,
 						subitemLabel,
 						rate,
+						ratePerWords,
 					);
 					if (!subitem) return state;
 					const newItem: InvoiceItem = {
@@ -182,15 +219,44 @@ export const useInvoiceStore = create<InvoiceStore>()(
 							item.id === itemId
 								? {
 										...item,
-										subitems: item.subitems.map((sub) =>
-											sub.id === subitemId
-												? {
-														...sub,
-														ratePerWord: rate,
-														amount: sub.wordCount * rate,
-													}
-												: sub,
-										),
+										subitems: item.subitems.map((sub) => {
+											if (sub.id !== subitemId) return sub;
+											return {
+												...sub,
+												ratePerWord: rate,
+												amount: calculateSubitemAmount(
+													sub.wordCount,
+													rate,
+													sub.ratePerWords,
+												),
+											};
+										}),
+									}
+								: item,
+						),
+					},
+				})),
+
+			updateSubitemUnit: (itemId, subitemId, unit) =>
+				set((state) => ({
+					invoice: {
+						...state.invoice,
+						items: state.invoice.items.map((item) =>
+							item.id === itemId
+								? {
+										...item,
+										subitems: item.subitems.map((sub) => {
+											if (sub.id !== subitemId) return sub;
+											return {
+												...sub,
+												ratePerWords: unit,
+												amount: calculateSubitemAmount(
+													sub.wordCount,
+													sub.ratePerWord,
+													unit,
+												),
+											};
+										}),
 									}
 								: item,
 						),

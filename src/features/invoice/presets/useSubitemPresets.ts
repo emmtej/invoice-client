@@ -1,52 +1,41 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-	getPresets,
-	type InvoiceSubitemPreset,
-	presetSummary,
-	removePreset,
-	savePreset,
-} from "./subitemPresets";
+import { useCallback, useMemo } from "react";
+import { useInvoicePresetsStore } from "../store/invoicePresetsStore";
+import { type InvoiceSubitemPreset, presetSummary } from "./subitemPresets";
 
 export function useSubitemPresets() {
-	const [presets, setPresets] = useState<InvoiceSubitemPreset[]>(() =>
-		getPresets(),
+	const { ratePresets, addRatePreset, deleteRatePreset } =
+		useInvoicePresetsStore();
+
+	const addPreset = useCallback(
+		(data: Omit<InvoiceSubitemPreset, "id">) => {
+			addRatePreset(data);
+		},
+		[addRatePreset],
 	);
 
-	useEffect(() => {
-		setPresets(getPresets());
-	}, []);
-
-	const addPreset = useCallback((data: Omit<InvoiceSubitemPreset, "id">) => {
-		const created = savePreset(data);
-		setPresets(getPresets());
-		return created;
-	}, []);
-
-	const deletePreset = useCallback((id: string) => {
-		removePreset(id);
-		setPresets(getPresets());
-	}, []);
-
-	const refreshPresets = useCallback(() => {
-		setPresets(getPresets());
-	}, []);
+	const deletePreset = useCallback(
+		(id: string) => {
+			deleteRatePreset(id);
+		},
+		[deleteRatePreset],
+	);
 
 	return {
-		presets,
+		presets: ratePresets,
 		presetOptions: useMemo(
 			() =>
-				presets.map((p) => ({
+				ratePresets.map((p) => ({
 					value: p.id,
 					label: presetSummary(p),
 				})),
-			[presets],
+			[ratePresets],
 		),
 		addPreset,
 		deletePreset,
-		refreshPresets,
+		refreshPresets: () => {}, // No-op now as it's reactive
 		getPresetById: useCallback(
-			(id: string) => presets.find((p) => p.id === id),
-			[presets],
+			(id: string) => ratePresets.find((p) => p.id === id),
+			[ratePresets],
 		),
 	};
 }

@@ -1,48 +1,33 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useInvoicePresetsStore } from "../store/invoicePresetsStore";
 import {
-	deriveProfileLabel,
-	getDefaultProfileFromState,
 	getEmptyProfile,
 	type InvoiceProfile,
-	type InvoiceProfileWithMeta,
-	loadProfilesFromStorage,
-	type ProfilesState,
 	profileSchema,
-	saveProfilesToStorage,
 } from "./invoiceProfile";
 
 export const ADD_PROFILE_VALUE = "__add_profile__";
 
 export function useProfileManager() {
-	const [profilesState, setProfilesState] = useState<ProfilesState>({
-		profiles: [],
-		defaultProfileId: undefined,
-	});
+	const {
+		profilePresets,
+		defaultProfileId,
+		addProfilePreset,
+		updateProfilePreset,
+		setDefaultProfile,
+	} = useInvoicePresetsStore();
+
 	const [selectedProfileId, setSelectedProfileId] = useState<string | null>(
-		null,
+		defaultProfileId,
 	);
-	const [editingProfile, setEditingProfile] = useState<InvoiceProfile>(() =>
-		getEmptyProfile(),
-	);
+	const [editingProfile, setEditingProfile] = useState<InvoiceProfile>(() => {
+		const found = profilePresets.find((p) => p.id === defaultProfileId);
+		return found?.profile ?? getEmptyProfile();
+	});
 	const [profileSavedMessage, setProfileSavedMessage] = useState<string>("");
-	const [isEditingProfile, setIsEditingProfile] = useState(true);
-
-	useEffect(() => {
-		const loaded = loadProfilesFromStorage();
-		if (loaded.profiles.length === 0) {
-			setProfilesState({ profiles: [], defaultProfileId: undefined });
-			setSelectedProfileId(null);
-			setEditingProfile(getEmptyProfile());
-			setIsEditingProfile(true);
-			return;
-		}
-
-		const defaultProfile = getDefaultProfileFromState(loaded);
-		setProfilesState(loaded);
-		setSelectedProfileId(defaultProfile?.id ?? null);
-		setEditingProfile(defaultProfile?.profile ?? getEmptyProfile());
-		setIsEditingProfile(false);
-	}, []);
+	const [isEditingProfile, setIsEditingProfile] = useState(
+		profilePresets.length === 0,
+	);
 
 	const handleProfileChange =
 		(field: keyof InvoiceProfile) =>
@@ -67,100 +52,49 @@ export function useProfileManager() {
 			return;
 		}
 
-		const hasProfiles = profilesState.profiles.length > 0;
-		const isExistingSelected =
-			!!selectedProfileId &&
-			profilesState.profiles.some((p) => p.id === selectedProfileId);
+		const isNew = !selectedProfileId || selectedProfileId === ADD_PROFILE_VALUE;
 
-		const shouldCreateNewProfile =
-			!hasProfiles ||
-			!isExistingSelected ||
-			selectedProfileId === ADD_PROFILE_VALUE;
-
-		let nextState: ProfilesState;
-		let createdId: string | null = null;
-
-		if (shouldCreateNewProfile) {
-			const id =
-				typeof crypto !== "undefined" && "randomUUID" in crypto
-					? crypto.randomUUID()
-					: `profile_${Date.now().toString(36)}_${Math.random()
-							.toString(36)
-							.slice(2, 8)}`;
-
-			const newProfile: InvoiceProfileWithMeta = {
-				id,
-				label: deriveProfileLabel(editingProfile),
-				isDefault: !hasProfiles,
-				profile: editingProfile,
-			};
-
-			nextState = {
-				profiles: [...profilesState.profiles, newProfile],
-				defaultProfileId: hasProfiles ? profilesState.defaultProfileId : id,
-			};
-			createdId = id;
+		if (isNew) {
+			addProfilePreset(editingProfile);
+			// The store will auto-select as default if it's the first one
 		} else {
-			const updatedProfiles = profilesState.profiles.map((p) =>
-				p.id === selectedProfileId
-					? {
-							...p,
-							label: deriveProfileLabel(editingProfile),
-							profile: editingProfile,
-						}
-					: p,
-			);
-
-			nextState = {
-				profiles: updatedProfiles,
-				defaultProfileId: profilesState.defaultProfileId,
-			};
+			updateProfilePreset(selectedProfileId, editingProfile);
 		}
 
-		setProfilesState(nextState);
-		saveProfilesToStorage(nextState);
-		if (createdId !== null) {
-			setSelectedProfileId(createdId);
-		}
 		setIsEditingProfile(false);
 		setProfileSavedMessage("Profile saved.");
-	}, [editingProfile, isProfileValid, profilesState, selectedProfileId]);
+	}, [
+		editingProfile,
+		isProfileValid,
+		selectedProfileId,
+		addProfilePreset,
+		updateProfilePreset,
+	]);
 
 	const handleCancelEdit = useCallback(() => {
-		if (profilesState.profiles.length === 0) {
+		if (profilePresets.length === 0) {
 			setEditingProfile(getEmptyProfile());
 			setIsEditingProfile(true);
 			setProfileSavedMessage("");
 			return;
 		}
 
-		const defaultProfile = getDefaultProfileFromState(profilesState);
 		const currentProfile =
-			profilesState.profiles.find((p) => p.id === selectedProfileId) ??
-			defaultProfile;
+			profilePresets.find((p) => p.id === selectedProfileId) ??
+			profilePresets.find((p) => p.id === defaultProfileId) ??
+			profilePresets[0];
 
 		setSelectedProfileId(currentProfile?.id ?? null);
 		setEditingProfile(currentProfile?.profile ?? getEmptyProfile());
 		setIsEditingProfile(false);
 		setProfileSavedMessage("");
-	}, [profilesState, selectedProfileId]);
+	}, [profilePresets, selectedProfileId, defaultProfileId]);
 
 	const handleSetAsDefault = useCallback(() => {
-		if (
-			!selectedProfileId ||
-			selectedProfileId === ADD_PROFILE_VALUE ||
-			selectedProfileId === profilesState.defaultProfileId
-		) {
-			return;
-		}
-		const nextState: ProfilesState = {
-			...profilesState,
-			defaultProfileId: selectedProfileId,
-		};
-		setProfilesState(nextState);
-		saveProfilesToStorage(nextState);
+		if (!selectedProfileId || selectedProfileId === ADD_PROFILE_VALUE) return;
+		setDefaultProfile(selectedProfileId);
 		setProfileSavedMessage("Default profile updated.");
-	}, [profilesState, selectedProfileId]);
+	}, [selectedProfileId, setDefaultProfile]);
 
 	const handleSelectProfile = (value: string | null) => {
 		if (!value) return;
@@ -174,9 +108,7 @@ export function useProfileManager() {
 		}
 
 		setSelectedProfileId(value);
-		const selected =
-			profilesState.profiles.find((p) => p.id === value) ??
-			getDefaultProfileFromState(profilesState);
+		const selected = profilePresets.find((p) => p.id === value);
 		setEditingProfile(selected?.profile ?? getEmptyProfile());
 		setIsEditingProfile(false);
 		setProfileSavedMessage("");
@@ -185,13 +117,17 @@ export function useProfileManager() {
 	const activeProfileForSummary: InvoiceProfile | undefined = (() => {
 		if (isEditingProfile) return editingProfile;
 		const current =
-			profilesState.profiles.find((p) => p.id === selectedProfileId) ??
-			getDefaultProfileFromState(profilesState);
+			profilePresets.find((p) => p.id === selectedProfileId) ??
+			profilePresets.find((p) => p.id === defaultProfileId) ??
+			profilePresets[0];
 		return current?.profile;
 	})();
 
 	return {
-		profilesState,
+		profilesState: {
+			profiles: profilePresets,
+			defaultProfileId: defaultProfileId ?? undefined,
+		},
 		selectedProfileId,
 		editingProfile,
 		profileSavedMessage,
