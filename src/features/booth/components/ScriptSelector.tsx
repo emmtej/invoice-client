@@ -71,11 +71,9 @@ export function ScriptSelector({
 	useEffect(() => {
 		(async () => {
 			if (docFiles.length === 0) return;
-			const processed = processDocuments(docFiles);
+			const processed = await processDocuments(docFiles);
 			if (processed.length > 0) {
-				for (const script of processed) {
-					await scriptsQueries.saveScript(script);
-				}
+				await scriptsQueries.saveScripts(processed);
 				const [refreshed, total] = await Promise.all([
 					scriptsQueries.getRecentScripts(INITIAL_LIMIT, 0),
 					scriptsQueries.countAllScripts(),

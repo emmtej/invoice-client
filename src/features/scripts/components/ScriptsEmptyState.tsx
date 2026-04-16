@@ -1,7 +1,7 @@
-import { Button, Group, Stack, Text } from "@mantine/core";
+import { Button, Stack, Text } from "@mantine/core";
 import { FolderOpen, FolderPlus } from "lucide-react";
-import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 import { EmptyState } from "@/components/ui/feedback/EmptyState";
+import { DocxUploadDropzone } from "@/components/ui/upload/DocxUploadDropzone";
 
 interface ScriptsEmptyStateProps {
 	isRoot: boolean;
@@ -29,25 +29,22 @@ export function ScriptsEmptyState({
 				maxDescriptionWidth={280}
 			/>
 			{onCreateFolder && onUpload ? (
-				<Group gap="sm" justify="center" wrap="wrap">
-					<DocxUploadButton
-						onChange={onUpload}
-						multiple
-						variant="light"
-						color="wave"
+				<Stack gap="sm" w="100%" maw={440} mx="auto">
+					<DocxUploadDropzone
+						onFilesSelected={onUpload}
 						loading={isUploading}
-					>
-						Upload Scripts
-					</DocxUploadButton>
+						multiple
+					/>
 					<Button
 						color="wave"
 						variant="outline"
 						leftSection={<FolderPlus size={16} />}
 						onClick={onCreateFolder}
+						mx="auto"
 					>
 						New Folder
 					</Button>
-				</Group>
+				</Stack>
 			) : isRoot ? (
 				<Text size="sm" c="gray.6" ta="center" maw={320}>
 					Use{" "}

@@ -1,5 +1,5 @@
 import { Box } from "@mantine/core";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { AppModal } from "@/components/ui/modal/AppModal";
 import { useScriptStore } from "@/features/editor";
@@ -26,9 +26,11 @@ export function BoothModals() {
 		setEditorOpened(false);
 	}, [setEditorOpened]);
 
-	const scriptInEditorStore = script
-		? (editorScripts.find((s) => s.id === script.id) ?? null)
-		: null;
+	const scriptInEditorStore = useMemo(
+		() =>
+			script ? (editorScripts.find((s) => s.id === script.id) ?? null) : null,
+		[script, editorScripts],
+	);
 
 	useEffect(() => {
 		if (!isEditorOpened || !script || !scriptInEditorStore) return;

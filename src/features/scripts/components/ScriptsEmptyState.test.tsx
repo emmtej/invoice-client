@@ -46,9 +46,7 @@ describe("ScriptsEmptyState", () => {
 			screen.getByText(/when those actions are available on this page/i),
 		).toBeTruthy();
 
-		expect(
-			screen.queryByRole("button", { name: /upload scripts/i }),
-		).toBeNull();
+		expect(screen.queryByText(/drop word documents here/i)).toBeNull();
 		expect(screen.queryByRole("button", { name: /new folder/i })).toBeNull();
 	});
 
@@ -67,9 +65,7 @@ describe("ScriptsEmptyState", () => {
 		);
 
 		expect(screen.getByText("No scripts yet")).toBeTruthy();
-		expect(
-			screen.getByRole("button", { name: /upload scripts/i }),
-		).toBeTruthy();
+		expect(screen.getByText(/drop word documents here/i)).toBeTruthy();
 		expect(screen.getByRole("button", { name: /new folder/i })).toBeTruthy();
 	});
 
@@ -88,6 +84,7 @@ describe("ScriptsEmptyState", () => {
 		);
 
 		expect(screen.getByText("This folder is empty")).toBeTruthy();
+		expect(screen.getByText(/drop word documents here/i)).toBeTruthy();
 		expect(screen.getByRole("button", { name: /new folder/i })).toBeTruthy();
 		expect(screen.queryByText(/at the top right/i)).toBeNull();
 	});

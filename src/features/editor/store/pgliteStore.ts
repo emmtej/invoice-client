@@ -1,18 +1,11 @@
 import { desc, eq, inArray, lte } from "drizzle-orm";
-import * as folderQueries from "@/features/storage/folderQueries";
 import { getDrizzleDb, initDb } from "@/features/storage/pgliteClient";
 import { scriptDrafts, scripts } from "@/features/storage/schema";
 import type { Script } from "@/types/Script";
 
-let editorSchemaReady = false;
 const DRAFT_TTL_HOURS = 24;
 
 export const initEditorDb = async () => {
-	if (editorSchemaReady) return await initDb();
-
-	await folderQueries.initSchema();
-
-	editorSchemaReady = true;
 	return await initDb();
 };
 
@@ -37,10 +30,14 @@ export const pgliteStore = {
 	async saveScript(script: Script): Promise<void> {
 		await initEditorDb();
 		const db = await getDrizzleDb();
+		await this.saveScriptTx(db, script);
+	},
+
+	async saveScriptTx(tx: any, script: Script): Promise<void> {
 		const { id, name, html, overview, lines, groupName, label, folderId } =
 			script;
 
-		await db
+		await tx
 			.insert(scripts)
 			.values({
 				id,
@@ -67,9 +64,20 @@ export const pgliteStore = {
 	},
 
 	async saveScripts(scriptsList: Script[]): Promise<void> {
-		for (const script of scriptsList) {
-			await this.saveScript(script);
+		if (scriptsList.length === 0) return;
+		await initEditorDb();
+		const db = await getDrizzleDb();
+		
+		if (scriptsList.length === 1) {
+			await this.saveScriptTx(db, scriptsList[0]);
+			return;
 		}
+
+		await db.transaction(async (tx) => {
+			for (const script of scriptsList) {
+				await this.saveScriptTx(tx, script);
+			}
+		});
 	},
 
 	async deleteScript(id: string): Promise<void> {
@@ -117,12 +125,16 @@ export const pgliteStore = {
 	async saveDraftScript(script: Script): Promise<void> {
 		await initEditorDb();
 		const db = await getDrizzleDb();
+		await this.saveDraftScriptTx(db, script);
+	},
+
+	async saveDraftScriptTx(tx: any, script: Script): Promise<void> {
 		const { id, name, html, overview, lines, groupName, label } = script;
 
 		const expiresAt = new Date();
 		expiresAt.setHours(expiresAt.getHours() + DRAFT_TTL_HOURS);
 
-		await db
+		await tx
 			.insert(scriptDrafts)
 			.values({
 				id,
@@ -150,9 +162,20 @@ export const pgliteStore = {
 	},
 
 	async saveDraftScripts(scriptsList: Script[]): Promise<void> {
-		for (const script of scriptsList) {
-			await this.saveDraftScript(script);
+		if (scriptsList.length === 0) return;
+		await initEditorDb();
+		const db = await getDrizzleDb();
+
+		if (scriptsList.length === 1) {
+			await this.saveDraftScriptTx(db, scriptsList[0]);
+			return;
 		}
+
+		await db.transaction(async (tx) => {
+			for (const script of scriptsList) {
+				await this.saveDraftScriptTx(tx, script);
+			}
+		});
 	},
 
 	async deleteDraftScript(id: string): Promise<void> {

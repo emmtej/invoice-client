@@ -3,7 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { FolderPlus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
+import { DocxUploadDropzone } from "@/components/ui/upload/DocxUploadDropzone";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { BreadcrumbNav } from "./components/BreadcrumbNav";
 import { MultiSelectToolbar } from "./components/MultiSelectToolbar";
@@ -114,10 +114,18 @@ export default function ScriptsPage() {
 		}
 	};
 
-	const isRoot = currentFolderId === null;
-	const isEmpty = folders.length === 0 && scripts.length === 0;
-	const currentFolderName =
-		breadcrumb.length > 0 ? breadcrumb[breadcrumb.length - 1].name : undefined;
+	const isRoot = useMemo(() => currentFolderId === null, [currentFolderId]);
+	const isEmpty = useMemo(
+		() => folders.length === 0 && scripts.length === 0,
+		[folders.length, scripts.length],
+	);
+	const currentFolderName = useMemo(
+		() =>
+			breadcrumb.length > 0
+				? breadcrumb[breadcrumb.length - 1].name
+				: undefined,
+		[breadcrumb],
+	);
 
 	return (
 		<Flex direction="column" h="100%" rowGap="md">
@@ -164,20 +172,26 @@ export default function ScriptsPage() {
 							isLoadingMore={isLoadingMore}
 							onLoadMore={handleLoadMore}
 						/>
-						<Group justify="center" gap="sm" wrap="wrap" pt="lg">
-							<DocxUploadButton
-								onChange={handleFileChange}
-								multiple
-								variant="light"
-								color="wave"
-								loading={isUploading}
-							>
-								Upload Scripts
-							</DocxUploadButton>
+						<Group
+							justify="center"
+							align="stretch"
+							gap="sm"
+							wrap="wrap"
+							pt="lg"
+						>
+							<Box mih={0} miw={280} maw={560} style={{ flex: "1 1 280px" }}>
+								<DocxUploadDropzone
+									variant="compact"
+									onFilesSelected={handleFileChange}
+									loading={isUploading}
+									multiple
+								/>
+							</Box>
 							<Button
 								color="wave"
 								leftSection={<FolderPlus size={16} />}
 								onClick={openCreateFolder}
+								style={{ alignSelf: "center" }}
 							>
 								New Folder
 							</Button>

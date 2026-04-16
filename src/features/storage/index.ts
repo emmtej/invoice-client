@@ -6,7 +6,6 @@ export {
 	getFolderBreadcrumb,
 	getFoldersAtLevel,
 	getScriptCountInFolder,
-	initSchema,
 } from "./folderQueries";
 export { getDb, initDb, resetDb } from "./pgliteClient";
 export type {

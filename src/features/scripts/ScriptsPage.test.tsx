@@ -10,7 +10,6 @@ vi.mock("@/features/storage/pgliteClient", () => ({
 
 vi.mock("@/features/storage/folderQueries", () => ({
 	folderQueries: {
-		initSchema: vi.fn().mockResolvedValue(undefined),
 		getFoldersAtLevel: vi.fn().mockResolvedValue([]),
 		getRecentFolders: vi.fn().mockResolvedValue([]),
 		getAllFolders: vi.fn().mockResolvedValue([]),

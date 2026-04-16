@@ -36,10 +36,6 @@ vi.mock("@/features/storage/pgliteClient", () => ({
 	getDrizzleDb: vi.fn().mockResolvedValue(db),
 }));
 
-vi.mock("@/features/storage/folderQueries", () => ({
-	initSchema: vi.fn().mockResolvedValue(undefined),
-}));
-
 import { scriptDrafts, scripts } from "@/features/storage/schema";
 import { initEditorDb, pgliteStore } from "./pgliteStore";
 

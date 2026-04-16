@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { folderQueries } from "@/features/storage/folderQueries";
+import { initDb } from "@/features/storage/pgliteClient";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { generateId } from "@/utils/id";
 import { scriptsQueries } from "./scriptsQueries";
@@ -58,7 +59,7 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((set, get) => ({
 	init: async () => {
 		set({ isLoading: true });
 		try {
-			await folderQueries.initSchema();
+			await initDb();
 			const [folders, scripts, scriptsTotalCount] = await Promise.all([
 				folderQueries.getRecentFolders(null, INITIAL_FOLDER_LIMIT),
 				scriptsQueries.getScriptsInFolderPaginated(

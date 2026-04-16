@@ -1,6 +1,5 @@
 import { asc, count, desc, eq, inArray, isNull, sql } from "drizzle-orm";
-import { initSchema } from "@/features/storage/folderQueries";
-import { getDrizzleDb } from "@/features/storage/pgliteClient";
+import { getDrizzleDb, initDb } from "@/features/storage/pgliteClient";
 import { scripts } from "@/features/storage/schema";
 import type { ScriptSummary } from "@/features/storage/types";
 import type { Script } from "@/types/Script";
@@ -26,7 +25,7 @@ function mapToScriptSummary(row: {
 
 export const scriptsQueries = {
 	async getAllScripts(): Promise<ScriptSummary[]> {
-		await initSchema();
+		await initDb();
 		const db = await getDrizzleDb();
 		const result = await db
 			.select({
@@ -65,7 +64,7 @@ export const scriptsQueries = {
 		limit: number,
 		offset: number,
 	): Promise<ScriptSummary[]> {
-		await initSchema();
+		await initDb();
 		const db = await getDrizzleDb();
 		const result = await db
 			.select({
@@ -185,9 +184,13 @@ export const scriptsQueries = {
 
 	async saveScript(script: Script): Promise<void> {
 		const db = await getDrizzleDb();
+		await this.saveScriptTx(db, script);
+	},
+
+	async saveScriptTx(tx: any, script: Script): Promise<void> {
 		const { id, name, html, overview, lines, groupName, label, folderId } =
 			script;
-		await db
+		await tx
 			.insert(scripts)
 			.values({
 				id,
@@ -211,5 +214,21 @@ export const scriptsQueries = {
 					folderId: folderId ?? null,
 				},
 			});
+	},
+
+	async saveScripts(scriptsList: Script[]): Promise<void> {
+		if (scriptsList.length === 0) return;
+		const db = await getDrizzleDb();
+		
+		if (scriptsList.length === 1) {
+			await this.saveScriptTx(db, scriptsList[0]);
+			return;
+		}
+
+		await db.transaction(async (tx) => {
+			for (const script of scriptsList) {
+				await this.saveScriptTx(tx, script);
+			}
+		});
 	},
 };

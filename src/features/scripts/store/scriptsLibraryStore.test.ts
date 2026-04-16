@@ -4,7 +4,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const folderQueriesMocks = vi.hoisted(() => ({
-	initSchema: vi.fn().mockResolvedValue(undefined),
 	getFoldersAtLevel: vi.fn(),
 	getRecentFolders: vi.fn(),
 	getFolderBreadcrumb: vi.fn(),
@@ -30,9 +29,13 @@ vi.mock("./scriptsQueries", () => ({
 	scriptsQueries: scriptsQueriesMocks,
 }));
 
-vi.mock("@/features/storage/pgliteClient", () => ({
-	initDb: vi.fn(),
+const pgliteClientMocks = vi.hoisted(() => ({
+	initDb: vi.fn().mockResolvedValue({ exec: vi.fn(), query: vi.fn() }),
+	getDb: vi.fn(() => ({ exec: vi.fn(), query: vi.fn() })),
+	getDrizzleDb: vi.fn(),
 }));
+
+vi.mock("@/features/storage/pgliteClient", () => pgliteClientMocks);
 
 vi.mock("@/utils/id", () => ({
 	generateId: vi.fn(() => "generated-id"),
@@ -75,7 +78,10 @@ describe("Scripts Library Stores", () => {
 			isPreviewLoading: false,
 		});
 
-		folderQueriesMocks.initSchema.mockResolvedValue(undefined);
+		pgliteClientMocks.initDb.mockResolvedValue({
+			exec: vi.fn(),
+			query: vi.fn(),
+		});
 		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([]);
 		folderQueriesMocks.getRecentFolders.mockResolvedValue([]);
 		folderQueriesMocks.getFolderBreadcrumb.mockResolvedValue([]);
@@ -102,7 +108,7 @@ describe("Scripts Library Stores", () => {
 
 			await useScriptsDataStore.getState().init();
 
-			expect(folderQueriesMocks.initSchema).toHaveBeenCalled();
+			expect(pgliteClientMocks.initDb).toHaveBeenCalled();
 			expect(folderQueriesMocks.getRecentFolders).toHaveBeenCalledWith(null, 1);
 			expect(
 				scriptsQueriesMocks.getScriptsInFolderPaginated,

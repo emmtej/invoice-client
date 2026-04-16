@@ -166,20 +166,29 @@ export function reparseHtmlToScript(html: string): {
 	};
 }
 
-export function processDocuments(documents: DocFile[]): Script[] {
-	return documents.map((doc) => {
+export async function processDocuments(
+	documents: DocFile[],
+): Promise<Script[]> {
+	const scripts: Script[] = [];
+
+	for (const doc of documents) {
 		const lines = parseLinesFromNodes(
 			doc.document.querySelectorAll(
 				"p, h1, h2, h3, h4, h5, h6, blockquote, li, div",
 			),
 		);
-		return {
+		scripts.push({
 			id: generateId(),
 			name: doc.name,
 			source: doc.document,
 			lines,
 			overview: getScriptOverview(lines),
 			html: generateHtmlFromScript(lines),
-		};
-	});
+		});
+
+		// Yield to main thread to prevent blocking
+		await new Promise((resolve) => setTimeout(resolve, 0));
+	}
+
+	return scripts;
 }

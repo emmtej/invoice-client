@@ -1,6 +1,5 @@
 import { desc, eq } from "drizzle-orm";
-import { initSchema } from "@/features/storage/folderQueries";
-import { getDrizzleDb } from "@/features/storage/pgliteClient";
+import { getDrizzleDb, initDb } from "@/features/storage/pgliteClient";
 import { boothSessions } from "@/features/storage/schema";
 import type { LineTimingEntry } from "@/features/storage/types";
 
@@ -17,12 +16,8 @@ export interface BoothSession {
 	completedAt: string | null;
 }
 
-let schemaReady = false;
-
 async function initBoothSchema(): Promise<void> {
-	if (schemaReady) return;
-	await initSchema();
-	schemaReady = true;
+	await initDb();
 }
 
 export const boothQueries = {

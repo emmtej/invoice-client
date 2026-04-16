@@ -10,6 +10,8 @@ export interface DocFile {
 interface UseFileUpload {
 	docFiles: DocFile[];
 	isLoading: boolean;
+	processedCount: number;
+	totalCount: number;
 	errors: string[];
 	handleFileChange: (e: React.ChangeEvent<HTMLInputElement> | File[]) => void;
 	reset: () => void;
@@ -18,6 +20,8 @@ interface UseFileUpload {
 export function useFileUpload(): UseFileUpload {
 	const [docFiles, setDocFiles] = useState<DocFile[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [processedCount, setProcessedCount] = useState<number>(0);
+	const [totalCount, setTotalCount] = useState<number>(0);
 	const [errors, setErrors] = useState<string[]>([]);
 	const isMountedRef = useRef(true);
 
@@ -31,42 +35,39 @@ export function useFileUpload(): UseFileUpload {
 	const processFiles = useCallback(async (newFiles: File[]) => {
 		setIsLoading(true);
 		setErrors([]);
-
-		const filePromises = newFiles.map(async (file): Promise<DocFile> => {
-			if (!file.name.endsWith(".docx")) {
-				throw new Error(`File "${file.name}" is not a .docx file.`);
-			}
-			try {
-				const arrayBuffer = await file.arrayBuffer();
-				const { value } = await mammoth.convertToHtml({ arrayBuffer });
-
-				const document = parseHtmlToDocument(value);
-
-				return {
-					name: file.name,
-					document,
-				};
-			} catch (err) {
-				throw new Error(
-					`Failed to parse ${file.name}: ${err instanceof Error ? err.message : String(err)}`,
-				);
-			}
-		});
-
-		const results = await Promise.allSettled(filePromises);
-		if (!isMountedRef.current) return;
+		setTotalCount(newFiles.length);
+		setProcessedCount(0);
 
 		const successfulDocs: DocFile[] = [];
 		const newErrors: string[] = [];
 
-		results.forEach((result) => {
-			if (result.status === "fulfilled") {
-				successfulDocs.push(result.value);
-			} else {
-				console.error(result.reason);
-				newErrors.push(result.reason.message);
+		for (const file of newFiles) {
+			if (!isMountedRef.current) break;
+
+			try {
+				if (!file.name.endsWith(".docx")) {
+					throw new Error(`File "${file.name}" is not a .docx file.`);
+				}
+
+				const arrayBuffer = await file.arrayBuffer();
+				const { value } = await mammoth.convertToHtml({ arrayBuffer });
+				const document = parseHtmlToDocument(value);
+
+				successfulDocs.push({
+					name: file.name,
+					document,
+				});
+			} catch (err) {
+				console.error(err);
+				newErrors.push(
+					err instanceof Error ? err.message : `Failed to parse ${file.name}`,
+				);
+			} finally {
+				setProcessedCount((prev) => prev + 1);
 			}
-		});
+		}
+
+		if (!isMountedRef.current) return;
 
 		if (newErrors.length > 0) {
 			setErrors((prev) => [...prev, ...newErrors]);
@@ -101,11 +102,15 @@ export function useFileUpload(): UseFileUpload {
 		setDocFiles([]);
 		setErrors([]);
 		setIsLoading(false);
+		setProcessedCount(0);
+		setTotalCount(0);
 	}, []);
 
 	return {
 		docFiles,
 		isLoading,
+		processedCount,
+		totalCount,
 		errors,
 		handleFileChange,
 		reset,

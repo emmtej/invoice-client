@@ -14,6 +14,8 @@ export function useScriptsUpload() {
 	const {
 		docFiles,
 		isLoading: isUploading,
+		processedCount,
+		totalCount,
 		errors: uploadErrors,
 		handleFileChange,
 		reset: resetUpload,
@@ -24,7 +26,8 @@ export function useScriptsUpload() {
 		let cancelled = false;
 
 		(async () => {
-			const newScripts = processDocuments(docFiles).map((s) => ({
+			const processed = await processDocuments(docFiles);
+			const newScripts = processed.map((s) => ({
 				...s,
 				folderId: currentFolderId,
 			}));
@@ -41,6 +44,8 @@ export function useScriptsUpload() {
 
 	return {
 		isUploading,
+		processedCount,
+		totalCount,
 		uploadErrors,
 		handleFileChange,
 		resetUpload,
