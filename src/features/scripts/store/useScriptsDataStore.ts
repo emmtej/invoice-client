@@ -4,13 +4,19 @@ import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { generateId } from "@/utils/id";
 import { scriptsQueries } from "./scriptsQueries";
 
+const INITIAL_SCRIPT_LIMIT = 5;
+const INITIAL_FOLDER_LIMIT = 1;
+const LOAD_MORE_BATCH = 10;
+
 interface ScriptsDataState {
 	folders: Folder[];
 	scripts: ScriptSummary[];
 	breadcrumb: { id: string; name: string }[];
-	/** Direct child count per folder id (subfolders + scripts in that folder). */
 	folderChildItemCounts: Record<string, number>;
 	isLoading: boolean;
+	scriptsTotalCount: number;
+	scriptsOffset: number;
+	hasMoreScripts: boolean;
 }
 
 interface ScriptsDataActions {
@@ -20,6 +26,7 @@ interface ScriptsDataActions {
 		scripts: ScriptSummary[];
 		breadcrumb: { id: string; name: string }[];
 	}>;
+	loadMoreScripts: (folderId: string | null) => Promise<void>;
 	createFolder: (name: string, parentId: string | null) => Promise<void>;
 	deleteFolder: (folderId: string) => Promise<void>;
 	deleteScript: (scriptId: string) => Promise<void>;
@@ -44,13 +51,23 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((set, get) => ({
 	breadcrumb: [],
 	folderChildItemCounts: {},
 	isLoading: false,
+	scriptsTotalCount: 0,
+	scriptsOffset: 0,
+	hasMoreScripts: false,
 
 	init: async () => {
 		set({ isLoading: true });
 		try {
 			await folderQueries.initSchema();
-			const folders = await folderQueries.getFoldersAtLevel(null);
-			const scripts = await scriptsQueries.getScriptsInFolder(null);
+			const [folders, scripts, scriptsTotalCount] = await Promise.all([
+				folderQueries.getRecentFolders(null, INITIAL_FOLDER_LIMIT),
+				scriptsQueries.getScriptsInFolderPaginated(
+					null,
+					INITIAL_SCRIPT_LIMIT,
+					0,
+				),
+				scriptsQueries.countScriptsInFolder(null),
+			]);
 			const folderChildItemCounts = await loadFolderChildItemCounts(folders);
 			set({
 				folders,
@@ -58,6 +75,9 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((set, get) => ({
 				breadcrumb: [],
 				folderChildItemCounts,
 				isLoading: false,
+				scriptsTotalCount,
+				scriptsOffset: INITIAL_SCRIPT_LIMIT,
+				hasMoreScripts: scriptsTotalCount > INITIAL_SCRIPT_LIMIT,
 			});
 		} catch (error) {
 			console.error("Failed to initialize scripts data:", error);
@@ -68,11 +88,19 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((set, get) => ({
 	fetchFolderData: async (folderId) => {
 		set({ isLoading: true });
 		try {
-			const folders = await folderQueries.getFoldersAtLevel(folderId);
-			const scripts = await scriptsQueries.getScriptsInFolder(folderId);
-			const breadcrumb = folderId
-				? await folderQueries.getFolderBreadcrumb(folderId)
-				: [];
+			const [folders, scripts, breadcrumb, scriptsTotalCount] =
+				await Promise.all([
+					folderQueries.getRecentFolders(folderId, INITIAL_FOLDER_LIMIT),
+					scriptsQueries.getScriptsInFolderPaginated(
+						folderId,
+						INITIAL_SCRIPT_LIMIT,
+						0,
+					),
+					folderId
+						? folderQueries.getFolderBreadcrumb(folderId)
+						: Promise.resolve([]),
+					scriptsQueries.countScriptsInFolder(folderId),
+				]);
 			const folderChildItemCounts = await loadFolderChildItemCounts(folders);
 			set({
 				folders,
@@ -80,6 +108,9 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((set, get) => ({
 				breadcrumb,
 				folderChildItemCounts,
 				isLoading: false,
+				scriptsTotalCount,
+				scriptsOffset: INITIAL_SCRIPT_LIMIT,
+				hasMoreScripts: scriptsTotalCount > INITIAL_SCRIPT_LIMIT,
 			});
 			return { folders, scripts, breadcrumb };
 		} catch (error) {
@@ -87,6 +118,40 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((set, get) => ({
 			set({ isLoading: false });
 			throw error;
 		}
+	},
+
+	loadMoreScripts: async (folderId) => {
+		const {
+			scriptsOffset,
+			scripts: currentScripts,
+			folders: currentFolders,
+		} = get();
+		const isFirstLoadMore = scriptsOffset <= INITIAL_SCRIPT_LIMIT;
+
+		const [newScripts, allFolders] = await Promise.all([
+			scriptsQueries.getScriptsInFolderPaginated(
+				folderId,
+				LOAD_MORE_BATCH,
+				scriptsOffset,
+			),
+			isFirstLoadMore
+				? folderQueries.getFoldersAtLevel(folderId)
+				: Promise.resolve(currentFolders),
+		]);
+
+		const newOffset = scriptsOffset + newScripts.length;
+		const { scriptsTotalCount } = get();
+		const folderChildItemCounts = isFirstLoadMore
+			? await loadFolderChildItemCounts(allFolders)
+			: get().folderChildItemCounts;
+
+		set({
+			scripts: [...currentScripts, ...newScripts],
+			folders: allFolders,
+			folderChildItemCounts,
+			scriptsOffset: newOffset,
+			hasMoreScripts: newOffset < scriptsTotalCount,
+		});
 	},
 
 	createFolder: async (name, parentId) => {
@@ -97,8 +162,6 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((set, get) => ({
 
 	deleteFolder: async (folderId) => {
 		await folderQueries.deleteFolder(folderId);
-		// Note: caller is responsible for currentFolderId refresh if needed,
-		// or we can refresh the current view if we know it.
 	},
 
 	deleteScript: async (scriptId) => {
@@ -123,9 +186,23 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((set, get) => ({
 	},
 
 	refresh: async (currentFolderId) => {
-		const folders = await folderQueries.getFoldersAtLevel(currentFolderId);
-		const scripts = await scriptsQueries.getScriptsInFolder(currentFolderId);
+		const { scriptsOffset } = get();
+		const loadCount = Math.max(scriptsOffset, INITIAL_SCRIPT_LIMIT);
+
+		const [folders, scripts, scriptsTotalCount] = await Promise.all([
+			folderQueries.getFoldersAtLevel(currentFolderId),
+			scriptsQueries.getScriptsInFolderPaginated(currentFolderId, loadCount, 0),
+			scriptsQueries.countScriptsInFolder(currentFolderId),
+		]);
 		const folderChildItemCounts = await loadFolderChildItemCounts(folders);
-		set({ folders, scripts, folderChildItemCounts });
+
+		set({
+			folders,
+			scripts,
+			folderChildItemCounts,
+			scriptsTotalCount,
+			scriptsOffset: loadCount,
+			hasMoreScripts: loadCount < scriptsTotalCount,
+		});
 	},
 }));

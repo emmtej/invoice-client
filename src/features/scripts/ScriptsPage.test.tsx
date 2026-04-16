@@ -12,6 +12,7 @@ vi.mock("@/features/storage/folderQueries", () => ({
 	folderQueries: {
 		initSchema: vi.fn().mockResolvedValue(undefined),
 		getFoldersAtLevel: vi.fn().mockResolvedValue([]),
+		getRecentFolders: vi.fn().mockResolvedValue([]),
 		getAllFolders: vi.fn().mockResolvedValue([]),
 		createFolder: vi.fn().mockResolvedValue({
 			id: "new",
@@ -29,6 +30,9 @@ vi.mock("@/features/storage/folderQueries", () => ({
 vi.mock("./store/scriptsQueries", () => ({
 	scriptsQueries: {
 		getScriptsInFolder: vi.fn().mockResolvedValue([]),
+		getScriptsInFolderPaginated: vi.fn().mockResolvedValue([]),
+		countScriptsInFolder: vi.fn().mockResolvedValue(0),
+		touchScript: vi.fn().mockResolvedValue(undefined),
 		getScriptById: vi.fn().mockResolvedValue(null),
 		deleteScript: vi.fn().mockResolvedValue(undefined),
 		duplicateScript: vi.fn().mockResolvedValue(undefined),
@@ -80,11 +84,15 @@ describe("Scripts Library Stores integration", () => {
 					wordCount: 100,
 					invalidLineCount: 0,
 					createdAt: new Date(),
+					lastAccessedAt: null,
 				},
 			];
-			vi.mocked(folderQueries.getFoldersAtLevel).mockResolvedValue(mockFolders);
-			vi.mocked(scriptsQueries.getScriptsInFolder).mockResolvedValue(
+			vi.mocked(folderQueries.getRecentFolders).mockResolvedValue(mockFolders);
+			vi.mocked(scriptsQueries.getScriptsInFolderPaginated).mockResolvedValue(
 				mockScripts,
+			);
+			vi.mocked(scriptsQueries.countScriptsInFolder).mockResolvedValue(
+				mockScripts.length,
 			);
 
 			await useScriptsDataStore.getState().init();
@@ -105,12 +113,18 @@ describe("Scripts Library Stores integration", () => {
 					wordCount: 50,
 					invalidLineCount: 1,
 					createdAt: new Date(),
+					lastAccessedAt: null,
 				},
 			];
 			const crumbs = [{ id: "f1", name: "Project A" }];
 
-			vi.mocked(folderQueries.getFoldersAtLevel).mockResolvedValue(subFolders);
-			vi.mocked(scriptsQueries.getScriptsInFolder).mockResolvedValue(scripts);
+			vi.mocked(folderQueries.getRecentFolders).mockResolvedValue(subFolders);
+			vi.mocked(scriptsQueries.getScriptsInFolderPaginated).mockResolvedValue(
+				scripts,
+			);
+			vi.mocked(scriptsQueries.countScriptsInFolder).mockResolvedValue(
+				scripts.length,
+			);
 			vi.mocked(folderQueries.getFolderBreadcrumb).mockResolvedValue(crumbs);
 
 			const result = await useScriptsDataStore.getState().fetchFolderData("f1");

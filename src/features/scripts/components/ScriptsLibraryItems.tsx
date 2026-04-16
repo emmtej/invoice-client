@@ -1,4 +1,4 @@
-import { Box, Stack, UnstyledButton } from "@mantine/core";
+import { Box, Button, Stack, UnstyledButton } from "@mantine/core";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
@@ -9,7 +9,6 @@ import { ScriptLibraryTile } from "./ScriptLibraryTile";
 interface ScriptsLibraryItemsProps {
 	folders: Folder[];
 	scripts: ScriptSummary[];
-	/** Direct child counts per folder id (from store). */
 	folderItemCounts: Record<string, number>;
 	sortAscending: boolean;
 	onSortAscendingChange: (ascending: boolean) => void;
@@ -20,6 +19,9 @@ interface ScriptsLibraryItemsProps {
 	onSelectScript: (scriptId: string) => void;
 	onDeleteScript: (script: ScriptSummary) => void;
 	onToggleSelection: (id: string, isMulti: boolean, isRange: boolean) => void;
+	hasMoreScripts: boolean;
+	isLoadingMore: boolean;
+	onLoadMore: () => void;
 }
 
 export function ScriptsLibraryItems({
@@ -35,6 +37,9 @@ export function ScriptsLibraryItems({
 	onSelectScript,
 	onDeleteScript,
 	onToggleSelection,
+	hasMoreScripts,
+	isLoadingMore,
+	onLoadMore,
 }: ScriptsLibraryItemsProps) {
 	const sortedFolders = sortByName(folders, sortAscending);
 	const sortedScripts = sortByName(scripts, sortAscending);
@@ -46,15 +51,14 @@ export function ScriptsLibraryItems({
 	) => {
 		const isMulti = e.ctrlKey || e.metaKey;
 		const isRange = e.shiftKey;
-
 		if (isMulti || isRange) {
 			onToggleSelection(id, isMulti, isRange);
 		} else {
-			// Single selection should also show the menu
 			onToggleSelection(id, false, false);
 			onPrimaryAction();
 		}
 	};
+
 	return (
 		<Stack gap="lg">
 			<Box px="md">
@@ -122,6 +126,19 @@ export function ScriptsLibraryItems({
 						/>
 					))}
 				</Stack>
+			)}
+
+			{hasMoreScripts && (
+				<Box ta="center" pt="sm">
+					<Button
+						variant="light"
+						color="wave"
+						onClick={onLoadMore}
+						loading={isLoadingMore}
+					>
+						Show more scripts
+					</Button>
+				</Box>
 			)}
 		</Stack>
 	);

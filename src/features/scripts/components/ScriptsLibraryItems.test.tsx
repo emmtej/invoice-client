@@ -66,6 +66,7 @@ describe("ScriptsLibraryItems", () => {
 							wordCount: 1,
 							invalidLineCount: 0,
 							createdAt: new Date(),
+							lastAccessedAt: null,
 						},
 					]}
 					sortAscending
@@ -77,6 +78,9 @@ describe("ScriptsLibraryItems", () => {
 					onDeleteScript={vi.fn()}
 					selectedIds={[]}
 					onToggleSelection={vi.fn()}
+					hasMoreScripts={false}
+					isLoadingMore={false}
+					onLoadMore={vi.fn()}
 				/>,
 			),
 		);
@@ -107,6 +111,9 @@ describe("ScriptsLibraryItems", () => {
 					onDeleteScript={vi.fn()}
 					selectedIds={[]}
 					onToggleSelection={vi.fn()}
+					hasMoreScripts={false}
+					isLoadingMore={false}
+					onLoadMore={vi.fn()}
 				/>,
 			),
 		);
@@ -129,6 +136,7 @@ describe("ScriptsLibraryItems", () => {
 							wordCount: 1,
 							invalidLineCount: 0,
 							createdAt: new Date(),
+							lastAccessedAt: null,
 						},
 						{
 							id: "2",
@@ -137,6 +145,7 @@ describe("ScriptsLibraryItems", () => {
 							wordCount: 1,
 							invalidLineCount: 0,
 							createdAt: new Date(),
+							lastAccessedAt: null,
 						},
 					]}
 					sortAscending={false}
@@ -148,6 +157,9 @@ describe("ScriptsLibraryItems", () => {
 					onDeleteScript={vi.fn()}
 					selectedIds={[]}
 					onToggleSelection={vi.fn()}
+					hasMoreScripts={false}
+					isLoadingMore={false}
+					onLoadMore={vi.fn()}
 				/>,
 			),
 		);

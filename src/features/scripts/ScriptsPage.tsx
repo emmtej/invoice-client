@@ -24,8 +24,10 @@ export default function ScriptsPage() {
 		breadcrumb,
 		folderChildItemCounts,
 		isLoading,
+		hasMoreScripts,
 		init,
 		fetchFolderData,
+		loadMoreScripts,
 		duplicateItems,
 	} = useScriptsDataStore(
 		useShallow((s) => ({
@@ -34,8 +36,10 @@ export default function ScriptsPage() {
 			breadcrumb: s.breadcrumb,
 			folderChildItemCounts: s.folderChildItemCounts,
 			isLoading: s.isLoading,
+			hasMoreScripts: s.hasMoreScripts,
 			init: s.init,
 			fetchFolderData: s.fetchFolderData,
+			loadMoreScripts: s.loadMoreScripts,
 			duplicateItems: s.duplicateItems,
 		})),
 	);
@@ -64,6 +68,8 @@ export default function ScriptsPage() {
 
 	const { isUploading, uploadErrors, handleFileChange, resetUpload } =
 		useScriptsUpload();
+
+	const [isLoadingMore, setIsLoadingMore] = useState(false);
 
 	const allCurrentIds = useMemo(
 		() => [...folders.map((f) => f.id), ...scripts.map((s) => s.id)],
@@ -99,6 +105,15 @@ export default function ScriptsPage() {
 		await fetchFolderData(folderId);
 	};
 
+	const handleLoadMore = async () => {
+		setIsLoadingMore(true);
+		try {
+			await loadMoreScripts(currentFolderId);
+		} finally {
+			setIsLoadingMore(false);
+		}
+	};
+
 	const isRoot = currentFolderId === null;
 	const isEmpty = folders.length === 0 && scripts.length === 0;
 	const currentFolderName =
@@ -108,14 +123,12 @@ export default function ScriptsPage() {
 		<Flex direction="column" h="100%" rowGap="md">
 			<ScriptsHeader uploadErrors={uploadErrors} onResetUpload={resetUpload} />
 
-			{/* Folder breadcrumb navigation */}
 			{breadcrumb.length > 0 && (
 				<Box px="md">
 					<BreadcrumbNav breadcrumb={breadcrumb} onNavigate={handleNavigate} />
 				</Box>
 			)}
 
-			{/* Content area */}
 			{isLoading ? (
 				<Center flex={1}>
 					<Loader color="wave" size="sm" />
@@ -147,6 +160,9 @@ export default function ScriptsPage() {
 							onToggleSelection={(id, isMulti, isRange) =>
 								toggleSelection(id, isMulti, isRange, allCurrentIds)
 							}
+							hasMoreScripts={hasMoreScripts}
+							isLoadingMore={isLoadingMore}
+							onLoadMore={handleLoadMore}
 						/>
 						<Group justify="center" gap="sm" wrap="wrap" pt="lg">
 							<DocxUploadButton

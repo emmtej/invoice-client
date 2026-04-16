@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const folderQueriesMocks = vi.hoisted(() => ({
 	initSchema: vi.fn().mockResolvedValue(undefined),
 	getFoldersAtLevel: vi.fn(),
+	getRecentFolders: vi.fn(),
 	getFolderBreadcrumb: vi.fn(),
 	createFolder: vi.fn().mockResolvedValue(undefined),
 	deleteFolder: vi.fn().mockResolvedValue(undefined),
@@ -14,6 +15,9 @@ const folderQueriesMocks = vi.hoisted(() => ({
 
 const scriptsQueriesMocks = vi.hoisted(() => ({
 	getScriptsInFolder: vi.fn(),
+	getScriptsInFolderPaginated: vi.fn(),
+	countScriptsInFolder: vi.fn(),
+	touchScript: vi.fn().mockResolvedValue(undefined),
 	getScriptById: vi.fn(),
 	deleteScript: vi.fn().mockResolvedValue(undefined),
 }));
@@ -73,19 +77,25 @@ describe("Scripts Library Stores", () => {
 
 		folderQueriesMocks.initSchema.mockResolvedValue(undefined);
 		folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([]);
+		folderQueriesMocks.getRecentFolders.mockResolvedValue([]);
 		folderQueriesMocks.getFolderBreadcrumb.mockResolvedValue([]);
 		folderQueriesMocks.createFolder.mockResolvedValue(rootFolder);
 		folderQueriesMocks.deleteFolder.mockResolvedValue(undefined);
 		folderQueriesMocks.getChildItemCountsForFolders.mockResolvedValue({});
 		scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([]);
+		scriptsQueriesMocks.getScriptsInFolderPaginated.mockResolvedValue([]);
+		scriptsQueriesMocks.countScriptsInFolder.mockResolvedValue(0);
 		scriptsQueriesMocks.getScriptById.mockResolvedValue(null);
 		scriptsQueriesMocks.deleteScript.mockResolvedValue(undefined);
 	});
 
 	describe("useScriptsDataStore", () => {
 		it("init loads schema and root folders and scripts", async () => {
-			folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([rootFolder]);
-			scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([scriptSummary]);
+			folderQueriesMocks.getRecentFolders.mockResolvedValue([rootFolder]);
+			scriptsQueriesMocks.getScriptsInFolderPaginated.mockResolvedValue([
+				scriptSummary,
+			]);
+			scriptsQueriesMocks.countScriptsInFolder.mockResolvedValue(1);
 			folderQueriesMocks.getChildItemCountsForFolders.mockResolvedValue({
 				"f-root": 2,
 			});
@@ -93,8 +103,13 @@ describe("Scripts Library Stores", () => {
 			await useScriptsDataStore.getState().init();
 
 			expect(folderQueriesMocks.initSchema).toHaveBeenCalled();
-			expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalledWith(null);
-			expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith(null);
+			expect(folderQueriesMocks.getRecentFolders).toHaveBeenCalledWith(null, 1);
+			expect(
+				scriptsQueriesMocks.getScriptsInFolderPaginated,
+			).toHaveBeenCalledWith(null, 5, 0);
+			expect(scriptsQueriesMocks.countScriptsInFolder).toHaveBeenCalledWith(
+				null,
+			);
 			expect(
 				folderQueriesMocks.getChildItemCountsForFolders,
 			).toHaveBeenCalledWith(["f-root"]);
@@ -114,10 +129,11 @@ describe("Scripts Library Stores", () => {
 				createdAt: new Date("2025-01-03"),
 			};
 			const inFolderScript = { ...scriptSummary, id: "s2", folderId: "f-root" };
-			folderQueriesMocks.getFoldersAtLevel.mockResolvedValue([childFolder]);
-			scriptsQueriesMocks.getScriptsInFolder.mockResolvedValue([
+			folderQueriesMocks.getRecentFolders.mockResolvedValue([childFolder]);
+			scriptsQueriesMocks.getScriptsInFolderPaginated.mockResolvedValue([
 				inFolderScript,
 			]);
+			scriptsQueriesMocks.countScriptsInFolder.mockResolvedValue(1);
 			folderQueriesMocks.getFolderBreadcrumb.mockResolvedValue([
 				{ id: "f-root", name: "Rootish" },
 			]);
@@ -126,10 +142,14 @@ describe("Scripts Library Stores", () => {
 				.getState()
 				.fetchFolderData("f-root");
 
-			expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalledWith(
+			expect(folderQueriesMocks.getRecentFolders).toHaveBeenCalledWith(
 				"f-root",
+				1,
 			);
-			expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalledWith(
+			expect(
+				scriptsQueriesMocks.getScriptsInFolderPaginated,
+			).toHaveBeenCalledWith("f-root", 5, 0);
+			expect(scriptsQueriesMocks.countScriptsInFolder).toHaveBeenCalledWith(
 				"f-root",
 			);
 			expect(folderQueriesMocks.getFolderBreadcrumb).toHaveBeenCalledWith(
@@ -151,7 +171,9 @@ describe("Scripts Library Stores", () => {
 				null,
 			);
 			expect(folderQueriesMocks.getFoldersAtLevel).toHaveBeenCalled();
-			expect(scriptsQueriesMocks.getScriptsInFolder).toHaveBeenCalled();
+			expect(
+				scriptsQueriesMocks.getScriptsInFolderPaginated,
+			).toHaveBeenCalled();
 		});
 
 		it("deleteFolder and deleteScript call queries", async () => {
