@@ -1,4 +1,4 @@
-import { asc, count, eq, inArray, isNull, sql } from "drizzle-orm";
+import { asc, count, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { getDrizzleDb, initDb } from "./pgliteClient";
 import { folders, scripts } from "./schema";
 import type { Folder } from "./types";
@@ -33,6 +33,10 @@ export async function initSchema(): Promise<void> {
 	`);
 
 	await db.exec(`
+		ALTER TABLE scripts ADD COLUMN IF NOT EXISTS last_accessed_at TIMESTAMP;
+	`);
+
+	await db.exec(`
 		CREATE TABLE IF NOT EXISTS script_drafts (
 			id TEXT PRIMARY KEY,
 			name TEXT NOT NULL,
@@ -49,6 +53,15 @@ export async function initSchema(): Promise<void> {
 
 	await db.exec(`
 		CREATE INDEX IF NOT EXISTS idx_script_drafts_expires_at ON script_drafts (expires_at);
+	`);
+
+	await db.exec(`
+		CREATE INDEX IF NOT EXISTS idx_scripts_recency
+			ON scripts (last_accessed_at DESC NULLS LAST, created_at DESC);
+	`);
+
+	await db.exec(`
+		CREATE INDEX IF NOT EXISTS idx_folders_created_at ON folders (created_at DESC);
 	`);
 
 	await db.exec(`
@@ -78,6 +91,24 @@ export async function getFoldersAtLevel(
 		.from(folders)
 		.where(parentId ? eq(folders.parentId, parentId) : isNull(folders.parentId))
 		.orderBy(asc(folders.name));
+
+	return result.map((row) => ({
+		...row,
+		parentId: row.parentId ?? null,
+	}));
+}
+
+export async function getRecentFolders(
+	parentId: string | null,
+	limit: number,
+): Promise<Folder[]> {
+	const db = await getDrizzleDb();
+	const result = await db
+		.select()
+		.from(folders)
+		.where(parentId ? eq(folders.parentId, parentId) : isNull(folders.parentId))
+		.orderBy(desc(folders.createdAt))
+		.limit(limit);
 
 	return result.map((row) => ({
 		...row,
@@ -175,9 +206,6 @@ export async function getScriptCountInFolder(
 	return result?.value ?? 0;
 }
 
-/**
- * For each folder id, total direct children: subfolders plus scripts (not recursive).
- */
 export async function getChildItemCountsForFolders(
 	folderIds: string[],
 ): Promise<Record<string, number>> {
@@ -191,7 +219,7 @@ export async function getChildItemCountsForFolders(
 	const folderCounts = await db
 		.select({ parentId: folders.parentId, value: count() })
 		.from(folders)
-		.where(inArray(folders.parentId, folderIds)) // Cast to any because parentId is nullable
+		.where(inArray(folders.parentId, folderIds))
 		.groupBy(folders.parentId);
 
 	for (const row of folderCounts) {
@@ -225,6 +253,7 @@ export async function moveFolders(
 export const folderQueries = {
 	initSchema,
 	getFoldersAtLevel,
+	getRecentFolders,
 	getAllFolders,
 	createFolder,
 	deleteFolder,

@@ -1,11 +1,26 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { ScriptOverview } from "@/types/Script";
 
 // Mock document for pgliteStore since we removed jsdom environment
-globalThis.document = {
+const mockDocument = {
 	implementation: {
-		createHTMLDocument: () => ({}) as any,
+		createHTMLDocument: () => ({}),
 	},
-} as any;
+};
+
+Object.defineProperty(globalThis, "document", {
+	value: mockDocument as unknown as Document,
+	writable: true,
+});
+
+const createOverview = (wordCount = 0): ScriptOverview => ({
+	validLines: [],
+	invalidLines: [],
+	actionLines: [],
+	scenes: [],
+	wordCount,
+	totalLines: 0,
+});
 
 const { testDb, db } = await vi.hoisted(async () => {
 	const { PGlite } = await import("@electric-sql/pglite");
@@ -45,7 +60,8 @@ describe("pgliteStore drafts", () => {
 				group_name TEXT,
 				label TEXT,
 				folder_id TEXT,
-				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+				last_accessed_at TIMESTAMP
 			);
 		`);
 		await testDb.exec(`
@@ -58,6 +74,7 @@ describe("pgliteStore drafts", () => {
 				group_name TEXT,
 				label TEXT,
 				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+				last_accessed_at TIMESTAMP,
 				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 				expires_at TIMESTAMP NOT NULL
 			);
@@ -99,20 +116,20 @@ describe("pgliteStore drafts", () => {
 			id: "a",
 			name: "Draft A",
 			html: "<p>Hello</p>",
-			overview: { wordCount: 1 },
+			overview: createOverview(1),
 			lines: [],
 			expiresAt: new Date(Date.now() + 1000000),
-		};
+		} satisfies typeof scriptDrafts.$inferInsert;
 		const scriptB = {
 			id: "b",
 			name: "Draft B",
 			html: "<p>World</p>",
-			overview: { wordCount: 1 },
+			overview: createOverview(1),
 			lines: [],
 			expiresAt: new Date(Date.now() + 1000000),
-		};
+		} satisfies typeof scriptDrafts.$inferInsert;
 
-		await db.insert(scriptDrafts).values([scriptA, scriptB] as any[]);
+		await db.insert(scriptDrafts).values([scriptA, scriptB]);
 
 		await pgliteStore.promoteDraftsToScripts(["a", "b"], "folder-1");
 

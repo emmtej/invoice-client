@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { ScriptOverview } from "@/types/Script";
 import {
 	createFolder,
 	deleteFolder,
@@ -7,9 +8,19 @@ import {
 	getChildItemCountsForFolders,
 	getFolderBreadcrumb,
 	getFoldersAtLevel,
+	getRecentFolders,
 	getScriptCountInFolder,
 } from "./folderQueries";
 import { folders, scripts } from "./schema";
+
+const emptyOverview: ScriptOverview = {
+	validLines: [],
+	invalidLines: [],
+	actionLines: [],
+	scenes: [],
+	wordCount: 0,
+	totalLines: 0,
+};
 
 // Mock pgliteClient to return our test database
 const { testDb, db } = await vi.hoisted(async () => {
@@ -51,7 +62,8 @@ describe("folderQueries", () => {
 				group_name TEXT,
 				label TEXT,
 				folder_id TEXT REFERENCES folders(id) ON DELETE CASCADE,
-				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+				last_accessed_at TIMESTAMP
 			);
 		`);
 	});
@@ -163,13 +175,12 @@ describe("folderQueries", () => {
 	describe("getScriptCountInFolder", () => {
 		it("counts scripts in a specific folder", async () => {
 			await db.insert(folders).values({ id: "f1", name: "Folder" });
-			// @ts-ignore: mock insert
 			await db.insert(scripts).values([
 				{
 					id: "s1",
 					name: "S1",
 					html: "",
-					overview: {},
+					overview: emptyOverview,
 					lines: [],
 					folderId: "f1",
 				},
@@ -177,7 +188,7 @@ describe("folderQueries", () => {
 					id: "s2",
 					name: "S2",
 					html: "",
-					overview: {},
+					overview: emptyOverview,
 					lines: [],
 					folderId: "f1",
 				},
@@ -185,7 +196,7 @@ describe("folderQueries", () => {
 					id: "s3",
 					name: "S3",
 					html: "",
-					overview: {},
+					overview: emptyOverview,
 					lines: [],
 					folderId: null,
 				},
@@ -203,13 +214,12 @@ describe("folderQueries", () => {
 				{ id: "f2", name: "F2" },
 				{ id: "f1s1", name: "Sub1", parentId: "f1" },
 			]);
-			// @ts-ignore: mock insert
 			await db.insert(scripts).values([
 				{
 					id: "s1",
 					name: "S1",
 					html: "",
-					overview: {},
+					overview: emptyOverview,
 					lines: [],
 					folderId: "f1",
 				},
@@ -217,7 +227,7 @@ describe("folderQueries", () => {
 					id: "s2",
 					name: "S2",
 					html: "",
-					overview: {},
+					overview: emptyOverview,
 					lines: [],
 					folderId: "f1",
 				},
@@ -225,17 +235,81 @@ describe("folderQueries", () => {
 					id: "s3",
 					name: "S3",
 					html: "",
-					overview: {},
+					overview: emptyOverview,
 					lines: [],
 					folderId: "f2",
 				},
-			] as any[]);
+			]);
 
 			const counts = await getChildItemCountsForFolders(["f1", "f2"]);
 
 			// f1: 1 subfolder + 2 scripts = 3
 			// f2: 0 subfolders + 1 script = 1
 			expect(counts).toEqual({ f1: 3, f2: 1 });
+		});
+	});
+
+	describe("getRecentFolders", () => {
+		it("returns folders ordered by createdAt desc", async () => {
+			await db.insert(folders).values([
+				{
+					id: "f1",
+					name: "Old",
+					parentId: null,
+					createdAt: new Date("2025-01-01T00:00:00.000Z"),
+				},
+				{
+					id: "f2",
+					name: "New",
+					parentId: null,
+					createdAt: new Date("2025-06-01T00:00:00.000Z"),
+				},
+			]);
+
+			const result = await getRecentFolders(null, 10);
+
+			expect(result.map((f) => f.id)).toEqual(["f2", "f1"]);
+		});
+
+		it("respects the limit", async () => {
+			await db.insert(folders).values([
+				{
+					id: "f1",
+					name: "A",
+					parentId: null,
+					createdAt: new Date("2025-01-01T00:00:00.000Z"),
+				},
+				{
+					id: "f2",
+					name: "B",
+					parentId: null,
+					createdAt: new Date("2025-02-01T00:00:00.000Z"),
+				},
+				{
+					id: "f3",
+					name: "C",
+					parentId: null,
+					createdAt: new Date("2025-03-01T00:00:00.000Z"),
+				},
+			]);
+
+			const result = await getRecentFolders(null, 1);
+
+			expect(result).toHaveLength(1);
+			expect(result[0].id).toBe("f3");
+		});
+
+		it("filters by parentId", async () => {
+			await db.insert(folders).values([
+				{ id: "root", name: "Root", parentId: null },
+				{ id: "child", name: "Child", parentId: "root" },
+			]);
+
+			const rootResult = await getRecentFolders(null, 10);
+			const childResult = await getRecentFolders("root", 10);
+
+			expect(rootResult.map((f) => f.id)).toEqual(["root"]);
+			expect(childResult.map((f) => f.id)).toEqual(["child"]);
 		});
 	});
 });

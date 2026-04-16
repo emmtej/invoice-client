@@ -19,6 +19,7 @@ export interface ScriptSummary {
 	wordCount: number;
 	invalidLineCount: number;
 	createdAt: Date;
+	lastAccessedAt: Date | null;
 }
 
 export interface ScriptSummaryRow {
