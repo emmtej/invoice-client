@@ -2,6 +2,7 @@
  * @vitest-environment jsdom
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { Script } from "@/types/Script";
 
 // Mock PGLite and pgliteStore
 vi.mock("./pgliteStore", () => ({
@@ -30,17 +31,24 @@ describe("scriptEditorStore", () => {
 	});
 
 	it("should initialize the store from draft storage", async () => {
-		const mockScripts = [
+		const mockScripts: Script[] = [
 			{
 				id: "1",
 				name: "Stored Script",
 				html: "<p>00:01 Speaker: Hello</p>",
 				lines: [],
-				overview: { wordCount: 0 },
+				overview: {
+					validLines: [],
+					invalidLines: [],
+					actionLines: [],
+					scenes: [],
+					wordCount: 0,
+					totalLines: 0,
+				},
 				source: document.implementation.createHTMLDocument(),
 			},
 		];
-		(pgliteStore.getAllDraftScripts as any).mockResolvedValue(mockScripts);
+		vi.mocked(pgliteStore.getAllDraftScripts).mockResolvedValue(mockScripts);
 
 		await useScriptStore.getState().init();
 
