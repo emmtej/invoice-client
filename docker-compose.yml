@@ -1,0 +1,18 @@
+services:
+  invoice-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - CLIENT_PORT=3000
+    container_name: invoice-client
+    restart: unless-stopped
+    ports:
+      # Map host port 8080 (change this if OMV port 8080 is taken) to container port 80
+      - "8080:80"
+    networks:
+      - invoice-network
+
+networks:
+  invoice-network:
+    driver: bridge
