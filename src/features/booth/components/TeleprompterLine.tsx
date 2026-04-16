@@ -6,7 +6,7 @@ import {
 	Text,
 	TextInput,
 } from "@mantine/core";
-import { Maximize2, Pencil, X } from "lucide-react";
+import { Pencil, X } from "lucide-react";
 import { useRef, useState } from "react";
 import type { ParsedLine } from "@/types/Script";
 
@@ -19,7 +19,6 @@ interface TeleprompterLineProps {
 	isSessionRunning: boolean;
 	onComplete: (lineIndex: number) => void;
 	onEdit: (lineIndex: number, content: string) => Promise<void>;
-	onExpandEdit: (lineIndex: number) => void;
 }
 
 export function TeleprompterLine({
@@ -31,7 +30,6 @@ export function TeleprompterLine({
 	isSessionRunning,
 	onComplete,
 	onEdit,
-	onExpandEdit,
 }: TeleprompterLineProps) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValue, setEditValue] = useState("");
@@ -143,15 +141,6 @@ export function TeleprompterLine({
 						aria-label="Edit line"
 					>
 						<Pencil size={14} />
-					</ActionIcon>
-					<ActionIcon
-						size="sm"
-						variant="subtle"
-						color="gray"
-						onClick={() => onExpandEdit(lineIndex)}
-						aria-label="Expand editor"
-					>
-						<Maximize2 size={14} />
 					</ActionIcon>
 				</Group>
 			)}

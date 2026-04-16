@@ -2,6 +2,7 @@ import {
 	ActionIcon,
 	Badge,
 	Button,
+	Checkbox,
 	Divider,
 	Group,
 	Stack,
@@ -58,17 +59,29 @@ export function SessionTimer() {
 	};
 
 	const handleResetClick = () => {
+		let shouldResetTimer = true;
+
 		modals.openConfirmModal({
-			title: "Reset Session?",
+			title: "Reset Take?",
 			children: (
-				<Text size="sm">
-					This will clear all progress and restart the timer for this script.
-					This take will be marked as abandoned in your history.
-				</Text>
+				<Stack gap="md">
+					<Text size="sm">
+						This will clear all line progress for this script and start a new
+						take. This current take will be marked as abandoned.
+					</Text>
+					<Checkbox
+						label="Also reset the session timer to zero"
+						defaultChecked={shouldResetTimer}
+						onChange={(event) => {
+							shouldResetTimer = event.currentTarget.checked;
+						}}
+						color="wave"
+					/>
+				</Stack>
 			),
-			labels: { confirm: "Reset", cancel: "Cancel" },
+			labels: { confirm: "Reset Take", cancel: "Cancel" },
 			confirmProps: { color: "studio" },
-			onConfirm: restartSession,
+			onConfirm: () => restartSession(shouldResetTimer),
 		});
 	};
 

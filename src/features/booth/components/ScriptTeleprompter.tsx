@@ -4,11 +4,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useBoothStore } from "../store/useBoothStore";
 import { TeleprompterLine } from "./TeleprompterLine";
 
-interface ScriptTeleprompterProps {
-	onExpandEdit: (lineIndex: number) => void;
-}
-
-export function ScriptTeleprompter({ onExpandEdit }: ScriptTeleprompterProps) {
+export function ScriptTeleprompter() {
 	const {
 		script,
 		status,
@@ -69,7 +65,6 @@ export function ScriptTeleprompter({ onExpandEdit }: ScriptTeleprompterProps) {
 									isSessionRunning={isSessionRunning}
 									onComplete={completeLine}
 									onEdit={editLine}
-									onExpandEdit={onExpandEdit}
 								/>
 							</div>
 						);

@@ -1,6 +1,7 @@
 import {
 	Badge,
 	Box,
+	Button,
 	Center,
 	Group,
 	Loader,
@@ -19,14 +20,26 @@ import { scriptsQueries } from "@/features/scripts/store/scriptsQueries";
 import type { ScriptSummary } from "@/features/storage/types";
 import type { Script } from "@/types/Script";
 
+const INITIAL_LIMIT = 5;
+const LOAD_MORE_BATCH = 10;
+
 interface ScriptSelectorProps {
 	onSelect: (script: Script) => void;
+	onLoadingChange?: (loading: boolean) => void;
+	hideLoader?: boolean;
 }
 
-export function ScriptSelector({ onSelect }: ScriptSelectorProps) {
+export function ScriptSelector({
+	onSelect,
+	onLoadingChange,
+	hideLoader,
+}: ScriptSelectorProps) {
 	const [scripts, setScripts] = useState<ScriptSummary[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [loadingScriptId, setLoadingScriptId] = useState<string | null>(null);
+	const [offset, setOffset] = useState(INITIAL_LIMIT);
+	const [hasMore, setHasMore] = useState(false);
+	const [isLoadingMore, setIsLoadingMore] = useState(false);
 
 	const {
 		docFiles,
@@ -37,10 +50,18 @@ export function ScriptSelector({ onSelect }: ScriptSelectorProps) {
 	} = useFileUpload();
 
 	useEffect(() => {
+		onLoadingChange?.(isLoading);
+	}, [isLoading, onLoadingChange]);
+
+	useEffect(() => {
 		(async () => {
 			try {
-				const all = await scriptsQueries.getAllScripts();
-				setScripts(all);
+				const [initial, total] = await Promise.all([
+					scriptsQueries.getRecentScripts(INITIAL_LIMIT, 0),
+					scriptsQueries.countAllScripts(),
+				]);
+				setScripts(initial);
+				setHasMore(total > INITIAL_LIMIT);
 			} finally {
 				setIsLoading(false);
 			}
@@ -52,16 +73,16 @@ export function ScriptSelector({ onSelect }: ScriptSelectorProps) {
 			if (docFiles.length === 0) return;
 			const processed = processDocuments(docFiles);
 			if (processed.length > 0) {
-				// Save all processed scripts to the database
 				for (const script of processed) {
 					await scriptsQueries.saveScript(script);
 				}
-
-				// Refresh the list of scripts
-				const all = await scriptsQueries.getAllScripts();
-				setScripts(all);
-
-				// If only one was uploaded, select it automatically
+				const [refreshed, total] = await Promise.all([
+					scriptsQueries.getRecentScripts(INITIAL_LIMIT, 0),
+					scriptsQueries.countAllScripts(),
+				]);
+				setScripts(refreshed);
+				setOffset(INITIAL_LIMIT);
+				setHasMore(total > INITIAL_LIMIT);
 				if (processed.length === 1) {
 					onSelect(processed[0]);
 				}
@@ -74,18 +95,42 @@ export function ScriptSelector({ onSelect }: ScriptSelectorProps) {
 		setLoadingScriptId(id);
 		try {
 			const script = await scriptsQueries.getScriptById(id);
-			if (script) onSelect(script);
+			if (script) {
+				onSelect(script);
+				scriptsQueries.touchScript(id); // fire-and-forget
+			}
 		} finally {
 			setLoadingScriptId(null);
 		}
 	};
 
-	if (isLoading) {
+	const handleLoadMore = async () => {
+		setIsLoadingMore(true);
+		try {
+			const more = await scriptsQueries.getRecentScripts(
+				LOAD_MORE_BATCH,
+				offset,
+			);
+			const newOffset = offset + more.length;
+			const total = await scriptsQueries.countAllScripts();
+			setScripts((prev) => [...prev, ...more]);
+			setOffset(newOffset);
+			setHasMore(newOffset < total);
+		} finally {
+			setIsLoadingMore(false);
+		}
+	};
+
+	if (isLoading && !hideLoader) {
 		return (
 			<Center py="xl">
 				<Loader color="wave" size="sm" />
 			</Center>
 		);
+	}
+
+	if (isLoading) {
+		return null;
 	}
 
 	return (
@@ -123,44 +168,66 @@ export function ScriptSelector({ onSelect }: ScriptSelectorProps) {
 					description="Upload a DOCX file to get started, or add scripts via the Scripts page."
 				/>
 			) : (
-				<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
-					{scripts.map((s) => (
-						<UnstyledButton
-							key={s.id}
-							onClick={() => handleScriptClick(s.id)}
-							disabled={loadingScriptId !== null}
-						>
-							<SurfaceCard
-								style={{
-									cursor: "pointer",
-									transition:
-										"transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease",
-									border:
-										loadingScriptId === s.id
-											? "1.5px solid var(--mantine-color-wave-4)"
-											: "1px solid #F3F4F6",
-								}}
+				<Stack gap="md">
+					<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+						{scripts.map((s) => (
+							<UnstyledButton
+								key={s.id}
+								onClick={() => handleScriptClick(s.id)}
+								disabled={loadingScriptId !== null}
+								className="group"
 							>
-								<Stack gap="xs">
-									<Group gap="xs" wrap="nowrap">
-										<FileText size={16} style={{ flexShrink: 0 }} />
-										<Text fw={600} size="sm" truncate="end" c="gray.8">
-											{s.name}
-										</Text>
-									</Group>
-									<Group gap="xs">
-										<Badge size="sm" variant="light" color="wave">
-											{s.wordCount.toLocaleString()} words
-										</Badge>
-										{loadingScriptId === s.id && (
-											<Loader size={14} color="wave" />
-										)}
-									</Group>
-								</Stack>
-							</SurfaceCard>
-						</UnstyledButton>
-					))}
-				</SimpleGrid>
+								<SurfaceCard
+									style={{
+										cursor: "pointer",
+										transition:
+											"all 200ms ease",
+										border:
+											loadingScriptId === s.id
+												? "2px solid var(--mantine-color-wave-4)"
+												: "1px solid var(--mantine-color-gray-2)",
+									}}
+									className="group-hover:border-[var(--mantine-color-wave-3)] group-hover:shadow-md group-active:scale-[0.98]"
+								>
+									<Stack gap="xs">
+										<Group gap="xs" wrap="nowrap">
+											<FileText 
+												size={18} 
+												style={{ flexShrink: 0 }} 
+												color="var(--mantine-color-gray-5)"
+												className="group-hover:text-[var(--mantine-color-wave-5)]"
+											/>
+											<Text fw={600} size="sm" truncate="end" c="gray.8">
+												{s.name}
+											</Text>
+										</Group>
+										<Group justify="space-between" align="center">
+											<Badge size="sm" variant="light" color="wave">
+												{s.wordCount.toLocaleString()} words
+											</Badge>
+											{loadingScriptId === s.id && (
+												<Loader size={14} color="wave" />
+											)}
+										</Group>
+									</Stack>
+								</SurfaceCard>
+							</UnstyledButton>
+						))}
+					</SimpleGrid>
+
+					{hasMore && (
+						<Center pt="md">
+							<Button
+								variant="light"
+								color="wave"
+								onClick={handleLoadMore}
+								loading={isLoadingMore}
+							>
+								Load more scripts
+							</Button>
+						</Center>
+					)}
+				</Stack>
 			)}
 		</Stack>
 	);

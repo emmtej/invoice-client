@@ -21,6 +21,7 @@ export function useTimer() {
 
 	useEffect(() => {
 		if (status === "running") {
+			accumulatedRef.current = elapsedMs;
 			lastTickRef.current = Date.now();
 			intervalRef.current = setInterval(() => {
 				const now = Date.now();

@@ -5,8 +5,8 @@ import {
 	Group,
 	Loader,
 	Stack,
-	Table,
 	Text,
+	UnstyledButton,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { Clock, Trash2 } from "lucide-react";
@@ -20,6 +20,7 @@ interface SessionHistoryProps {
 	isLoading: boolean;
 	onDelete: (id: string) => void;
 	onSelect: (session: BoothSession) => void;
+	hideLoader?: boolean;
 }
 
 function statusColor(status: BoothSession["status"]) {
@@ -38,7 +39,6 @@ function formatDate(iso: string): string {
 	return d.toLocaleDateString(undefined, {
 		month: "short",
 		day: "numeric",
-		year: "numeric",
 		hour: "numeric",
 		minute: "2-digit",
 	});
@@ -49,6 +49,7 @@ export function SessionHistory({
 	isLoading,
 	onDelete,
 	onSelect,
+	hideLoader,
 }: SessionHistoryProps) {
 	const handleDelete = (id: string) => {
 		modals.openConfirmModal({
@@ -65,12 +66,16 @@ export function SessionHistory({
 		});
 	};
 
-	if (isLoading) {
+	if (isLoading && !hideLoader) {
 		return (
 			<Center py="xl">
 				<Loader color="wave" size="sm" />
 			</Center>
 		);
+	}
+
+	if (isLoading) {
+		return null;
 	}
 
 	if (sessions.length === 0) {
@@ -84,86 +89,78 @@ export function SessionHistory({
 	}
 
 	return (
-		<Stack gap="md">
-			<Text fw={700} size="lg" c="gray.8">
-				Session History
-			</Text>
-			<SurfaceCard p="0">
-				<Table highlightOnHover>
-					<Table.Thead>
-						<Table.Tr>
-							<Table.Th>Script</Table.Th>
-							<Table.Th>Date</Table.Th>
-							<Table.Th>Duration</Table.Th>
-							<Table.Th>Lines</Table.Th>
-							<Table.Th>Status</Table.Th>
-							<Table.Th w={40} />
-						</Table.Tr>
-					</Table.Thead>
-					<Table.Tbody>
-						{sessions.map((s) => (
-							<Table.Tr
-								key={s.id}
+		<Stack gap="xs">
+			{sessions.map((s) => (
+				<SurfaceCard
+					key={s.id}
+					p="sm"
+					style={{
+						border:
+							s.status === "in_progress"
+								? "1px solid var(--mantine-color-wave-2)"
+								: undefined,
+						backgroundColor:
+							s.status === "in_progress"
+								? "var(--mantine-color-wave-0)"
+								: undefined,
+					}}
+				>
+					<Stack gap={4}>
+						<Group justify="space-between" wrap="nowrap" align="flex-start">
+							<UnstyledButton
 								onClick={() => {
 									if (s.status === "in_progress") {
 										onSelect(s);
 									}
 								}}
 								style={{
+									flex: 1,
 									cursor: s.status === "in_progress" ? "pointer" : "default",
 								}}
-								bg={s.status === "in_progress" ? "wave.0" : undefined}
 							>
-								<Table.Td>
-									<Text size="sm" fw={500} truncate="end" maw={200}>
-										{s.scriptName}
-									</Text>
-								</Table.Td>
-								<Table.Td>
-									<Text size="sm" c="gray.6">
-										{formatDate(s.startedAt)}
-									</Text>
-								</Table.Td>
-								<Table.Td>
-									<Text size="sm" ff="monospace">
-										{formatTime(s.elapsedMs)}
-									</Text>
-								</Table.Td>
-								<Table.Td>
-									<Text size="sm" c="gray.6">
-										{s.completedLines} / {s.totalLines}
-									</Text>
-								</Table.Td>
-								<Table.Td>
-									<Badge
-										size="sm"
-										variant="light"
-										color={statusColor(s.status)}
-									>
-										{s.status === "in_progress" ? "in progress" : s.status}
-									</Badge>
-								</Table.Td>
-								<Table.Td>
-									<Group gap={4}>
-										<ActionIcon
-											size="sm"
-											variant="subtle"
-											color="red"
-											onClick={(event) => {
-												event.stopPropagation();
-												handleDelete(s.id);
-											}}
-											aria-label="Delete session"
-										>
-											<Trash2 size={14} />
-										</ActionIcon>
-									</Group>
-								</Table.Td>
-							</Table.Tr>
-						))}
-					</Table.Tbody>
-				</Table>
-			</SurfaceCard>
+								<Text size="sm" fw={600} truncate="end" c="gray.8">
+									{s.scriptName}
+								</Text>
+							</UnstyledButton>
+							<ActionIcon
+								size="sm"
+								variant="subtle"
+								color="red"
+								onClick={() => handleDelete(s.id)}
+								aria-label="Delete session"
+							>
+								<Trash2 size={14} />
+							</ActionIcon>
+						</Group>
+
+						<Text size="xs" c="gray.5">
+							{formatDate(s.startedAt)}
+						</Text>
+
+						<Group justify="space-between" mt={4}>
+							<Group gap={8}>
+								<Text size="xs" ff="monospace" fw={500}>
+									{formatTime(s.elapsedMs)}
+								</Text>
+								<Text size="xs" c="gray.5">
+									•
+								</Text>
+								<Text size="xs" c="gray.6">
+									{s.completedLines}/{s.totalLines} lines
+								</Text>
+							</Group>
+							<Badge
+								size="xs"
+								variant="light"
+								color={statusColor(s.status)}
+								tt="lowercase"
+							>
+								{s.status === "in_progress" ? "in progress" : s.status}
+							</Badge>
+						</Group>
+					</Stack>
+				</SurfaceCard>
+			))}
 		</Stack>
 	);
 }

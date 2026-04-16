@@ -41,7 +41,7 @@ interface BoothActions {
 	completeLine: (lineIndex: number) => Promise<void>;
 	editLine: (lineIndex: number, content: string) => Promise<void>;
 	resetSession: () => void;
-	restartSession: () => Promise<void>;
+	restartSession: (resetTimer?: boolean) => Promise<void>;
 	setStatus: (status: BoothStatus) => void;
 	tick: (nowMs: number) => void;
 
@@ -169,16 +169,34 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 	},
 
 	stopSession: async () => {
-		const { sessionId, completedLineIndices, elapsedMs, lineTimings } = get();
-		if (!sessionId) return;
+		const { sessionId, completedLineIndices, elapsedMs, lineTimings, script } =
+			get();
+		if (!sessionId || !script) return;
 
-		await boothQueries.completeSession(sessionId, {
-			completedLines: completedLineIndices.length,
-			elapsedMs,
-			lineTimings,
-		});
+		const totalReadable = getReadableLineCount(script);
+		const allDone = completedLineIndices.length >= totalReadable;
 
-		set({ status: "completed" });
+		if (allDone) {
+			await boothQueries.completeSession(sessionId, {
+				completedLines: completedLineIndices.length,
+				elapsedMs,
+				lineTimings,
+			});
+			set({ status: "completed" });
+		} else {
+			// Just update the session with current progress but keep it in_progress
+			await boothQueries.updateSession(sessionId, {
+				completedLines: completedLineIndices.length,
+				elapsedMs,
+				lineTimings,
+			});
+			set({
+				status: "idle",
+				script: null,
+				sessionId: null,
+			});
+		}
+
 		await get().loadSessions();
 	},
 
@@ -279,8 +297,8 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 		});
 	},
 
-	restartSession: async () => {
-		const { script, sessionId } = get();
+	restartSession: async (resetTimer = true) => {
+		const { script, sessionId, elapsedMs } = get();
 		if (!script || !sessionId) return;
 
 		// Abandon current session in DB
@@ -302,7 +320,7 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 		set({
 			sessionId: newSessionId,
 			status: "running",
-			elapsedMs: 0,
+			elapsedMs: resetTimer ? 0 : elapsedMs,
 			lineStartMs: Date.now(),
 			lineTimings: [],
 			completedLineIndices: [],
