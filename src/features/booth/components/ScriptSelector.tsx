@@ -180,8 +180,7 @@ export function ScriptSelector({
 								<SurfaceCard
 									style={{
 										cursor: "pointer",
-										transition:
-											"all 200ms ease",
+										transition: "all 200ms ease",
 										border:
 											loadingScriptId === s.id
 												? "2px solid var(--mantine-color-wave-4)"
@@ -191,9 +190,9 @@ export function ScriptSelector({
 								>
 									<Stack gap="xs">
 										<Group gap="xs" wrap="nowrap">
-											<FileText 
-												size={18} 
-												style={{ flexShrink: 0 }} 
+											<FileText
+												size={18}
+												style={{ flexShrink: 0 }}
 												color="var(--mantine-color-gray-5)"
 												className="group-hover:text-[var(--mantine-color-wave-5)]"
 											/>

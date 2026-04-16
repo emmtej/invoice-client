@@ -215,13 +215,16 @@ export default function BoothPage() {
 													{ongoingSession.totalLines} lines
 												</Badge>
 												<Group gap="xs">
-													<Clock size={14} color="var(--mantine-color-gray-5)" />
+													<Clock
+														size={14}
+														color="var(--mantine-color-gray-5)"
+													/>
 													<Text size="sm" c="gray.6" ff="monospace">
 														{Math.floor(ongoingSession.elapsedMs / 1000 / 60)}m{" "}
-														{Math.floor(
-															(ongoingSession.elapsedMs / 1000) % 60,
-														).toString()
-															.padStart(2, "0")}s
+														{Math.floor((ongoingSession.elapsedMs / 1000) % 60)
+															.toString()
+															.padStart(2, "0")}
+														s
 													</Text>
 												</Group>
 											</Group>
@@ -246,7 +249,9 @@ export default function BoothPage() {
 						<Stack gap="md">
 							<Group justify="space-between" align="center">
 								<Text fw={700} size="sm" c="gray.6" tt="uppercase" lts={0.5}>
-									{status === "selecting" ? "Selected Script" : "Start New Session"}
+									{status === "selecting"
+										? "Selected Script"
+										: "Start New Session"}
 								</Text>
 								{status === "selecting" && (
 									<Button
@@ -269,7 +274,10 @@ export default function BoothPage() {
 							)}
 
 							{status === "selecting" && script && (
-								<SurfaceCard py={40} style={{ border: "1px dashed var(--mantine-color-gray-3)" }}>
+								<SurfaceCard
+									py={40}
+									style={{ border: "1px dashed var(--mantine-color-gray-3)" }}
+								>
 									<Stack align="center" gap="xl">
 										<Box ta="center">
 											<Text fw={800} size="24px" c="gray.8">

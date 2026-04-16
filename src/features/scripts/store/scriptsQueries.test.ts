@@ -262,12 +262,12 @@ describe("scriptsQueries", () => {
 
 			const [row] = await db.select().from(scripts).where(eq(scripts.id, "s1"));
 			expect(row.lastAccessedAt).not.toBeNull();
-			expect(row.lastAccessedAt!.getTime()).toBeGreaterThanOrEqual(
-				before.getTime(),
-			);
-			expect(row.lastAccessedAt!.getTime()).toBeLessThanOrEqual(
-				after.getTime(),
-			);
+			const touchedAt = row.lastAccessedAt;
+			if (!touchedAt) {
+				throw new Error("Expected lastAccessedAt to be set after touchScript");
+			}
+			expect(touchedAt.getTime()).toBeGreaterThanOrEqual(before.getTime());
+			expect(touchedAt.getTime()).toBeLessThanOrEqual(after.getTime());
 		});
 
 		it("is a no-op for a missing id", async () => {
