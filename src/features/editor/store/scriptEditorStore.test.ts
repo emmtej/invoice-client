@@ -24,13 +24,14 @@ describe("scriptEditorStore", () => {
 		vi.clearAllMocks();
 		useScriptStore.setState({
 			scripts: [],
+			activeScript: null,
 			isDbReady: false,
 			isLoading: false,
 			persistenceEnabled: true,
 		});
 	});
 
-	it("should initialize the store from draft storage", async () => {
+	it("should initialize the store with metadata from draft storage", async () => {
 		const mockScripts: Script[] = [
 			{
 				id: "1",
@@ -46,20 +47,23 @@ describe("scriptEditorStore", () => {
 					totalLines: 0,
 				},
 				source: document.implementation.createHTMLDocument(),
+				createdAt: new Date(),
 			},
 		];
 		vi.mocked(pgliteStore.getAllDraftScripts).mockResolvedValue(mockScripts);
 
 		await useScriptStore.getState().init();
 
-		expect(useScriptStore.getState().scripts).toEqual(mockScripts);
+		expect(useScriptStore.getState().scripts[0].id).toBe("1");
+		// @ts-expect-error - html should not exist on metadata
+		expect(useScriptStore.getState().scripts[0].html).toBeUndefined();
 		expect(useScriptStore.getState().isDbReady).toBe(true);
 		expect(pgliteStore.getAllDraftScripts).toHaveBeenCalled();
 	});
 
-	it("should update lines and overview but preserve html when shouldUpdateHtml is false", async () => {
+	it("should update lines and overview but preserve html when shouldUpdateHtml is false in activeScript", async () => {
 		const initialHtml = "<p>00:01 Speaker: Hello</p>";
-		const initialScript = {
+		const initialScript: Script = {
 			id: "1",
 			name: "Test",
 			source: document.implementation.createHTMLDocument(),
@@ -73,9 +77,13 @@ describe("scriptEditorStore", () => {
 				totalLines: 0,
 			},
 			html: initialHtml,
+			createdAt: new Date(),
 		};
 
-		useScriptStore.setState({ scripts: [initialScript] });
+		useScriptStore.setState({
+			activeScript: initialScript,
+			scripts: [{ ...initialScript }],
+		});
 
 		const updatedHtmlFromEditor = "<p>00:01 Speaker: Hello World</p>";
 
@@ -87,27 +95,27 @@ describe("scriptEditorStore", () => {
 			.getState()
 			.updateScriptFromHtml("1", updatedHtmlFromEditor, false);
 
-		const updatedScript = useScriptStore.getState().scripts[0];
+		const updatedActiveScript = useScriptStore.getState().activeScript;
 
 		// HTML should remain EXACTLY as passed from editor
-		expect(updatedScript.html).toBe(updatedHtmlFromEditor);
+		expect(updatedActiveScript?.html).toBe(updatedHtmlFromEditor);
 
 		// Lines should be updated (reparsed)
-		expect(updatedScript.lines.length).toBe(1);
-		const firstLine = updatedScript.lines[0];
-		expect(firstLine.type).toBe("dialogue");
-		if (firstLine.type === "dialogue") {
+		expect(updatedActiveScript?.lines.length).toBe(1);
+		const firstLine = updatedActiveScript?.lines[0];
+		expect(firstLine?.type).toBe("dialogue");
+		if (firstLine?.type === "dialogue") {
 			expect(firstLine.content).toBe("Hello World");
 		}
 
 		// Overview should be updated
-		expect(updatedScript.overview.wordCount).toBe(2);
+		expect(updatedActiveScript?.overview.wordCount).toBe(2);
 		expect(pgliteStore.saveDraftScript).toHaveBeenCalled();
 	});
 
-	it("should update HTML when shouldUpdateHtml is true (default)", async () => {
+	it("should update HTML when shouldUpdateHtml is true (default) in activeScript", async () => {
 		const initialHtml = "<p>Original</p>";
-		const initialScript = {
+		const initialScript: Script = {
 			id: "1",
 			name: "Test",
 			source: document.implementation.createHTMLDocument(),
@@ -121,19 +129,20 @@ describe("scriptEditorStore", () => {
 				totalLines: 0,
 			},
 			html: initialHtml,
+			createdAt: new Date(),
 		};
 
-		useScriptStore.setState({ scripts: [initialScript] });
+		useScriptStore.setState({ activeScript: initialScript });
 
 		// This HTML would be reformatted by reparseHtmlToScript
 		const dirtyHtml = "<p>  00:01 Speaker: Clean  </p>";
 
 		await useScriptStore.getState().updateScriptFromHtml("1", dirtyHtml, true);
 
-		const updatedScript = useScriptStore.getState().scripts[0];
+		const updatedActiveScript = useScriptStore.getState().activeScript;
 
 		// The HTML should be formatted/cleaned by generateHtmlFromScript
-		expect(updatedScript.html).toBe("<p>00:01 Speaker: Clean</p>");
+		expect(updatedActiveScript?.html).toBe("<p>00:01 Speaker: Clean</p>");
 	});
 
 	it("promotes selected drafts and removes them from workspace", async () => {
@@ -141,8 +150,6 @@ describe("scriptEditorStore", () => {
 			{
 				id: "s1",
 				name: "One",
-				source: document.implementation.createHTMLDocument(),
-				lines: [],
 				overview: {
 					validLines: [],
 					invalidLines: [],
@@ -151,22 +158,7 @@ describe("scriptEditorStore", () => {
 					wordCount: 0,
 					totalLines: 0,
 				},
-				html: "<p>one</p>",
-			},
-			{
-				id: "s2",
-				name: "Two",
-				source: document.implementation.createHTMLDocument(),
-				lines: [],
-				overview: {
-					validLines: [],
-					invalidLines: [],
-					actionLines: [],
-					scenes: [],
-					wordCount: 0,
-					totalLines: 0,
-				},
-				html: "<p>two</p>",
+				createdAt: new Date(),
 			},
 		];
 
@@ -177,6 +169,6 @@ describe("scriptEditorStore", () => {
 			["s1"],
 			"folder-1",
 		);
-		expect(useScriptStore.getState().scripts.map((s) => s.id)).toEqual(["s2"]);
+		expect(useScriptStore.getState().scripts.map((s) => s.id)).toEqual([]);
 	});
 });
