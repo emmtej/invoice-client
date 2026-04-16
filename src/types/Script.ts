@@ -6,16 +6,22 @@ export interface ScriptOverview {
 	wordCount: number;
 	totalLines: number;
 }
-export interface Script {
+
+export interface ScriptMetadata {
 	id: string;
 	name: string;
-	source: Document;
-	lines: ParsedLine[];
 	overview: ScriptOverview;
-	html: string;
 	groupName?: string;
 	label?: string;
 	folderId?: string | null;
+	lastAccessedAt?: Date | null;
+	createdAt: Date;
+}
+
+export interface Script extends ScriptMetadata {
+	source: Document;
+	lines: ParsedLine[];
+	html: string;
 }
 
 export interface BaseLine {
