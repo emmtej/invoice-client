@@ -37,9 +37,7 @@ export const scripts = pgTable(
 	{
 		id: text("id").primaryKey(),
 		name: text("name").notNull(),
-		html: text("html").notNull(),
 		overview: jsonb("overview").$type<ScriptOverview>().notNull(),
-		lines: jsonb("lines").$type<ParsedLine[]>().notNull(),
 		groupName: text("group_name"),
 		label: text("label"),
 		folderId: text("folder_id").references(() => folders.id, {
@@ -49,15 +47,33 @@ export const scripts = pgTable(
 		lastAccessedAt: timestamp("last_accessed_at"),
 	},
 	(table) => [
-		// Sort direction (DESC NULLS LAST) is enforced by the raw SQL in initSchema()
 		index("idx_scripts_recency").on(table.lastAccessedAt, table.createdAt),
 	],
 );
 
-export const scriptsRelations = relations(scripts, ({ one }) => ({
+export const scriptContents = pgTable("script_contents", {
+	scriptId: text("script_id")
+		.primaryKey()
+		.references(() => scripts.id, { onDelete: "cascade" }),
+	html: text("html").notNull(),
+	lines: jsonb("lines").$type<ParsedLine[]>().notNull(),
+});
+
+export const scriptsRelations = relations(scripts, ({ one, many }) => ({
 	folder: one(folders, {
 		fields: [scripts.folderId],
 		references: [folders.id],
+	}),
+	content: one(scriptContents, {
+		fields: [scripts.id],
+		references: [scriptContents.scriptId],
+	}),
+}));
+
+export const scriptContentsRelations = relations(scriptContents, ({ one }) => ({
+	script: one(scripts, {
+		fields: [scriptContents.scriptId],
+		references: [scripts.id],
 	}),
 }));
 

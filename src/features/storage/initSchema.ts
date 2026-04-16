@@ -1,6 +1,10 @@
 import { PGlite } from "@electric-sql/pglite";
 
 export async function initSchema(db: PGlite): Promise<void> {
+	// Drop existing tables for fresh start (Destructive Migration)
+	await db.exec(`DROP TABLE IF EXISTS script_contents;`);
+	await db.exec(`DROP TABLE IF EXISTS scripts;`);
+
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS folders (
 			id TEXT PRIMARY KEY,
@@ -14,18 +18,21 @@ export async function initSchema(db: PGlite): Promise<void> {
 		CREATE TABLE IF NOT EXISTS scripts (
 			id TEXT PRIMARY KEY,
 			name TEXT NOT NULL,
-			html TEXT NOT NULL,
 			overview JSONB NOT NULL,
-			lines JSONB NOT NULL,
 			group_name TEXT,
 			label TEXT,
 			folder_id TEXT REFERENCES folders(id) ON DELETE CASCADE,
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			last_accessed_at TIMESTAMP
 		);
 	`);
 
 	await db.exec(`
-		ALTER TABLE scripts ADD COLUMN IF NOT EXISTS last_accessed_at TIMESTAMP;
+		CREATE TABLE IF NOT EXISTS script_contents (
+			script_id TEXT PRIMARY KEY REFERENCES scripts(id) ON DELETE CASCADE,
+			html TEXT NOT NULL,
+			lines JSONB NOT NULL
+		);
 	`);
 
 	await db.exec(`
