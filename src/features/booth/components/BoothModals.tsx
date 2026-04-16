@@ -19,29 +19,42 @@ export function BoothModals() {
 
 	const [isScriptEditorEditing, setIsScriptEditorEditing] = useState(true);
 
-	const editorScripts = useScriptStore((s) => s.scripts);
+	const { activeScript, loadScript, closeActiveScript } = useScriptStore(
+		useShallow((s) => ({
+			activeScript: s.activeScript,
+			loadScript: s.loadScript,
+			closeActiveScript: s.closeActiveScript,
+		})),
+	);
 
 	const handleCloseScriptEditor = useCallback(() => {
 		setIsScriptEditorEditing(false);
 		setEditorOpened(false);
-	}, [setEditorOpened]);
+		closeActiveScript();
+	}, [setEditorOpened, closeActiveScript]);
 
-	const scriptInEditorStore = useMemo(
-		() =>
-			script ? (editorScripts.find((s) => s.id === script.id) ?? null) : null,
-		[script, editorScripts],
-	);
-
+	// Load script when editor opens
 	useEffect(() => {
-		if (!isEditorOpened || !script || !scriptInEditorStore) return;
+		if (isEditorOpened && script) {
+			if (activeScript?.id !== script.id) {
+				loadScript(script.id);
+			}
+			setIsScriptEditorEditing(true);
+		}
+	}, [isEditorOpened, script, activeScript?.id, loadScript]);
+
+	// Sync changes from editor back to booth session
+	useEffect(() => {
+		if (!isEditorOpened || !script || !activeScript) return;
+		
 		// Only update if it's the same script and content has changed
 		if (
-			scriptInEditorStore.id === script.id &&
-			scriptInEditorStore.html !== script.html
+			activeScript.id === script.id &&
+			(activeScript.html !== script.html || activeScript.lines.length !== script.lines.length)
 		) {
-			updateScript(scriptInEditorStore);
+			updateScript(activeScript);
 		}
-	}, [isEditorOpened, script, scriptInEditorStore, updateScript]);
+	}, [isEditorOpened, script, activeScript, updateScript]);
 
 	return (
 		<AppModal
@@ -51,9 +64,9 @@ export function BoothModals() {
 			size="90vw"
 		>
 			<Box h="70vh" mih={500}>
-				{scriptInEditorStore && (
+				{activeScript && (
 					<ScriptEditor
-						script={scriptInEditorStore}
+						script={activeScript}
 						isEditing={isScriptEditorEditing}
 						onStartEdit={() => setIsScriptEditorEditing(true)}
 						onStopEdit={() => setIsScriptEditorEditing(false)}
