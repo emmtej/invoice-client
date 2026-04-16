@@ -1,6 +1,6 @@
 import { asc, count, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { getDrizzleDb, initDb } from "@/features/storage/pgliteClient";
-import { scripts } from "@/features/storage/schema";
+import { scriptContents, scripts } from "@/features/storage/schema";
 import type { ScriptSummary } from "@/features/storage/types";
 import type { Script } from "@/types/Script";
 
@@ -142,13 +142,20 @@ export const scriptsQueries = {
 
 	async getScriptById(id: string): Promise<Script | null> {
 		const db = await getDrizzleDb();
-		const [row] = await db.select().from(scripts).where(eq(scripts.id, id));
+		const [row] = await db
+			.select()
+			.from(scripts)
+			.innerJoin(scriptContents, eq(scripts.id, scriptContents.scriptId))
+			.where(eq(scripts.id, id));
+
 		if (!row) return null;
+
 		return {
-			...row,
-			groupName: row.groupName ?? undefined,
-			label: row.label ?? undefined,
-			folderId: row.folderId ?? null,
+			...row.scripts,
+			...row.script_contents,
+			groupName: row.scripts.groupName ?? undefined,
+			label: row.scripts.label ?? undefined,
+			folderId: row.scripts.folderId ?? null,
 			source: document.implementation.createHTMLDocument(),
 		};
 	},
@@ -171,33 +178,46 @@ export const scriptsQueries = {
 
 	async duplicateScript(id: string, newId: string): Promise<void> {
 		const db = await getDrizzleDb();
-		const [row] = await db.select().from(scripts).where(eq(scripts.id, id));
+		const [row] = await db
+			.select()
+			.from(scripts)
+			.innerJoin(scriptContents, eq(scripts.id, scriptContents.scriptId))
+			.where(eq(scripts.id, id));
+
 		if (!row) return;
-		await db.insert(scripts).values({
-			...row,
-			id: newId,
-			name: `${row.name} (Copy)`,
-			createdAt: new Date(),
-			lastAccessedAt: null,
+
+		await db.transaction(async (tx) => {
+			await tx.insert(scripts).values({
+				...row.scripts,
+				id: newId,
+				name: `${row.scripts.name} (Copy)`,
+				createdAt: new Date(),
+				lastAccessedAt: null,
+			});
+			await tx.insert(scriptContents).values({
+				...row.script_contents,
+				scriptId: newId,
+			});
 		});
 	},
 
 	async saveScript(script: Script): Promise<void> {
 		const db = await getDrizzleDb();
-		await this.saveScriptTx(db, script);
+		await db.transaction(async (tx) => {
+			await this.saveScriptTx(tx, script);
+		});
 	},
 
 	async saveScriptTx(tx: any, script: Script): Promise<void> {
 		const { id, name, html, overview, lines, groupName, label, folderId } =
 			script;
+
 		await tx
 			.insert(scripts)
 			.values({
 				id,
 				name,
-				html,
 				overview,
-				lines,
 				groupName: groupName ?? null,
 				label: label ?? null,
 				folderId: folderId ?? null,
@@ -206,12 +226,25 @@ export const scriptsQueries = {
 				target: scripts.id,
 				set: {
 					name,
-					html,
 					overview,
-					lines,
 					groupName: groupName ?? null,
 					label: label ?? null,
 					folderId: folderId ?? null,
+				},
+			});
+
+		await tx
+			.insert(scriptContents)
+			.values({
+				scriptId: id,
+				html,
+				lines,
+			})
+			.onConflictDoUpdate({
+				target: scriptContents.scriptId,
+				set: {
+					html,
+					lines,
 				},
 			});
 	},
@@ -219,11 +252,6 @@ export const scriptsQueries = {
 	async saveScripts(scriptsList: Script[]): Promise<void> {
 		if (scriptsList.length === 0) return;
 		const db = await getDrizzleDb();
-		
-		if (scriptsList.length === 1) {
-			await this.saveScriptTx(db, scriptsList[0]);
-			return;
-		}
 
 		await db.transaction(async (tx) => {
 			for (const script of scriptsList) {

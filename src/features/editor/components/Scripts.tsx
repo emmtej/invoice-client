@@ -22,20 +22,26 @@ export default function Scripts() {
 
 	const {
 		scripts,
+		activeScript,
 		addScripts,
 		removeScript,
 		removeScripts,
 		init,
+		loadScript,
+		closeActiveScript,
 		isLoading,
 		persistenceEnabled,
 		promoteScriptsToLibrary,
 	} = useScriptStore(
 		useShallow((s) => ({
 			scripts: s.scripts,
+			activeScript: s.activeScript,
 			addScripts: s.addScripts,
 			removeScript: s.removeScript,
 			removeScripts: s.removeScripts,
 			init: s.init,
+			loadScript: s.loadScript,
+			closeActiveScript: s.closeActiveScript,
 			isLoading: s.isLoading,
 			persistenceEnabled: s.persistenceEnabled,
 			promoteScriptsToLibrary: s.promoteScriptsToLibrary,
@@ -52,6 +58,17 @@ export default function Scripts() {
 	const [editingScriptId, setEditingScriptId] = useState<string | null>(null);
 	const [initialSelectDone, setInitialSelectDone] = useState(false);
 	const [pasteError, setPasteError] = useState<string | null>(null);
+
+	/**
+	 * Logic: Load full script content when activeScriptId changes
+	 */
+	useEffect(() => {
+		if (activeScriptId) {
+			loadScript(activeScriptId);
+		} else {
+			closeActiveScript();
+		}
+	}, [activeScriptId, loadScript, closeActiveScript]);
 
 	const [
 		clearAllModalOpened,
@@ -159,7 +176,6 @@ export default function Scripts() {
 		return <ScriptsLoading persistenceEnabled={persistenceEnabled} />;
 	}
 
-	const activeScript = scripts.find((s) => s.id === activeScriptId);
 	const hasScripts = scripts.length > 0;
 
 	return (
