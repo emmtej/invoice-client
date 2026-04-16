@@ -36,12 +36,13 @@ vi.mock("@/features/storage/pgliteClient", () => ({
 	getDrizzleDb: vi.fn().mockResolvedValue(db),
 }));
 
-import { scriptDrafts, scripts } from "@/features/storage/schema";
+import { scriptContents, scriptDrafts, scripts } from "@/features/storage/schema";
 import { initEditorDb, pgliteStore } from "./pgliteStore";
 
-describe("pgliteStore drafts", () => {
+describe("pgliteStore partitioned scripts", () => {
 	beforeEach(async () => {
 		vi.clearAllMocks();
+		await testDb.exec("DROP TABLE IF EXISTS script_contents CASCADE;");
 		await testDb.exec("DROP TABLE IF EXISTS script_drafts CASCADE;");
 		await testDb.exec("DROP TABLE IF EXISTS scripts CASCADE;");
 		await testDb.exec("DROP TABLE IF EXISTS folders CASCADE;");
@@ -50,14 +51,19 @@ describe("pgliteStore drafts", () => {
 			CREATE TABLE scripts (
 				id TEXT PRIMARY KEY,
 				name TEXT NOT NULL,
-				html TEXT NOT NULL,
 				overview JSONB NOT NULL,
-				lines JSONB NOT NULL,
 				group_name TEXT,
 				label TEXT,
 				folder_id TEXT,
 				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 				last_accessed_at TIMESTAMP
+			);
+		`);
+		await testDb.exec(`
+			CREATE TABLE script_contents (
+				script_id TEXT PRIMARY KEY REFERENCES scripts(id) ON DELETE CASCADE,
+				html TEXT NOT NULL,
+				lines JSONB NOT NULL
 			);
 		`);
 		await testDb.exec(`
@@ -77,37 +83,30 @@ describe("pgliteStore drafts", () => {
 		`);
 	});
 
-	it("creates script_drafts table and index during editor init", async () => {
-		await initEditorDb();
-		expect(true).toBe(true);
-	});
-
-	it("saves drafts with TTL extension fields", async () => {
+	it("saves and retrieves full scripts across two tables", async () => {
 		const script = {
 			id: "s1",
-			name: "Draft",
+			name: "Full Script",
 			html: "<p>Hello</p>",
-			overview: {
-				validLines: [],
-				invalidLines: [],
-				actionLines: [],
-				scenes: [],
-				wordCount: 1,
-				totalLines: 1,
-			},
+			overview: createOverview(1),
 			lines: [],
 			source: document.implementation.createHTMLDocument(),
 		};
 
-		await pgliteStore.saveDraftScript(script);
+		await pgliteStore.saveScript(script);
 
-		const result = await db.select().from(scriptDrafts);
-		expect(result.length).toBe(1);
-		expect(result[0].id).toBe("s1");
-		expect(result[0].expiresAt).toBeInstanceOf(Date);
+		const metadata = await pgliteStore.getLibraryListing();
+		expect(metadata.length).toBe(1);
+		expect(metadata[0].name).toBe("Full Script");
+		// @ts-expect-error - html should not exist on metadata
+		expect(metadata[0].html).toBeUndefined();
+
+		const full = await pgliteStore.getScriptFull("s1");
+		expect(full?.html).toBe("<p>Hello</p>");
+		expect(full?.name).toBe("Full Script");
 	});
 
-	it("promotes drafts transactionally into scripts", async () => {
+	it("promotes drafts into two tables", async () => {
 		const scriptA = {
 			id: "a",
 			name: "Draft A",
@@ -116,25 +115,19 @@ describe("pgliteStore drafts", () => {
 			lines: [],
 			expiresAt: new Date(Date.now() + 1000000),
 		} satisfies typeof scriptDrafts.$inferInsert;
-		const scriptB = {
-			id: "b",
-			name: "Draft B",
-			html: "<p>World</p>",
-			overview: createOverview(1),
-			lines: [],
-			expiresAt: new Date(Date.now() + 1000000),
-		} satisfies typeof scriptDrafts.$inferInsert;
 
-		await db.insert(scriptDrafts).values([scriptA, scriptB]);
+		await db.insert(scriptDrafts).values([scriptA]);
 
-		await pgliteStore.promoteDraftsToScripts(["a", "b"], "folder-1");
+		await pgliteStore.promoteDraftsToScripts(["a"], "folder-1");
 
 		const remainingDrafts = await db.select().from(scriptDrafts);
 		expect(remainingDrafts.length).toBe(0);
 
 		const promotedScripts = await db.select().from(scripts);
-		expect(promotedScripts.length).toBe(2);
-		expect(promotedScripts[0].folderId).toBe("folder-1");
-		expect(promotedScripts[1].folderId).toBe("folder-1");
+		expect(promotedScripts.length).toBe(1);
+		
+		const promotedContents = await db.select().from(scriptContents);
+		expect(promotedContents.length).toBe(1);
+		expect(promotedContents[0].html).toBe("<p>Hello</p>");
 	});
 });

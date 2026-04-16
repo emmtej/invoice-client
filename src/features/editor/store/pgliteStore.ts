@@ -1,7 +1,7 @@
 import { desc, eq, inArray, lte } from "drizzle-orm";
 import { getDrizzleDb, initDb } from "@/features/storage/pgliteClient";
-import { scriptDrafts, scripts } from "@/features/storage/schema";
-import type { Script } from "@/types/Script";
+import { scriptContents, scriptDrafts, scripts } from "@/features/storage/schema";
+import type { Script, ScriptMetadata } from "@/types/Script";
 
 const DRAFT_TTL_HOURS = 24;
 
@@ -10,7 +10,7 @@ export const initEditorDb = async () => {
 };
 
 export const pgliteStore = {
-	async getAllScripts(): Promise<Script[]> {
+	async getLibraryListing(): Promise<ScriptMetadata[]> {
 		await initEditorDb();
 		const db = await getDrizzleDb();
 		const result = await db
@@ -23,14 +23,36 @@ export const pgliteStore = {
 			groupName: row.groupName ?? undefined,
 			label: row.label ?? undefined,
 			folderId: row.folderId ?? null,
-			source: document.implementation.createHTMLDocument(),
 		}));
+	},
+
+	async getScriptFull(id: string): Promise<Script | null> {
+		await initEditorDb();
+		const db = await getDrizzleDb();
+		const [result] = await db
+			.select()
+			.from(scripts)
+			.innerJoin(scriptContents, eq(scripts.id, scriptContents.scriptId))
+			.where(eq(scripts.id, id));
+
+		if (!result) return null;
+
+		return {
+			...result.scripts,
+			...result.script_contents,
+			groupName: result.scripts.groupName ?? undefined,
+			label: result.scripts.label ?? undefined,
+			folderId: result.scripts.folderId ?? null,
+			source: document.implementation.createHTMLDocument(),
+		};
 	},
 
 	async saveScript(script: Script): Promise<void> {
 		await initEditorDb();
 		const db = await getDrizzleDb();
-		await this.saveScriptTx(db, script);
+		await db.transaction(async (tx) => {
+			await this.saveScriptTx(tx, script);
+		});
 	},
 
 	async saveScriptTx(tx: any, script: Script): Promise<void> {
@@ -42,9 +64,7 @@ export const pgliteStore = {
 			.values({
 				id,
 				name,
-				html,
 				overview,
-				lines,
 				groupName: groupName ?? null,
 				label: label ?? null,
 				folderId: folderId ?? null,
@@ -53,12 +73,25 @@ export const pgliteStore = {
 				target: scripts.id,
 				set: {
 					name,
-					html,
 					overview,
-					lines,
 					groupName: groupName ?? null,
 					label: label ?? null,
 					folderId: folderId ?? null,
+				},
+			});
+
+		await tx
+			.insert(scriptContents)
+			.values({
+				scriptId: id,
+				html,
+				lines,
+			})
+			.onConflictDoUpdate({
+				target: scriptContents.scriptId,
+				set: {
+					html,
+					lines,
 				},
 			});
 	},
@@ -67,11 +100,6 @@ export const pgliteStore = {
 		if (scriptsList.length === 0) return;
 		await initEditorDb();
 		const db = await getDrizzleDb();
-		
-		if (scriptsList.length === 1) {
-			await this.saveScriptTx(db, scriptsList[0]);
-			return;
-		}
 
 		await db.transaction(async (tx) => {
 			for (const script of scriptsList) {
@@ -83,12 +111,14 @@ export const pgliteStore = {
 	async deleteScript(id: string): Promise<void> {
 		await initEditorDb();
 		const db = await getDrizzleDb();
+		// Cascade delete handles script_contents
 		await db.delete(scripts).where(eq(scripts.id, id));
 	},
 
 	async deleteScripts(ids: string[]): Promise<void> {
 		await initEditorDb();
 		const db = await getDrizzleDb();
+		// Cascade delete handles script_contents
 		await db.delete(scripts).where(inArray(scripts.id, ids));
 	},
 
@@ -166,11 +196,6 @@ export const pgliteStore = {
 		await initEditorDb();
 		const db = await getDrizzleDb();
 
-		if (scriptsList.length === 1) {
-			await this.saveDraftScriptTx(db, scriptsList[0]);
-			return;
-		}
-
 		await db.transaction(async (tx) => {
 			for (const script of scriptsList) {
 				await this.saveDraftScriptTx(tx, script);
@@ -213,30 +238,13 @@ export const pgliteStore = {
 					.where(eq(scriptDrafts.id, id));
 
 				if (draft) {
-					await tx
-						.insert(scripts)
-						.values({
-							id: draft.id,
-							name: draft.name,
-							html: draft.html,
-							overview: draft.overview,
-							lines: draft.lines,
-							groupName: draft.groupName,
-							label: draft.label,
-							folderId: folderId ?? null,
-						})
-						.onConflictDoUpdate({
-							target: scripts.id,
-							set: {
-								name: draft.name,
-								html: draft.html,
-								overview: draft.overview,
-								lines: draft.lines,
-								groupName: draft.groupName,
-								label: draft.label,
-								folderId: folderId ?? null,
-							},
-						});
+					await this.saveScriptTx(tx, {
+						...draft,
+						groupName: draft.groupName ?? undefined,
+						label: draft.label ?? undefined,
+						folderId,
+						source: document.implementation.createHTMLDocument(),
+					});
 				}
 			}
 			await tx.delete(scriptDrafts).where(inArray(scriptDrafts.id, ids));
