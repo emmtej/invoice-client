@@ -58,6 +58,25 @@ cp .env.example .env.local
     *   `npm run format`: Run Biome formatter.
     *   `npm run check`: Run both linting and formatting checks.
 
+### Running with Docker
+
+This project can be containerized using Docker for easy deployment and sharing.
+
+**Prerequisites:**
+*   Docker and Docker Compose installed on your machine.
+
+**Commands:**
+1.  **Build and start the container:**
+    ```bash
+    docker compose up --build -d
+    ```
+2.  **Access the application:**
+    Open your browser and navigate to `http://localhost:8080`.
+3.  **Stop the container:**
+    ```bash
+    docker compose down
+    ```
+
 ## Development Conventions
 
 *   **Indentation:** Use **Tabs** for indentation (enforced by Biome).
@@ -73,3 +92,12 @@ cp .env.example .env.local
     *   Follow the design tokens defined in `src/theme.ts`.
 *   **Validation:** Use Zod schemas for API responses and form validation to ensure type safety at runtime.
 *   **Testing:** Add unit tests for utility functions and integration tests for complex components using Vitest.
+
+## License
+
+This project is released under a **Source-Available Non-Commercial License**. 
+
+*   **Permitted:** Personal review, evaluation by potential employers, and local non-commercial use on a private network.
+*   **Prohibited:** Commercial use, redistribution, public hosting for third parties, or selling of the software.
+
+Please see the [LICENSE](LICENSE) file for the full legal terms.
