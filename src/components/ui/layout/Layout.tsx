@@ -16,7 +16,7 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-	const [opened, { toggle }] = useDisclosure();
+	const [opened, { toggle, close }] = useDisclosure();
 	const migrate = useInvoicePresetsStore((s) => s._migrateFromOldStorage);
 
 	useEffect(() => {
@@ -51,7 +51,7 @@ export function Layout({ children }: LayoutProps) {
 				</Group>
 			</AppShell.Header>
 			<AppShell.Navbar p={0}>
-				<Sidebar />
+				<Sidebar onNavigate={close} />
 			</AppShell.Navbar>
 
 			{opened && (

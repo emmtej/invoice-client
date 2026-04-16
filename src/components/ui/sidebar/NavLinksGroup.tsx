@@ -89,6 +89,7 @@ interface LinksGroupProps {
 	initiallyOpened?: boolean;
 	links?: { label: string; link: string }[];
 	href?: string;
+	onNavigate?: () => void;
 }
 
 export function LinksGroup({
@@ -97,6 +98,7 @@ export function LinksGroup({
 	initiallyOpened,
 	links,
 	href,
+	onNavigate,
 }: LinksGroupProps) {
 	const hasLinks = Array.isArray(links);
 	const isDirectLink = !hasLinks && !!href;
@@ -133,6 +135,7 @@ export function LinksGroup({
 				key={link.label}
 				component={Link}
 				to={link.link}
+				onClick={onNavigate}
 				style={isActive ? linkActiveStyles : linkBaseStyles}
 			>
 				{link.label}
@@ -160,6 +163,7 @@ export function LinksGroup({
 				<UnstyledButton
 					component={Link}
 					to={href || ""}
+					onClick={onNavigate}
 					styles={isHrefActive ? controlActiveStyles : controlStyles}
 				>
 					{content}

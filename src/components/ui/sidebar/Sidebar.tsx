@@ -28,11 +28,15 @@ const navlinks = [
 	{ label: "Profile", icon: User, href: "/profile" },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+	onNavigate?: () => void;
+}
+
+export function Sidebar({ onNavigate }: SidebarProps) {
 	const user = useUserStore((store) => store.user);
 
 	const links = navlinks.map((item) => (
-		<LinksGroup {...item} key={item.label} />
+		<LinksGroup {...item} key={item.label} onNavigate={onNavigate} />
 	));
 
 	return (
