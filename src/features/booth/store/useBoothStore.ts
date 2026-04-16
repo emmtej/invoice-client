@@ -28,6 +28,7 @@ interface BoothState {
 
 	sessions: BoothSession[];
 	isLoadingSessions: boolean;
+	isEditorOpened: boolean;
 }
 
 interface BoothActions {
@@ -47,6 +48,7 @@ interface BoothActions {
 
 	loadSessions: () => Promise<void>;
 	deleteSessionRecord: (id: string) => Promise<void>;
+	setEditorOpened: (opened: boolean) => void;
 
 	// Helpers
 	getLineContent: (lineIndex: number) => string;
@@ -89,6 +91,7 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 	startedAt: null,
 	sessions: [],
 	isLoadingSessions: false,
+	isEditorOpened: false,
 
 	setScript: (script) => {
 		const firstLine = findNextUncompletedLine(script, []);
@@ -353,6 +356,8 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 			sessions: s.sessions.filter((sess) => sess.id !== id),
 		}));
 	},
+
+	setEditorOpened: (opened) => set({ isEditorOpened: opened }),
 
 	getLineContent: (lineIndex) => {
 		const { script, editedLines } = get();
