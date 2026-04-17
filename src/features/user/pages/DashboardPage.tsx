@@ -11,7 +11,7 @@ import { Link } from "@tanstack/react-router";
 import { Gauge, Receipt } from "lucide-react";
 import { PageTitle } from "@/components/ui/text/PageTitle";
 
-export default function Dashboard() {
+export default function DashboardPage() {
 	return (
 		<Stack gap="md">
 			<Box mb="xl">

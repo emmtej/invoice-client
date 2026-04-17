@@ -21,9 +21,13 @@ const InvoicePage = lazy(() =>
 const PresetsPage = lazy(() =>
 	import("@/features/invoice").then((m) => ({ default: m.PresetsPage })),
 );
-const Authentication = lazy(() => import("./pages/Authentication"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Profile = lazy(() => import("./pages/Profile"));
+const AuthenticationPage = lazy(() => import("@/features/auth"));
+const DashboardPage = lazy(() =>
+	import("@/features/user").then((m) => ({ default: m.DashboardPage })),
+);
+const ProfilePage = lazy(() =>
+	import("@/features/user").then((m) => ({ default: m.ProfilePage })),
+);
 
 declare module "@tanstack/react-router" {
 	interface Register {
@@ -99,7 +103,7 @@ const loginRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	component: () => (
 		<Suspense fallback={<RouteFallback label="authentication" />}>
-			<Authentication />
+			<AuthenticationPage />
 		</Suspense>
 	),
 });
@@ -109,13 +113,13 @@ const registrationRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	component: () => (
 		<Suspense fallback={<RouteFallback label="authentication" />}>
-			<Authentication />
+			<AuthenticationPage />
 		</Suspense>
 	),
 });
 
-// Protected Routes
-const authenticatedRoutes = createRoute({
+// Protected user routes
+const protectedUserRoutes = createRoute({
 	getParentRoute: () => rootRoute,
 	id: "authenticated",
 	beforeLoad: () => {
@@ -126,21 +130,21 @@ const authenticatedRoutes = createRoute({
 });
 
 const dashboardRoute = createRoute({
-	getParentRoute: () => authenticatedRoutes,
+	getParentRoute: () => protectedUserRoutes,
 	path: "/dashboard",
 	component: () => (
 		<Suspense fallback={<RouteFallback label="dashboard" />}>
-			<Dashboard />
+			<DashboardPage />
 		</Suspense>
 	),
 });
 
 const profileRoute = createRoute({
-	getParentRoute: () => authenticatedRoutes,
+	getParentRoute: () => protectedUserRoutes,
 	path: "/profile",
 	component: () => (
 		<Suspense fallback={<RouteFallback label="profile" />}>
-			<Profile />
+			<ProfilePage />
 		</Suspense>
 	),
 });
@@ -205,7 +209,7 @@ const routeTree = rootRoute.addChildren([
 	invoicePresetsRoute,
 	loginRoute,
 	registrationRoute,
-	authenticatedRoutes.addChildren([dashboardRoute, profileRoute]),
+	protectedUserRoutes.addChildren([dashboardRoute, profileRoute]),
 ]);
 
 export const router = createRouter({

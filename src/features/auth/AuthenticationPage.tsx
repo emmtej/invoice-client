@@ -8,11 +8,11 @@ import {
 	Text,
 } from "@mantine/core";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { AuthForm } from "@/components/auth/AuthForm";
-import { OAuthProviders } from "@/components/auth/OAuthProviders";
+import { AuthForm } from "@/features/auth/components/AuthForm";
+import { OAuthProviders } from "@/features/auth/components/OAuthProviders";
 import { PageTitle } from "@/components/ui/text/PageTitle";
 
-function Authentication() {
+function AuthenticationPage() {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const isRegistering = pathname.includes("register");
@@ -121,4 +121,4 @@ function Authentication() {
 	);
 }
 
-export default Authentication;
+export default AuthenticationPage;

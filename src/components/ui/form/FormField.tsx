@@ -1,6 +1,5 @@
 import { Input, type InputWrapperProps } from "@mantine/core";
 import type { ReactNode } from "react";
-import { ErrorMessage } from "@/components/auth/ErrorMessage";
 
 interface FormFieldProps extends Omit<InputWrapperProps, "error"> {
 	label: string;
@@ -19,7 +18,7 @@ export function FormField({
 	return (
 		<Input.Wrapper
 			label={label}
-			error={<ErrorMessage message={error} />}
+			error={error}
 			required={required}
 			{...rest}
 		>
