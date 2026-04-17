@@ -1,5 +1,5 @@
 import { Box } from "@mantine/core";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { AppModal } from "@/components/ui/modal/AppModal";
 import { useScriptStore } from "@/features/editor";

@@ -17,10 +17,10 @@ import {
 } from "lucide-react";
 import { memo, useMemo } from "react";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
-import type { Script } from "@/types/Script";
+import type { ScriptMetadata } from "@/types/Script";
 
 interface WorkspaceExplorerProps {
-	scripts: Script[];
+	scripts: ScriptMetadata[];
 	activeScriptId: string | null;
 	onSelect: (id: string | null) => void;
 	onRemove: (id: string) => void;

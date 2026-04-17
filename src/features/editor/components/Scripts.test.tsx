@@ -47,7 +47,23 @@ vi.mock("../hooks/useFileUpload", () => ({
 	}),
 }));
 
+// Mock pgliteStore to avoid database issues in jsdom
+vi.mock("../store/pgliteStore", () => ({
+	pgliteStore: {
+		getAllDraftScripts: vi.fn().mockResolvedValue([]),
+		getScriptFull: vi.fn().mockResolvedValue(null),
+		saveDraftScript: vi.fn().mockResolvedValue(undefined),
+		saveDraftScripts: vi.fn().mockResolvedValue(undefined),
+		deleteDraftScript: vi.fn().mockResolvedValue(undefined),
+		deleteDraftScripts: vi.fn().mockResolvedValue(undefined),
+		saveScript: vi.fn().mockResolvedValue(undefined),
+		promoteDraftsToScripts: vi.fn().mockResolvedValue(undefined),
+		deleteExpiredDrafts: vi.fn().mockResolvedValue(undefined),
+	},
+}));
+
 import { useScriptStore } from "../store/scriptEditorStore";
+import { pgliteStore } from "../store/pgliteStore";
 import Scripts from "./Scripts";
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -73,11 +89,15 @@ const createMockScript = (id: string, name: string): Script => ({
 		size: 1024,
 		lastModified: Date.now(),
 	} as unknown as Document,
+	createdAt: new Date(),
+	lastAccessedAt: null,
+	folderId: null,
 });
 
 describe("Scripts", () => {
 	afterEach(() => {
 		cleanup();
+		vi.clearAllMocks();
 	});
 
 	beforeEach(() => {
@@ -90,7 +110,12 @@ describe("Scripts", () => {
 			},
 			writable: true,
 		});
-		useScriptStore.setState({ scripts: [] });
+		useScriptStore.setState({ 
+			scripts: [], 
+			activeScript: null, 
+			isLoading: false, 
+			persistenceEnabled: false 
+		});
 	});
 
 	it("shows Getting Started when there are no scripts", () => {
@@ -102,38 +127,55 @@ describe("Scripts", () => {
 		expect(screen.getByTestId("getting-started-view")).toBeTruthy();
 	});
 
-	it("does not show Getting Started view when at least one script exists", () => {
+	it("does not show Getting Started view when at least one script exists", async () => {
+		const mockScript = createMockScript("1", "My Script.docx");
+		
+		// Ensure loadScript finds the script
+		(pgliteStore.getAllDraftScripts as any).mockResolvedValue([mockScript]);
+
 		useScriptStore.setState({
-			scripts: [createMockScript("1", "My Script.docx")],
+			scripts: [mockScript],
 		});
+		
 		render(
 			<TestWrapper>
 				<Scripts />
 			</TestWrapper>,
 		);
-		expect(screen.queryByTestId("getting-started-view")).toBeNull();
-		expect(screen.getAllByText("My Script.docx").length).toBeGreaterThan(0);
+		
+		const scriptElements = await screen.findAllByText("My Script.docx");
+		expect(scriptElements.length).toBeGreaterThan(0);
+		
+		// Wait for activeScript to be loaded and view to switch
+		await waitFor(() => {
+			expect(screen.queryByTestId("getting-started-view")).toBeNull();
+		}, { timeout: 2000 });
 	});
 
 	it("clears all documents after confirming in the modal", async () => {
+		const mockScript = createMockScript("1", "My Script.docx");
+		(pgliteStore.getAllDraftScripts as any).mockResolvedValue([mockScript]);
+		
 		useScriptStore.setState({
-			scripts: [createMockScript("1", "My Script.docx")],
+			scripts: [mockScript],
+			activeScript: mockScript,
 		});
+		
 		render(
 			<TestWrapper>
 				<Scripts />
 			</TestWrapper>,
 		);
 
-		const clearBtn = screen.getByTestId("clear-all-documents-trigger");
-		fireEvent.click(clearBtn);
+		const trigger = await screen.findByTestId("clear-all-documents-trigger");
+		fireEvent.click(trigger);
 		const confirm = await screen.findByTestId("clear-all-documents-confirm");
 		fireEvent.click(confirm);
 
 		await waitFor(() => {
 			expect(useScriptStore.getState().scripts).toEqual([]);
 		});
-		expect(screen.getByTestId("getting-started-view")).toBeTruthy();
+		expect(await screen.findByTestId("getting-started-view")).toBeTruthy();
 
 		await waitFor(() => {
 			expect(screen.queryByRole("dialog")).toBeNull();

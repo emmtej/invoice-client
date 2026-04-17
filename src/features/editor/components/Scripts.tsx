@@ -8,7 +8,8 @@ import { useScriptStore } from "../store/scriptEditorStore";
 import { processDocuments, reparseHtmlToScript } from "../utils/documentParser";
 import { ClearAllScriptsModal } from "./ClearAllScriptsModal";
 import { GettingStarted } from "./GettingStarted";
-import { SaveToStorageModal } from "./SaveToStorageModal";
+import { SaveToLibraryModal } from "@/features/storage";
+import { notify } from "@/utils/notifications";
 import { ScriptEditor } from "./ScriptEditor";
 import { ScriptsLoading } from "./ScriptsLoading";
 import { WorkspaceExplorer } from "./WorkspaceExplorer";
@@ -18,7 +19,14 @@ import { WorkspaceExplorer } from "./WorkspaceExplorer";
  * Manages the collection of scripts, their selection, and the editor layout.
  */
 export default function Scripts() {
-	const { docFiles, handleFileChange, reset } = useFileUpload();
+	const {
+		docFiles,
+		handleFileChange,
+		reset,
+		isLoading: isUploading,
+		processedCount,
+		totalCount,
+	} = useFileUpload();
 
 	const {
 		scripts,
@@ -29,7 +37,7 @@ export default function Scripts() {
 		init,
 		loadScript,
 		closeActiveScript,
-		isLoading,
+		isLoading: isStoreLoading,
 		persistenceEnabled,
 		promoteScriptsToLibrary,
 	} = useScriptStore(
@@ -58,6 +66,7 @@ export default function Scripts() {
 	const [editingScriptId, setEditingScriptId] = useState<string | null>(null);
 	const [initialSelectDone, setInitialSelectDone] = useState(false);
 	const [pasteError, setPasteError] = useState<string | null>(null);
+	const [isProcessing, setIsProcessing] = useState(false);
 
 	/**
 	 * Logic: Load full script content when activeScriptId changes
@@ -85,14 +94,23 @@ export default function Scripts() {
 	useEffect(() => {
 		if (!docFiles || docFiles.length === 0) return;
 
-		const processed = processDocuments(docFiles);
-		addScripts(processed);
+		const handleProcessing = async () => {
+			setIsProcessing(true);
+			try {
+				const processed = await processDocuments(docFiles);
+				await addScripts(processed);
 
-		if (processed.length > 0) {
-			setActiveScriptId(processed[0].id);
-			setInitialSelectDone(true);
-		}
-		reset(); // Clear temporary file state
+				if (processed.length > 0) {
+					setActiveScriptId(processed[0].id);
+					setInitialSelectDone(true);
+				}
+				reset(); // Clear temporary file state
+			} finally {
+				setIsProcessing(false);
+			}
+		};
+
+		handleProcessing();
 	}, [docFiles, addScripts, reset]);
 
 	/**
@@ -129,6 +147,7 @@ export default function Scripts() {
 
 	// Handlers
 	const handleConfirmClearAll = useCallback(async () => {
+		const count = scripts.length;
 		await removeScripts(scripts.map((s) => s.id));
 		reset();
 		setActiveScriptId(null);
@@ -136,6 +155,9 @@ export default function Scripts() {
 		setEditingScriptId(null);
 		setPasteError(null);
 		closeClearAllModal();
+		notify.success({
+			message: `Cleared ${count} ${count === 1 ? "draft" : "drafts"}`,
+		});
 	}, [scripts, removeScripts, reset, closeClearAllModal]);
 
 	const handlePasteProcessed = useCallback(
@@ -143,9 +165,10 @@ export default function Scripts() {
 			const { lines, overview, html: parsedHtml } = reparseHtmlToScript(html);
 
 			if (lines.length === 0) {
-				setPasteError(
-					"No billable dialogue or lines were found in the pasted content. Please check the format.",
-				);
+				const errorMsg =
+					"No billable dialogue or lines were found in the pasted content. Please check the format.";
+				setPasteError(errorMsg);
+				notify.error({ message: errorMsg });
 				return;
 			}
 
@@ -156,6 +179,7 @@ export default function Scripts() {
 				lines,
 				overview,
 				html: parsedHtml,
+				createdAt: new Date(),
 			};
 
 			addScripts([newScript]);
@@ -172,8 +196,25 @@ export default function Scripts() {
 		[promoteScriptsToLibrary],
 	);
 
-	if (isLoading) {
+	if (isStoreLoading) {
 		return <ScriptsLoading persistenceEnabled={persistenceEnabled} />;
+	}
+
+	if (isUploading || isProcessing) {
+		const message = isUploading
+			? `Uploading documents (${processedCount}/${totalCount})...`
+			: "Analyzing script structure...";
+		const subtext = isUploading
+			? "Converting Word documents to HTML"
+			: "Identifying dialogue and speakers";
+
+		return (
+			<ScriptsLoading
+				persistenceEnabled={persistenceEnabled}
+				message={message}
+				subtext={subtext}
+			/>
+		);
 	}
 
 	const hasScripts = scripts.length > 0;
@@ -235,7 +276,7 @@ export default function Scripts() {
 				onConfirm={handleConfirmClearAll}
 			/>
 
-			<SaveToStorageModal
+			<SaveToLibraryModal
 				opened={saveModalOpened}
 				onClose={closeSaveModal}
 				scripts={scripts}

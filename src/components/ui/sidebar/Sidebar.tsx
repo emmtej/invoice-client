@@ -19,7 +19,7 @@ const navlinks = [
 		icon: Receipt,
 		initiallyOpened: true,
 		links: [
-			{ label: "Generator", link: "/invoice" },
+			{ label: "New Invoice", link: "/invoice" },
 			{ label: "Presets", link: "/invoice/presets" },
 		],
 	},

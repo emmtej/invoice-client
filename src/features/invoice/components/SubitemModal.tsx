@@ -84,14 +84,17 @@ export function SubitemModal({
 	// Process uploaded files
 	useEffect(() => {
 		if (docFiles.length > 0) {
-			const processed = processDocuments(docFiles);
-			const newScripts: ScriptForInvoice[] = processed.map((p) => ({
-				id: p.id,
-				name: p.name,
-				overview: { wordCount: p.overview.wordCount },
-			}));
-			setUploadedScripts((prev) => [...prev, ...newScripts]);
-			resetUpload();
+			const handleProcessing = async () => {
+				const processed = await processDocuments(docFiles);
+				const newScripts: ScriptForInvoice[] = processed.map((p) => ({
+					id: p.id,
+					name: p.name,
+					overview: { wordCount: p.overview.wordCount },
+				}));
+				setUploadedScripts((prev) => [...prev, ...newScripts]);
+				resetUpload();
+			};
+			handleProcessing();
 		}
 	}, [docFiles, resetUpload]);
 

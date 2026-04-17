@@ -37,7 +37,7 @@ vi.mock("@/features/storage/pgliteClient", () => ({
 }));
 
 import { scriptContents, scriptDrafts, scripts } from "@/features/storage/schema";
-import { initEditorDb, pgliteStore } from "./pgliteStore";
+import { pgliteStore } from "./pgliteStore";
 
 describe("pgliteStore partitioned scripts", () => {
 	beforeEach(async () => {
@@ -91,6 +91,7 @@ describe("pgliteStore partitioned scripts", () => {
 			overview: createOverview(1),
 			lines: [],
 			source: document.implementation.createHTMLDocument(),
+			createdAt: new Date(),
 		};
 
 		await pgliteStore.saveScript(script);

@@ -184,6 +184,7 @@ export async function processDocuments(
 			lines,
 			overview: getScriptOverview(lines),
 			html: generateHtmlFromScript(lines),
+			createdAt: new Date(),
 		});
 
 		// Yield to main thread to prevent blocking

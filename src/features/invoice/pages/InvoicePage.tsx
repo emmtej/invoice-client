@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { PageTitle } from "@/components/ui/text/PageTitle";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
+import { notify } from "@/utils/notifications";
 import {
 	InvoiceDetailsSection,
 	loadInvoiceDefaults,
@@ -36,12 +37,12 @@ export default function InvoicePage() {
 
 	const handleAddItem = useCallback(() => {
 		const name = newItemName.trim();
-		if (name) {
-			addEmptyItem(name);
-		} else {
-			addEmptyItem("New item");
-		}
+		const finalName = name || "New item";
+		addEmptyItem(finalName);
 		setNewItemName("");
+		notify.success({
+			message: `Added item: ${finalName}`,
+		});
 	}, [addEmptyItem, newItemName]);
 
 	const hasItems = invoice.items.length > 0;
