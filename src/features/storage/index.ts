@@ -8,6 +8,7 @@ export {
 	getScriptCountInFolder,
 } from "./folderQueries";
 export { getDb, initDb, resetDb } from "./pgliteClient";
+export { SaveToLibraryModal } from "./components/SaveToLibraryModal";
 export type {
 	Folder,
 	FolderRow,

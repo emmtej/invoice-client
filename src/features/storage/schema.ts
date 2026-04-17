@@ -59,7 +59,7 @@ export const scriptContents = pgTable("script_contents", {
 	lines: jsonb("lines").$type<ParsedLine[]>().notNull(),
 });
 
-export const scriptsRelations = relations(scripts, ({ one, many }) => ({
+export const scriptsRelations = relations(scripts, ({ one }) => ({
 	folder: one(folders, {
 		fields: [scripts.folderId],
 		references: [folders.id],

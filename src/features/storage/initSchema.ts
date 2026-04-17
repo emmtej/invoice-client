@@ -1,10 +1,6 @@
 import { PGlite } from "@electric-sql/pglite";
 
 export async function initSchema(db: PGlite): Promise<void> {
-	// Drop existing tables for fresh start (Destructive Migration)
-	await db.exec(`DROP TABLE IF EXISTS script_contents;`);
-	await db.exec(`DROP TABLE IF EXISTS scripts;`);
-
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS folders (
 			id TEXT PRIMARY KEY,

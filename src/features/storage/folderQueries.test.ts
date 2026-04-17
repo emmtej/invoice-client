@@ -56,9 +56,7 @@ describe("folderQueries", () => {
 			CREATE TABLE scripts (
 				id TEXT PRIMARY KEY,
 				name TEXT NOT NULL,
-				html TEXT NOT NULL,
 				overview JSONB NOT NULL,
-				lines JSONB NOT NULL,
 				group_name TEXT,
 				label TEXT,
 				folder_id TEXT REFERENCES folders(id) ON DELETE CASCADE,
@@ -179,25 +177,19 @@ describe("folderQueries", () => {
 				{
 					id: "s1",
 					name: "S1",
-					html: "",
 					overview: emptyOverview,
-					lines: [],
 					folderId: "f1",
 				},
 				{
 					id: "s2",
 					name: "S2",
-					html: "",
 					overview: emptyOverview,
-					lines: [],
 					folderId: "f1",
 				},
 				{
 					id: "s3",
 					name: "S3",
-					html: "",
 					overview: emptyOverview,
-					lines: [],
 					folderId: null,
 				},
 			]);
@@ -218,25 +210,19 @@ describe("folderQueries", () => {
 				{
 					id: "s1",
 					name: "S1",
-					html: "",
 					overview: emptyOverview,
-					lines: [],
 					folderId: "f1",
 				},
 				{
 					id: "s2",
 					name: "S2",
-					html: "",
 					overview: emptyOverview,
-					lines: [],
 					folderId: "f1",
 				},
 				{
 					id: "s3",
 					name: "S3",
-					html: "",
 					overview: emptyOverview,
-					lines: [],
 					folderId: "f2",
 				},
 			]);

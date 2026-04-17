@@ -190,6 +190,9 @@ describe("Scripts Library Stores integration", () => {
 					totalLines: 1,
 				},
 				source: document.implementation.createHTMLDocument(),
+				createdAt: new Date(),
+				lastAccessedAt: null,
+				folderId: null,
 			};
 			vi.mocked(scriptsQueries.getScriptById).mockResolvedValue(mockScript);
 
