@@ -6,6 +6,7 @@ import "./styles.css";
 
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
+import { Notifications } from "@mantine/notifications";
 import { router } from "./router.tsx";
 import { appTheme } from "./theme";
 
@@ -15,6 +16,7 @@ if (rootElement && !rootElement.innerHTML) {
 	root.render(
 		<StrictMode>
 			<MantineProvider theme={appTheme}>
+				<Notifications position="bottom-right" zIndex={1000} />
 				<ModalsProvider>
 					<RouterProvider router={router} />
 				</ModalsProvider>
