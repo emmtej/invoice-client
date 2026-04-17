@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useId } from "react";
 import { PageTitle } from "@/components/ui/text/PageTitle";
+import { initDb } from "@/features/storage/pgliteClient";
 
 const features = [
 	{
@@ -236,6 +237,7 @@ export default function App() {
 			to={tool.to}
 			withBorder
 			p="md"
+			onMouseEnter={() => initDb()}
 			style={{
 				transition: "transform 200ms ease, box-shadow 200ms ease",
 				cursor: "pointer",
@@ -296,6 +298,7 @@ export default function App() {
 									variant="filled"
 									color="wave"
 									size="lg"
+									onMouseEnter={() => initDb()}
 								>
 									Get started
 								</Button>
@@ -305,6 +308,7 @@ export default function App() {
 									variant="light"
 									color="wave"
 									size="lg"
+									onMouseEnter={() => initDb()}
 								>
 									Open script editor
 								</Button>

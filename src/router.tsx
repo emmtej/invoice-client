@@ -7,9 +7,10 @@ import {
 	redirect,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import App from "./App";
 import { Layout } from "./components/ui/layout/Layout";
+import { getDbStatus } from "./features/storage/pgliteClient";
 import { useUserStore } from "./store/userStore";
 
 const BoothPage = lazy(() => import("@/features/booth"));
@@ -36,16 +37,30 @@ declare module "@tanstack/react-router" {
 }
 
 function RouteFallback({ label }: { label: string }) {
+	const [isDbInitializing, setIsDbInitializing] = useState(
+		getDbStatus().isInitializing,
+	);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			const { isInitializing } = getDbStatus();
+			setIsDbInitializing(isInitializing);
+		}, 100);
+		return () => clearInterval(interval);
+	}, []);
+
 	return (
 		<Center mih="50vh">
 			<Paper withBorder p="xl" maw={360} w="100%" bg="white">
 				<Stack gap="sm" align="center">
 					<Loader color="wave" size="sm" />
 					<Text fw={700} c="gray.8">
-						Loading {label}
+						{isDbInitializing ? "Setting up studio..." : `Loading ${label}`}
 					</Text>
 					<Text size="sm" c="gray.5" ta="center">
-						Hang tight while this screen finishes loading.
+						{isDbInitializing
+							? "Initializing your local database for the first time."
+							: "Hang tight while this screen finishes loading."}
 					</Text>
 				</Stack>
 			</Paper>

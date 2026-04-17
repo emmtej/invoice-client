@@ -9,6 +9,7 @@ import {
 import { Link, useLocation } from "@tanstack/react-router";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
+import { initDb } from "@/features/storage/pgliteClient";
 
 function normalizePath(path: string) {
 	return path.replace(/\/$/, "") || "/";
@@ -136,6 +137,7 @@ export function LinksGroup({
 				component={Link}
 				to={link.link}
 				onClick={onNavigate}
+				onMouseEnter={() => initDb()}
 				style={isActive ? linkActiveStyles : linkBaseStyles}
 			>
 				{link.label}
@@ -164,6 +166,7 @@ export function LinksGroup({
 					component={Link}
 					to={href || ""}
 					onClick={onNavigate}
+					onMouseEnter={() => initDb()}
 					styles={isHrefActive ? controlActiveStyles : controlStyles}
 				>
 					{content}
