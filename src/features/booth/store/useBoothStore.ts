@@ -40,6 +40,7 @@ interface BoothActions {
 	resumeSession: () => void;
 	stopSession: () => Promise<void>;
 	completeLine: (lineIndex: number) => Promise<void>;
+	completeScene: (markerIndex: number) => Promise<void>;
 	editLine: (lineIndex: number, content: string) => Promise<void>;
 	resetSession: () => void;
 	restartSession: (resetTimer?: boolean) => Promise<void>;
@@ -216,6 +217,69 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 			{ lineIndex, elapsedMs: lineElapsed },
 		];
 		const newCompleted = [...state.completedLineIndices, lineIndex];
+		const nextLine = findNextUncompletedLine(state.script, newCompleted);
+		const totalReadable = getReadableLineCount(state.script);
+		const allDone = newCompleted.length >= totalReadable;
+
+		set({
+			completedLineIndices: newCompleted,
+			lineTimings: newTimings,
+			currentLineIndex: nextLine >= 0 ? nextLine : state.currentLineIndex,
+			lineStartMs: Date.now(),
+		});
+
+		if (allDone) {
+			const finalElapsed = get().elapsedMs;
+			if (state.sessionId) {
+				await boothQueries.completeSession(state.sessionId, {
+					completedLines: newCompleted.length,
+					elapsedMs: finalElapsed,
+					lineTimings: newTimings,
+				});
+			}
+			set({ status: "completed" });
+			await get().loadSessions();
+		} else if (state.sessionId) {
+			await boothQueries.updateSession(state.sessionId, {
+				completedLines: newCompleted.length,
+				elapsedMs: get().elapsedMs,
+				lineTimings: newTimings,
+			});
+		}
+	},
+
+	completeScene: async (markerIndex) => {
+		const state = get();
+		if (state.status !== "running" || !state.script) return;
+
+		// 1. Find all readable lines in this scene
+		const lineIndicesInScene: number[] = [];
+		for (let i = markerIndex + 1; i < state.script.lines.length; i++) {
+			const line = state.script.lines[i];
+			if (line.type === "marker") break;
+			if (line.type === "dialogue" || line.type === "action") {
+				if (!state.completedLineIndices.includes(i)) {
+					lineIndicesInScene.push(i);
+				}
+			}
+		}
+
+		if (lineIndicesInScene.length === 0) return;
+
+		// 2. Calculate and distribute timings
+		const totalElapsedSinceStart = Date.now() - state.lineStartMs;
+		const perLineElapsed = Math.floor(
+			totalElapsedSinceStart / lineIndicesInScene.length,
+		);
+
+		const newTimings = [...state.lineTimings];
+		const newCompleted = [...state.completedLineIndices];
+
+		for (const idx of lineIndicesInScene) {
+			newTimings.push({ lineIndex: idx, elapsedMs: perLineElapsed });
+			newCompleted.push(idx);
+		}
+
 		const nextLine = findNextUncompletedLine(state.script, newCompleted);
 		const totalReadable = getReadableLineCount(state.script);
 		const allDone = newCompleted.length >= totalReadable;

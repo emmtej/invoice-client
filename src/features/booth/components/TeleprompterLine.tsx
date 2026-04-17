@@ -17,7 +17,9 @@ interface TeleprompterLineProps {
 	isCurrent: boolean;
 	isCompleted: boolean;
 	isSessionRunning: boolean;
+	trackingMode: "line" | "scene";
 	onComplete: (lineIndex: number) => void;
+	onCompleteScene: (markerIndex: number) => void;
 	onEdit: (lineIndex: number, content: string) => Promise<void>;
 }
 
@@ -28,7 +30,9 @@ export function TeleprompterLine({
 	isCurrent,
 	isCompleted,
 	isSessionRunning,
+	trackingMode,
 	onComplete,
+	onCompleteScene,
 	onEdit,
 }: TeleprompterLineProps) {
 	const [isEditing, setIsEditing] = useState(false);
@@ -36,17 +40,44 @@ export function TeleprompterLine({
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const isReadable = line.type === "dialogue" || line.type === "action";
+	const isSceneMode = trackingMode === "scene";
 
 	if (line.type === "marker") {
 		return (
 			<Box
-				py="xs"
+				py="md"
 				px="md"
-				style={{ borderBottom: "1px dashed var(--mantine-color-gray-3)" }}
+				bg={isCurrent && isSceneMode ? "wave.0" : "transparent"}
+				style={{
+					borderBottom: "1px dashed var(--mantine-color-gray-3)",
+					borderLeft:
+						isCurrent && isSceneMode
+							? "3px solid var(--mantine-color-wave-5)"
+							: "3px solid transparent",
+					transition: "background-color 150ms ease",
+				}}
 			>
-				<Text size="xs" fw={700} c="gray.5" tt="uppercase" ta="center">
-					{content}
-				</Text>
+				<Group gap="sm" wrap="nowrap">
+					{isSceneMode && (
+						<Checkbox
+							checked={isCompleted}
+							onChange={() => onCompleteScene(lineIndex)}
+							disabled={!isSessionRunning || isCompleted}
+							color="wave"
+							style={{ flexShrink: 0 }}
+						/>
+					)}
+					<Text
+						size="xs"
+						fw={800}
+						c={isCompleted ? "gray.5" : "gray.6"}
+						tt="uppercase"
+						lts={1}
+						flex={1}
+					>
+						{content}
+					</Text>
+				</Group>
 			</Box>
 		);
 	}
@@ -77,25 +108,28 @@ export function TeleprompterLine({
 			py="sm"
 			px="md"
 			align="flex-start"
-			bg={isCurrent ? "wave.0" : "transparent"}
+			bg={isCurrent && !isSceneMode ? "wave.0" : "transparent"}
 			opacity={isCompleted ? 0.45 : 1}
 			style={{
-				borderLeft: isCurrent
-					? "3px solid var(--mantine-color-wave-5)"
-					: "3px solid transparent",
+				borderLeft:
+					isCurrent && !isSceneMode
+						? "3px solid var(--mantine-color-wave-5)"
+						: "3px solid transparent",
 				transition: "background-color 150ms ease, opacity 150ms ease",
 			}}
 		>
-			<Checkbox
-				checked={isCompleted}
-				onChange={() => onComplete(lineIndex)}
-				disabled={!isSessionRunning || isCompleted}
-				mt={4}
-				color="wave"
-				style={{ flexShrink: 0 }}
-			/>
+			{!isSceneMode && (
+				<Checkbox
+					checked={isCompleted}
+					onChange={() => onComplete(lineIndex)}
+					disabled={!isSessionRunning || isCompleted}
+					mt={4}
+					color="wave"
+					style={{ flexShrink: 0 }}
+				/>
+			)}
 
-			<Box flex={1} miw={0}>
+			<Box flex={1} miw={0} ml={isSceneMode ? "md" : 0}>
 				{isEditing ? (
 					<Group gap="xs" wrap="nowrap">
 						<TextInput
