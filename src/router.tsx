@@ -8,11 +8,11 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import React, { lazy, Suspense, useEffect, useState } from "react";
-import App from "./App";
 import { Layout } from "./components/ui/layout/Layout";
 import { getDbStatus } from "./features/storage/pgliteClient";
 import { useUserStore } from "./store/userStore";
 
+const HomePage = lazy(() => import("@/features/home"));
 const BoothPage = lazy(() => import("@/features/booth"));
 const EditorPage = lazy(() => import("@/features/editor"));
 const ScriptsPage = lazy(() => import("@/features/scripts"));
@@ -110,7 +110,11 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "/",
-	component: App,
+	component: () => (
+		<Suspense fallback={<RouteFallback label="home" />}>
+			<HomePage />
+		</Suspense>
+	),
 });
 
 const loginRoute = createRoute({

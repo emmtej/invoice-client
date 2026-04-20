@@ -3,6 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import viteReact from "@vitejs/plugin-react";
 import { defineConfig, loadEnv } from "vite";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), "");
@@ -20,6 +21,12 @@ export default defineConfig(({ mode }) => {
 				babel: {
 					plugins: ["babel-plugin-react-compiler"],
 				},
+			}),
+			ViteImageOptimizer({
+				png: { quality: 80 },
+				jpeg: { quality: 75 },
+				webp: { quality: 80 },
+				avif: { quality: 70 },
 			}),
 			tailwindcss(),
 			{
