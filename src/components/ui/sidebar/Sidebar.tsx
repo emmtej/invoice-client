@@ -2,18 +2,18 @@ import { Box, ScrollArea } from "@mantine/core";
 import {
 	FileText,
 	FolderOpen,
-	LayoutDashboard,
 	Mic,
 	Receipt,
 	User,
+	Wrench,
 } from "lucide-react";
 import { useUserStore } from "@/store/userStore";
 import { LinksGroup } from "./NavLinksGroup";
 import { UserButton } from "./UserButton";
 
 const navlinks = [
-	{ label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-	{ label: "Scripts", icon: FolderOpen, href: "/scripts" },
+	{ label: "Booth", icon: Mic, href: "/booth" },
+
 	{
 		label: "Invoices",
 		icon: Receipt,
@@ -23,8 +23,14 @@ const navlinks = [
 			{ label: "Presets", link: "/invoice/presets" },
 		],
 	},
-	{ label: "Booth", icon: Mic, href: "/booth" },
-	{ label: "Editor", icon: FileText, href: "/editor" },
+	{
+		label: "Tools",
+		icon: Wrench,
+		links: [
+			{ label: "Scripts", link: "/scripts" },
+			{ label: "Editor", link: "/editor" },
+		],
+	},
 	{ label: "Profile", icon: User, href: "/profile" },
 ];
 
