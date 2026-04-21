@@ -1,5 +1,33 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap");
+@font-face {
+	font-family: "Sneaky Times";
+	src:
+		url("./assets/fonts/Sneaky-Times.woff2") format("woff2"),
+		url("./assets/fonts/Sneaky-Times.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Poppins";
+	src:
+		url("./assets/fonts/Poppins-Variable.woff2") format("woff2-variations"),
+		url("./assets/fonts/Poppins-Variable.woff") format("woff");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Poppins";
+	src:
+		url("./assets/fonts/Poppins-VariableItalic.woff2") format("woff2-variations"),
+		url("./assets/fonts/Poppins-VariableItalic.woff") format("woff");
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+
 @import "tailwindcss";
 @import "@mantine/core/styles.css";
 @import "@mantine/dropzone/styles.css";
@@ -7,8 +35,8 @@
 @import "@mantine/tiptap/styles.css";
 
 @theme {
-	--font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-	--font-display: "Source Serif 4", Georgia, Cambria, "Times New Roman", serif;
+	--font-sans: "Poppins", sans-serif;
+	--font-display: "Sneaky Times", serif;
 	--radius-xs: 0px;
 	--radius-sm: 0px;
 	--radius-md: 0px;
@@ -37,9 +65,9 @@
 }
 
 :root {
-	--app-bg: light-dark(#F9FAFB, var(--mantine-color-dark-8));
-	--font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-	--font-display: "Source Serif 4", Georgia, Cambria, "Times New Roman", serif;
+	--app-bg: light-dark(#fdfdfc, var(--mantine-color-dark-8));
+	--font-sans: "Poppins", sans-serif;
+	--font-display: "Sneaky Times", serif;
 }
 
 html,
@@ -48,7 +76,9 @@ body {
 	color: #4b5563;
 	min-height: 100dvh;
 	font-family: var(--font-sans);
+	font-weight: 400;
 	font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+	-webkit-font-smoothing: antialiased;
 }
 
 .tabular-nums {
@@ -65,26 +95,28 @@ body {
 
 .page-title {
 	font-family: var(--font-display);
-	font-weight: 800;
-	letter-spacing: -0.025em;
+	font-weight: 500;
+	letter-spacing: -0.01em;
 	line-height: 1.1;
-	color: #1f2937;
+	color: #2b3440;
 }
 
 .page-subtitle {
 	color: #6b7280;
 	text-wrap: pretty;
+	font-size: 1.125rem;
 }
 
 body {
 	background-image: radial-gradient(
-		ellipse 120% 80% at 100% -20%,
+		ellipse 80% 50% at 50% -10%,
 		light-dark(
-			color-mix(in srgb, var(--mantine-color-studio-1) 35%, transparent),
-			color-mix(in srgb, var(--mantine-color-studio-9) 25%, transparent)
+			color-mix(in srgb, var(--mantine-color-wave-0) 40%, transparent),
+			color-mix(in srgb, var(--mantine-color-wave-9) 20%, transparent)
 		),
-		transparent 55%
+		transparent 100%
 	);
+	background-attachment: fixed;
 }
 
 @media print {
@@ -95,13 +127,14 @@ body {
 	}
 }
 
-/* Notion-like minimal editor toolbar */
+/* Redesigned rich text editor toolbar */
 .rich-text-editor-toolbar {
-	padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+	padding: var(--mantine-spacing-sm);
 	border-bottom: 1px solid
-		light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+		light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 	gap: var(--mantine-spacing-xs);
 	align-items: center;
+	background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
 }
 
 .rich-text-editor-toolbar .editor-additional-menu {
@@ -109,4 +142,21 @@ body {
 	align-items: center;
 	gap: var(--mantine-spacing-xs);
 	margin-left: auto;
+}
+
+/* Custom soft component styles */
+.mantine-Button-root {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.mantine-Paper-root {
+	transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.mantine-Paper-root:hover {
+	/* Only apply to cards that should be interactive */
+	&.interactive-card {
+		transform: translateY(-2px);
+		box-shadow: var(--mantine-shadow-md);
+	}
 }

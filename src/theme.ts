@@ -1,37 +1,34 @@
 import { createTheme, type MantineColorsTuple } from "@mantine/core";
 
+// Custom local fonts
 const fontSans =
-	"Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif";
-
-/**
- * InVoice design tokens (warm, Gusto-inspired financial aesthetic):
- * - wave: deep teal primary (CTAs, active nav, links, focus rings)
- * - studio: warm terracotta accent (badges, illustrations, warm tints)
- */
-const studio: MantineColorsTuple = [
-	"#fdf6f3",
-	"#fceee8",
-	"#f8dcd0",
-	"#f0c0a8",
-	"#e49a78",
-	"#d47852",
-	"#c45d3e",
-	"#a34a32",
-	"#863d2a",
-	"#6f3424",
-];
+	'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+const fontDisplay = '"Sneaky Times", serif';
 
 const wave: MantineColorsTuple = [
-	"#f0faf9",
-	"#d8f4f0",
-	"#b3e8e0",
-	"#7dd4c8",
-	"#4dbdaa",
-	"#2fa896",
-	"#238b7c",
-	"#1d7065",
-	"#185a52",
-	"#134a44",
+	"#e6fcf5", // 0: Background/Ghost
+	"#c3fae8", // 1: Hover/Lightest
+	"#96f2d7", // 2: Light
+	"#63e6be", // 3: Soft
+	"#38d9a9", // 4: Muted
+	"#20c997", // 5: Base Muted
+	"#12b886", // 6: Solid
+	"#0ca678", // 7: Dark Solid
+	"#099268", // 8: Primary Base
+	"#087f5b", // 9: Deepest
+];
+
+const studio: MantineColorsTuple = [
+	"#fff0e6", // 0: Background/Ghost
+	"#ffe8cc", // 1: Hover/Lightest
+	"#ffd8a8", // 2: Light
+	"#ffc078", // 3: Soft
+	"#ffa94d", // 4: Muted
+	"#ff922b", // 5: Base Muted
+	"#fd7e14", // 6: Solid
+	"#f76707", // 7: Dark Solid
+	"#e8590c", // 8: Primary Base
+	"#d9480f", // 9: Deepest
 ];
 
 export const appTheme = createTheme({
@@ -41,8 +38,8 @@ export const appTheme = createTheme({
 		studio,
 		wave,
 	},
-	black: "#1F2937",
-	defaultRadius: 0,
+	black: "#2b3440", // Softer dark grey
+	defaultRadius: "0",
 	radius: {
 		xs: "0px",
 		sm: "0px",
@@ -51,40 +48,102 @@ export const appTheme = createTheme({
 		xl: "0px",
 	},
 	shadows: {
-		sm: "0 2px 10px -3px rgba(0, 0, 0, 0.05)",
-		md: "0 4px 15px -5px rgba(0, 0, 0, 0.05)",
-		lg: "0 10px 25px -5px rgba(0, 0, 0, 0.05)",
+		sm: "0 4px 12px -2px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02)",
+		md: "0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)",
+		lg: "0 20px 25px -5px rgba(0, 0, 0, 0.04), 0 10px 10px -5px rgba(0, 0, 0, 0.02)",
 	},
 	fontFamily: fontSans,
 	headings: {
-		fontFamily: fontSans,
-		fontWeight: "800",
+		fontFamily: fontDisplay,
+		fontWeight: "700",
+		sizes: {
+			h1: { fontSize: "40px", lineHeight: "1.2" },
+			h2: { fontSize: "32px", lineHeight: "1.25" },
+		},
 	},
 	components: {
+		Text: {
+			defaultProps: {
+				className: "font-sans",
+			},
+		},
+		TextInput: {
+			defaultProps: { radius: "0" },
+			styles: {
+				input: {
+					fontFamily: "var(--mantine-font-family)",
+					"&:focus": {
+						borderColor: "var(--mantine-color-wave-8)",
+					},
+				},
+				label: {
+					fontFamily: "var(--mantine-font-family)",
+				},
+			},
+		},
 		Paper: {
 			defaultProps: {
 				shadow: "sm",
-				withBorder: false,
+				withBorder: true,
+				radius: "0",
+			},
+			styles: {
+				root: {
+					borderColor: "var(--mantine-color-gray-2)",
+				},
 			},
 		},
 		Button: {
-			defaultProps: { radius: 0 },
+			defaultProps: { radius: "0" },
+			styles: {
+				root: {
+					fontWeight: 600,
+					transition: "all 150ms ease",
+				},
+			},
 		},
-		Input: { defaultProps: { radius: 0 } },
-		ActionIcon: { defaultProps: { radius: 0 } },
-		Badge: { defaultProps: { radius: 0 } },
-		Avatar: { defaultProps: { radius: 0 } },
-		ThemeIcon: { defaultProps: { radius: 0 } },
-		SegmentedControl: { defaultProps: { radius: 0 } },
+		Input: {
+			defaultProps: { radius: "0" },
+			styles: {
+				input: {
+					"&:focus": {
+						borderColor: "var(--mantine-color-wave-8)",
+					},
+				},
+			},
+		},
+		ActionIcon: { defaultProps: { radius: "0" } },
+		Badge: {
+			defaultProps: { radius: "0" },
+			styles: {
+				root: {
+					textTransform: "capitalize",
+					letterSpacing: "0",
+					fontWeight: 600,
+				},
+			},
+		},
+		Avatar: { defaultProps: { radius: "0" } },
+		ThemeIcon: { defaultProps: { radius: "0" } },
+		SegmentedControl: {
+			defaultProps: { radius: "0" },
+			styles: {
+				root: {
+					backgroundColor: "var(--mantine-color-gray-0)",
+				},
+				indicator: {
+					boxShadow: "var(--mantine-shadow-sm)",
+				},
+			},
+		},
 		InputWrapper: {
 			styles: {
 				label: {
-					fontSize: "12px",
-					textTransform: "uppercase",
-					letterSpacing: "0.05em",
+					fontSize: "13px",
 					fontWeight: 600,
-					color: "#6B7280",
+					color: "#4b5563",
 					marginBottom: "4px",
+					letterSpacing: "0",
 				},
 			},
 		},
@@ -94,8 +153,9 @@ export const appTheme = createTheme({
 				withinPortal: true,
 				overlayProps: {
 					blur: 3,
-					backgroundOpacity: 0.55,
+					backgroundOpacity: 0.5,
 				},
+				radius: "0",
 			},
 		},
 		Table: {
@@ -106,28 +166,25 @@ export const appTheme = createTheme({
 			},
 			styles: {
 				thead: {
-					backgroundColor: "transparent",
+					backgroundColor: "var(--mantine-color-gray-0)",
 				},
 				th: {
-					borderBottom: "1px solid #F3F4F6",
-					color: "#6B7280",
+					borderBottom: "1px solid var(--mantine-color-gray-2)",
+					color: "#4b5563",
 					fontSize: "12px",
 					textTransform: "uppercase",
 					letterSpacing: "0.05em",
-					fontWeight: 600,
-				},
-				tr: {
-					transition: "background-color 150ms ease",
+					fontWeight: 700,
 				},
 				td: {
-					borderBottom: "1px solid #F3F4F6",
+					borderBottom: "1px solid var(--mantine-color-gray-1)",
 				},
 			},
 		},
 		Title: {
 			styles: {
 				root: {
-					color: "#1F2937",
+					color: "#2b3440",
 				},
 			},
 		},
