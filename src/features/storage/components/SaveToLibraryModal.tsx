@@ -196,7 +196,7 @@ export const SaveToLibraryModal = memo(
 				onClose={onClose}
 				title={title}
 				size="md"
-				radius={0}
+				radius="md"
 			>
 				<Stack gap="md">
 					<Text size="sm" c="gray.6">
@@ -217,7 +217,7 @@ export const SaveToLibraryModal = memo(
 										<X size={10} />
 									</ActionIcon>
 								)}
-								radius={0}
+								radius="md"
 								w={180}
 							/>
 						</Group>
@@ -296,7 +296,7 @@ export const SaveToLibraryModal = memo(
 									placeholder="Folder name"
 									value={newFolderName}
 									onChange={(e) => setNewFolderName(e.currentTarget.value)}
-									radius={0}
+									radius="md"
 									size="sm"
 									autoFocus
 									onKeyDown={(e) => e.key === 'Enter' && void handleCreateFolder()}
@@ -306,7 +306,7 @@ export const SaveToLibraryModal = memo(
 										variant="subtle"
 										color="gray"
 										size="xs"
-										radius={0}
+										radius="md"
 										onClick={() => {
 											setCreateFormOpen(false);
 											setNewFolderName("");
@@ -317,7 +317,7 @@ export const SaveToLibraryModal = memo(
 									<Button
 										color="wave"
 										size="xs"
-										radius={0}
+										radius="md"
 										loading={isCreatingFolder}
 										disabled={!newFolderName.trim()}
 										onClick={() => void handleCreateFolder()}
@@ -334,7 +334,7 @@ export const SaveToLibraryModal = memo(
 								mt="xs"
 								leftSection={<FolderPlus size={14} />}
 								onClick={() => setCreateFormOpen(true)}
-								radius={0}
+								radius="md"
 								styles={{
 									section: { marginRight: 6 }
 								}}
@@ -375,7 +375,7 @@ export const SaveToLibraryModal = memo(
 					)}
 
 					<Group justify="flex-end" mt="md">
-						<Button variant="subtle" color="gray" onClick={onClose} radius={0}>
+						<Button variant="subtle" color="gray" onClick={onClose} radius="md">
 							Cancel
 						</Button>
 						<Button
@@ -383,7 +383,7 @@ export const SaveToLibraryModal = memo(
 							onClick={() => void handleSave()}
 							loading={isSubmitting}
 							disabled={scripts.length > 0 && selectedIds.size === 0}
-							radius={0}
+							radius="md"
 						>
 							Confirm & Save
 						</Button>

@@ -7,7 +7,6 @@ import {
 	Group,
 	Overlay,
 	Paper,
-	SimpleGrid,
 	Stack,
 	Text,
 	ThemeIcon,
@@ -21,104 +20,122 @@ import { initDb } from "@/features/storage/pgliteClient";
 export function LandingHero() {
 	return (
 		<section>
-			<Grid gutter={60} align="center">
-				<Grid.Col span={{ base: 12, md: 5 }}>
-					<Stack gap="xl">
-						<div>
-							<Badge variant="dot" color="studio" size="lg" mb="md">
-								Studio-ready workflow
-							</Badge>
-							<Title order={1} size={56} fw={900} style={{ lineHeight: 1.1 }}>
-								From script to
-								<br />
-								<Text component="span" inherit c="studio.5">
-									professional invoice
-								</Text>
-							</Title>
-						</div>
-						<Text c="gray.6" size="lg">
-							InVoice handles the word counts so you can focus on the
-							performance. Automated parsing for DOCX and text scripts.
-						</Text>
-						<Group gap="md">
-							<Button
-								component={Link}
-								to="/register"
-								size="xl"
-								radius="md"
-								color="wave"
-								onMouseEnter={() => initDb()}
-							>
-								Create Account
-							</Button>
-							<Button
-								component={Link}
-								to="/editor"
-								size="xl"
-								radius="md"
-								variant="light"
-								color="gray"
-								onMouseEnter={() => initDb()}
-							>
-								Try Editor
-							</Button>
-						</Group>
-					</Stack>
-				</Grid.Col>
-				<Grid.Col span={{ base: 12, md: 7 }}>
-					<SimpleGrid cols={2} spacing="md">
-						<Paper
-							radius="2xl"
-							p={0}
-							withBorder
-							style={{
-								gridColumn: "span 2",
-								overflow: "hidden",
-								height: "300px",
-							}}
+			<Grid gutter="md">
+				{/* Large card on the left with image on right */}
+				<Grid.Col span={{ base: 12, lg: 8 }}>
+					<Paper
+						radius="2xl"
+						p={0}
+						withBorder
+						style={{
+							overflow: "hidden",
+							height: "500px",
+							position: "relative",
+							backgroundColor: "#1A1B1E", // Dark studio foam base
+						}}
+					>
+						{/* Image container positioned to the right */}
+						<Box
+							pos="absolute"
+							top={0}
+							right={0}
+							bottom={0}
+							w="70%"
+							style={{ zIndex: 1 }}
 						>
-							<BackgroundImage src={invoice1} h="100%">
-								<Box p="xl" h="100%" pos="relative">
-									<Overlay color="#000" opacity={0.3} zIndex={1} />
-									<Stack
-										h="100%"
-										justify="flex-end"
-										pos="relative"
-										style={{ zIndex: 2 }}
+							<BackgroundImage src={invoice1} h="100%" />
+						</Box>
+
+						{/* Overlay for text contrast - matching dark foam color */}
+						<Overlay
+							gradient="linear-gradient(90deg, #1A1B1E 35%, rgba(26, 27, 30, 0.8) 50%, rgba(26, 27, 30, 0) 100%)"
+							zIndex={2}
+						/>
+
+						{/* Content container */}
+						<Box p={40} h="100%" pos="relative" style={{ zIndex: 3 }}>
+							<Stack gap="xl" maw={420} h="100%" justify="center">
+								<div>
+									<Title
+										order={1}
+										size={44}
+										style={{ lineHeight: 1.1 }}
+										fw={600}
+										c="white"
 									>
-										<Badge variant="filled" color="wave" w="fit-content">
-											Preview
-										</Badge>
-										<Text fw={700} c="white" size="xl">
-											Visual script tracking
-										</Text>
-									</Stack>
-								</Box>
-							</BackgroundImage>
+										From Script to
+										<br />
+										Professional Invoice
+									</Title>
+								</div>
+								<Text c="white" size="md" fw={400} style={{ opacity: 0.8 }}>
+									InVoice handles the word counts so you can focus on the
+									performance. Automated parsing for DOCX and text scripts.
+								</Text>
+								<Group gap="md">
+									<Button
+										component={Link}
+										to="/register"
+										size="md"
+										radius="sm"
+										color="wave"
+										onMouseEnter={() => initDb()}
+									>
+										Get Started
+									</Button>
+									<Button
+										component={Link}
+										to="/editor"
+										size="md"
+										radius="sm"
+										variant="white"
+										color="gray"
+										onMouseEnter={() => initDb()}
+									>
+										Try Editor
+									</Button>
+								</Group>
+							</Stack>
+						</Box>
+					</Paper>
+				</Grid.Col>
+
+				{/* Stacked cards on the right */}
+				<Grid.Col span={{ base: 12, lg: 4 }}>
+					<Stack gap="md" h="100%">
+						<Paper radius="2xl" p="xl" bg="studio.0" withBorder flex={1}>
+							<Stack h="100%" justify="space-between">
+								<ThemeIcon variant="light" color="studio" size="lg" radius="md">
+									<Mic size={20} />
+								</ThemeIcon>
+								<div>
+									<Text fw={700} size="lg">
+										Booth Mode
+									</Text>
+									<Text size="sm" c="gray.6">
+										Professional teleprompter tools designed for active
+										recording sessions.
+									</Text>
+								</div>
+							</Stack>
 						</Paper>
-						<Paper radius="2xl" p="xl" bg="studio.0" withBorder>
-							<ThemeIcon variant="light" color="studio" size="lg" radius="md">
-								<Mic size={20} />
-							</ThemeIcon>
-							<Text fw={700} mt="md">
-								Booth Mode
-							</Text>
-							<Text size="sm" c="gray.6">
-								Teleprompter tools for sessions.
-							</Text>
+						<Paper radius="2xl" p="xl" bg="wave.0" withBorder flex={1}>
+							<Stack h="100%" justify="space-between">
+								<ThemeIcon variant="light" color="wave" size="lg" radius="md">
+									<Receipt size={20} />
+								</ThemeIcon>
+								<div>
+									<Text fw={700} size="lg">
+										Smart Billing
+									</Text>
+									<Text size="sm" c="gray.6">
+										Generate invoices based on word-counts and custom line items
+										automatically.
+									</Text>
+								</div>
+							</Stack>
 						</Paper>
-						<Paper radius="2xl" p="xl" bg="wave.0" withBorder>
-							<ThemeIcon variant="light" color="wave" size="lg" radius="md">
-								<Receipt size={20} />
-							</ThemeIcon>
-							<Text fw={700} mt="md">
-								Smart Billing
-							</Text>
-							<Text size="sm" c="gray.6">
-								Word-count based lines.
-							</Text>
-						</Paper>
-					</SimpleGrid>
+					</Stack>
 				</Grid.Col>
 			</Grid>
 		</section>
