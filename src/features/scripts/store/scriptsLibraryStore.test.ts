@@ -76,6 +76,7 @@ describe("Scripts Library Stores", () => {
 			selectedIds: [],
 			lastSelectedId: null,
 			isPreviewLoading: false,
+			viewMode: "grid",
 		});
 
 		pgliteClientMocks.initDb.mockResolvedValue({
@@ -260,6 +261,16 @@ describe("Scripts Library Stores", () => {
 
 			expect(useScriptsUiStore.getState().selectedScript).toBeNull();
 			expect(useScriptsUiStore.getState().selectedIds).toEqual([]);
+		});
+
+		it("manages viewMode state", () => {
+			expect(useScriptsUiStore.getState().viewMode).toBe("grid");
+
+			useScriptsUiStore.getState().setViewMode("list");
+			expect(useScriptsUiStore.getState().viewMode).toBe("list");
+
+			useScriptsUiStore.getState().setViewMode("grid");
+			expect(useScriptsUiStore.getState().viewMode).toBe("grid");
 		});
 	});
 });

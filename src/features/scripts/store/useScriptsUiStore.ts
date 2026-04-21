@@ -8,6 +8,7 @@ interface ScriptsUiState {
 	selectedIds: string[];
 	lastSelectedId: string | null;
 	isPreviewLoading: boolean;
+	viewMode: "grid" | "list";
 }
 
 interface ScriptsUiActions {
@@ -23,6 +24,7 @@ interface ScriptsUiActions {
 	) => void;
 	selectAll: (allCurrentIds: string[]) => void;
 	clearSelection: () => void;
+	setViewMode: (mode: "grid" | "list") => void;
 }
 
 export type ScriptsUiStore = ScriptsUiState & ScriptsUiActions;
@@ -33,6 +35,7 @@ export const useScriptsUiStore = create<ScriptsUiStore>()((set, get) => ({
 	selectedIds: [],
 	lastSelectedId: null,
 	isPreviewLoading: false,
+	viewMode: "grid",
 
 	setCurrentFolder: (folderId) =>
 		set({ currentFolderId: folderId, selectedScript: null, selectedIds: [] }),
@@ -91,4 +94,6 @@ export const useScriptsUiStore = create<ScriptsUiStore>()((set, get) => ({
 
 	clearSelection: () =>
 		set({ selectedScript: null, selectedIds: [], lastSelectedId: null }),
+
+	setViewMode: (mode) => set({ viewMode: mode }),
 }));
