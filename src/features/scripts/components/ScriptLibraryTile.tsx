@@ -26,11 +26,7 @@ export function ScriptLibraryTile({
 
 	return (
 		<Card
-			bg={
-				isSelected
-					? "rgba(17, 40, 77, 0.05)"
-					: "transparent"
-			}
+			bg={isSelected ? "rgba(17, 40, 77, 0.05)" : "white"}
 			shadow="xs"
 			py="sm"
 			px="md"
