@@ -2,7 +2,6 @@ import { type MantineTheme, Paper, type PaperProps } from "@mantine/core";
 import type { CSSProperties, ReactNode } from "react";
 
 const surfaceStyle = {
-	border: "1px solid #F3F4F6", // very faint border
 	transition: "transform 150ms ease, box-shadow 150ms ease",
 };
 
@@ -25,7 +24,7 @@ export function SurfaceCard({ children, style, ...rest }: SurfaceCardProps) {
 		: { ...surfaceStyle, ...(style ?? {}) };
 
 	return (
-		<Paper p="xl" bg="white" shadow="sm" style={mergedStyle} {...rest}>
+		<Paper p="xl" style={mergedStyle} {...rest}>
 			{children}
 		</Paper>
 	);

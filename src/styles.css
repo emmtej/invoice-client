@@ -65,11 +65,11 @@
 	--color-aged-paper: #ebe4d5;
 	--color-charcoal: #212529;
 
-	--radius-xs: 2px;
-	--radius-sm: 4px;
-	--radius-md: 8px;
-	--radius-lg: 12px;
-	--radius-xl: 20px;
+	--radius-xs: 1px;
+	--radius-sm: 2px;
+	--radius-md: 4px;
+	--radius-lg: 8px;
+	--radius-xl: 12px;
 }
 
 :root {

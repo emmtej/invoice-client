@@ -42,11 +42,11 @@ export const appTheme = createTheme({
 	white: "#FFFFFF",
 	defaultRadius: "md",
 	radius: {
-		xs: "2px",
-		sm: "4px",
-		md: "8px",
-		lg: "12px",
-		xl: "20px",
+		xs: "1px",
+		sm: "2px",
+		md: "4px",
+		lg: "8px",
+		xl: "12px",
 	},
 	shadows: {
 		sm: "0 4px 12px -2px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02)",
@@ -92,6 +92,7 @@ export const appTheme = createTheme({
 			styles: {
 				root: {
 					borderColor: "rgba(0,0,0,0.05)",
+					overflow: "hidden",
 				},
 			},
 		},
