@@ -52,7 +52,7 @@ export const useScriptsUiStore = create<ScriptsUiStore>()((set, get) => ({
 			}
 		} catch (error) {
 			console.error("Failed to load script preview:", error);
-			set({ isPreviewLoading: false });
+			set({ selectedScript: null, isPreviewLoading: false });
 		}
 	},
 
@@ -64,6 +64,7 @@ export const useScriptsUiStore = create<ScriptsUiStore>()((set, get) => ({
 		if (isRange && lastSelectedId) {
 			const lastIndex = allCurrentIds.indexOf(lastSelectedId);
 			const currentIndex = allCurrentIds.indexOf(id);
+
 			if (lastIndex !== -1 && currentIndex !== -1) {
 				const start = Math.min(lastIndex, currentIndex);
 				const end = Math.max(lastIndex, currentIndex);
@@ -75,19 +76,19 @@ export const useScriptsUiStore = create<ScriptsUiStore>()((set, get) => ({
 			}
 		}
 
-		if (isMulti) {
-			const newSelected = new Set(selectedIds);
-			if (newSelected.has(id)) {
-				newSelected.delete(id);
-			} else {
-				newSelected.add(id);
-			}
-			set({ selectedIds: Array.from(newSelected), lastSelectedId: id });
-		} else {
+		if (!isMulti) {
 			set({ selectedIds: [id], lastSelectedId: id });
+			return;
 		}
-	},
 
+		const newSelected = new Set(selectedIds);
+		if (newSelected.has(id)) {
+			newSelected.delete(id);
+		} else {
+			newSelected.add(id);
+		}
+		set({ selectedIds: Array.from(newSelected), lastSelectedId: id });
+	},
 	selectAll: (allCurrentIds) => {
 		set({ selectedIds: allCurrentIds });
 	},

@@ -1,13 +1,22 @@
-import { Alert, Box, Breadcrumbs, Button, Center, Group, SegmentedControl, Text } from "@mantine/core";
-import { AlertCircle, ChevronRight, FolderPlus, LayoutGrid, List, Upload } from "lucide-react";
+import {
+	ActionIcon,
+	Alert,
+	Box,
+	Breadcrumbs,
+	Button,
+	Group,
+	Text,
+	Tooltip,
+} from "@mantine/core";
+import { AlertCircle, ChevronRight, FolderPlus, Grid, List } from "lucide-react";
 import { PageTitle } from "@/components/ui/text/PageTitle";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 
 interface ScriptsHeaderProps {
 	uploadErrors: string[];
 	onResetUpload: () => void;
-	viewMode: "grid" | "list";
-	onViewModeChange: (mode: "grid" | "list") => void;
+	viewMode: "list" | "grid";
+	onViewModeChange: (mode: "list" | "grid") => void;
 	onCreateFolder: () => void;
 	onUpload: (files: File[]) => void;
 	isUploading: boolean;
@@ -53,50 +62,54 @@ export function ScriptsHeader({
 
 			{/* Page header */}
 			<Box px="md" pt="md">
-				<Group justify="space-between" align="flex-end" mb="md">
+				<Group justify="space-between" align="center">
 					<PageTitle>Scripts</PageTitle>
 
-					<Group gap="sm">
-						<SegmentedControl
-							value={viewMode}
-							onChange={(value) => onViewModeChange(value as "grid" | "list")}
-							data={[
-								{
-									value: "grid",
-									label: (
-										<Center>
-											<LayoutGrid size={16} />
-										</Center>
-									),
-								},
-								{
-									value: "list",
-									label: (
-										<Center>
-											<List size={16} />
-										</Center>
-									),
-								},
-							]}
-						/>
+					<Group gap="xs">
+						<Group gap={0} bg="black/5" p={2} style={{ borderRadius: 6 }}>
+							<Tooltip label="List view" openDelay={500}>
+								<ActionIcon
+									variant={viewMode === "list" ? "white" : "transparent"}
+									color={viewMode === "list" ? "charcoal" : "dimmed"}
+									onClick={() => onViewModeChange("list")}
+									size="md"
+									radius="sm"
+									style={{
+										boxShadow:
+											viewMode === "list" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+									}}
+								>
+									<List size={18} />
+								</ActionIcon>
+							</Tooltip>
+							<Tooltip label="Grid view" openDelay={500}>
+								<ActionIcon
+									variant={viewMode === "grid" ? "white" : "transparent"}
+									color={viewMode === "grid" ? "charcoal" : "dimmed"}
+									onClick={() => onViewModeChange("grid")}
+									size="md"
+									radius="sm"
+									style={{
+										boxShadow:
+											viewMode === "grid" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+									}}
+								>
+									<Grid size={18} />
+								</ActionIcon>
+							</Tooltip>
+						</Group>
 
 						<Button
-							variant="light"
-							color="studio-blue"
+							variant="subtle"
+							color="charcoal"
 							leftSection={<FolderPlus size={16} />}
 							onClick={onCreateFolder}
+							size="sm"
 						>
 							New Folder
 						</Button>
 
-						<DocxUploadButton
-							onChange={onUpload}
-							loading={isUploading}
-							leftSection={<Upload size={16} />}
-							multiple
-						>
-							Upload
-						</DocxUploadButton>
+						<DocxUploadButton onFilesSelected={onUpload} loading={isUploading} />
 					</Group>
 				</Group>
 

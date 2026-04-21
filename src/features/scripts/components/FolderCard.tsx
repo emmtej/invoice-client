@@ -23,11 +23,7 @@ export function FolderCard({
 
 	return (
 		<Card
-			bg={
-				isSelected
-					? "rgba(17, 40, 77, 0.05)"
-					: "transparent"
-			}
+			bg={isSelected ? "rgba(17, 40, 77, 0.05)" : "white"}
 			shadow="xs"
 			py="sm"
 			px="md"
@@ -67,7 +63,7 @@ export function FolderCard({
 						</Text>
 						{itemCount > 0 ? (
 							<Text size="xs" c="dimmed" className="tabular-nums">
-								{itemCount === 1 ? "1 item" : `${itemCount} items`}
+								{itemCount === 1 ? "1 item" : \`\${itemCount} items\`}
 							</Text>
 						) : (
 							<Flex align="center" gap={6}>
