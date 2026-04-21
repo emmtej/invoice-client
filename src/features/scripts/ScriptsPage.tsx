@@ -1,9 +1,7 @@
-import { Box, Button, Center, Flex, Group, Loader } from "@mantine/core";
+import { Box, Center, Flex, Loader } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { FolderPlus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { DocxUploadDropzone } from "@/components/ui/upload/DocxUploadDropzone";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { BreadcrumbNav } from "./components/BreadcrumbNav";
 import { MultiSelectToolbar } from "./components/MultiSelectToolbar";
@@ -48,21 +46,25 @@ export default function ScriptsPage() {
 		currentFolderId,
 		selectedScript,
 		selectedIds,
+		viewMode,
 		isPreviewLoading,
 		setCurrentFolder,
 		selectScript,
 		toggleSelection,
 		clearSelection,
+		setViewMode,
 	} = useScriptsUiStore(
 		useShallow((s) => ({
 			currentFolderId: s.currentFolderId,
 			selectedScript: s.selectedScript,
 			selectedIds: s.selectedIds,
+			viewMode: s.viewMode,
 			isPreviewLoading: s.isPreviewLoading,
 			setCurrentFolder: s.setCurrentFolder,
 			selectScript: s.selectScript,
 			toggleSelection: s.toggleSelection,
 			clearSelection: s.clearSelection,
+			setViewMode: s.setViewMode,
 		})),
 	);
 
@@ -129,7 +131,15 @@ export default function ScriptsPage() {
 
 	return (
 		<Flex direction="column" h="100%" rowGap="md">
-			<ScriptsHeader uploadErrors={uploadErrors} onResetUpload={resetUpload} />
+			<ScriptsHeader
+				uploadErrors={uploadErrors}
+				onResetUpload={resetUpload}
+				viewMode={viewMode}
+				onViewModeChange={setViewMode}
+				onCreateFolder={openCreateFolder}
+				onUpload={handleFileChange}
+				isUploading={isUploading}
+			/>
 
 			{breadcrumb.length > 0 && (
 				<Box px="md">
@@ -172,30 +182,6 @@ export default function ScriptsPage() {
 							isLoadingMore={isLoadingMore}
 							onLoadMore={handleLoadMore}
 						/>
-						<Group
-							justify="center"
-							align="stretch"
-							gap="sm"
-							wrap="wrap"
-							pt="lg"
-						>
-							<Box mih={0} miw={280} maw={560} style={{ flex: "1 1 280px" }}>
-								<DocxUploadDropzone
-									variant="compact"
-									onFilesSelected={handleFileChange}
-									loading={isUploading}
-									multiple
-								/>
-							</Box>
-							<Button
-								color="studio-blue"
-								leftSection={<FolderPlus size={16} />}
-								onClick={openCreateFolder}
-								style={{ alignSelf: "center" }}
-							>
-								New Folder
-							</Button>
-						</Group>
 					</Box>
 
 					{selectedScript && (

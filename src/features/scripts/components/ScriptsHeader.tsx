@@ -1,15 +1,26 @@
-import { Alert, Box, Breadcrumbs, Text } from "@mantine/core";
-import { AlertCircle, ChevronRight } from "lucide-react";
+import { Alert, Box, Breadcrumbs, Button, Center, Group, SegmentedControl, Text } from "@mantine/core";
+import { AlertCircle, ChevronRight, FolderPlus, LayoutGrid, List, Upload } from "lucide-react";
 import { PageTitle } from "@/components/ui/text/PageTitle";
+import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 
 interface ScriptsHeaderProps {
 	uploadErrors: string[];
 	onResetUpload: () => void;
+	viewMode: "grid" | "list";
+	onViewModeChange: (mode: "grid" | "list") => void;
+	onCreateFolder: () => void;
+	onUpload: (files: File[]) => void;
+	isUploading: boolean;
 }
 
 export function ScriptsHeader({
 	uploadErrors,
 	onResetUpload,
+	viewMode,
+	onViewModeChange,
+	onCreateFolder,
+	onUpload,
+	isUploading,
 }: ScriptsHeaderProps) {
 	return (
 		<>
@@ -42,7 +53,53 @@ export function ScriptsHeader({
 
 			{/* Page header */}
 			<Box px="md" pt="md">
-				<PageTitle>Scripts</PageTitle>
+				<Group justify="space-between" align="flex-end" mb="md">
+					<PageTitle>Scripts</PageTitle>
+
+					<Group gap="sm">
+						<SegmentedControl
+							value={viewMode}
+							onChange={(value) => onViewModeChange(value as "grid" | "list")}
+							data={[
+								{
+									value: "grid",
+									label: (
+										<Center>
+											<LayoutGrid size={16} />
+										</Center>
+									),
+								},
+								{
+									value: "list",
+									label: (
+										<Center>
+											<List size={16} />
+										</Center>
+									),
+								},
+							]}
+						/>
+
+						<Button
+							variant="light"
+							color="studio-blue"
+							leftSection={<FolderPlus size={16} />}
+							onClick={onCreateFolder}
+						>
+							New Folder
+						</Button>
+
+						<DocxUploadButton
+							onChange={onUpload}
+							loading={isUploading}
+							leftSection={<Upload size={16} />}
+							multiple
+						>
+							Upload
+						</DocxUploadButton>
+					</Group>
+				</Group>
+
 				{uploadErrors.length > 0 && (
 					<Alert
 						color="on-air-red"
