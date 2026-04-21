@@ -1,47 +1,34 @@
-import { Box, ScrollArea } from "@mantine/core";
-import {
-	FileText,
-	FolderOpen,
-	Mic,
-	Receipt,
-	User,
-	Wrench,
-} from "lucide-react";
 import { useUserStore } from "@/store/userStore";
+import { Box, ScrollArea } from "@mantine/core";
+import { NAVIGATION, type NavItem } from "@/config/navigation";
 import { LinksGroup } from "./NavLinksGroup";
 import { UserButton } from "./UserButton";
+import type { LucideIcon } from "lucide-react";
 
-const navlinks = [
-	{ label: "Booth", icon: Mic, href: "/booth" },
-
-	{
-		label: "Invoices",
-		icon: Receipt,
-		initiallyOpened: true,
-		links: [
-			{ label: "New Invoice", link: "/invoice" },
-			{ label: "Presets", link: "/invoice/presets" },
-		],
-	},
-	{
-		label: "Tools",
-		icon: Wrench,
-		links: [
-			{ label: "Scripts", link: "/scripts" },
-			{ label: "Editor", link: "/editor" },
-		],
-	},
-	{ label: "Profile", icon: User, href: "/profile" },
-];
-
-interface SidebarProps {
-	onNavigate?: () => void;
-}
-
-export function Sidebar({ onNavigate }: SidebarProps) {
+export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 	const user = useUserStore((store) => store.user);
 
-	const links = navlinks.map((item) => (
+	// Combine public and protected for sidebar display
+	const allNavItems = [...NAVIGATION.public, ...NAVIGATION.protected];
+
+	// Type guard to ensure icon exists for sidebar items
+	const sidebarLinks = allNavItems
+		.filter(
+			(item): item is NavItem & { icon: LucideIcon } =>
+				!item.hideInSidebar && !!item.icon,
+		)
+		.map((item) => ({
+			label: item.label,
+			icon: item.icon,
+			href: item.path,
+			initiallyOpened: item.initiallyOpened,
+			links: item.children?.map((child) => ({
+				label: child.label,
+				link: child.path,
+			})),
+		}));
+
+	const links = sidebarLinks.map((item) => (
 		<LinksGroup {...item} key={item.label} onNavigate={onNavigate} />
 	));
 

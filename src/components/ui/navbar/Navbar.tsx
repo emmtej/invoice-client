@@ -54,7 +54,17 @@ export function Navbar() {
 			gap="md"
 			flex={1}
 		>
-			<Group gap="sm">
+			<UnstyledButton
+				component={Link}
+				to="/"
+				style={{
+					display: "flex",
+					alignItems: "center",
+					gap: "var(--mantine-spacing-sm)",
+					textDecoration: "none",
+					color: "inherit",
+				}}
+			>
 				<Receipt
 					size={28}
 					strokeWidth={2}
@@ -69,7 +79,7 @@ export function Navbar() {
 				>
 					InVoice
 				</Text>
-			</Group>
+			</UnstyledButton>
 
 			{user === null ? (
 				<Group gap="sm">
