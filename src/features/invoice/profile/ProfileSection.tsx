@@ -87,7 +87,7 @@ export function ProfileSection({
 									profileSavedMessage === "Profile saved." ||
 									profileSavedMessage === "Default profile updated."
 										? "teal"
-										: "red"
+										: "on-air-red"
 								}
 							>
 								{profileSavedMessage}
@@ -100,7 +100,7 @@ export function ProfileSection({
 										onClick={handleCancelEdit}
 										size="xs"
 										variant="subtle"
-										color="red"
+										color="on-air-red"
 										leftSection={<X size={14} />}
 									>
 										Cancel
@@ -111,6 +111,7 @@ export function ProfileSection({
 									disabled={!isProfileValid}
 									size="xs"
 									variant="light"
+									color="studio-blue"
 									leftSection={<Save size={14} />}
 								>
 									Save
@@ -126,6 +127,7 @@ export function ProfileSection({
 											onClick={handleSetAsDefault}
 											size="xs"
 											variant="subtle"
+											color="studio-blue"
 											leftSection={<Star size={14} />}
 										>
 											Set as default
@@ -145,6 +147,7 @@ export function ProfileSection({
 									}}
 									size="xs"
 									variant="light"
+									color="studio-blue"
 									leftSection={<Pencil size={14} />}
 								>
 									Edit
@@ -157,7 +160,7 @@ export function ProfileSection({
 				{(!hasProfiles || isEditingProfile) && (
 					<Stack gap="sm">
 						{!hasProfiles && (
-							<Text size="xs" c="gray.5">
+							<Text size="xs" c="dimmed">
 								Create your first invoice profile. It will be saved and can be
 								reused later.
 							</Text>

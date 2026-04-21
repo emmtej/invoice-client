@@ -17,24 +17,24 @@ export function ScriptsHeader({
 			<Box
 				px="md"
 				py="xs"
-				style={(theme) => ({
-					borderBottom: `1px solid ${theme.colors.gray[1]}`,
-				})}
+				style={{
+					borderBottom: "1px solid rgba(0,0,0,0.05)",
+				}}
 			>
 				<Breadcrumbs
 					separator={
 						<ChevronRight
 							size={14}
 							strokeWidth={2.5}
-							className="text-gray-300"
+							className="text-black/10"
 						/>
 					}
 					separatorMargin="md"
 				>
-					<Text size="xs" fw={800} tt="uppercase" lts={1.5} c="gray.5">
+					<Text size="xs" fw={800} tt="uppercase" lts={1.5} c="dimmed">
 						Script Tools
 					</Text>
-					<Text size="xs" fw={900} tt="uppercase" lts={1.5} c="gray.8">
+					<Text size="xs" fw={900} tt="uppercase" lts={1.5} c="charcoal">
 						Scripts
 					</Text>
 				</Breadcrumbs>
@@ -45,7 +45,7 @@ export function ScriptsHeader({
 				<PageTitle>Scripts</PageTitle>
 				{uploadErrors.length > 0 && (
 					<Alert
-						color="red"
+						color="on-air-red"
 						icon={<AlertCircle size={16} />}
 						mt="sm"
 						withCloseButton

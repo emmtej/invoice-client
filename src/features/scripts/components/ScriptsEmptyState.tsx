@@ -36,7 +36,7 @@ export function ScriptsEmptyState({
 						multiple
 					/>
 					<Button
-						color="wave"
+						color="studio-blue"
 						variant="outline"
 						leftSection={<FolderPlus size={16} />}
 						onClick={onCreateFolder}
@@ -46,13 +46,13 @@ export function ScriptsEmptyState({
 					</Button>
 				</Stack>
 			) : isRoot ? (
-				<Text size="sm" c="gray.6" ta="center" maw={320}>
+				<Text size="sm" c="dimmed" ta="center" maw={320}>
 					Use{" "}
-					<Text span fw={600} c="gray.7">
+					<Text span fw={600} c="charcoal">
 						Upload Scripts
 					</Text>{" "}
 					or{" "}
-					<Text span fw={600} c="gray.7">
+					<Text span fw={600} c="charcoal">
 						New Folder
 					</Text>{" "}
 					when those actions are available on this page.

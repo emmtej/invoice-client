@@ -13,7 +13,7 @@ export function ActiveProfileDisplay({ profile }: ActiveProfileDisplayProps) {
 		.join(" ");
 
 	return (
-		<Paper p="md" bg="gray.0" style={{ border: "1px solid #F3F4F6" }}>
+		<Paper p="md" bg="transparent" className="border border-black/10">
 			<Stack gap="xs">
 				<Group gap="xs">
 					<User size={16} className="text-gray-400" strokeWidth={2} />
@@ -24,7 +24,7 @@ export function ActiveProfileDisplay({ profile }: ActiveProfileDisplayProps) {
 				{profile.email?.trim() && (
 					<Group gap="xs">
 						<AtSign size={16} className="text-gray-400" strokeWidth={2} />
-						<Text size="sm" c="gray.5">
+						<Text size="sm" c="dimmed">
 							{profile.email}
 						</Text>
 					</Group>

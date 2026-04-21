@@ -25,15 +25,14 @@ export function FolderCard({
 		<Card
 			bg={
 				isSelected
-					? "color-mix(in srgb, var(--mantine-color-studio-5) 8%, white)"
-					: "gray.0"
+					? "rgba(17, 40, 77, 0.05)"
+					: "transparent"
 			}
 			shadow="xs"
 			py="sm"
 			px="md"
 			withBorder
 			w="100%"
-			radius="sm"
 			onClick={onClick}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
@@ -41,13 +40,16 @@ export function FolderCard({
 				root: {
 					cursor: "pointer",
 					borderColor: isSelected
-						? "var(--mantine-color-studio-5)"
-						: "var(--mantine-color-gray-2)",
+						? "var(--mantine-color-studio-blue-5)"
+						: "rgba(0,0,0,0.05)",
 					transition: "border-color 150ms ease, background-color 150ms ease",
 					"&:hover": {
 						borderColor: isSelected
-							? "var(--mantine-color-studio-6)"
-							: "var(--mantine-color-wave-3)",
+							? "var(--mantine-color-studio-blue-6)"
+							: "var(--mantine-color-studio-blue-3)",
+						backgroundColor: isSelected
+							? "rgba(17, 40, 77, 0.08)"
+							: "rgba(17, 40, 77, 0.02)",
 					},
 				},
 			}}
@@ -56,15 +58,15 @@ export function FolderCard({
 				<Flex align="flex-start" gap="sm" miw={0} style={{ flex: 1 }}>
 					<FolderIcon
 						size={20}
-						color="var(--mantine-color-studio-5)"
+						color="var(--mantine-color-studio-blue-5)"
 						style={{ flexShrink: 0, marginTop: 2 }}
 					/>
 					<Stack gap={4} miw={0} style={{ flex: 1 }}>
-						<Text size="sm" fw={600} c="gray.7" truncate>
+						<Text size="sm" fw={600} c="charcoal" truncate>
 							{folder.name}
 						</Text>
 						{itemCount > 0 ? (
-							<Text size="xs" c="gray.5" className="tabular-nums">
+							<Text size="xs" c="dimmed" className="tabular-nums">
 								{itemCount === 1 ? "1 item" : `${itemCount} items`}
 							</Text>
 						) : (
@@ -72,11 +74,11 @@ export function FolderCard({
 								<FolderOpen
 									size={14}
 									strokeWidth={2}
-									color="var(--mantine-color-gray-4)"
+									color="rgba(0,0,0,0.2)"
 									style={{ flexShrink: 0 }}
 									aria-hidden
 								/>
-								<Text size="xs" c="gray.5">
+								<Text size="xs" c="dimmed">
 									Empty
 								</Text>
 							</Flex>
@@ -95,7 +97,7 @@ export function FolderCard({
 						flexShrink: 0,
 						opacity: hovered ? 1 : 0,
 						transition: "opacity 150ms ease",
-						"&:hover": { color: "var(--mantine-color-red-6)" },
+						"&:hover": { color: "var(--mantine-color-on-air-red-6)" },
 					}}
 				>
 					<Trash2 size={14} />

@@ -70,24 +70,24 @@ export function ScriptsLibraryItems({
 						gap: "4px",
 						padding: "4px 8px",
 						marginLeft: "-8px",
-						borderRadius: "4px",
+						borderRadius: "var(--mantine-radius-sm)",
 						transition: "background-color 150ms ease",
 					}}
 					styles={{
 						root: {
 							"&:hover": {
-								backgroundColor: "var(--mantine-color-gray-1)",
+								backgroundColor: "rgba(0,0,0,0.03)",
 							},
 						},
 					}}
 				>
-					<SectionLabel size="xs" c="gray.6">
+					<SectionLabel size="xs" c="dimmed">
 						Name
 					</SectionLabel>
 					{sortAscending ? (
-						<ArrowUp size={14} color="var(--mantine-color-gray-5)" />
+						<ArrowUp size={14} color="rgba(0,0,0,0.3)" />
 					) : (
-						<ArrowDown size={14} color="var(--mantine-color-gray-5)" />
+						<ArrowDown size={14} color="rgba(0,0,0,0.3)" />
 					)}
 				</UnstyledButton>
 			</Box>
@@ -132,7 +132,7 @@ export function ScriptsLibraryItems({
 				<Box ta="center" pt="sm">
 					<Button
 						variant="light"
-						color="wave"
+						color="studio-blue"
 						onClick={onLoadMore}
 						loading={isLoadingMore}
 					>

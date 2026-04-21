@@ -102,17 +102,17 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 					<Tooltip label="Remove entire item group">
 						<ActionIcon
 							variant="subtle"
-							color="red"
+							color="on-air-red"
 							onClick={handleDeleteItem}
 							size="md"
 						>
 							<Trash2 size={18} />
 						</ActionIcon>
 					</Tooltip>
-				</Group>
+					</Group>
 
-				{/* Sub-item Table */}
-				{item.subitems.length > 0 ? (
+					{/* Sub-item Table */}
+					{item.subitems.length > 0 ? (
 					<Table.ScrollContainer minWidth={500}>
 						<Table verticalSpacing="sm">
 							<Table.Thead>
@@ -228,7 +228,7 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 										<Table.Td style={{ textAlign: "right" }}>
 											<ActionIcon
 												variant="subtle"
-												color="gray"
+												color="on-air-red"
 												onClick={() => handleDeleteSubitem(sub.id)}
 												size="sm"
 											>
@@ -240,24 +240,25 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 							</Table.Tbody>
 						</Table>
 					</Table.ScrollContainer>
-				) : (
+					) : (
 					<Text size="sm" c="dimmed" fs="italic" ta="center" py="xl">
 						No sub-items added yet.
 					</Text>
-				)}
+					)}
 
-				{/* Card Footer */}
-				<Group justify="center" mt="sm">
+					{/* Card Footer */}
+					<Group justify="center" mt="sm">
 					<Button
 						leftSection={<Plus size={16} />}
 						variant="subtle"
-						color="wave"
+						color="studio-blue"
 						onClick={() => setSubitemModalOpened(true)}
 						size="sm"
 					>
 						Add Sub-item
 					</Button>
-				</Group>
+					</Group>
+
 			</Stack>
 
 			{/* Modals */}

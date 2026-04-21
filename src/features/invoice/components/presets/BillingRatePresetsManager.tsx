@@ -47,14 +47,14 @@ export function BillingRatePresetsManager() {
 					<Text fw={700} size="lg">
 						Billing Rates
 					</Text>
-					<Text size="sm" c="gray.6">
+					<Text size="sm" c="dimmed">
 						Standard rates for your services (e.g., Narration, Commercial,
 						Editing).
 					</Text>
 				</Box>
 				<Button
 					leftSection={<Plus size={16} />}
-					color="wave"
+					color="studio-blue"
 					onClick={handleOpenAdd}
 				>
 					Add Preset
@@ -106,7 +106,7 @@ export function BillingRatePresetsManager() {
 											<Tooltip label="Delete preset">
 												<ActionIcon
 													variant="subtle"
-													color="red"
+													color="on-air-red"
 													onClick={() => handleDelete(preset.id)}
 												>
 													<Trash2 size={16} />
@@ -122,12 +122,12 @@ export function BillingRatePresetsManager() {
 			) : (
 				<SurfaceCard p="xl">
 					<Stack align="center" gap="xs">
-						<Text c="gray.5" fs="italic">
+						<Text c="dimmed" fs="italic">
 							No billing rate presets created yet.
 						</Text>
 						<Button
 							variant="subtle"
-							color="wave"
+							color="studio-blue"
 							onClick={handleOpenAdd}
 							leftSection={<Plus size={16} />}
 						>
@@ -226,7 +226,7 @@ function RatePresetModal({
 						Cancel
 					</Button>
 					<Button
-						color="wave"
+						color="studio-blue"
 						onClick={() =>
 							onSave({
 								subitemLabel: label,

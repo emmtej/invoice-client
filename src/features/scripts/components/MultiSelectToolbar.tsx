@@ -27,7 +27,7 @@ export function MultiSelectToolbar({
 				<Paper
 					shadow="md"
 					p="xs"
-					bg="gray.8"
+					bg="studio-blue.9"
 					radius="md"
 					style={{
 						...styles,
@@ -40,6 +40,7 @@ export function MultiSelectToolbar({
 						display: "flex",
 						alignItems: "center",
 						gap: "1rem",
+						border: "1px solid rgba(255,255,255,0.1)",
 					}}
 				>
 					<Group gap="sm" px="sm">
@@ -48,10 +49,11 @@ export function MultiSelectToolbar({
 						</Text>
 						<Button
 							variant="subtle"
-							color="gray.4"
+							color="white"
 							size="compact-xs"
 							onClick={onClear}
 							leftSection={<X size={14} />}
+							style={{ opacity: 0.7 }}
 						>
 							Clear
 						</Button>
@@ -60,7 +62,7 @@ export function MultiSelectToolbar({
 					<Group gap="xs">
 						<Button
 							variant="subtle"
-							color="gray.0"
+							color="white"
 							size="sm"
 							onClick={onCopy}
 							leftSection={<Copy size={16} />}
@@ -69,7 +71,7 @@ export function MultiSelectToolbar({
 						</Button>
 						<Button
 							variant="subtle"
-							color="gray.0"
+							color="white"
 							size="sm"
 							onClick={onMove}
 							leftSection={<FolderInput size={16} />}
@@ -78,7 +80,7 @@ export function MultiSelectToolbar({
 						</Button>
 						<Button
 							variant="subtle"
-							color="red.4"
+							color="on-air-red.2"
 							size="sm"
 							onClick={onDelete}
 							leftSection={<Trash2 size={16} />}

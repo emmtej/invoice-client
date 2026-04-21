@@ -33,7 +33,7 @@ export function InvoiceItemAdder({
 					leftSection={<Plus size={16} />}
 					onClick={handleAddItem}
 					variant="filled"
-					color="wave"
+					color="studio-blue"
 					size="sm"
 					disabled={!newItemName.trim()}
 				>

@@ -39,7 +39,7 @@ export const InvoiceSummary = memo(
 									fw={600}
 									tt="uppercase"
 									lts="0.1em"
-									c="gray.5"
+									c="dimmed"
 									mb={4}
 								>
 									Project Invoice
@@ -51,7 +51,7 @@ export const InvoiceSummary = memo(
 								>
 									{invoiceTitle}
 								</Title>
-								<Text size="sm" c="gray.6" mt={4}>
+								<Text size="sm" c="dimmed" mt={4}>
 									Date: {invoiceDate || getTodayDateString()}
 								</Text>
 							</Box>
@@ -60,7 +60,7 @@ export const InvoiceSummary = memo(
 									<Text fw={600} c="gray.8">
 										{profile.firstName} {profile.lastName}
 									</Text>
-									<Text size="sm" c="gray.5">
+									<Text size="sm" c="dimmed">
 										{profile.email}
 									</Text>
 								</Box>
@@ -73,15 +73,15 @@ export const InvoiceSummary = memo(
 							))}
 						</Stack>
 
-						<Box py="xl" mt="xs" style={{ borderTop: "2px solid #F3F4F6" }}>
+						<Box py="xl" mt="xs" style={{ borderTop: "2px solid rgba(0,0,0,0.05)" }}>
 							<Group justify="flex-end" gap="xl">
-								<Text fw={600} size="lg" c="gray.5" tt="uppercase" lts="0.05em">
+								<Text fw={600} size="lg" c="dimmed" tt="uppercase" lts="0.05em">
 									Total Amount
 								</Text>
 								<Text
 									fw={800}
 									size="32px"
-									c="gray.8"
+									c="charcoal"
 									className="tabular-nums tracking-tighter"
 								>
 									${totalAmount.toFixed(2)}
@@ -92,7 +92,7 @@ export const InvoiceSummary = memo(
 						<Group justify="flex-end" mt="md">
 							<Button
 								variant="filled"
-								color="wave"
+								color="studio-blue"
 								size="md"
 								onClick={openExport}
 								disabled={items.length === 0}

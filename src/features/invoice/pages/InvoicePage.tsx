@@ -58,7 +58,7 @@ export default function InvoicePage() {
 		>
 			<Stack gap={4} mb="xl">
 				<PageTitle>Invoice</PageTitle>
-				<Text size="lg" c="gray.5" className="page-subtitle">
+				<Text size="lg" c="dimmed" className="page-subtitle">
 					Build line items from scripts, set rates, and export a clear summary
 					for clients.
 				</Text>

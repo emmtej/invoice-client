@@ -26,13 +26,16 @@ export function ScriptLibraryTile({
 
 	return (
 		<Card
-			bg="white"
+			bg={
+				isSelected
+					? "rgba(17, 40, 77, 0.05)"
+					: "transparent"
+			}
 			shadow="xs"
 			py="sm"
 			px="md"
 			withBorder
 			w="100%"
-			radius="sm"
 			onClick={onClick}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
@@ -40,12 +43,17 @@ export function ScriptLibraryTile({
 				root: {
 					cursor: "pointer",
 					borderColor: isSelected
-						? "var(--mantine-color-wave-5)"
-						: "var(--mantine-color-gray-2)",
-					backgroundColor: isSelected
-						? "color-mix(in srgb, var(--mantine-color-wave-5) 8%, white)"
-						: "var(--mantine-color-white)",
+						? "var(--mantine-color-studio-blue-5)"
+						: "rgba(0,0,0,0.05)",
 					transition: "border-color 150ms ease, background-color 150ms ease",
+					"&:hover": {
+						borderColor: isSelected
+							? "var(--mantine-color-studio-blue-6)"
+							: "var(--mantine-color-studio-blue-3)",
+						backgroundColor: isSelected
+							? "rgba(17, 40, 77, 0.08)"
+							: "rgba(17, 40, 77, 0.02)",
+					},
 				},
 			}}
 		>
@@ -55,15 +63,15 @@ export function ScriptLibraryTile({
 						size={20}
 						color={
 							isSelected
-								? "var(--mantine-color-wave-6)"
-								: "var(--mantine-color-gray-5)"
+								? "var(--mantine-color-studio-blue-6)"
+								: "rgba(0,0,0,0.2)"
 						}
 						style={{ flexShrink: 0 }}
 					/>
 					<Text
 						size="sm"
 						fw={600}
-						c={isSelected ? "wave.8" : "gray.7"}
+						c={isSelected ? "studio-blue.8" : "charcoal"}
 						truncate
 						style={{ flex: 1, minWidth: 0 }}
 					>
@@ -78,18 +86,18 @@ export function ScriptLibraryTile({
 					visibleFrom="sm"
 					style={{ flexShrink: 0 }}
 				>
-					<Text size="xs" c="gray.5" className="tabular-nums">
+					<Text size="xs" c="dimmed" className="tabular-nums">
 						{script.wordCount.toLocaleString()} words
 					</Text>
 					{script.invalidLineCount > 0 && (
 						<Flex align="center" gap={4}>
-							<AlertCircle size={14} color="var(--mantine-color-red-5)" />
-							<Text size="xs" c="red.5" className="tabular-nums">
+							<AlertCircle size={14} color="var(--mantine-color-on-air-red-5)" />
+							<Text size="xs" c="on-air-red.5" className="tabular-nums">
 								{script.invalidLineCount}
 							</Text>
 						</Flex>
 					)}
-					<Text size="xs" c="gray.4" className="tabular-nums">
+					<Text size="xs" c="dimmed" className="tabular-nums" style={{ opacity: 0.6 }}>
 						{dateFormatter.format(script.createdAt)}
 					</Text>
 				</Group>
@@ -106,6 +114,7 @@ export function ScriptLibraryTile({
 						flexShrink: 0,
 						opacity: hovered ? 1 : 0,
 						transition: "opacity 150ms ease",
+						"&:hover": { color: "var(--mantine-color-on-air-red-6)" },
 					}}
 				>
 					<Trash2 size={14} />
@@ -113,18 +122,18 @@ export function ScriptLibraryTile({
 			</Flex>
 
 			<Group gap="xs" mt="xs" hiddenFrom="sm" wrap="wrap">
-				<Text size="xs" c="gray.5" className="tabular-nums">
+				<Text size="xs" c="dimmed" className="tabular-nums">
 					{script.wordCount.toLocaleString()} words
 				</Text>
 				{script.invalidLineCount > 0 && (
 					<Flex align="center" gap={4}>
-						<AlertCircle size={12} color="var(--mantine-color-red-5)" />
-						<Text size="xs" c="red.5" className="tabular-nums">
+						<AlertCircle size={12} color="var(--mantine-color-on-air-red-5)" />
+						<Text size="xs" c="on-air-red.5" className="tabular-nums">
 							{script.invalidLineCount}
 						</Text>
 					</Flex>
 				)}
-				<Text size="xs" c="gray.4" className="tabular-nums">
+				<Text size="xs" c="dimmed" className="tabular-nums" style={{ opacity: 0.6 }}>
 					{dateFormatter.format(script.createdAt)}
 				</Text>
 			</Group>

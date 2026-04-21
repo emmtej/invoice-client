@@ -70,7 +70,7 @@ export function MoveToFolderModal({
 						Cancel
 					</Button>
 					<Button
-						color="wave"
+						color="studio-blue"
 						onClick={() =>
 							onConfirm(selectedFolderId === "root" ? null : selectedFolderId)
 						}

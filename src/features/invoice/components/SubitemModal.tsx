@@ -186,7 +186,7 @@ export function SubitemModal({
 				<Tabs
 					value={activeTab}
 					onChange={(val) => setActiveTab(val as "upload" | "library")}
-					color="wave"
+					color="studio-blue"
 				>
 					<Tabs.List grow>
 						<Tabs.Tab value="upload" leftSection={<FileUp size={16} />}>
@@ -204,7 +204,7 @@ export function SubitemModal({
 							</DocxUploadButton>
 							{uploadedScripts.length > 0 && (
 								<Stack gap={4}>
-									<Text size="xs" fw={700} c="gray.6">
+									<Text size="xs" fw={700} c="dimmed">
 										UPLOADED DOCUMENTS:
 									</Text>
 									{uploadedScripts.map((s) => (
@@ -249,7 +249,7 @@ export function SubitemModal({
 						onChange={(val) =>
 							setBillingType(val as "word-count" | "fixed-rate")
 						}
-						color="wave"
+						color="studio-blue"
 						data={[
 							{ label: "Word Count", value: "word-count" },
 							{ label: "Fixed Rate", value: "fixed-rate" },
@@ -291,7 +291,7 @@ export function SubitemModal({
 						label="Save as Preset"
 						checked={saveAsPreset}
 						onChange={(e) => setSaveAsPreset(e.currentTarget.checked)}
-						color="wave"
+						color="studio-blue"
 					/>
 				</Stack>
 
@@ -300,7 +300,7 @@ export function SubitemModal({
 						Cancel
 					</Button>
 					<Button
-						color="wave"
+						color="studio-blue"
 						onClick={handleAdd}
 						disabled={!subitemLabel || currentScripts.length === 0}
 					>

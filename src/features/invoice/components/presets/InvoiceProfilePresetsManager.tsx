@@ -54,14 +54,14 @@ export function InvoiceProfilePresetsManager() {
 					<Text fw={700} size="lg">
 						Invoice Profiles
 					</Text>
-					<Text size="sm" c="gray.6">
+					<Text size="sm" c="dimmed">
 						Manage your business identities and contact information for
 						invoices.
 					</Text>
 				</Box>
 				<Button
 					leftSection={<Plus size={16} />}
-					color="wave"
+					color="studio-blue"
 					onClick={handleOpenAdd}
 				>
 					Add Profile
@@ -81,7 +81,7 @@ export function InvoiceProfilePresetsManager() {
 											</Text>
 											{profile.isDefault && (
 												<Badge
-													color="wave"
+													color="studio-blue"
 													variant="light"
 													leftSection={<Star size={12} />}
 												>
@@ -89,7 +89,7 @@ export function InvoiceProfilePresetsManager() {
 												</Badge>
 											)}
 										</Group>
-										<Text size="sm" c="gray.6">
+										<Text size="sm" c="dimmed">
 											{profile.profile.firstName} {profile.profile.lastName} •{" "}
 											{profile.profile.email}
 										</Text>
@@ -120,7 +120,7 @@ export function InvoiceProfilePresetsManager() {
 									<Tooltip label="Delete profile">
 										<ActionIcon
 											variant="subtle"
-											color="red"
+											color="on-air-red"
 											onClick={() => handleDelete(profile.id)}
 											disabled={profile.isDefault && profilePresets.length > 1}
 										>
@@ -135,12 +135,12 @@ export function InvoiceProfilePresetsManager() {
 			) : (
 				<SurfaceCard p="xl">
 					<Stack align="center" gap="xs">
-						<Text c="gray.5" fs="italic">
+						<Text c="dimmed" fs="italic">
 							No invoice profiles created yet.
 						</Text>
 						<Button
 							variant="subtle"
-							color="wave"
+							color="studio-blue"
 							onClick={handleOpenAdd}
 							leftSection={<Plus size={16} />}
 						>
@@ -239,7 +239,7 @@ function ProfileModal({
 						Cancel
 					</Button>
 					<Button
-						color="wave"
+						color="studio-blue"
 						onClick={() =>
 							onSave({ firstName, lastName, email }, { isDefault })
 						}

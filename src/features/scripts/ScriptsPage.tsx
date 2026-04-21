@@ -139,7 +139,7 @@ export default function ScriptsPage() {
 
 			{isLoading ? (
 				<Center flex={1}>
-					<Loader color="wave" size="sm" />
+					<Loader color="studio-blue" size="sm" />
 				</Center>
 			) : isEmpty ? (
 				<Box flex={1} px="md">
@@ -188,7 +188,7 @@ export default function ScriptsPage() {
 								/>
 							</Box>
 							<Button
-								color="wave"
+								color="studio-blue"
 								leftSection={<FolderPlus size={16} />}
 								onClick={openCreateFolder}
 								style={{ alignSelf: "center" }}

@@ -44,7 +44,7 @@ export const ExportModal = ({
 	return (
 		<AppModal opened={opened} onClose={onClose} title="Export Invoice">
 			<Stack gap="md">
-				<Text size="sm" c="gray.5">
+				<Text size="sm" c="dimmed">
 					Choose how you would like to export your invoice summary.
 				</Text>
 
@@ -62,7 +62,7 @@ export const ExportModal = ({
 					<Button
 						leftSection={<Copy size={16} />}
 						onClick={handleCopyAsText}
-						color={clipboard.copied ? "teal" : "wave"}
+						color={clipboard.copied ? "teal" : "studio-blue"}
 						variant="light"
 					>
 						{clipboard.copied ? "Copied!" : "Copy as Text"}

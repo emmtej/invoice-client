@@ -112,7 +112,7 @@ export function ScriptsModals({
 						<Button variant="subtle" color="gray" onClick={closeDeleteItems}>
 							Cancel
 						</Button>
-						<Button color="red" onClick={onConfirmDeleteSelected}>
+						<Button color="on-air-red" onClick={onConfirmDeleteSelected}>
 							Delete
 						</Button>
 					</Group>

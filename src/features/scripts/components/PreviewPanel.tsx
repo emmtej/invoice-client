@@ -26,48 +26,48 @@ function LinePreview({ line, index }: { line: ParsedLine; index: number }) {
 		<Box
 			py={4}
 			px="xs"
-			style={{ borderBottom: "1px solid var(--mantine-color-gray-1)" }}
+			style={{ borderBottom: "1px solid rgba(0,0,0,0.03)" }}
 		>
 			<Flex gap="xs" align="flex-start">
 				<Text
 					size="xs"
-					c="gray.4"
+					c="dimmed"
 					className="tabular-nums"
 					w={24}
 					ta="right"
-					style={{ flexShrink: 0 }}
+					style={{ flexShrink: 0, opacity: 0.5 }}
 				>
 					{index + 1}
 				</Text>
 				<Box flex={1} miw={0}>
 					{line.type === "dialogue" ? (
 						<>
-							<Text size="xs" fw={600} c="gray.7" truncate>
+							<Text size="xs" fw={600} c="charcoal" truncate>
 								{line.speakers.join(", ")}
 							</Text>
-							<Text size="xs" c="gray.6" lineClamp={1}>
+							<Text size="xs" c="dimmed" lineClamp={1}>
 								{line.content}
 							</Text>
 						</>
 					) : line.type === "action" ? (
-						<Text size="xs" c="gray.5" fs="italic" lineClamp={1}>
+						<Text size="xs" c="dimmed" fs="italic" lineClamp={1}>
 							{line.notes?.join(" ") || line.source}
 						</Text>
 					) : line.type === "invalid" || line.type === "malformed" ? (
 						<Flex align="center" gap={4}>
 							<AlertCircle
 								size={12}
-								color="var(--mantine-color-red-5)"
+								color="var(--mantine-color-on-air-red-5)"
 								style={{ flexShrink: 0 }}
 							/>
-							<Text size="xs" c="red.5" lineClamp={1}>
+							<Text size="xs" c="on-air-red.5" lineClamp={1}>
 								{line.type === "malformed"
 									? line.message
 									: line.source || "Invalid line"}
 							</Text>
 						</Flex>
 					) : (
-						<Text size="xs" c="gray.4" lineClamp={1}>
+						<Text size="xs" c="dimmed" lineClamp={1}>
 							{line.source}
 						</Text>
 					)}
@@ -94,7 +94,7 @@ export function PreviewPanel({
 		<Box
 			w={380}
 			style={{
-				borderLeft: "1px solid var(--mantine-color-gray-2)",
+				borderLeft: "1px solid rgba(0,0,0,0.05)",
 				flexShrink: 0,
 			}}
 			display="flex"
@@ -103,19 +103,19 @@ export function PreviewPanel({
 			<Flex direction="column" h="100%" w="100%">
 				{isLoading ? (
 					<Center flex={1}>
-						<Loader color="wave" size="sm" />
+						<Loader color="studio-blue" size="sm" />
 					</Center>
 				) : script ? (
 					<>
 						<Box
 							p="md"
-							style={{ borderBottom: "1px solid var(--mantine-color-gray-1)" }}
+							style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}
 						>
 							<Flex justify="space-between" align="flex-start" mb="sm">
 								<Text
 									size="md"
 									fw={700}
-									c="gray.8"
+									c="charcoal"
 									style={{ flex: 1 }}
 									lineClamp={2}
 								>
@@ -132,14 +132,14 @@ export function PreviewPanel({
 								</ActionIcon>
 							</Flex>
 							<Flex gap="xs" wrap="wrap">
-								<Badge variant="light" color="wave" size="sm">
+								<Badge variant="light" color="studio-blue" size="sm">
 									{script.overview.wordCount.toLocaleString()} words
 								</Badge>
 								<Badge variant="light" color="gray" size="sm">
 									{script.overview.totalLines} lines
 								</Badge>
 								{script.overview.invalidLines.length > 0 && (
-									<Badge variant="light" color="red" size="sm">
+									<Badge variant="light" color="on-air-red" size="sm">
 										{script.overview.invalidLines.length} invalid
 									</Badge>
 								)}
@@ -156,7 +156,7 @@ export function PreviewPanel({
 									/>
 								))}
 								{script.lines.length > 30 && (
-									<Text size="xs" c="gray.4" ta="center" py="xs">
+									<Text size="xs" c="dimmed" ta="center" py="xs">
 										… {script.lines.length - 30} more lines
 									</Text>
 								)}
@@ -165,10 +165,10 @@ export function PreviewPanel({
 
 						<Box
 							p="md"
-							style={{ borderTop: "1px solid var(--mantine-color-gray-1)" }}
+							style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}
 						>
 							<Button
-								color="wave"
+								color="studio-blue"
 								fullWidth
 								leftSection={<ExternalLink size={16} />}
 								onClick={handleOpenInEditor}

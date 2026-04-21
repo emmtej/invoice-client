@@ -50,14 +50,14 @@ export function InvoiceTitlePresetsManager() {
 					<Text fw={700} size="lg">
 						Invoice Titles
 					</Text>
-					<Text size="sm" c="gray.6">
+					<Text size="sm" c="dimmed">
 						Commonly used titles for your invoices (e.g. Session Invoice,
 						Project Fee).
 					</Text>
 				</Box>
 				<Button
 					leftSection={<Plus size={16} />}
-					color="wave"
+					color="studio-blue"
 					onClick={handleOpenAdd}
 				>
 					Add Title
@@ -93,7 +93,7 @@ export function InvoiceTitlePresetsManager() {
 											<Tooltip label="Delete title">
 												<ActionIcon
 													variant="subtle"
-													color="red"
+													color="on-air-red"
 													onClick={() => handleDelete(preset.id)}
 												>
 													<Trash2 size={16} />
@@ -109,12 +109,12 @@ export function InvoiceTitlePresetsManager() {
 			) : (
 				<SurfaceCard p="xl">
 					<Stack align="center" gap="xs">
-						<Text c="gray.5" fs="italic">
+						<Text c="dimmed" fs="italic">
 							No invoice title presets created yet.
 						</Text>
 						<Button
 							variant="subtle"
-							color="wave"
+							color="studio-blue"
 							onClick={handleOpenAdd}
 							leftSection={<Plus size={16} />}
 						>
@@ -186,7 +186,7 @@ function TitlePresetModal({
 						Cancel
 					</Button>
 					<Button
-						color="wave"
+						color="studio-blue"
 						onClick={() => onSave(title)}
 						disabled={!title.trim()}
 					>
