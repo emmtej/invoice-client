@@ -5,47 +5,48 @@ const fontSans =
 	'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const fontDisplay = '"Sneaky Times", serif';
 
-const wave: MantineColorsTuple = [
-	"#e6fcf5", // 0: Background/Ghost
-	"#c3fae8", // 1: Hover/Lightest
-	"#96f2d7", // 2: Light
-	"#63e6be", // 3: Soft
-	"#38d9a9", // 4: Muted
-	"#20c997", // 5: Base Muted
-	"#12b886", // 6: Solid
-	"#0ca678", // 7: Dark Solid
-	"#099268", // 8: Primary Base
-	"#087f5b", // 9: Deepest
+const studioBlue: MantineColorsTuple = [
+	"#e7e9ed",
+	"#cfd4db",
+	"#a0a9b7",
+	"#707e93",
+	"#415370",
+	"#11284d",
+	"#092648", // 6: Primary Base
+	"#082241",
+	"#071e3a",
+	"#061a32",
 ];
 
-const studio: MantineColorsTuple = [
-	"#fff0e6", // 0: Background/Ghost
-	"#ffe8cc", // 1: Hover/Lightest
-	"#ffd8a8", // 2: Light
-	"#ffc078", // 3: Soft
-	"#ffa94d", // 4: Muted
-	"#ff922b", // 5: Base Muted
-	"#fd7e14", // 6: Solid
-	"#f76707", // 7: Dark Solid
-	"#e8590c", // 8: Primary Base
-	"#d9480f", // 9: Deepest
+const onAirRed: MantineColorsTuple = [
+	"#f9e9eb",
+	"#f3d3d8",
+	"#e7a7b1",
+	"#db7b8a",
+	"#cf4f63",
+	"#c4233d",
+	"#c41e3a", // 6: Secondary Base
+	"#b01b34",
+	"#9d182e",
+	"#891528",
 ];
 
 export const appTheme = createTheme({
-	primaryColor: "wave",
-	primaryShade: 8,
+	primaryColor: "studio-blue",
+	primaryShade: 6,
 	colors: {
-		studio,
-		wave,
+		"studio-blue": studioBlue,
+		"on-air-red": onAirRed,
 	},
-	black: "#2b3440", // Softer dark grey
-	defaultRadius: "0",
+	black: "#212529", // Charcoal
+	white: "#FFFFFF",
+	defaultRadius: "md",
 	radius: {
-		xs: "0px",
-		sm: "0px",
-		md: "0px",
-		lg: "0px",
-		xl: "0px",
+		xs: "2px",
+		sm: "4px",
+		md: "8px",
+		lg: "12px",
+		xl: "20px",
 	},
 	shadows: {
 		sm: "0 4px 12px -2px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02)",
@@ -68,12 +69,12 @@ export const appTheme = createTheme({
 			},
 		},
 		TextInput: {
-			defaultProps: { radius: "0" },
+			defaultProps: { radius: "md" },
 			styles: {
 				input: {
 					fontFamily: "var(--mantine-font-family)",
 					"&:focus": {
-						borderColor: "var(--mantine-color-wave-8)",
+						borderColor: "var(--mantine-color-studio-blue-6)",
 					},
 				},
 				label: {
@@ -85,16 +86,26 @@ export const appTheme = createTheme({
 			defaultProps: {
 				shadow: "sm",
 				withBorder: true,
-				radius: "0",
+				radius: "md",
+				bg: "#EBE4D5", // Aged Paper
 			},
 			styles: {
 				root: {
-					borderColor: "var(--mantine-color-gray-2)",
+					borderColor: "rgba(0,0,0,0.05)",
 				},
 			},
 		},
+		Card: {
+			defaultProps: {
+				radius: "md",
+				bg: "#EBE4D5", // Aged Paper
+			},
+		},
 		Button: {
-			defaultProps: { radius: "0" },
+			defaultProps: {
+				radius: "md",
+				color: "studio-blue",
+			},
 			styles: {
 				root: {
 					fontWeight: 600,
@@ -103,18 +114,18 @@ export const appTheme = createTheme({
 			},
 		},
 		Input: {
-			defaultProps: { radius: "0" },
+			defaultProps: { radius: "md" },
 			styles: {
 				input: {
 					"&:focus": {
-						borderColor: "var(--mantine-color-wave-8)",
+						borderColor: "var(--mantine-color-studio-blue-6)",
 					},
 				},
 			},
 		},
-		ActionIcon: { defaultProps: { radius: "0" } },
+		ActionIcon: { defaultProps: { radius: "md" } },
 		Badge: {
-			defaultProps: { radius: "0" },
+			defaultProps: { radius: "md" },
 			styles: {
 				root: {
 					textTransform: "capitalize",
@@ -123,13 +134,13 @@ export const appTheme = createTheme({
 				},
 			},
 		},
-		Avatar: { defaultProps: { radius: "0" } },
-		ThemeIcon: { defaultProps: { radius: "0" } },
+		Avatar: { defaultProps: { radius: "md" } },
+		ThemeIcon: { defaultProps: { radius: "md" } },
 		SegmentedControl: {
-			defaultProps: { radius: "0" },
+			defaultProps: { radius: "md" },
 			styles: {
 				root: {
-					backgroundColor: "var(--mantine-color-gray-0)",
+					backgroundColor: "rgba(0,0,0,0.05)",
 				},
 				indicator: {
 					boxShadow: "var(--mantine-shadow-sm)",
@@ -141,7 +152,7 @@ export const appTheme = createTheme({
 				label: {
 					fontSize: "13px",
 					fontWeight: 600,
-					color: "#4b5563",
+					color: "#212529", // Charcoal
 					marginBottom: "4px",
 					letterSpacing: "0",
 				},
@@ -155,7 +166,7 @@ export const appTheme = createTheme({
 					blur: 3,
 					backgroundOpacity: 0.5,
 				},
-				radius: "0",
+				radius: "md",
 			},
 		},
 		Table: {
@@ -166,25 +177,25 @@ export const appTheme = createTheme({
 			},
 			styles: {
 				thead: {
-					backgroundColor: "var(--mantine-color-gray-0)",
+					backgroundColor: "rgba(0,0,0,0.02)",
 				},
 				th: {
-					borderBottom: "1px solid var(--mantine-color-gray-2)",
-					color: "#4b5563",
+					borderBottom: "1px solid rgba(0,0,0,0.05)",
+					color: "#212529", // Charcoal
 					fontSize: "12px",
 					textTransform: "uppercase",
 					letterSpacing: "0.05em",
 					fontWeight: 700,
 				},
 				td: {
-					borderBottom: "1px solid var(--mantine-color-gray-1)",
+					borderBottom: "1px solid rgba(0,0,0,0.03)",
 				},
 			},
 		},
 		Title: {
 			styles: {
 				root: {
-					color: "#2b3440",
+					color: "#212529", // Charcoal
 				},
 			},
 		},

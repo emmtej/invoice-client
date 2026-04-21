@@ -37,48 +37,72 @@
 @theme {
 	--font-sans: "Poppins", sans-serif;
 	--font-display: "Sneaky Times", serif;
-	--radius-xs: 0px;
-	--radius-sm: 0px;
-	--radius-md: 0px;
-	--radius-lg: 0px;
-	--radius-xl: 0px;
-	--color-wave-50: var(--mantine-color-wave-0);
-	--color-wave-100: var(--mantine-color-wave-1);
-	--color-wave-200: var(--mantine-color-wave-2);
-	--color-wave-300: var(--mantine-color-wave-3);
-	--color-wave-400: var(--mantine-color-wave-4);
-	--color-wave-500: var(--mantine-color-wave-5);
-	--color-wave-600: var(--mantine-color-wave-6);
-	--color-wave-700: var(--mantine-color-wave-7);
-	--color-wave-800: var(--mantine-color-wave-8);
-	--color-wave-900: var(--mantine-color-wave-9);
-	--color-studio-50: var(--mantine-color-studio-0);
-	--color-studio-100: var(--mantine-color-studio-1);
-	--color-studio-200: var(--mantine-color-studio-2);
-	--color-studio-300: var(--mantine-color-studio-3);
-	--color-studio-400: var(--mantine-color-studio-4);
-	--color-studio-500: var(--mantine-color-studio-5);
-	--color-studio-600: var(--mantine-color-studio-6);
-	--color-studio-700: var(--mantine-color-studio-7);
-	--color-studio-800: var(--mantine-color-studio-8);
-	--color-studio-900: var(--mantine-color-studio-9);
+
+	/* Color Palette */
+	--color-studio-blue-50: var(--mantine-color-studio-blue-0);
+	--color-studio-blue-100: var(--mantine-color-studio-blue-1);
+	--color-studio-blue-200: var(--mantine-color-studio-blue-2);
+	--color-studio-blue-300: var(--mantine-color-studio-blue-3);
+	--color-studio-blue-400: var(--mantine-color-studio-blue-4);
+	--color-studio-blue-500: var(--mantine-color-studio-blue-5);
+	--color-studio-blue-600: var(--mantine-color-studio-blue-6);
+	--color-studio-blue-700: var(--mantine-color-studio-blue-7);
+	--color-studio-blue-800: var(--mantine-color-studio-blue-8);
+	--color-studio-blue-900: var(--mantine-color-studio-blue-9);
+
+	--color-on-air-red-50: var(--mantine-color-on-air-red-0);
+	--color-on-air-red-100: var(--mantine-color-on-air-red-1);
+	--color-on-air-red-200: var(--mantine-color-on-air-red-2);
+	--color-on-air-red-300: var(--mantine-color-on-air-red-3);
+	--color-on-air-red-400: var(--mantine-color-on-air-red-4);
+	--color-on-air-red-500: var(--mantine-color-on-air-red-5);
+	--color-on-air-red-600: var(--mantine-color-on-air-red-6);
+	--color-on-air-red-700: var(--mantine-color-on-air-red-7);
+	--color-on-air-red-800: var(--mantine-color-on-air-red-8);
+	--color-on-air-red-900: var(--mantine-color-on-air-red-9);
+
+	--color-newsprint-beige: #f5f1e8;
+	--color-aged-paper: #ebe4d5;
+	--color-charcoal: #212529;
+
+	--radius-xs: 2px;
+	--radius-sm: 4px;
+	--radius-md: 8px;
+	--radius-lg: 12px;
+	--radius-xl: 20px;
 }
 
 :root {
-	--app-bg: light-dark(#fdfdfc, var(--mantine-color-dark-8));
+	--app-bg: #f5f1e8;
 	--font-sans: "Poppins", sans-serif;
 	--font-display: "Sneaky Times", serif;
+	--charcoal: #212529;
 }
 
 html,
 body {
-	background: var(--app-bg);
-	color: #4b5563;
+	background-color: var(--app-bg);
+	color: var(--charcoal);
 	min-height: 100dvh;
 	font-family: var(--font-sans);
 	font-weight: 400;
 	font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 	-webkit-font-smoothing: antialiased;
+	position: relative;
+}
+
+/* Noise overlay */
+body::before {
+	content: "";
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	opacity: 0.03;
+	z-index: 9999;
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 .tabular-nums {
@@ -98,25 +122,13 @@ body {
 	font-weight: 500;
 	letter-spacing: -0.01em;
 	line-height: 1.1;
-	color: #2b3440;
+	color: var(--charcoal);
 }
 
 .page-subtitle {
-	color: #6b7280;
+	color: #4a5568;
 	text-wrap: pretty;
 	font-size: 1.125rem;
-}
-
-body {
-	background-image: radial-gradient(
-		ellipse 80% 50% at 50% -10%,
-		light-dark(
-			color-mix(in srgb, var(--mantine-color-wave-0) 40%, transparent),
-			color-mix(in srgb, var(--mantine-color-wave-9) 20%, transparent)
-		),
-		transparent 100%
-	);
-	background-attachment: fixed;
 }
 
 @media print {
@@ -125,16 +137,18 @@ body {
 		background: white !important;
 		background-image: none !important;
 	}
+	body::before {
+		display: none;
+	}
 }
 
 /* Redesigned rich text editor toolbar */
 .rich-text-editor-toolbar {
 	padding: var(--mantine-spacing-sm);
-	border-bottom: 1px solid
-		light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 	gap: var(--mantine-spacing-xs);
 	align-items: center;
-	background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+	background-color: rgba(0, 0, 0, 0.02);
 }
 
 .rich-text-editor-toolbar .editor-additional-menu {
