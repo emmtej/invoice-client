@@ -1,4 +1,5 @@
 import { Button, Group, Stack, Text } from "@mantine/core";
+import { create } from "zustand";
 import { AppModal } from "@/components/ui/modal/AppModal";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { useScriptsDataStore } from "../store/useScriptsDataStore";
@@ -8,38 +9,37 @@ import { DeleteFolderModal } from "./DeleteFolderModal";
 import { DeleteScriptModal } from "./DeleteScriptModal";
 import { MoveToFolderModal } from "./MoveToFolderModal";
 
-interface ScriptsModalsProps {
-	// Targets for deletion
+interface ModalsState {
 	deleteFolderTarget: Folder | null;
-	setDeleteFolderTarget: (folder: Folder | null) => void;
 	deleteScriptTarget: ScriptSummary | null;
-	setDeleteScriptTarget: (script: ScriptSummary | null) => void;
-
-	// Disclosure states
 	createFolderOpened: boolean;
-	closeCreateFolder: () => void;
 	moveModalOpened: boolean;
-	closeMoveModal: () => void;
 	deleteItemsOpened: boolean;
-	closeDeleteItems: () => void;
+	setDeleteFolderTarget: (target: Folder | null) => void;
+	setDeleteScriptTarget: (target: ScriptSummary | null) => void;
+	setCreateFolderOpened: (opened: boolean) => void;
+	setMoveModalOpened: (opened: boolean) => void;
+	setDeleteItemsOpened: (opened: boolean) => void;
+}
 
-	// Context
+export const useScriptsModalsStore = create<ModalsState>((set) => ({
+	deleteFolderTarget: null,
+	deleteScriptTarget: null,
+	createFolderOpened: false,
+	moveModalOpened: false,
+	deleteItemsOpened: false,
+	setDeleteFolderTarget: (target) => set({ deleteFolderTarget: target }),
+	setDeleteScriptTarget: (target) => set({ deleteScriptTarget: target }),
+	setCreateFolderOpened: (opened) => set({ createFolderOpened: opened }),
+	setMoveModalOpened: (opened) => set({ moveModalOpened: opened }),
+	setDeleteItemsOpened: (opened) => set({ deleteItemsOpened: opened }),
+}));
+
+interface ScriptsModalsProps {
 	currentFolderName?: string;
 }
 
-export function ScriptsModals({
-	deleteFolderTarget,
-	setDeleteFolderTarget,
-	deleteScriptTarget,
-	setDeleteScriptTarget,
-	createFolderOpened,
-	closeCreateFolder,
-	moveModalOpened,
-	closeMoveModal,
-	deleteItemsOpened,
-	closeDeleteItems,
-	currentFolderName,
-}: ScriptsModalsProps) {
+export function ScriptsModals({ currentFolderName }: ScriptsModalsProps) {
 	const { currentFolderId, selectedIds, clearSelection } = useScriptsUiStore();
 	const {
 		createFolder,
@@ -50,8 +50,20 @@ export function ScriptsModals({
 		scripts,
 	} = useScriptsDataStore();
 
+	const {
+		deleteFolderTarget,
+		deleteScriptTarget,
+		createFolderOpened,
+		moveModalOpened,
+		deleteItemsOpened,
+		setDeleteFolderTarget,
+		setDeleteScriptTarget,
+		setCreateFolderOpened,
+		setMoveModalOpened,
+		setDeleteItemsOpened,
+	} = useScriptsModalsStore();
+
 	const onConfirmDeleteSelected = async () => {
-		// Identify folders vs scripts in selection
 		const folderIds = selectedIds.filter((id) =>
 			folders.some((f) => f.id === id),
 		);
@@ -64,7 +76,7 @@ export function ScriptsModals({
 
 		await refresh(currentFolderId);
 		clearSelection();
-		closeDeleteItems();
+		setDeleteItemsOpened(false);
 	};
 
 	const onConfirmMoveSelected = async (targetFolderId: string | null) => {
@@ -75,9 +87,6 @@ export function ScriptsModals({
 			scripts.some((s) => s.id === id),
 		);
 
-		// Implementation of move logic (as noted in DataStore)
-		// We'll need to ensure the DataStore or a utility can handle the move
-		// For now, let's use the folderQueries/scriptsQueries directly if store is incomplete
 		const { folderQueries } = await import("@/features/storage/folderQueries");
 		const { scriptsQueries } = await import("../store/scriptsQueries");
 
@@ -90,14 +99,14 @@ export function ScriptsModals({
 
 		await refresh(currentFolderId);
 		clearSelection();
-		closeMoveModal();
+		setMoveModalOpened(false);
 	};
 
 	return (
 		<>
 			<AppModal
 				opened={deleteItemsOpened}
-				onClose={closeDeleteItems}
+				onClose={() => setDeleteItemsOpened(false)}
 				title="Delete items"
 				centered
 				size="sm"
@@ -109,7 +118,7 @@ export function ScriptsModals({
 						undone.
 					</Text>
 					<Group justify="flex-end">
-						<Button variant="subtle" color="gray" onClick={closeDeleteItems}>
+						<Button variant="subtle" color="gray" onClick={() => setDeleteItemsOpened(false)}>
 							Cancel
 						</Button>
 						<Button color="on-air-red" onClick={onConfirmDeleteSelected}>
@@ -121,17 +130,17 @@ export function ScriptsModals({
 
 			<CreateFolderModal
 				opened={createFolderOpened}
-				onClose={closeCreateFolder}
+				onClose={() => setCreateFolderOpened(false)}
 				onConfirm={async (name) => {
 					await createFolder(name, currentFolderId);
-					closeCreateFolder();
+					setCreateFolderOpened(false);
 				}}
 				parentFolderName={currentFolderName}
 			/>
 
 			<MoveToFolderModal
 				opened={moveModalOpened}
-				onClose={closeMoveModal}
+				onClose={() => setMoveModalOpened(false)}
 				onConfirm={onConfirmMoveSelected}
 				itemCount={selectedIds.length}
 				currentFolderId={currentFolderId}
