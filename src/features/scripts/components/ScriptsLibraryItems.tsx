@@ -1,7 +1,10 @@
 import { Box, Button, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
 import { ArrowDown, ArrowUp } from "lucide-react";
+import { useState } from "react";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
-import type { Folder, ScriptSummary } from "@/features/storage/types";
+import { useScriptsDataStore } from "../store/useScriptsDataStore";
+import { useScriptsUiStore } from "../store/useScriptsUiStore";
+import { useScriptsModalsStore } from "./ScriptsModals";
 import { sortByName } from "../utils/sortByName";
 import { FolderCard } from "./FolderCard";
 import { ScriptLibraryTile } from "./ScriptLibraryTile";
@@ -9,42 +12,35 @@ import { FolderCardGrid } from "./FolderCardGrid";
 import { ScriptLibraryTileGrid } from "./ScriptLibraryTileGrid";
 
 interface ScriptsLibraryItemsProps {
-	folders: Folder[];
-	scripts: ScriptSummary[];
-	folderItemCounts: Record<string, number>;
-	sortAscending: boolean;
-	onSortAscendingChange: (ascending: boolean) => void;
-	selectedScriptId: string | null;
-	selectedIds: string[];
 	onNavigateFolder: (folderId: string) => void;
-	onDeleteFolder: (folder: Folder) => void;
-	onSelectScript: (scriptId: string) => void;
-	onDeleteScript: (script: ScriptSummary) => void;
-	onToggleSelection: (id: string, isMulti: boolean, isRange: boolean) => void;
 	hasMoreScripts: boolean;
 	isLoadingMore: boolean;
 	onLoadMore: () => void;
-	viewMode: "grid" | "list";
+	allCurrentIds: string[];
 }
 
 export function ScriptsLibraryItems({
-	folders,
-	scripts,
-	folderItemCounts,
-	sortAscending,
-	onSortAscendingChange,
-	selectedScriptId,
-	selectedIds,
 	onNavigateFolder,
-	onDeleteFolder,
-	onSelectScript,
-	onDeleteScript,
-	onToggleSelection,
 	hasMoreScripts,
 	isLoadingMore,
 	onLoadMore,
-	viewMode,
+	allCurrentIds,
 }: ScriptsLibraryItemsProps) {
+	const folders = useScriptsDataStore((s) => s.folders);
+	const scripts = useScriptsDataStore((s) => s.scripts);
+	const folderItemCounts = useScriptsDataStore((s) => s.folderChildItemCounts);
+	
+	const viewMode = useScriptsUiStore((s) => s.viewMode);
+	const selectedScriptId = useScriptsUiStore((s) => s.selectedScript?.id ?? null);
+	const selectedIds = useScriptsUiStore((s) => s.selectedIds);
+	const selectScript = useScriptsUiStore((s) => s.selectScript);
+	const toggleSelection = useScriptsUiStore((s) => s.toggleSelection);
+
+	const setDeleteFolderTarget = useScriptsModalsStore((s) => s.setDeleteFolderTarget);
+	const setDeleteScriptTarget = useScriptsModalsStore((s) => s.setDeleteScriptTarget);
+
+	const [sortAscending, setSortAscending] = useState(true);
+
 	const sortedFolders = sortByName(folders, sortAscending);
 	const sortedScripts = sortByName(scripts, sortAscending);
 
@@ -56,9 +52,9 @@ export function ScriptsLibraryItems({
 		const isMulti = e.ctrlKey || e.metaKey;
 		const isRange = e.shiftKey;
 		if (isMulti || isRange) {
-			onToggleSelection(id, isMulti, isRange);
+			toggleSelection(id, isMulti, isRange, allCurrentIds);
 		} else {
-			onToggleSelection(id, false, false);
+			toggleSelection(id, false, false, allCurrentIds);
 			onPrimaryAction();
 		}
 	};
@@ -68,7 +64,7 @@ export function ScriptsLibraryItems({
 			<Stack gap="xl">
 				<Box px="md">
 					<UnstyledButton
-						onClick={() => onSortAscendingChange(!sortAscending)}
+						onClick={() => setSortAscending(!sortAscending)}
 						style={{
 							display: "inline-flex",
 							alignItems: "center",
@@ -112,7 +108,7 @@ export function ScriptsLibraryItems({
 									onClick={(e) =>
 										handleItemClick(e, folder.id, () => onNavigateFolder(folder.id))
 									}
-									onDelete={() => onDeleteFolder(folder)}
+									onDelete={() => setDeleteFolderTarget(folder)}
 								/>
 							))}
 						</SimpleGrid>
@@ -134,9 +130,9 @@ export function ScriptsLibraryItems({
 										selectedIds.includes(script.id)
 									}
 									onClick={(e) =>
-										handleItemClick(e, script.id, () => onSelectScript(script.id))
+										handleItemClick(e, script.id, () => selectScript(script.id))
 									}
-									onDelete={() => onDeleteScript(script)}
+									onDelete={() => setDeleteScriptTarget(script)}
 								/>
 							))}
 						</SimpleGrid>
@@ -163,7 +159,7 @@ export function ScriptsLibraryItems({
 		<Stack gap="lg">
 			<Box px="md">
 				<UnstyledButton
-					onClick={() => onSortAscendingChange(!sortAscending)}
+					onClick={() => setSortAscending(!sortAscending)}
 					style={{
 						display: "inline-flex",
 						alignItems: "center",
@@ -203,7 +199,7 @@ export function ScriptsLibraryItems({
 							onClick={(e) =>
 								handleItemClick(e, folder.id, () => onNavigateFolder(folder.id))
 							}
-							onDelete={() => onDeleteFolder(folder)}
+							onDelete={() => setDeleteFolderTarget(folder)}
 						/>
 					))}
 				</Stack>
@@ -220,9 +216,9 @@ export function ScriptsLibraryItems({
 								selectedIds.includes(script.id)
 							}
 							onClick={(e) =>
-								handleItemClick(e, script.id, () => onSelectScript(script.id))
+								handleItemClick(e, script.id, () => selectScript(script.id))
 							}
-							onDelete={() => onDeleteScript(script)}
+							onDelete={() => setDeleteScriptTarget(script)}
 						/>
 					))}
 				</Stack>
