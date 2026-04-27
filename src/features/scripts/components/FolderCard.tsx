@@ -63,7 +63,7 @@ export function FolderCard({
 						</Text>
 						{itemCount > 0 ? (
 							<Text size="xs" c="dimmed" className="tabular-nums">
-								{itemCount === 1 ? "1 item" : \`\${itemCount} items\`}
+								{itemCount === 1 ? "1 item" : `${itemCount} items`}
 							</Text>
 						) : (
 							<Flex align="center" gap={6}>

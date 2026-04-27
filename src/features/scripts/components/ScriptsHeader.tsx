@@ -109,7 +109,7 @@ export function ScriptsHeader({
 							New Folder
 						</Button>
 
-						<DocxUploadButton onFilesSelected={onUpload} loading={isUploading} />
+						<DocxUploadButton onChange={onUpload} loading={isUploading} />
 					</Group>
 				</Group>
 
