@@ -8,6 +8,8 @@ import type { ReactElement } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { appTheme } from "@/theme";
 import { ScriptsLibraryItems } from "./ScriptsLibraryItems";
+import { useScriptsDataStore } from "../store/useScriptsDataStore";
+import { useScriptsUiStore } from "../store/useScriptsUiStore";
 
 Object.defineProperty(window, "matchMedia", {
 	writable: true,
@@ -43,45 +45,46 @@ const baseFolder = {
 };
 
 describe("ScriptsLibraryItems", () => {
-	const onSortAscendingChange = vi.fn();
-
 	beforeEach(() => {
-		onSortAscendingChange.mockClear();
+		useScriptsDataStore.setState({
+			folders: [],
+			scripts: [],
+			folderChildItemCounts: {},
+		});
+		useScriptsUiStore.setState({
+			viewMode: "list",
+			selectedScript: null,
+			selectedIds: [],
+		});
 	});
 
 	it("lists all folder names before any script name in document order", () => {
+		useScriptsDataStore.setState({
+			folders: [
+				{ id: "f1", name: "Zebra Folder", ...baseFolder },
+				{ id: "f2", name: "Alpha Folder", ...baseFolder },
+			],
+			scripts: [
+				{
+					id: "s1",
+					name: "A Script",
+					folderId: null,
+					wordCount: 1,
+					invalidLineCount: 0,
+					createdAt: new Date(),
+					lastAccessedAt: null,
+				},
+			],
+		});
+
 		render(
 			wrap(
 				<ScriptsLibraryItems
-					viewMode="list"
-					folders={[
-						{ id: "f1", name: "Zebra Folder", ...baseFolder },
-						{ id: "f2", name: "Alpha Folder", ...baseFolder },
-					]}
-					folderItemCounts={{}}
-					scripts={[
-						{
-							id: "s1",
-							name: "A Script",
-							folderId: null,
-							wordCount: 1,
-							invalidLineCount: 0,
-							createdAt: new Date(),
-							lastAccessedAt: null,
-						},
-					]}
-					sortAscending
-					onSortAscendingChange={onSortAscendingChange}
-					selectedScriptId={null}
 					onNavigateFolder={vi.fn()}
-					onDeleteFolder={vi.fn()}
-					onSelectScript={vi.fn()}
-					onDeleteScript={vi.fn()}
-					selectedIds={[]}
-					onToggleSelection={vi.fn()}
 					hasMoreScripts={false}
 					isLoadingMore={false}
 					onLoadMore={vi.fn()}
+					allCurrentIds={["f1", "f2", "s1"]}
 				/>,
 			),
 		);
@@ -96,76 +99,44 @@ describe("ScriptsLibraryItems", () => {
 		expect(Math.max(idxAlpha, idxZebra)).toBeLessThan(idxScript);
 	});
 
-	it("sort toggle calls onSortAscendingChange", () => {
-		render(
-			wrap(
-				<ScriptsLibraryItems
-					viewMode="list"
-					folders={[{ id: "f1", name: "F", ...baseFolder }]}
-					folderItemCounts={{}}
-					scripts={[]}
-					sortAscending
-					onSortAscendingChange={onSortAscendingChange}
-					selectedScriptId={null}
-					onNavigateFolder={vi.fn()}
-					onDeleteFolder={vi.fn()}
-					onSelectScript={vi.fn()}
-					onDeleteScript={vi.fn()}
-					selectedIds={[]}
-					onToggleSelection={vi.fn()}
-					hasMoreScripts={false}
-					isLoadingMore={false}
-					onLoadMore={vi.fn()}
-				/>,
-			),
-		);
-
-		fireEvent.click(screen.getByText("Name"));
-		expect(onSortAscendingChange).toHaveBeenCalledWith(false);
-	});
-
 	it("sorts scripts by name when descending", () => {
+		useScriptsDataStore.setState({
+			scripts: [
+				{
+					id: "1",
+					name: "Apple",
+					folderId: null,
+					wordCount: 1,
+					invalidLineCount: 0,
+					createdAt: new Date(),
+					lastAccessedAt: null,
+				},
+				{
+					id: "2",
+					name: "Banana",
+					folderId: null,
+					wordCount: 1,
+					invalidLineCount: 0,
+					createdAt: new Date(),
+					lastAccessedAt: null,
+				},
+			],
+		});
+
 		render(
 			wrap(
 				<ScriptsLibraryItems
-					viewMode="list"
-					folders={[]}
-					folderItemCounts={{}}
-					scripts={[
-						{
-							id: "1",
-							name: "Apple",
-							folderId: null,
-							wordCount: 1,
-							invalidLineCount: 0,
-							createdAt: new Date(),
-							lastAccessedAt: null,
-						},
-						{
-							id: "2",
-							name: "Banana",
-							folderId: null,
-							wordCount: 1,
-							invalidLineCount: 0,
-							createdAt: new Date(),
-							lastAccessedAt: null,
-						},
-					]}
-					sortAscending={false}
-					onSortAscendingChange={onSortAscendingChange}
-					selectedScriptId={null}
 					onNavigateFolder={vi.fn()}
-					onDeleteFolder={vi.fn()}
-					onSelectScript={vi.fn()}
-					onDeleteScript={vi.fn()}
-					selectedIds={[]}
-					onToggleSelection={vi.fn()}
 					hasMoreScripts={false}
 					isLoadingMore={false}
 					onLoadMore={vi.fn()}
+					allCurrentIds={["1", "2"]}
 				/>,
 			),
 		);
+
+		// Click to sort descending
+		fireEvent.click(screen.getByText("Name"));
 
 		const text = document.body.textContent ?? "";
 		expect(text.indexOf("Banana")).toBeLessThan(text.indexOf("Apple"));
