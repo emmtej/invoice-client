@@ -53,6 +53,7 @@ describe("ScriptsLibraryItems", () => {
 		render(
 			wrap(
 				<ScriptsLibraryItems
+					viewMode="list"
 					folders={[
 						{ id: "f1", name: "Zebra Folder", ...baseFolder },
 						{ id: "f2", name: "Alpha Folder", ...baseFolder },
@@ -99,6 +100,7 @@ describe("ScriptsLibraryItems", () => {
 		render(
 			wrap(
 				<ScriptsLibraryItems
+					viewMode="list"
 					folders={[{ id: "f1", name: "F", ...baseFolder }]}
 					folderItemCounts={{}}
 					scripts={[]}
@@ -126,6 +128,7 @@ describe("ScriptsLibraryItems", () => {
 		render(
 			wrap(
 				<ScriptsLibraryItems
+					viewMode="list"
 					folders={[]}
 					folderItemCounts={{}}
 					scripts={[

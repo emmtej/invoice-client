@@ -38,54 +38,21 @@ afterEach(() => {
 });
 
 describe("ScriptsEmptyState", () => {
-	it("at root without handlers shows hint only — no upload or new-folder buttons", () => {
+	it("at root shows root-specific empty state message", () => {
 		render(wrap(<ScriptsEmptyState isRoot />));
 
 		expect(screen.getByText("No scripts yet")).toBeTruthy();
 		expect(
-			screen.getByText(/when those actions are available on this page/i),
+			screen.getByText(/Upload scripts or create a folder using the actions in the top right/i),
 		).toBeTruthy();
-
-		expect(screen.queryByText(/drop word documents here/i)).toBeNull();
-		expect(screen.queryByRole("button", { name: /new folder/i })).toBeNull();
 	});
 
-	it("at root with handlers shows upload and new-folder buttons", () => {
-		const onUpload = vi.fn();
-		const onCreateFolder = vi.fn();
-
-		render(
-			wrap(
-				<ScriptsEmptyState
-					isRoot
-					onUpload={onUpload}
-					onCreateFolder={onCreateFolder}
-				/>,
-			),
-		);
-
-		expect(screen.getByText("No scripts yet")).toBeTruthy();
-		expect(screen.getByText(/drop word documents here/i)).toBeTruthy();
-		expect(screen.getByRole("button", { name: /new folder/i })).toBeTruthy();
-	});
-
-	it("inside a folder shows centered upload and new-folder buttons", () => {
-		const onUpload = vi.fn();
-		const onCreateFolder = vi.fn();
-
-		render(
-			wrap(
-				<ScriptsEmptyState
-					isRoot={false}
-					onUpload={onUpload}
-					onCreateFolder={onCreateFolder}
-				/>,
-			),
-		);
+	it("inside a folder shows folder-specific empty state message", () => {
+		render(wrap(<ScriptsEmptyState isRoot={false} />));
 
 		expect(screen.getByText("This folder is empty")).toBeTruthy();
-		expect(screen.getByText(/drop word documents here/i)).toBeTruthy();
-		expect(screen.getByRole("button", { name: /new folder/i })).toBeTruthy();
-		expect(screen.queryByText(/at the top right/i)).toBeNull();
+		expect(
+			screen.getByText(/Upload scripts into this folder, or create a subfolder/i),
+		).toBeTruthy();
 	});
 });
