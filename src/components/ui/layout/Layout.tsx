@@ -1,7 +1,8 @@
-import { AppShell, Burger, Container, Group, Overlay } from "@mantine/core";
+import { AppShell, Box, Burger, Container, Group, Overlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type ReactNode, useEffect } from "react";
 import { useInvoicePresetsStore } from "@/features/invoice/store/invoicePresetsStore";
+import { AppFooter } from "./AppFooter";
 import { Navbar } from "../navbar/Navbar";
 import { Sidebar } from "../sidebar/Sidebar";
 import {
@@ -25,7 +26,7 @@ export function Layout({ children }: LayoutProps) {
 
 	return (
 		<AppShell
-			padding="md"
+			padding={0}
 			zIndex={100}
 			header={{
 				height: APP_SHELL_HEADER_HEIGHT,
@@ -57,7 +58,7 @@ export function Layout({ children }: LayoutProps) {
 			{opened && (
 				<Overlay
 					onClick={toggle}
-					zIndex={99}
+					zIndex={200}
 					backgroundOpacity={0.5}
 					blur={2}
 					fixed
@@ -67,7 +68,7 @@ export function Layout({ children }: LayoutProps) {
 
 			<AppShell.Main
 				display="flex"
-				style={{ flexDirection: "column", height: "100vh" }}
+				style={{ flexDirection: "column", minHeight: "100dvh" }}
 			>
 				<Container
 					maw={APP_CONTENT_MAX_WIDTH}
@@ -76,14 +77,23 @@ export function Layout({ children }: LayoutProps) {
 					px="md"
 					flex={1}
 					w="100%"
+					display="flex"
 					style={{
-						display: "flex",
 						flexDirection: "column",
-						minHeight: 0,
 					}}
 				>
 					{children}
 				</Container>
+				<Box
+					component="footer"
+					py="xl"
+					bg="white"
+					style={{ borderTop: "1px solid var(--mantine-color-gray-2)" }}
+				>
+					<Container maw={APP_CONTENT_MAX_WIDTH} size="lg" px="md">
+						<AppFooter />
+					</Container>
+				</Box>
 			</AppShell.Main>
 		</AppShell>
 	);

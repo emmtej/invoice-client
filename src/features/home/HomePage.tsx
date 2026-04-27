@@ -1,8 +1,5 @@
 import {
-	Anchor,
-	Box,
 	Button,
-	Divider,
 	Grid,
 	Group,
 	Paper,
@@ -80,33 +77,6 @@ const tools = [
 		icon: User,
 		to: "/profile",
 		color: "studio" as const,
-	},
-];
-
-const footerLinks = [
-	{
-		title: "Product",
-		links: [
-			{ label: "Editor", to: "/editor" },
-			{ label: "Invoices", to: "/invoice" },
-			{ label: "Dashboard", to: "/dashboard" },
-		],
-	},
-	{
-		title: "Resources",
-		links: [
-			{ label: "Documentation", to: "/" },
-			{ label: "API Reference", to: "/" },
-			{ label: "Community", to: "/" },
-		],
-	},
-	{
-		title: "Company",
-		links: [
-			{ label: "About Us", to: "/" },
-			{ label: "Careers", to: "/" },
-			{ label: "Contact", to: "/" },
-		],
 	},
 ];
 
@@ -223,53 +193,6 @@ export default function HomePage() {
 				</Grid>
 			</section>
 
-			<Box pt={40}>
-				<Divider mb={60} />
-				<Grid gutter={40}>
-					<Grid.Col span={{ base: 12, md: 4 }}>
-						<Group gap="xs" mb="md">
-							<Receipt
-								size={30}
-								strokeWidth={2}
-								style={{ color: "var(--mantine-color-wave-8)" }}
-							/>
-							<Text size="xl" fw={800} c="gray.8" className="tracking-tighter">
-								InVoice
-							</Text>
-						</Group>
-						<Text size="sm" c="gray.5" maw={300} mb="xl">
-							Billing and script tools for voice actors—soft on the eyes, sharp
-							on the details.
-						</Text>
-						<Text size="xs" c="gray.5">
-							© 2026 InVoice Platform. All rights reserved.
-						</Text>
-					</Grid.Col>
-					<Grid.Col span={{ base: 12, md: 8 }}>
-						<SimpleGrid cols={{ base: 2, sm: 3 }}>
-							{footerLinks.map((group) => (
-								<Stack key={group.title} gap="xs">
-									<Text fw={600} size="sm" mb="xs">
-										{group.title}
-									</Text>
-									{group.links.map((link) => (
-										<Anchor
-											key={link.label}
-											component={Link}
-											to={link.to}
-											size="sm"
-											c="gray.5"
-											underline="hover"
-										>
-											{link.label}
-										</Anchor>
-									))}
-								</Stack>
-							))}
-						</SimpleGrid>
-					</Grid.Col>
-				</Grid>
-			</Box>
 		</Stack>
 	);
 }
