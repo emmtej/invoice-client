@@ -8,7 +8,7 @@ import { SelectionView } from "./components/SelectionView";
 import { useBoothInitialization } from "./hooks/useBoothInitialization";
 import { useBoothStore } from "./store/useBoothStore";
 
-export default function BoothPage() {
+export default function BoothView() {
 	useBoothInitialization();
 
 	const { status, isSelectionMode, isSessionMode } = useBoothStore(

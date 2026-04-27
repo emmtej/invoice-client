@@ -2,10 +2,10 @@ import { type LucideIcon, Mic, Receipt, User, Wrench } from "lucide-react";
 import { type ComponentType, lazy } from "react";
 
 // Core components - Direct import for performance
-import BoothPage from "@/features/booth";
-import EditorPage from "@/features/editor";
-import HomePage from "@/features/home";
-import ScriptsPage from "@/features/scripts";
+import BoothPage from "@/pages/booth/BoothPage";
+import EditorPage from "@/pages/editor/EditorPage";
+import HomePage from "@/pages/home/HomePage";
+import ScriptsPage from "@/pages/scripts/ScriptsPage";
 
 export interface NavChild {
 	label: string;
@@ -45,20 +45,12 @@ export const NAVIGATION = {
 				{
 					label: "New Invoice",
 					path: "/invoice",
-					component: lazy(() =>
-						import("@/features/invoice").then((m) => ({
-							default: m.InvoicePage,
-						})),
-					),
+					component: lazy(() => import("@/pages/invoice/InvoicePage")),
 				},
 				{
 					label: "Presets",
 					path: "/invoice/presets",
-					component: lazy(() =>
-						import("@/features/invoice").then((m) => ({
-							default: m.PresetsPage,
-						})),
-					),
+					component: lazy(() => import("@/pages/invoice/PresetsPage")),
 				},
 			],
 		},
@@ -82,13 +74,13 @@ export const NAVIGATION = {
 		{
 			label: "Login",
 			path: "/login",
-			component: lazy(() => import("@/features/auth")),
+			component: lazy(() => import("@/pages/auth/AuthenticationPage")),
 			hideInSidebar: true,
 		},
 		{
 			label: "Register",
 			path: "/register",
-			component: lazy(() => import("@/features/auth")),
+			component: lazy(() => import("@/pages/auth/AuthenticationPage")),
 			hideInSidebar: true,
 		},
 	] as NavItem[],
@@ -97,18 +89,14 @@ export const NAVIGATION = {
 		{
 			label: "Dashboard",
 			path: "/dashboard",
-			component: lazy(() =>
-				import("@/features/user").then((m) => ({ default: m.DashboardPage })),
-			),
+			component: lazy(() => import("@/pages/user/DashboardPage")),
 			hideInSidebar: true,
 		},
 		{
 			label: "Profile",
 			path: "/profile",
 			icon: User,
-			component: lazy(() =>
-				import("@/features/user").then((m) => ({ default: m.ProfilePage })),
-			),
+			component: lazy(() => import("@/pages/user/ProfilePage")),
 		},
 	] as NavItem[],
 };

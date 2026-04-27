@@ -1,1 +1,1 @@
-export { default } from "./AuthenticationPage";
+export { default as AuthenticationView, default } from "./AuthenticationView";

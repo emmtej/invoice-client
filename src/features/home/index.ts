@@ -1,3 +1,1 @@
-import HomePage from "./HomePage";
-
-export default HomePage;
+export { default as HomeView, default } from "./HomeView";

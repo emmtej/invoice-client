@@ -12,7 +12,7 @@ import { AuthForm } from "@/features/auth/components/AuthForm";
 import { OAuthProviders } from "@/features/auth/components/OAuthProviders";
 import { PageTitle } from "@/components/ui/text/PageTitle";
 
-function AuthenticationPage() {
+function AuthenticationView() {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const isRegistering = pathname.includes("register");
@@ -121,4 +121,4 @@ function AuthenticationPage() {
 	);
 }
 
-export default AuthenticationPage;
+export default AuthenticationView;

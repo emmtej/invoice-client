@@ -1,12 +1,12 @@
 import { Box, Stack, Tabs, Text } from "@mantine/core";
 import { useEffect } from "react";
 import { PageTitle } from "@/components/ui/text/PageTitle";
-import { BillingRatePresetsManager } from "../components/presets/BillingRatePresetsManager";
-import { InvoiceProfilePresetsManager } from "../components/presets/InvoiceProfilePresetsManager";
-import { InvoiceTitlePresetsManager } from "../components/presets/InvoiceTitlePresetsManager";
-import { useInvoicePresetsStore } from "../store/invoicePresetsStore";
+import { BillingRatePresetsManager } from "./components/presets/BillingRatePresetsManager";
+import { InvoiceProfilePresetsManager } from "./components/presets/InvoiceProfilePresetsManager";
+import { InvoiceTitlePresetsManager } from "./components/presets/InvoiceTitlePresetsManager";
+import { useInvoicePresetsStore } from "./store/invoicePresetsStore";
 
-export function PresetsPage() {
+export function PresetsView() {
 	const migrate = useInvoicePresetsStore((s) => s._migrateFromOldStorage);
 
 	useEffect(() => {
@@ -46,4 +46,4 @@ export function PresetsPage() {
 	);
 }
 
-export default PresetsPage;
+export default PresetsView;

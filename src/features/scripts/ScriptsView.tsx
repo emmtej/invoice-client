@@ -14,7 +14,7 @@ import { useScriptsPageController } from "./hooks/useScriptsPageController";
 import { useScriptsDataStore } from "./store/useScriptsDataStore";
 import { useScriptsUiStore } from "./store/useScriptsUiStore";
 
-export default function ScriptsPage() {
+export default function ScriptsView() {
 	const init = useScriptsDataStore((s) => s.init);
 	const isLoading = useScriptsDataStore((s) => s.isLoading);
 	const breadcrumb = useScriptsDataStore((s) => s.breadcrumb);

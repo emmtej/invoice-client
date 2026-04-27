@@ -8,12 +8,12 @@ import {
 	InvoiceDetailsSection,
 	loadInvoiceDefaults,
 	saveInvoiceDefaults,
-} from "../details";
-import { InvoiceItemAdder } from "../items";
-import { ProfileSection, useProfileManager } from "../profile";
-import { InvoiceSummary } from "../summary";
+} from "./details";
+import { InvoiceItemAdder } from "./items";
+import { ProfileSection, useProfileManager } from "./profile";
+import { InvoiceSummary } from "./summary";
 
-export default function InvoicePage() {
+export default function InvoiceView() {
 	const { invoice, addEmptyItem } = useInvoiceStore(
 		useShallow((s) => ({
 			invoice: s.invoice,

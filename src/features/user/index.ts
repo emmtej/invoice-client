@@ -1,2 +1,2 @@
-export { default as DashboardPage } from "./pages/DashboardPage";
-export { default as ProfilePage } from "./pages/ProfilePage";
+export { default as DashboardView } from "./DashboardView";
+export { default as ProfileView } from "./ProfileView";

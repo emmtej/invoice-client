@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Mic, User } from "lucide-react";
 import { PageTitle } from "@/components/ui/text/PageTitle";
 
-export default function ProfilePage() {
+export default function ProfileView() {
 	return (
 		<Stack gap="md">
 			<div>

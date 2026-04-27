@@ -1,1 +1,1 @@
-export { default as ScriptsPage, default } from "./ScriptsPage";
+export { default as ScriptsView, default } from "./ScriptsView";

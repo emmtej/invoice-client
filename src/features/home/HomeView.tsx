@@ -80,7 +80,7 @@ const tools = [
 	},
 ];
 
-export default function HomePage() {
+export default function HomeView() {
 	const featureIcons: Array<"studio" | "wave" | "gray"> = [
 		"wave",
 		"wave",

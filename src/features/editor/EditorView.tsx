@@ -2,7 +2,7 @@ import { Box, Breadcrumbs, Flex, Text } from "@mantine/core";
 import { ChevronRight } from "lucide-react";
 import Scripts from "./components/Scripts";
 
-export default function EditorPage() {
+export default function EditorView() {
 	return (
 		<Flex direction="column" h="100%" rowGap={6}>
 			{/* Breadcrumb Orientation */}
