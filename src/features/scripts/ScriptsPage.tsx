@@ -48,7 +48,6 @@ export default function ScriptsPage() {
 		selectedIds,
 		viewMode,
 		isPreviewLoading,
-		viewMode,
 		setCurrentFolder,
 		selectScript,
 		toggleSelection,
@@ -61,7 +60,6 @@ export default function ScriptsPage() {
 			selectedIds: s.selectedIds,
 			viewMode: s.viewMode,
 			isPreviewLoading: s.isPreviewLoading,
-			viewMode: s.viewMode,
 			setCurrentFolder: s.setCurrentFolder,
 			selectScript: s.selectScript,
 			toggleSelection: s.toggleSelection,
@@ -166,6 +164,7 @@ export default function ScriptsPage() {
 				<Flex flex={1} mih={0}>
 					<Box flex={1} p="md" miw={0} style={{ overflowY: "auto" }}>
 						<ScriptsLibraryItems
+							viewMode={viewMode}
 							folders={folders}
 							scripts={scripts}
 							folderItemCounts={folderChildItemCounts}
