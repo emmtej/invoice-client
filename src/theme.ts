@@ -64,12 +64,9 @@ export const appTheme = createTheme({
 	},
 	components: {
 		Text: {
-			defaultProps: {
-				className: "font-sans",
-			},
+			defaultProps: {},
 		},
 		TextInput: {
-			defaultProps: { radius: "md" },
 			styles: {
 				input: {
 					fontFamily: "var(--mantine-font-family)",
@@ -86,7 +83,6 @@ export const appTheme = createTheme({
 			defaultProps: {
 				shadow: "sm",
 				withBorder: true,
-				radius: "md",
 				bg: "#EBE4D5", // Aged Paper
 			},
 			styles: {
@@ -98,13 +94,11 @@ export const appTheme = createTheme({
 		},
 		Card: {
 			defaultProps: {
-				radius: "md",
 				bg: "#EBE4D5", // Aged Paper
 			},
 		},
 		Button: {
 			defaultProps: {
-				radius: "md",
 				color: "studio-blue",
 			},
 			styles: {
@@ -115,7 +109,6 @@ export const appTheme = createTheme({
 			},
 		},
 		Input: {
-			defaultProps: { radius: "md" },
 			styles: {
 				input: {
 					"&:focus": {
@@ -124,9 +117,8 @@ export const appTheme = createTheme({
 				},
 			},
 		},
-		ActionIcon: { defaultProps: { radius: "md" } },
+		ActionIcon: { defaultProps: {} },
 		Badge: {
-			defaultProps: { radius: "md" },
 			styles: {
 				root: {
 					textTransform: "capitalize",
@@ -135,10 +127,9 @@ export const appTheme = createTheme({
 				},
 			},
 		},
-		Avatar: { defaultProps: { radius: "md" } },
-		ThemeIcon: { defaultProps: { radius: "md" } },
+		Avatar: { defaultProps: {} },
+		ThemeIcon: { defaultProps: {} },
 		SegmentedControl: {
-			defaultProps: { radius: "md" },
 			styles: {
 				root: {
 					backgroundColor: "rgba(0,0,0,0.05)",
@@ -151,10 +142,10 @@ export const appTheme = createTheme({
 		InputWrapper: {
 			styles: {
 				label: {
-					fontSize: "13px",
+					fontSize: "var(--mantine-font-size-sm)",
 					fontWeight: 600,
-					color: "#212529", // Charcoal
-					marginBottom: "4px",
+					color: "var(--mantine-color-black)",
+					marginBottom: "var(--mantine-spacing-xs)",
 					letterSpacing: "0",
 				},
 			},
@@ -167,7 +158,6 @@ export const appTheme = createTheme({
 					blur: 3,
 					backgroundOpacity: 0.5,
 				},
-				radius: "md",
 			},
 		},
 		Table: {
@@ -182,7 +172,7 @@ export const appTheme = createTheme({
 				},
 				th: {
 					borderBottom: "1px solid rgba(0,0,0,0.05)",
-					color: "#212529", // Charcoal
+					color: "var(--mantine-color-black)",
 					fontSize: "12px",
 					textTransform: "uppercase",
 					letterSpacing: "0.05em",
@@ -196,7 +186,7 @@ export const appTheme = createTheme({
 		Title: {
 			styles: {
 				root: {
-					color: "#212529", // Charcoal
+					color: "var(--mantine-color-black)",
 				},
 			},
 		},

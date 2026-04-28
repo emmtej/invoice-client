@@ -70,13 +70,8 @@
 	--radius-md: 4px;
 	--radius-lg: 8px;
 	--radius-xl: 12px;
-}
 
-:root {
 	--app-bg: #f5f1e8;
-	--font-sans: "Poppins", sans-serif;
-	--font-display: "Sneaky Times", serif;
-	--charcoal: #212529;
 }
 
 html,
@@ -101,7 +96,7 @@ body::before {
 	height: 100%;
 	pointer-events: none;
 	opacity: 0.03;
-	z-index: 9999;
+	z-index: 100;
 	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
@@ -126,7 +121,7 @@ body::before {
 }
 
 .page-subtitle {
-	color: #4a5568;
+	color: color-mix(in srgb, var(--charcoal) 70%, transparent);
 	text-wrap: pretty;
 	font-size: 1.125rem;
 }
