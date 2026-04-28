@@ -10,8 +10,9 @@ import { Suspense } from "react";
 import { RouteFallback } from "./components/router/RouteFallback";
 import { RouterErrorBoundary } from "./components/router/RouterErrorBoundary";
 import { Layout } from "./components/ui/layout/Layout";
-import { NAVIGATION, type NavItem } from "./config/navigation";
+import { protectedRoutes, publicRoutes } from "./config/routes";
 import { useUserStore } from "./store/userStore";
+import type { AppRoute } from "./types/navigation";
 
 declare module "@tanstack/react-router" {
 	interface Register {
@@ -43,56 +44,39 @@ const protectedUserRoutes = createRoute({
 });
 
 // --- Helper: Map Config to Routes ---
-const createRoutesFromConfig = (items: NavItem[], parent: any) => {
+const createRoutesFromConfig = (items: AppRoute[], parent: any) => {
 	const routes: any[] = [];
 
 	for (const item of items) {
-		if (item.path && item.component) {
-			const Component = item.component;
-			routes.push(
-				createRoute({
-					getParentRoute: () => parent,
-					path: item.path,
-					component: () => (
-						<Suspense fallback={<RouteFallback label={item.label.toLowerCase()} />}>
-							<Component />
-						</Suspense>
-					),
-				}),
-			);
-		}
-
-		if (item.children) {
-			for (const child of item.children) {
-				const ChildComponent = child.component;
-				routes.push(
-					createRoute({
-						getParentRoute: () => parent,
-						path: child.path,
-						component: () => (
-							<Suspense fallback={<RouteFallback label={child.label.toLowerCase()} />}>
-								<ChildComponent />
-							</Suspense>
-						),
-					}),
-				);
-			}
-		}
+		const Component = item.component;
+		routes.push(
+			createRoute({
+				getParentRoute: () => parent,
+				path: item.path,
+				component: () => (
+					<Suspense
+						fallback={<RouteFallback label={item.label.toLowerCase()} />}
+					>
+						<Component />
+					</Suspense>
+				),
+			}),
+		);
 	}
 
 	return routes;
 };
 
-const publicRoutes = createRoutesFromConfig(NAVIGATION.public, rootRoute);
-const protectedRoutes = createRoutesFromConfig(
-	NAVIGATION.protected,
+const publicRouterRoutes = createRoutesFromConfig(publicRoutes, rootRoute);
+const protectedRouterRoutes = createRoutesFromConfig(
+	protectedRoutes,
 	protectedUserRoutes,
 );
 
 // --- Router Instance ---
 const routeTree = rootRoute.addChildren([
-	...publicRoutes,
-	protectedUserRoutes.addChildren(protectedRoutes),
+	...publicRouterRoutes,
+	protectedUserRoutes.addChildren(protectedRouterRoutes),
 ]);
 
 export const router = createRouter({
