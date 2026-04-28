@@ -7,26 +7,20 @@ import { UserButton } from "./UserButton";
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 	const user = useUserStore((store) => store.user);
 
-	const links = MENU.map((item) => {
-		if (!item.icon) {
-			return null;
-		}
-
-		return (
-			<LinksGroup
-				key={item.label}
-				label={item.label}
-				icon={item.icon}
-				href={item.path}
-				initiallyOpened={item.initiallyOpened}
-				links={item.children?.map((child) => ({
-					label: child.label,
-					link: child.path,
-				}))}
-				onNavigate={onNavigate}
-			/>
-		);
-	});
+	const links = MENU.filter((item) => item.icon).map((item) => (
+		<LinksGroup
+			key={item.path || item.label}
+			label={item.label}
+			icon={item.icon!}
+			href={item.path}
+			initiallyOpened={item.initiallyOpened ?? false}
+			links={item.children?.map((child) => ({
+				label: child.label,
+				link: child.path,
+			}))}
+			onNavigate={onNavigate}
+		/>
+	));
 
 	return (
 		<Box
@@ -47,7 +41,6 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 			{user && (
 				<Box
 					pt="md"
-					mt="md"
 					style={{
 						borderTop: "1px solid var(--mantine-color-gray-3)",
 					}}
