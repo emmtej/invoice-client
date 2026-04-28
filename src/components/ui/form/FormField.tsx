@@ -16,12 +16,7 @@ export function FormField({
 	...rest
 }: FormFieldProps) {
 	return (
-		<Input.Wrapper
-			label={label}
-			error={error}
-			required={required}
-			{...rest}
-		>
+		<Input.Wrapper label={label} error={error} required={required} {...rest}>
 			{children}
 		</Input.Wrapper>
 	);

@@ -1,8 +1,6 @@
-import { Box, Button, Flex, Group, Stack, Text, Title } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { Box, Flex, Group, Stack, Table, Text, Title } from "@mantine/core";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { ExportModal, InvoiceItemCard } from "../components";
 import { getTodayDateString, type InvoiceProfile } from "../profile";
 import { useInvoiceStore } from "../store/invoiceStore";
 
@@ -10,17 +8,21 @@ type InvoiceSummaryProps = {
 	profile?: InvoiceProfile;
 	invoiceTitle: string;
 	invoiceDate: string;
+	isLivePreview?: boolean;
 };
 
 export const InvoiceSummary = memo(
-	({ profile, invoiceTitle, invoiceDate }: InvoiceSummaryProps) => {
+	({
+		profile,
+		invoiceTitle,
+		invoiceDate,
+		isLivePreview,
+	}: InvoiceSummaryProps) => {
 		const { invoice } = useInvoiceStore(
 			useShallow((s) => ({
 				invoice: s.invoice,
 			})),
 		);
-		const [exportModalOpened, { open: openExport, close: closeExport }] =
-			useDisclosure(false);
 
 		const items = invoice.items;
 		const totalAmount = items.reduce((sum, item) => {
@@ -28,87 +30,202 @@ export const InvoiceSummary = memo(
 			return sum + itemTotal;
 		}, 0);
 
+		const padding = isLivePreview ? "xl" : "40px";
+
 		return (
-			<Box mt="xl">
-				<Box p={0}>
-					<Stack gap="xl">
-						<Flex justify="space-between" align="flex-start">
-							<Box>
-								<Text
-									size="xs"
-									fw={600}
-									tt="uppercase"
-									lts="0.1em"
-									c="dimmed"
-									mb={4}
-								>
-									Project Invoice
-								</Text>
-								<Title
-									order={2}
-									size="h1"
-									className="tracking-tight text-balance"
-								>
-									{invoiceTitle}
-								</Title>
-								<Text size="sm" c="dimmed" mt={4}>
-									Date: {invoiceDate || getTodayDateString()}
-								</Text>
-							</Box>
-							{profile && (
-								<Box style={{ textAlign: "right" }}>
-									<Text fw={600} c="gray.8">
-										{profile.firstName} {profile.lastName}
-									</Text>
-									<Text size="sm" c="dimmed">
-										{profile.email}
-									</Text>
-								</Box>
-							)}
-						</Flex>
-
-						<Stack gap="xl">
-							{items.map((item) => (
-								<InvoiceItemCard key={item.id} item={item} />
-							))}
-						</Stack>
-
-						<Box py="xl" mt="xs" style={{ borderTop: "2px solid rgba(0,0,0,0.05)" }}>
-							<Group justify="flex-end" gap="xl">
-								<Text fw={600} size="lg" c="dimmed" tt="uppercase" lts="0.05em">
-									Total Amount
-								</Text>
-								<Text
-									fw={800}
-									size="32px"
-									c="charcoal"
-									className="tabular-nums tracking-tighter"
-								>
-									${totalAmount.toFixed(2)}
-								</Text>
-							</Group>
-						</Box>
-
-						<Group justify="flex-end" mt="md">
-							<Button
-								variant="filled"
-								color="studio-blue"
-								size="md"
-								onClick={openExport}
-								disabled={items.length === 0}
+			<Box
+				p={padding}
+				bg="white"
+				style={{
+					height: "100%",
+					color: "var(--mantine-color-gray-9)",
+					fontFamily: "var(--mantine-font-family)",
+				}}
+			>
+				<Stack gap={48}>
+					{/* Header */}
+					<Flex justify="space-between" align="flex-start">
+						<Stack gap="xs">
+							<Title
+								order={1}
+								style={{
+									fontFamily: "var(--font-display)",
+									fontSize: isLivePreview ? "32px" : "48px",
+									color: "var(--mantine-color-studio-blue-9)",
+								}}
 							>
-								Export
-							</Button>
+								{invoiceTitle || "Invoice"}
+							</Title>
+							<Text size="sm" fw={600} c="gray.6">
+								DATE: {invoiceDate || getTodayDateString()}
+							</Text>
+						</Stack>
+						{profile && (
+							<Stack gap={2} align="flex-end">
+								<Text fw={800} size="sm" c="gray.9">
+									{profile.firstName} {profile.lastName}
+								</Text>
+								<Text size="xs" c="gray.6">
+									{profile.email}
+								</Text>
+							</Stack>
+						)}
+					</Flex>
+
+					{/* Line Items Table */}
+					<Table
+						verticalSpacing="md"
+						horizontalSpacing="0"
+						className="border-t border-gray-100"
+					>
+						<Table.Thead>
+							<Table.Tr>
+								<Table.Th
+									style={{
+										color: "var(--mantine-color-gray-4)",
+										fontSize: "10px",
+										fontWeight: 800,
+										textTransform: "uppercase",
+										letterSpacing: "1.5px",
+									}}
+								>
+									Description
+								</Table.Th>
+								<Table.Th
+									style={{
+										color: "var(--mantine-color-gray-4)",
+										fontSize: "10px",
+										fontWeight: 800,
+										textTransform: "uppercase",
+										letterSpacing: "1.5px",
+										textAlign: "right",
+									}}
+								>
+									Qty
+								</Table.Th>
+								<Table.Th
+									style={{
+										color: "var(--mantine-color-gray-4)",
+										fontSize: "10px",
+										fontWeight: 800,
+										textTransform: "uppercase",
+										letterSpacing: "1.5px",
+										textAlign: "right",
+									}}
+								>
+									Rate
+								</Table.Th>
+								<Table.Th
+									style={{
+										color: "var(--mantine-color-gray-4)",
+										fontSize: "10px",
+										fontWeight: 800,
+										textTransform: "uppercase",
+										letterSpacing: "1.5px",
+										textAlign: "right",
+									}}
+								>
+									Total
+								</Table.Th>
+							</Table.Tr>
+						</Table.Thead>
+						<Table.Tbody>
+							{items.map((item) =>
+								item.subitems.map((sub) => (
+									<Table.Tr
+										key={sub.id}
+										style={{
+											borderBottom: "1px solid var(--mantine-color-gray-0)",
+										}}
+									>
+										<Table.Td>
+											<Text size="sm" fw={700} c="gray.9">
+												{sub.label || item.name}
+											</Text>
+											<Text size="xs" c="gray.5" mt={2}>
+												{sub.scriptName}
+											</Text>
+										</Table.Td>
+										<Table.Td style={{ textAlign: "right" }}>
+											<Text size="sm" fw={600} className="tabular-nums">
+												{sub.wordCount.toLocaleString()}
+											</Text>
+										</Table.Td>
+										<Table.Td style={{ textAlign: "right" }}>
+											<Text size="sm" fw={600} className="tabular-nums">
+												${sub.ratePerWord.toFixed(2)}
+											</Text>
+										</Table.Td>
+										<Table.Td style={{ textAlign: "right" }}>
+											<Text
+												size="sm"
+												fw={800}
+												c="gray.9"
+												className="tabular-nums"
+											>
+												${sub.amount.toFixed(2)}
+											</Text>
+										</Table.Td>
+									</Table.Tr>
+								)),
+							)}
+							{items.length === 0 && (
+								<Table.Tr>
+									<Table.Td colSpan={4} py={48}>
+										<Text size="sm" c="gray.4" ta="center" fs="italic">
+											No items added to invoice yet.
+										</Text>
+									</Table.Td>
+								</Table.Tr>
+							)}
+						</Table.Tbody>
+					</Table>
+
+					{/* Totals Section */}
+					<Stack gap="xs" align="flex-end" mt="xl">
+						<Group gap={48}>
+							<Text size="xs" fw={800} c="gray.5" tt="uppercase" lts={1.5}>
+								Subtotal
+							</Text>
+							<Text size="sm" fw={700} className="tabular-nums">
+								${totalAmount.toFixed(2)}
+							</Text>
+						</Group>
+						<Box h={1} w={150} bg="gray.1" my="sm" />
+						<Group gap={48}>
+							<Text
+								size="sm"
+								fw={800}
+								c="studio-blue.9"
+								tt="uppercase"
+								lts={1.5}
+							>
+								Total Due
+							</Text>
+							<Text
+								size={isLivePreview ? "24px" : "32px"}
+								fw={900}
+								c="studio-blue.9"
+								className="tabular-nums tracking-tighter"
+							>
+								${totalAmount.toFixed(2)}
+							</Text>
 						</Group>
 					</Stack>
-				</Box>
 
-				<ExportModal
-					opened={exportModalOpened}
-					onClose={closeExport}
-					items={items}
-					onDownloadPDF={() => window.print()}
-				/>
+					{/* Footer Note */}
+					<Box
+						mt={64}
+						style={{
+							borderTop: "1px solid var(--mantine-color-gray-1)",
+							paddingTop: "24px",
+						}}
+					>
+						<Text size="xs" c="gray.4" fw={500} ta="center" lts={0.5}>
+							Thank you for your business. Please remit payment within 30 days.
+						</Text>
+					</Box>
+				</Stack>
 			</Box>
 		);
 	},

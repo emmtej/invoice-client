@@ -118,7 +118,11 @@ export function ScriptsModals({ currentFolderName }: ScriptsModalsProps) {
 						undone.
 					</Text>
 					<Group justify="flex-end">
-						<Button variant="subtle" color="gray" onClick={() => setDeleteItemsOpened(false)}>
+						<Button
+							variant="subtle"
+							color="gray"
+							onClick={() => setDeleteItemsOpened(false)}
+						>
 							Cancel
 						</Button>
 						<Button color="on-air-red" onClick={onConfirmDeleteSelected}>

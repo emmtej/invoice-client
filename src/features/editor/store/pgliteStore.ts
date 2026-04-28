@@ -1,6 +1,10 @@
 import { desc, eq, inArray, lte } from "drizzle-orm";
 import { getDrizzleDb, initDb } from "@/features/storage/pgliteClient";
-import { scriptContents, scriptDrafts, scripts } from "@/features/storage/schema";
+import {
+	scriptContents,
+	scriptDrafts,
+	scripts,
+} from "@/features/storage/schema";
 import type { Script, ScriptMetadata } from "@/types/Script";
 
 const DRAFT_TTL_HOURS = 24;

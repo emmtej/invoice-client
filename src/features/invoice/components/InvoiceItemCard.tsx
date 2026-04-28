@@ -1,11 +1,11 @@
 import {
 	ActionIcon,
+	Box,
 	Button,
 	Group,
 	Stack,
 	Table,
 	Text,
-	Tooltip,
 } from "@mantine/core";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -71,57 +71,108 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 	};
 
 	return (
-		<SurfaceCard>
-			<Stack gap="md">
-				{/* Card Header */}
-				<Group justify="space-between">
+		<SurfaceCard
+			p={0}
+			style={{
+				backgroundColor: "white",
+				border: "1px solid var(--mantine-color-gray-1)",
+			}}
+		>
+			<Stack gap={0}>
+				{/* Section Header */}
+				<Group justify="space-between" bg="gray.0" px="xl" py="md">
 					<Group gap="xs">
-						<Text fw={700} size="lg">
+						<Text fw={800} size="md" c="gray.9" lts={-0.2}>
 							{item.name}
 						</Text>
-						<Tooltip label="Edit item name">
-							<ActionIcon
-								variant="subtle"
-								color="gray"
-								onClick={() =>
-									setEditConfig({
-										field: "name",
-										initialValue: item.name,
-										title: "Edit Item Name",
-										label: "Item Name",
-										inputType: "text",
-									})
-								}
-								size="sm"
-							>
-								<Pencil size={16} />
-							</ActionIcon>
-						</Tooltip>
-					</Group>
-
-					<Tooltip label="Remove entire item group">
 						<ActionIcon
 							variant="subtle"
-							color="on-air-red"
-							onClick={handleDeleteItem}
-							size="md"
+							color="gray"
+							onClick={() =>
+								setEditConfig({
+									field: "name",
+									initialValue: item.name,
+									title: "Rename Category",
+									label: "Category Name",
+									inputType: "text",
+								})
+							}
+							size="sm"
 						>
-							<Trash2 size={18} />
+							<Pencil size={14} />
 						</ActionIcon>
-					</Tooltip>
 					</Group>
 
-					{/* Sub-item Table */}
+					<Button
+						variant="subtle"
+						color="on-air-red"
+						onClick={handleDeleteItem}
+						size="xs"
+						leftSection={<Trash2 size={14} />}
+						fw={700}
+					>
+						Delete Category
+					</Button>
+				</Group>
+
+				{/* Table Area */}
+				<Box p="xl">
 					{item.subitems.length > 0 ? (
-					<Table.ScrollContainer minWidth={500}>
-						<Table verticalSpacing="sm">
+						<Table
+							verticalSpacing="md"
+							horizontalSpacing="sm"
+							className="border-b border-gray-50"
+						>
 							<Table.Thead>
 								<Table.Tr>
-									<Table.Th>Service / Scripts</Table.Th>
-									<Table.Th style={{ textAlign: "right" }}>Words</Table.Th>
-									<Table.Th style={{ textAlign: "right" }}>Rate</Table.Th>
-									<Table.Th style={{ textAlign: "right" }}>Amount</Table.Th>
-									<Table.Th />
+									<Table.Th
+										style={{
+											color: "var(--mantine-color-gray-8)",
+											fontSize: "11px",
+											fontWeight: 800,
+											textTransform: "uppercase",
+											letterSpacing: "1px",
+										}}
+									>
+										Line Item / Description
+									</Table.Th>
+									<Table.Th
+										style={{
+											color: "var(--mantine-color-gray-8)",
+											fontSize: "11px",
+											fontWeight: 800,
+											textTransform: "uppercase",
+											letterSpacing: "1px",
+											textAlign: "right",
+										}}
+									>
+										Qty
+									</Table.Th>
+									<Table.Th
+										style={{
+											color: "var(--mantine-color-gray-8)",
+											fontSize: "11px",
+											fontWeight: 800,
+											textTransform: "uppercase",
+											letterSpacing: "1px",
+											textAlign: "right",
+										}}
+									>
+										Rate
+									</Table.Th>
+									<Table.Th
+										style={{
+											color: "var(--mantine-color-gray-8)",
+											fontSize: "11px",
+											fontWeight: 800,
+											textTransform: "uppercase",
+											letterSpacing: "1px",
+											textAlign: "right",
+										}}
+									>
+										Total
+									</Table.Th>
+									<Table.Th w={50} />
 								</Table.Tr>
 							</Table.Thead>
 							<Table.Tbody>
@@ -129,108 +180,79 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 									<Table.Tr key={sub.id}>
 										<Table.Td>
 											<Stack gap={2}>
-												<Group gap={4}>
-													<Text size="sm" fw={700}>
-														{sub.label || "Service"}
+												<Group gap={6}>
+													<Text size="sm" fw={700} c="gray.9">
+														{sub.label || "Service Item"}
 													</Text>
-													<Tooltip label="Edit label">
-														<ActionIcon
-															variant="subtle"
-															color="gray"
-															size="xs"
-															onClick={() =>
-																setEditConfig({
-																	field: "subitemLabel",
-																	subitemId: sub.id,
-																	initialValue: sub.label || "",
-																	title: "Edit Label",
-																	label: "Label",
-																	inputType: "text",
-																})
-															}
-														>
-															<Pencil size={12} />
-														</ActionIcon>
-													</Tooltip>
+													<ActionIcon
+														variant="subtle"
+														color="gray"
+														size="xs"
+														onClick={() =>
+															setEditConfig({
+																field: "subitemLabel",
+																subitemId: sub.id,
+																initialValue: sub.label || "",
+																title: "Edit Line Label",
+																label: "Description",
+																inputType: "text",
+															})
+														}
+													>
+														<Pencil size={12} />
+													</ActionIcon>
 												</Group>
-												<Text size="xs" c="dimmed">
+												<Text size="xs" c="gray.5" fw={500}>
 													{sub.scriptName}
 												</Text>
 											</Stack>
 										</Table.Td>
 										<Table.Td style={{ textAlign: "right" }}>
-											<Text size="sm">{sub.wordCount.toLocaleString()}</Text>
+											<Text size="sm" fw={600} className="tabular-nums">
+												{sub.wordCount.toLocaleString()}
+											</Text>
 										</Table.Td>
 										<Table.Td style={{ textAlign: "right" }}>
-											<Group justify="flex-end" gap="xs">
-												<Group gap={4}>
-													<Text size="sm" c="dimmed">
-														$
-														{sub.ratePerWord.toLocaleString(undefined, {
-															minimumFractionDigits: 2,
-															maximumFractionDigits: 4,
-														})}
-													</Text>
-													<Tooltip label="Edit rate">
-														<ActionIcon
-															variant="subtle"
-															color="gray"
-															size="xs"
-															onClick={() =>
-																setEditConfig({
-																	field: "subitemRate",
-																	subitemId: sub.id,
-																	initialValue: sub.ratePerWord,
-																	title: "Edit Rate",
-																	label: "Rate (per word)",
-																	inputType: "number",
-																})
-															}
-														>
-															<Pencil size={12} />
-														</ActionIcon>
-													</Tooltip>
-												</Group>
-												<Text size="sm" c="dimmed">
-													/
+											<Group justify="flex-end" gap={4}>
+												<Text size="sm" fw={600} className="tabular-nums">
+													${sub.ratePerWord.toFixed(2)}
 												</Text>
-												<Group gap={4}>
-													<Text size="sm" c="dimmed">
-														{sub.ratePerWords} words
-													</Text>
-													<Tooltip label="Edit unit">
-														<ActionIcon
-															variant="subtle"
-															color="gray"
-															size="xs"
-															onClick={() =>
-																setEditConfig({
-																	field: "subitemUnit",
-																	subitemId: sub.id,
-																	initialValue: sub.ratePerWords,
-																	title: "Edit Unit",
-																	label: "Words per unit",
-																	inputType: "number",
-																})
-															}
-														>
-															<Pencil size={12} />
-														</ActionIcon>
-													</Tooltip>
-												</Group>
+												<ActionIcon
+													variant="subtle"
+													color="gray"
+													size="xs"
+													onClick={() =>
+														setEditConfig({
+															field: "subitemRate",
+															subitemId: sub.id,
+															initialValue: sub.ratePerWord,
+															title: "Edit Rate",
+															label: "Rate (per word)",
+															inputType: "number",
+														})
+													}
+												>
+													<Pencil size={12} />
+												</ActionIcon>
 											</Group>
 										</Table.Td>
 										<Table.Td style={{ textAlign: "right" }}>
-											<Text size="sm" fw={700}>
+											<Text
+												size="sm"
+												fw={800}
+												c="gray.9"
+												className="tabular-nums"
+											>
 												${sub.amount.toFixed(2)}
 											</Text>
 										</Table.Td>
 										<Table.Td style={{ textAlign: "right" }}>
 											<ActionIcon
 												variant="subtle"
-												color="on-air-red"
+												color="gray"
 												onClick={() => handleDeleteSubitem(sub.id)}
 												size="sm"
+												className="hover:text-red-600 hover:bg-red-50"
 											>
 												<Trash2 size={14} />
 											</ActionIcon>
@@ -239,29 +261,34 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 								))}
 							</Table.Tbody>
 						</Table>
-					</Table.ScrollContainer>
 					) : (
-					<Text size="sm" c="dimmed" fs="italic" ta="center" py="xl">
-						No sub-items added yet.
-					</Text>
+						<Box
+							py="xl"
+							ta="center"
+							className="border-2 border-dashed border-gray-100 rounded-md"
+						>
+							<Text size="sm" c="gray.5" fw={500}>
+								No line items added to this category yet.
+							</Text>
+						</Box>
 					)}
 
-					{/* Card Footer */}
-					<Group justify="center" mt="sm">
-					<Button
-						leftSection={<Plus size={16} />}
-						variant="subtle"
-						color="studio-blue"
-						onClick={() => setSubitemModalOpened(true)}
-						size="sm"
-					>
-						Add Sub-item
-					</Button>
+					<Group justify="center" mt="xl">
+						<Button
+							leftSection={<Plus size={16} />}
+							variant="light"
+							color="studio-blue"
+							onClick={() => setSubitemModalOpened(true)}
+							size="sm"
+							fw={700}
+						>
+							Add Line Item
+						</Button>
 					</Group>
-
+				</Box>
 			</Stack>
 
-			{/* Modals */}
+			{/* Modals remain the same */}
 			<EditValueModal
 				opened={!!editConfig}
 				onClose={() => setEditConfig(null)}

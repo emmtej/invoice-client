@@ -192,7 +192,6 @@ export default function HomeView() {
 					</Grid.Col>
 				</Grid>
 			</section>
-
 		</Stack>
 	);
 }

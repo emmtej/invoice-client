@@ -8,9 +8,15 @@ import {
 	Text,
 	Tooltip,
 } from "@mantine/core";
-import { AlertCircle, ChevronRight, FolderPlus, Grid, List } from "lucide-react";
-import { PageTitle } from "@/components/ui/text/PageTitle";
+import {
+	AlertCircle,
+	ChevronRight,
+	FolderPlus,
+	Grid,
+	List,
+} from "lucide-react";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
+import { PageTitle } from "@/components/ui/text/PageTitle";
 
 interface ScriptsHeaderProps {
 	uploadErrors: string[];
@@ -76,7 +82,9 @@ export function ScriptsHeader({
 									radius="sm"
 									style={{
 										boxShadow:
-											viewMode === "list" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+											viewMode === "list"
+												? "0 1px 3px rgba(0,0,0,0.1)"
+												: "none",
 									}}
 								>
 									<List size={18} />
@@ -91,7 +99,9 @@ export function ScriptsHeader({
 									radius="sm"
 									style={{
 										boxShadow:
-											viewMode === "grid" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+											viewMode === "grid"
+												? "0 1px 3px rgba(0,0,0,0.1)"
+												: "none",
 									}}
 								>
 									<Grid size={18} />

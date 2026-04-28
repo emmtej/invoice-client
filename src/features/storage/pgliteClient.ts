@@ -1,5 +1,5 @@
-import { drizzle } from "drizzle-orm/pglite";
 import type { PGlite } from "@electric-sql/pglite";
+import { drizzle } from "drizzle-orm/pglite";
 import { initSchema } from "./initSchema";
 import * as schema from "./schema";
 
@@ -47,7 +47,6 @@ export const initDb = async () => {
 
 	return initPromise;
 };
-
 
 export const getDrizzleDb = async () => {
 	if (db) return db;

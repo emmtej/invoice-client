@@ -1,15 +1,22 @@
-import { Box, Button, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
+import {
+	Box,
+	Button,
+	SimpleGrid,
+	Stack,
+	Text,
+	UnstyledButton,
+} from "@mantine/core";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useState } from "react";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
 import { useScriptsDataStore } from "../store/useScriptsDataStore";
 import { useScriptsUiStore } from "../store/useScriptsUiStore";
-import { useScriptsModalsStore } from "./ScriptsModals";
 import { sortByName } from "../utils/sortByName";
 import { FolderCard } from "./FolderCard";
-import { ScriptLibraryTile } from "./ScriptLibraryTile";
 import { FolderCardGrid } from "./FolderCardGrid";
+import { ScriptLibraryTile } from "./ScriptLibraryTile";
 import { ScriptLibraryTileGrid } from "./ScriptLibraryTileGrid";
+import { useScriptsModalsStore } from "./ScriptsModals";
 
 interface ScriptsLibraryItemsProps {
 	onNavigateFolder: (folderId: string) => void;
@@ -29,15 +36,21 @@ export function ScriptsLibraryItems({
 	const folders = useScriptsDataStore((s) => s.folders);
 	const scripts = useScriptsDataStore((s) => s.scripts);
 	const folderItemCounts = useScriptsDataStore((s) => s.folderChildItemCounts);
-	
+
 	const viewMode = useScriptsUiStore((s) => s.viewMode);
-	const selectedScriptId = useScriptsUiStore((s) => s.selectedScript?.id ?? null);
+	const selectedScriptId = useScriptsUiStore(
+		(s) => s.selectedScript?.id ?? null,
+	);
 	const selectedIds = useScriptsUiStore((s) => s.selectedIds);
 	const selectScript = useScriptsUiStore((s) => s.selectScript);
 	const toggleSelection = useScriptsUiStore((s) => s.toggleSelection);
 
-	const setDeleteFolderTarget = useScriptsModalsStore((s) => s.setDeleteFolderTarget);
-	const setDeleteScriptTarget = useScriptsModalsStore((s) => s.setDeleteScriptTarget);
+	const setDeleteFolderTarget = useScriptsModalsStore(
+		(s) => s.setDeleteFolderTarget,
+	);
+	const setDeleteScriptTarget = useScriptsModalsStore(
+		(s) => s.setDeleteScriptTarget,
+	);
 
 	const [sortAscending, setSortAscending] = useState(true);
 
@@ -106,7 +119,9 @@ export function ScriptsLibraryItems({
 									itemCount={folderItemCounts[folder.id] ?? 0}
 									isSelected={selectedIds.includes(folder.id)}
 									onClick={(e) =>
-										handleItemClick(e, folder.id, () => onNavigateFolder(folder.id))
+										handleItemClick(e, folder.id, () =>
+											onNavigateFolder(folder.id),
+										)
 									}
 									onDelete={() => setDeleteFolderTarget(folder)}
 								/>

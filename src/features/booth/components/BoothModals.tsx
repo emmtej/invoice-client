@@ -46,11 +46,12 @@ export function BoothModals() {
 	// Sync changes from editor back to booth session
 	useEffect(() => {
 		if (!isEditorOpened || !script || !activeScript) return;
-		
+
 		// Only update if it's the same script and content has changed
 		if (
 			activeScript.id === script.id &&
-			(activeScript.html !== script.html || activeScript.lines.length !== script.lines.length)
+			(activeScript.html !== script.html ||
+				activeScript.lines.length !== script.lines.length)
 		) {
 			updateScript(activeScript);
 		}

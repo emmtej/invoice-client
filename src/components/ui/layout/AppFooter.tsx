@@ -1,11 +1,4 @@
-import {
-	Anchor,
-	Box,
-	Grid,
-	Group,
-	Stack,
-	Text,
-} from "@mantine/core";
+import { Anchor, Box, Grid, Group, Stack, Text } from "@mantine/core";
 import { Link } from "@tanstack/react-router";
 import { Receipt } from "lucide-react";
 
@@ -26,7 +19,6 @@ const footerLinks = [
 			{ label: "Workspace", to: "/editor" },
 		],
 	},
-	
 ];
 
 export function AppFooter() {

@@ -15,7 +15,7 @@ export function SectionLabel({
 		<Text
 			size="sm"
 			fw={600}
-			c="gray.5"
+			c="gray.7"
 			tt="uppercase"
 			lts={letterSpacing}
 			{...rest}

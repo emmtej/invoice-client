@@ -62,8 +62,8 @@ vi.mock("../store/pgliteStore", () => ({
 	},
 }));
 
-import { useScriptStore } from "../store/scriptEditorStore";
 import { pgliteStore } from "../store/pgliteStore";
+import { useScriptStore } from "../store/scriptEditorStore";
 import Scripts from "./Scripts";
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -110,11 +110,11 @@ describe("Scripts", () => {
 			},
 			writable: true,
 		});
-		useScriptStore.setState({ 
-			scripts: [], 
-			activeScript: null, 
-			isLoading: false, 
-			persistenceEnabled: false 
+		useScriptStore.setState({
+			scripts: [],
+			activeScript: null,
+			isLoading: false,
+			persistenceEnabled: false,
 		});
 	});
 
@@ -129,38 +129,41 @@ describe("Scripts", () => {
 
 	it("does not show Getting Started view when at least one script exists", async () => {
 		const mockScript = createMockScript("1", "My Script.docx");
-		
+
 		// Ensure loadScript finds the script
 		(pgliteStore.getAllDraftScripts as any).mockResolvedValue([mockScript]);
 
 		useScriptStore.setState({
 			scripts: [mockScript],
 		});
-		
+
 		render(
 			<TestWrapper>
 				<Scripts />
 			</TestWrapper>,
 		);
-		
+
 		const scriptElements = await screen.findAllByText("My Script.docx");
 		expect(scriptElements.length).toBeGreaterThan(0);
-		
+
 		// Wait for activeScript to be loaded and view to switch
-		await waitFor(() => {
-			expect(screen.queryByTestId("getting-started-view")).toBeNull();
-		}, { timeout: 2000 });
+		await waitFor(
+			() => {
+				expect(screen.queryByTestId("getting-started-view")).toBeNull();
+			},
+			{ timeout: 2000 },
+		);
 	});
 
 	it("clears all documents after confirming in the modal", async () => {
 		const mockScript = createMockScript("1", "My Script.docx");
 		(pgliteStore.getAllDraftScripts as any).mockResolvedValue([mockScript]);
-		
+
 		useScriptStore.setState({
 			scripts: [mockScript],
 			activeScript: mockScript,
 		});
-		
+
 		render(
 			<TestWrapper>
 				<Scripts />

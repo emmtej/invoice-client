@@ -1,7 +1,13 @@
-import { Combobox, Group, Stack, TextInput, useCombobox } from "@mantine/core";
+import {
+	Combobox,
+	SimpleGrid,
+	Stack,
+	Text,
+	TextInput,
+	useCombobox,
+} from "@mantine/core";
 import { Calendar } from "lucide-react";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
-import { SectionLabel } from "@/components/ui/text/SectionLabel";
 import { useInvoicePresetsStore } from "../store/invoicePresetsStore";
 
 interface InvoiceDetailsSectionProps {
@@ -29,10 +35,18 @@ export function InvoiceDetailsSection({
 	));
 
 	return (
-		<SurfaceCard mt="md">
-			<Stack gap="sm">
-				<SectionLabel>Invoice details</SectionLabel>
-				<Group grow align="flex-end">
+		<SurfaceCard
+			p="xl"
+			style={{
+				backgroundColor: "white",
+				border: "1px solid var(--mantine-color-gray-1)",
+			}}
+		>
+			<Stack gap="xl">
+				<Text size="xs" fw={700} c="gray.7" tt="uppercase" lts={1}>
+					INVOICE DETAILS
+				</Text>
+				<SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg" maw={800}>
 					<Combobox
 						store={combobox}
 						onOptionSubmit={(val) => {
@@ -43,8 +57,8 @@ export function InvoiceDetailsSection({
 					>
 						<Combobox.Target>
 							<TextInput
-								label="Invoice title"
-								placeholder="Invoice"
+								label="Invoice Title"
+								placeholder="e.g. Character Voiceover"
 								value={invoiceTitle}
 								onChange={(event) => {
 									setInvoiceTitle(event.currentTarget.value);
@@ -56,7 +70,11 @@ export function InvoiceDetailsSection({
 								onBlur={() => combobox.closeDropdown()}
 								rightSection={<Combobox.Chevron />}
 								rightSectionPointerEvents="none"
-								size="sm"
+								size="md"
+								styles={(theme) => ({
+									label: { color: theme.colors.gray[8], marginBottom: 8 },
+									input: { "&::placeholder": { color: theme.colors.gray[4] } },
+								})}
 							/>
 						</Combobox.Target>
 
@@ -68,14 +86,17 @@ export function InvoiceDetailsSection({
 					</Combobox>
 
 					<TextInput
-						label="Invoice date"
+						label="Invoice Date"
 						type="date"
 						value={invoiceDate}
 						onChange={(e) => setInvoiceDate(e.currentTarget.value)}
-						leftSection={<Calendar size={14} strokeWidth={1.5} />}
-						size="sm"
+						leftSection={<Calendar size={18} strokeWidth={1.5} />}
+						size="md"
+						styles={(theme) => ({
+							label: { color: theme.colors.gray[8], marginBottom: 8 },
+						})}
 					/>
-				</Group>
+				</SimpleGrid>
 			</Stack>
 		</SurfaceCard>
 	);

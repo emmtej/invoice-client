@@ -43,7 +43,9 @@ describe("ScriptsEmptyState", () => {
 
 		expect(screen.getByText("No scripts yet")).toBeTruthy();
 		expect(
-			screen.getByText(/Upload scripts or create a folder using the actions in the top right/i),
+			screen.getByText(
+				/Upload scripts or create a folder using the actions in the top right/i,
+			),
 		).toBeTruthy();
 	});
 
@@ -52,7 +54,9 @@ describe("ScriptsEmptyState", () => {
 
 		expect(screen.getByText("This folder is empty")).toBeTruthy();
 		expect(
-			screen.getByText(/Upload scripts into this folder, or create a subfolder/i),
+			screen.getByText(
+				/Upload scripts into this folder, or create a subfolder/i,
+			),
 		).toBeTruthy();
 	});
 });

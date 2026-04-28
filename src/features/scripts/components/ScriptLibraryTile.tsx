@@ -87,13 +87,21 @@ export function ScriptLibraryTile({
 					</Text>
 					{script.invalidLineCount > 0 && (
 						<Flex align="center" gap={4}>
-							<AlertCircle size={14} color="var(--mantine-color-on-air-red-5)" />
+							<AlertCircle
+								size={14}
+								color="var(--mantine-color-on-air-red-5)"
+							/>
 							<Text size="xs" c="on-air-red.5" className="tabular-nums">
 								{script.invalidLineCount}
 							</Text>
 						</Flex>
 					)}
-					<Text size="xs" c="dimmed" className="tabular-nums" style={{ opacity: 0.6 }}>
+					<Text
+						size="xs"
+						c="dimmed"
+						className="tabular-nums"
+						style={{ opacity: 0.6 }}
+					>
 						{dateFormatter.format(script.createdAt)}
 					</Text>
 				</Group>
@@ -129,7 +137,12 @@ export function ScriptLibraryTile({
 						</Text>
 					</Flex>
 				)}
-				<Text size="xs" c="dimmed" className="tabular-nums" style={{ opacity: 0.6 }}>
+				<Text
+					size="xs"
+					c="dimmed"
+					className="tabular-nums"
+					style={{ opacity: 0.6 }}
+				>
 					{dateFormatter.format(script.createdAt)}
 				</Text>
 			</Group>

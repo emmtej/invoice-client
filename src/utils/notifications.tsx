@@ -37,7 +37,7 @@ export const notify = {
 
 	error: ({ title, message, error }: NotifyError) => {
 		let finalMessage = message;
-		
+
 		if (error instanceof Error) {
 			finalMessage = (
 				<>

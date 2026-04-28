@@ -8,9 +8,9 @@ import {
 	Text,
 } from "@mantine/core";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { PageTitle } from "@/components/ui/text/PageTitle";
 import { AuthForm } from "@/features/auth/components/AuthForm";
 import { OAuthProviders } from "@/features/auth/components/OAuthProviders";
-import { PageTitle } from "@/components/ui/text/PageTitle";
 
 function AuthenticationView() {
 	const { pathname } = useLocation();

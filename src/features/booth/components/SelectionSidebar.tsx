@@ -38,16 +38,12 @@ export function SelectionSidebar({ isInitialLoading }: SelectionSidebarProps) {
 
 	return (
 		<Box
-			w={{ base: "100%", md: 320 }}
 			style={{
-				borderLeft: "1px solid var(--mantine-color-gray-2)",
 				display: "flex",
 				flexDirection: "column",
 			}}
-			pl={{ base: 0, md: "xl" }}
-			pt={{ base: "xl", md: 0 }}
 		>
-			<SectionLabel mb="md">Sessions</SectionLabel>
+			<SectionLabel mb="lg">Recent Sessions</SectionLabel>
 			<SessionHistory
 				sessions={
 					ongoingSession

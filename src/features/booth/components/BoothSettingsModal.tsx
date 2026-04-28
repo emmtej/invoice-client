@@ -2,17 +2,17 @@ import {
 	Button,
 	Checkbox,
 	Divider,
+	Group,
 	Modal,
 	NumberInput,
+	SegmentedControl,
 	Stack,
 	Text,
-	Group,
-	SegmentedControl,
 } from "@mantine/core";
-import { Settings2 } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
-import { useBoothSettingsStore } from "../store/useBoothSettingsStore";
+import { Settings2 } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
+import { useBoothSettingsStore } from "../store/useBoothSettingsStore";
 
 export function BoothSettingsModal() {
 	const [opened, { open, close }] = useDisclosure(false);

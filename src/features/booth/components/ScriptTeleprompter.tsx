@@ -1,8 +1,8 @@
 import { Box, ScrollArea } from "@mantine/core";
 import { useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useBoothStore } from "../store/useBoothStore";
 import { useBoothSettingsStore } from "../store/useBoothSettingsStore";
+import { useBoothStore } from "../store/useBoothStore";
 import { TeleprompterLine } from "./TeleprompterLine";
 
 export function ScriptTeleprompter() {
@@ -71,9 +71,10 @@ export function ScriptTeleprompter() {
 							? index === currentSceneMarkerIndex
 							: index === currentLineIndex;
 
-						const isCompleted = isSceneMode && isMarker
-							? false // We'll compute this below
-							: completedSet.has(index);
+						const isCompleted =
+							isSceneMode && isMarker
+								? false // We'll compute this below
+								: completedSet.has(index);
 
 						// For markers in scene mode, it's completed if ALL readable lines under it are completed
 						let isMarkerCompleted = false;
@@ -107,7 +108,9 @@ export function ScriptTeleprompter() {
 									content={getLineContent(index)}
 									lineIndex={index}
 									isCurrent={isCurrent}
-									isCompleted={isSceneMode && isMarker ? isMarkerCompleted : isCompleted}
+									isCompleted={
+										isSceneMode && isMarker ? isMarkerCompleted : isCompleted
+									}
 									isSessionRunning={isSessionRunning}
 									trackingMode={trackingMode}
 									onComplete={completeLine}
@@ -122,4 +125,3 @@ export function ScriptTeleprompter() {
 		</Box>
 	);
 }
-

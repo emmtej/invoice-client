@@ -13,7 +13,13 @@ export function ScriptsEmptyState({ isRoot }: ScriptsEmptyStateProps) {
 	return (
 		<Stack align="center" justify="center" h="100%" py="xl" gap="md">
 			<EmptyState
-				icon={<FolderOpen size={48} strokeWidth={1.5} color="var(--mantine-color-studio-blue-3)" />}
+				icon={
+					<FolderOpen
+						size={48}
+						strokeWidth={1.5}
+						color="var(--mantine-color-studio-blue-3)"
+					/>
+				}
 				title={isRoot ? "No scripts yet" : "This folder is empty"}
 				description={
 					isRoot

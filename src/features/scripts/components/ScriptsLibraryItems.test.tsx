@@ -7,9 +7,9 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { appTheme } from "@/theme";
-import { ScriptsLibraryItems } from "./ScriptsLibraryItems";
 import { useScriptsDataStore } from "../store/useScriptsDataStore";
 import { useScriptsUiStore } from "../store/useScriptsUiStore";
+import { ScriptsLibraryItems } from "./ScriptsLibraryItems";
 
 Object.defineProperty(window, "matchMedia", {
 	writable: true,

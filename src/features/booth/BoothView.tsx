@@ -21,13 +21,15 @@ export default function BoothView() {
 
 	return (
 		<BoothLayout>
-			<BoothHeader />
-
-			{isSelectionMode && <SelectionView />}
-
-			{isSessionMode && status !== "completed" && <ActiveSessionView />}
-
-			{status === "completed" && <CompletedSessionView />}
+			{isSelectionMode ? (
+				<SelectionView header={<BoothHeader />} />
+			) : (
+				<>
+					<BoothHeader />
+					{isSessionMode && status !== "completed" && <ActiveSessionView />}
+					{status === "completed" && <CompletedSessionView />}
+				</>
+			)}
 
 			<BoothModals />
 		</BoothLayout>

@@ -5,7 +5,7 @@ import { useUserStore } from "@/store/userStore";
 import { LinkButton } from "../button/ButtonLink";
 import { APP_SHELL_HEADER_HEIGHT } from "../layout/layout-constants";
 
-const links = [{ link: "/invoice", label: "Invoices" }];
+const links: { link: string; label: string }[] = [];
 
 export function Navbar() {
 	const user = useUserStore((store) => store.user);

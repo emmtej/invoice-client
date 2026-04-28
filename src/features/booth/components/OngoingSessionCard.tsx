@@ -32,19 +32,24 @@ export function OngoingSessionCard({ session }: OngoingSessionCardProps) {
 		>
 			<Group justify="space-between" align="center">
 				<Box>
-					<Text fw={800} size="xl" c="gray.8">
+					<Text fw={800} size="xl" c="gray.9" lts={-0.2}>
 						{session.scriptName}
 					</Text>
-					<Text size="sm" c="gray.6">
+					<Text size="sm" c="gray.7" fw={500}>
 						Started {new Date(session.startedAt).toLocaleString()}
 					</Text>
-					<Group gap="md" mt={8}>
-						<Badge variant="filled" color="wave" size="md">
+					<Group gap="md" mt={12}>
+						<Badge
+							variant="filled"
+							color="wave"
+							size="md"
+							className="font-bold"
+						>
 							{session.completedLines} / {session.totalLines} lines
 						</Badge>
 						<Group gap="xs">
-							<Clock size={14} color="var(--mantine-color-gray-5)" />
-							<Text size="sm" c="gray.6" ff="monospace">
+							<Clock size={16} color="var(--mantine-color-gray-6)" />
+							<Text size="sm" c="gray.7" ff="monospace" fw={700}>
 								{Math.floor(session.elapsedMs / 1000 / 60)}m{" "}
 								{Math.floor((session.elapsedMs / 1000) % 60)
 									.toString()

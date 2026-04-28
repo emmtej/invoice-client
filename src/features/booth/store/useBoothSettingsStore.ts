@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface BoothSettingsState {
 	wordCountPricing: number;
@@ -26,8 +26,10 @@ export const useBoothSettingsStore = create<BoothSettingsStore>()(
 			trackingMode: "line",
 
 			setWordCountPricing: (wordCountPricing) => set({ wordCountPricing }),
-			setShowCurrentEarnings: (showCurrentEarnings) => set({ showCurrentEarnings }),
-			setShowRealizedHourly: (showRealizedHourly) => set({ showRealizedHourly }),
+			setShowCurrentEarnings: (showCurrentEarnings) =>
+				set({ showCurrentEarnings }),
+			setShowRealizedHourly: (showRealizedHourly) =>
+				set({ showRealizedHourly }),
 			setTrackingMode: (trackingMode) => set({ trackingMode }),
 		}),
 		{

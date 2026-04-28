@@ -5,16 +5,17 @@ import {
 	Center,
 	Group,
 	Loader,
+	Paper,
 	SimpleGrid,
 	Stack,
 	Text,
+	ThemeIcon,
 	UnstyledButton,
 } from "@mantine/core";
 import { FileText, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
-import { EmptyState } from "@/components/ui/feedback/EmptyState";
 import { processDocuments, useFileUpload } from "@/features/editor";
 import { scriptsQueries } from "@/features/scripts/store/scriptsQueries";
 import type { ScriptSummary } from "@/features/storage/types";
@@ -132,18 +133,25 @@ export function ScriptSelector({
 	}
 
 	return (
-		<Stack gap="lg">
+		<Stack gap={48}>
 			<Group justify="space-between" align="center">
-				<Text fw={700} size="lg" c="gray.8">
-					Select a Script
-				</Text>
+				<Box>
+					<Text fw={800} size="xl" c="gray.9" lts={-0.2}>
+						Select a Script
+					</Text>
+					<Text size="sm" c="gray.7" mt={2} fw={500}>
+						Choose from your library or import a new document to begin.
+					</Text>
+				</Box>
 				<DocxUploadButton
 					onChange={handleFileChange}
 					multiple={true}
-					variant="light"
-					color="wave"
+					variant="filled"
+					color="studio-blue"
+					size="md"
 					loading={isUploading}
-					leftSection={<Upload size={16} />}
+					leftSection={<Upload size={18} />}
+					className="shadow-md px-8"
 				>
 					Import DOCX
 				</DocxUploadButton>
@@ -160,14 +168,45 @@ export function ScriptSelector({
 			)}
 
 			{scripts.length === 0 ? (
-				<EmptyState
-					icon={<FileText size={40} />}
-					title="No scripts in your library"
-					description="Upload a DOCX file to get started, or add scripts via the Scripts page."
-				/>
+				<Paper
+					withBorder
+					p="xl"
+					bg="white"
+					style={{
+						borderStyle: "dashed",
+						borderWidth: 2,
+						borderColor: "var(--mantine-color-gray-2)",
+					}}
+				>
+					<Stack align="center" gap="lg" py="xl">
+						<ThemeIcon size={64} radius="xl" variant="light" color="gray">
+							<FileText size={32} strokeWidth={1.5} />
+						</ThemeIcon>
+						<Stack gap={4} align="center">
+							<Text fw={800} size="lg" c="gray.9">
+								Your script library is empty
+							</Text>
+							<Text size="sm" c="gray.7" ta="center" maw={400}>
+								Upload a Word document to automatically extract dialogue lines
+								and start your first recording session.
+							</Text>
+						</Stack>
+						<DocxUploadButton
+							onChange={handleFileChange}
+							multiple={true}
+							size="md"
+							variant="light"
+							color="wave"
+							loading={isUploading}
+							leftSection={<Upload size={16} />}
+						>
+							Upload your first script
+						</DocxUploadButton>
+					</Stack>
+				</Paper>
 			) : (
-				<Stack gap="md">
-					<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+				<Stack gap={24}>
+					<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
 						{scripts.map((s) => (
 							<UnstyledButton
 								key={s.id}
@@ -176,34 +215,42 @@ export function ScriptSelector({
 								className="group"
 							>
 								<SurfaceCard
+									p="lg"
 									style={{
 										cursor: "pointer",
 										transition: "all 200ms ease",
+										backgroundColor: "white",
 										border:
 											loadingScriptId === s.id
 												? "2px solid var(--mantine-color-wave-4)"
-												: "1px solid var(--mantine-color-gray-2)",
+												: "1px solid var(--mantine-color-gray-1)",
 									}}
-									className="group-hover:border-[var(--mantine-color-wave-3)] group-hover:shadow-md group-active:scale-[0.98]"
+									className="group-hover:border-[var(--mantine-color-wave-3)] group-hover:shadow-lg group-hover:-translate-y-1 group-active:scale-[0.98]"
 								>
-									<Stack gap="xs">
-										<Group gap="xs" wrap="nowrap">
-											<FileText
-												size={18}
-												style={{ flexShrink: 0 }}
-												color="var(--mantine-color-gray-5)"
-												className="group-hover:text-[var(--mantine-color-wave-5)]"
-											/>
-											<Text fw={600} size="sm" truncate="end" c="gray.8">
+									<Stack gap="md">
+										<Group gap="sm" wrap="nowrap">
+											<ThemeIcon variant="light" color="gray" size="md">
+												<FileText size={18} />
+											</ThemeIcon>
+											<Text fw={700} size="sm" truncate="end" c="gray.8">
 												{s.name}
 											</Text>
 										</Group>
 										<Group justify="space-between" align="center">
-											<Badge size="sm" variant="light" color="wave">
+											<Badge
+												size="sm"
+												variant="light"
+												color="wave"
+												className="font-bold"
+											>
 												{s.wordCount.toLocaleString()} words
 											</Badge>
-											{loadingScriptId === s.id && (
+											{loadingScriptId === s.id ? (
 												<Loader size={14} color="wave" />
+											) : (
+												<Text size="xs" c="gray.4" fw={600} tt="uppercase">
+													Select
+												</Text>
 											)}
 										</Group>
 									</Stack>
@@ -215,10 +262,12 @@ export function ScriptSelector({
 					{hasMore && (
 						<Center pt="md">
 							<Button
-								variant="light"
-								color="wave"
+								variant="subtle"
+								color="gray"
 								onClick={handleLoadMore}
 								loading={isLoadingMore}
+								size="sm"
+								fw={700}
 							>
 								Load more scripts
 							</Button>

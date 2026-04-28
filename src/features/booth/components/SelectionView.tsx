@@ -1,12 +1,16 @@
-import { Center, Flex, Loader, Stack, Text } from "@mantine/core";
-import { useState } from "react";
+import { Box, Center, Flex, Loader, Stack, Text } from "@mantine/core";
+import { type ReactNode, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useBoothStore } from "../store/useBoothStore";
 import { OngoingSessionCard } from "./OngoingSessionCard";
 import { ScriptSelectionPanel } from "./ScriptSelectionPanel";
 import { SelectionSidebar } from "./SelectionSidebar";
 
-export function SelectionView() {
+interface SelectionViewProps {
+	header?: ReactNode;
+}
+
+export function SelectionView({ header }: SelectionViewProps) {
 	const { sessions, isLoadingSessions } = useBoothStore(
 		useShallow((s) => ({
 			sessions: s.sessions,
@@ -22,36 +26,26 @@ export function SelectionView() {
 
 	return (
 		<Flex
-			direction={{ base: "column", md: "row" }}
+			direction={{ base: "column", lg: "row" }}
 			flex={1}
 			mih={0}
-			gap="xl"
-			px="md"
-			py="md"
+			gap={48}
+			px={{ base: "md", lg: "xl" }}
+			py="xl"
 		>
-			{isInitialLoading && (
-				<Center flex={1}>
-					<Stack align="center" gap="xs">
-						<Loader color="wave" size="sm" />
-						<Text size="sm" c="gray.6" fw={500}>
-							Loading...
-						</Text>
-					</Stack>
-				</Center>
-			)}
-
 			<Stack
-				gap="xl"
+				gap={32}
 				flex={1}
 				mih={0}
 				style={{
-					overflow: "auto",
 					display: isInitialLoading ? "none" : "flex",
 				}}
 			>
+				{header}
+
 				{ongoingSession && (
 					<Stack gap="sm">
-						<Text fw={700} size="sm" c="gray.6" tt="uppercase" lts={0.5}>
+						<Text fw={700} size="sm" c="gray.7" tt="uppercase" lts={0.5}>
 							Ongoing Session
 						</Text>
 						<OngoingSessionCard session={ongoingSession} />
@@ -64,8 +58,26 @@ export function SelectionView() {
 				/>
 			</Stack>
 
+			{isInitialLoading && (
+				<Center flex={1}>
+					<Stack align="center" gap="xs">
+						<Loader color="wave" size="sm" />
+						<Text size="sm" c="gray.6" fw={500}>
+							Loading...
+						</Text>
+					</Stack>
+				</Center>
+			)}
+
 			{!isInitialLoading && (
-				<SelectionSidebar isInitialLoading={isInitialLoading} />
+				<Box
+					w={{ base: "100%", lg: 320 }}
+					style={{ flexShrink: 0 }}
+					className="lg:border-l border-gray-100"
+					pl={{ base: 0, lg: 48 }}
+				>
+					<SelectionSidebar isInitialLoading={isInitialLoading} />
+				</Box>
 			)}
 		</Flex>
 	);

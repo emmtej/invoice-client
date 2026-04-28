@@ -1,10 +1,4 @@
-import {
-	ActionIcon,
-	Badge,
-	Group,
-	Stack,
-	Text,
-} from "@mantine/core";
+import { ActionIcon, Badge, Group, Stack, Text } from "@mantine/core";
 import { Pause, Play, Square } from "lucide-react";
 import { formatTime } from "../hooks/useTimer";
 

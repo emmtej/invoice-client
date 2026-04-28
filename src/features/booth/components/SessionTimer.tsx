@@ -1,10 +1,10 @@
 import { Checkbox, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useShallow } from "zustand/react/shallow";
-import { useBoothStore } from "../store/useBoothStore";
 import { useBoothSettingsStore } from "../store/useBoothSettingsStore";
-import { SessionTimerDisplay } from "./SessionTimerDisplay";
+import { useBoothStore } from "../store/useBoothStore";
 import { SessionStatsDisplay } from "./SessionStatsDisplay";
+import { SessionTimerDisplay } from "./SessionTimerDisplay";
 
 export function SessionTimer() {
 	const {

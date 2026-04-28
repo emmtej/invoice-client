@@ -23,7 +23,12 @@ export function PresetsView() {
 				</Text>
 			</Box>
 
-			<Tabs defaultValue="rates" variant="outline" radius="md" color="studio-blue">
+			<Tabs
+				defaultValue="rates"
+				variant="outline"
+				radius="md"
+				color="studio-blue"
+			>
 				<Tabs.List>
 					<Tabs.Tab value="rates">Billing Rates</Tabs.Tab>
 					<Tabs.Tab value="profiles">Invoice Profiles</Tabs.Tab>

@@ -33,10 +33,14 @@ export function FolderCardGrid({
 			styles={{
 				root: {
 					cursor: "pointer",
-					borderColor: isSelected ? "var(--mantine-color-studio-blue-5)" : "rgba(0,0,0,0.05)",
+					borderColor: isSelected
+						? "var(--mantine-color-studio-blue-5)"
+						: "rgba(0,0,0,0.05)",
 					transition: "all 150ms ease",
 					"&:hover": {
-						borderColor: isSelected ? "var(--mantine-color-studio-blue-6)" : "var(--mantine-color-studio-blue-3)",
+						borderColor: isSelected
+							? "var(--mantine-color-studio-blue-6)"
+							: "var(--mantine-color-studio-blue-3)",
 					},
 				},
 			}}
@@ -64,7 +68,10 @@ export function FolderCardGrid({
 						style={{
 							opacity: hovered ? 1 : 0,
 							transition: "opacity 150ms ease",
-							"&:hover": { color: "var(--mantine-color-on-air-red-6)", backgroundColor: "var(--mantine-color-on-air-red-0)" },
+							"&:hover": {
+								color: "var(--mantine-color-on-air-red-6)",
+								backgroundColor: "var(--mantine-color-on-air-red-0)",
+							},
 						}}
 					>
 						<Trash2 size={16} />
@@ -81,8 +88,15 @@ export function FolderCardGrid({
 						</Text>
 					) : (
 						<Flex align="center" gap={6}>
-							<FolderOpen size={14} strokeWidth={2} color="rgba(0,0,0,0.2)" aria-hidden />
-							<Text size="xs" c="dimmed">Empty</Text>
+							<FolderOpen
+								size={14}
+								strokeWidth={2}
+								color="rgba(0,0,0,0.2)"
+								aria-hidden
+							/>
+							<Text size="xs" c="dimmed">
+								Empty
+							</Text>
 						</Flex>
 					)}
 				</Box>

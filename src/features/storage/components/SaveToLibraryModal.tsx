@@ -1,4 +1,5 @@
 import {
+	ActionIcon,
 	Box,
 	Button,
 	Checkbox,
@@ -9,10 +10,15 @@ import {
 	Text,
 	TextInput,
 	UnstyledButton,
-	ActionIcon,
 } from "@mantine/core";
-import { ChevronRight, Folder as FolderIcon, FolderPlus, Search, X } from "lucide-react";
-import { memo, useCallback, useEffect, useMemo, useState, useRef } from "react";
+import {
+	ChevronRight,
+	Folder as FolderIcon,
+	FolderPlus,
+	Search,
+	X,
+} from "lucide-react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppModal } from "@/components/ui/modal/AppModal";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
 import {
@@ -43,11 +49,11 @@ type FolderListRow =
 
 function buildFolderRows(folders: Folder[], filter: string): FolderListRow[] {
 	const normalizedFilter = filter.toLowerCase().trim();
-	
+
 	if (normalizedFilter) {
 		return folders
-			.filter(f => f.name.toLowerCase().includes(normalizedFilter))
-			.map(f => ({ id: f.id, label: f.name, depth: 0, isRoot: false }));
+			.filter((f) => f.name.toLowerCase().includes(normalizedFilter))
+			.map((f) => ({ id: f.id, label: f.name, depth: 0, isRoot: false }));
 	}
 
 	const roots = folders
@@ -77,16 +83,18 @@ function buildFolderRows(folders: Folder[], filter: string): FolderListRow[] {
 }
 
 export const SaveToLibraryModal = memo(
-	({ 
-		opened, 
-		onClose, 
-		scripts = [], 
-		onConfirm, 
+	({
+		opened,
+		onClose,
+		scripts = [],
+		onConfirm,
 		title = "Save to Library",
-		itemsLabel = "Documents"
+		itemsLabel = "Documents",
 	}: SaveToLibraryModalProps) => {
 		const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-		const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+		const [selectedFolderId, setSelectedFolderId] = useState<string | null>(
+			null,
+		);
 		const [folders, setFolders] = useState<Folder[]>([]);
 		const [foldersLoading, setFoldersLoading] = useState(false);
 		const [counts, setCounts] = useState<Record<string, number>>({});
@@ -96,7 +104,7 @@ export const SaveToLibraryModal = memo(
 		const [searchQuery, setSearchQuery] = useState("");
 		const [isCreatingFolder, setIsCreatingFolder] = useState(false);
 		const [isSubmitting, setIsSubmitting] = useState(false);
-		
+
 		const viewport = useRef<HTMLDivElement>(null);
 
 		const loadFolders = useCallback(async () => {
@@ -104,13 +112,13 @@ export const SaveToLibraryModal = memo(
 			try {
 				const [list, rc] = await Promise.all([
 					getAllFolders(),
-					getScriptCountInFolder(null)
+					getScriptCountInFolder(null),
 				]);
 				setFolders(list);
 				setRootCount(rc);
-				
+
 				if (list.length > 0) {
-					const c = await getChildItemCountsForFolders(list.map(f => f.id));
+					const c = await getChildItemCountsForFolders(list.map((f) => f.id));
 					setCounts(c);
 				}
 			} catch {
@@ -131,7 +139,10 @@ export const SaveToLibraryModal = memo(
 			}
 		}, [opened, scripts, loadFolders]);
 
-		const folderRows = useMemo(() => buildFolderRows(folders, searchQuery), [folders, searchQuery]);
+		const folderRows = useMemo(
+			() => buildFolderRows(folders, searchQuery),
+			[folders, searchQuery],
+		);
 
 		const toggleScript = (id: string) => {
 			setSelectedIds((prev) => {
@@ -158,7 +169,7 @@ export const SaveToLibraryModal = memo(
 				// Small delay to let the list re-render before scrolling
 				setTimeout(() => {
 					const el = document.getElementById(`folder-${id}`);
-					el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+					el?.scrollIntoView({ block: "nearest", behavior: "smooth" });
 				}, 100);
 			} finally {
 				setIsCreatingFolder(false);
@@ -212,16 +223,22 @@ export const SaveToLibraryModal = memo(
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.currentTarget.value)}
 								leftSection={<Search size={12} />}
-								rightSection={searchQuery && (
-									<ActionIcon size="xs" variant="subtle" onClick={() => setSearchQuery("")}>
-										<X size={10} />
-									</ActionIcon>
-								)}
+								rightSection={
+									searchQuery && (
+										<ActionIcon
+											size="xs"
+											variant="subtle"
+											onClick={() => setSearchQuery("")}
+										>
+											<X size={10} />
+										</ActionIcon>
+									)
+								}
 								radius="md"
 								w={180}
 							/>
 						</Group>
-						
+
 						<ScrollArea
 							h={180}
 							viewportRef={viewport}
@@ -229,7 +246,10 @@ export const SaveToLibraryModal = memo(
 							p={0}
 						>
 							{foldersLoading ? (
-								<Box py="xl" style={{ display: "flex", justifyContent: "center" }}>
+								<Box
+									py="xl"
+									style={{ display: "flex", justifyContent: "center" }}
+								>
 									<Loader color="wave" size="sm" />
 								</Box>
 							) : (
@@ -240,49 +260,79 @@ export const SaveToLibraryModal = memo(
 											<UnstyledButton
 												key={row.isRoot ? "root" : row.id}
 												id={row.isRoot ? "folder-root" : `folder-${row.id}`}
-												onClick={() => setSelectedFolderId(row.isRoot ? null : row.id)}
+												onClick={() =>
+													setSelectedFolderId(row.isRoot ? null : row.id)
+												}
 												className={`w-full px-3 py-2 text-left transition-colors border-l-4 ${
-													selected 
-														? "bg-wave-50 border-wave-500" 
+													selected
+														? "bg-wave-50 border-wave-500"
 														: "hover:bg-gray-50 border-transparent"
 												}`}
 											>
 												<Group gap="xs" wrap="nowrap">
 													{row.isRoot ? (
-														<Text size="sm" fw={selected ? 700 : 500} c={selected ? "wave.7" : "gray.8"}>
+														<Text
+															size="sm"
+															fw={selected ? 700 : 500}
+															c={selected ? "wave.7" : "gray.8"}
+														>
 															{row.label}
 														</Text>
 													) : (
-														<Group gap="xs" wrap="nowrap" style={{ paddingLeft: searchQuery ? 0 : row.depth * 12 }}>
+														<Group
+															gap="xs"
+															wrap="nowrap"
+															style={{
+																paddingLeft: searchQuery ? 0 : row.depth * 12,
+															}}
+														>
 															{row.depth > 0 && !searchQuery && (
-																<ChevronRight size={14} className="flex-shrink-0 text-gray-400" />
+																<ChevronRight
+																	size={14}
+																	className="flex-shrink-0 text-gray-400"
+																/>
 															)}
 															<FolderIcon
 																size={16}
-																color={selected ? "var(--mantine-color-wave-5)" : STUDIO_ICON}
+																color={
+																	selected
+																		? "var(--mantine-color-wave-5)"
+																		: STUDIO_ICON
+																}
 																style={{ flexShrink: 0 }}
-																fill={selected ? "var(--mantine-color-wave-1)" : "none"}
+																fill={
+																	selected
+																		? "var(--mantine-color-wave-1)"
+																		: "none"
+																}
 															/>
-															<Text 
-																size="sm" 
-																fw={selected ? 700 : 500} 
-																c={selected ? "wave.7" : "gray.8"} 
+															<Text
+																size="sm"
+																fw={selected ? 700 : 500}
+																c={selected ? "wave.7" : "gray.8"}
 																truncate
 															>
 																{row.label}
 															</Text>
 														</Group>
 													)}
-													<Text size="xs" c={selected ? "wave.4" : "gray.4"} ml="auto" fw={500}>
-														{row.isRoot ? rootCount : (counts[row.id] || 0)}
+													<Text
+														size="xs"
+														c={selected ? "wave.4" : "gray.4"}
+														ml="auto"
+														fw={500}
+													>
+														{row.isRoot ? rootCount : counts[row.id] || 0}
 													</Text>
 												</Group>
 											</UnstyledButton>
 										);
 									})}
 									{folderRows.length === 0 && !foldersLoading && (
-										<Box p="md" style={{ textAlign: 'center' }}>
-											<Text size="sm" c="gray.5 italic">No folders found</Text>
+										<Box p="md" style={{ textAlign: "center" }}>
+											<Text size="sm" c="gray.5 italic">
+												No folders found
+											</Text>
 										</Box>
 									)}
 								</Stack>
@@ -292,14 +342,20 @@ export const SaveToLibraryModal = memo(
 						{createFormOpen ? (
 							<Stack gap="xs" mt="sm">
 								<TextInput
-									label={selectedFolderId ? "New subfolder in selected" : "New folder in root"}
+									label={
+										selectedFolderId
+											? "New subfolder in selected"
+											: "New folder in root"
+									}
 									placeholder="Folder name"
 									value={newFolderName}
 									onChange={(e) => setNewFolderName(e.currentTarget.value)}
 									radius="md"
 									size="sm"
 									autoFocus
-									onKeyDown={(e) => e.key === 'Enter' && void handleCreateFolder()}
+									onKeyDown={(e) =>
+										e.key === "Enter" && void handleCreateFolder()
+									}
 								/>
 								<Group gap="xs" justify="flex-end">
 									<Button
@@ -336,7 +392,7 @@ export const SaveToLibraryModal = memo(
 								onClick={() => setCreateFormOpen(true)}
 								radius="md"
 								styles={{
-									section: { marginRight: 6 }
+									section: { marginRight: 6 },
 								}}
 							>
 								New Folder
@@ -364,8 +420,8 @@ export const SaveToLibraryModal = memo(
 											color="wave"
 											size="sm"
 											styles={{
-												label: { cursor: 'pointer' },
-												input: { cursor: 'pointer' }
+												label: { cursor: "pointer" },
+												input: { cursor: "pointer" },
 											}}
 										/>
 									))}

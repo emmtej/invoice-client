@@ -7,7 +7,7 @@ export function useScriptsPageController() {
 	const setCurrentFolder = useScriptsUiStore((s) => s.setCurrentFolder);
 	const fetchFolderData = useScriptsDataStore((s) => s.fetchFolderData);
 	const loadMoreScripts = useScriptsDataStore((s) => s.loadMoreScripts);
-	
+
 	const folders = useScriptsDataStore((s) => s.folders);
 	const scripts = useScriptsDataStore((s) => s.scripts);
 	const breadcrumb = useScriptsDataStore((s) => s.breadcrumb);
@@ -34,7 +34,7 @@ export function useScriptsPageController() {
 	};
 
 	const isRoot = useMemo(() => currentFolderId === null, [currentFolderId]);
-	
+
 	const isEmpty = useMemo(
 		() => folders.length === 0 && scripts.length === 0,
 		[folders.length, scripts.length],

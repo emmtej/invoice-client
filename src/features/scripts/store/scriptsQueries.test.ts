@@ -90,7 +90,7 @@ describe("scriptsQueries", () => {
 			await db
 				.insert(folders)
 				.values({ id: "f1", name: "Folder 1", parentId: null });
-			
+
 			await scriptsQueries.saveScript({
 				id: "s1",
 				name: "A",

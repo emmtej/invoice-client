@@ -246,9 +246,7 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 		// Update active script AND metadata in the list if overview changed
 		set((state) => ({
 			activeScript: updatedScript,
-			scripts: state.scripts.map((s) =>
-				s.id === id ? { ...s, overview } : s,
-			),
+			scripts: state.scripts.map((s) => (s.id === id ? { ...s, overview } : s)),
 		}));
 	},
 

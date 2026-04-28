@@ -36,7 +36,11 @@ vi.mock("@/features/storage/pgliteClient", () => ({
 	getDrizzleDb: vi.fn().mockResolvedValue(db),
 }));
 
-import { scriptContents, scriptDrafts, scripts } from "@/features/storage/schema";
+import {
+	scriptContents,
+	scriptDrafts,
+	scripts,
+} from "@/features/storage/schema";
 import { pgliteStore } from "./pgliteStore";
 
 describe("pgliteStore partitioned scripts", () => {
@@ -126,7 +130,7 @@ describe("pgliteStore partitioned scripts", () => {
 
 		const promotedScripts = await db.select().from(scripts);
 		expect(promotedScripts.length).toBe(1);
-		
+
 		const promotedContents = await db.select().from(scriptContents);
 		expect(promotedContents.length).toBe(1);
 		expect(promotedContents[0].html).toBe("<p>Hello</p>");

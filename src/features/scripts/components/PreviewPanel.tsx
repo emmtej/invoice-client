@@ -23,11 +23,7 @@ interface PreviewPanelProps {
 
 function LinePreview({ line, index }: { line: ParsedLine; index: number }) {
 	return (
-		<Box
-			py={4}
-			px="xs"
-			style={{ borderBottom: "1px solid rgba(0,0,0,0.03)" }}
-		>
+		<Box py={4} px="xs" style={{ borderBottom: "1px solid rgba(0,0,0,0.03)" }}>
 			<Flex gap="xs" align="flex-start">
 				<Text
 					size="xs"
@@ -107,10 +103,7 @@ export function PreviewPanel({
 					</Center>
 				) : script ? (
 					<>
-						<Box
-							p="md"
-							style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}
-						>
+						<Box p="md" style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
 							<Flex justify="space-between" align="flex-start" mb="sm">
 								<Text
 									size="md"
@@ -163,10 +156,7 @@ export function PreviewPanel({
 							</Stack>
 						</ScrollArea>
 
-						<Box
-							p="md"
-							style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}
-						>
+						<Box p="md" style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}>
 							<Button
 								color="studio-blue"
 								fullWidth

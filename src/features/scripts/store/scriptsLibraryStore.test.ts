@@ -234,26 +234,32 @@ describe("Scripts Library Stores", () => {
 		});
 
 		it("toggleSelection handles multi and range selection", () => {
-		        const allIds = ["1", "2", "3", "4", "5"];
-		        const store = useScriptsUiStore.getState();
+			const allIds = ["1", "2", "3", "4", "5"];
+			const store = useScriptsUiStore.getState();
 
-		        // Single selection
-		        store.toggleSelection("1", false, false, allIds);
-		        expect(useScriptsUiStore.getState().selectedIds).toEqual(["1"]);
+			// Single selection
+			store.toggleSelection("1", false, false, allIds);
+			expect(useScriptsUiStore.getState().selectedIds).toEqual(["1"]);
 
-		        // Multi selection
-		        store.toggleSelection("3", true, false, allIds);
-		        expect(useScriptsUiStore.getState().selectedIds).toEqual(["1", "3"]);
+			// Multi selection
+			store.toggleSelection("3", true, false, allIds);
+			expect(useScriptsUiStore.getState().selectedIds).toEqual(["1", "3"]);
 
-		        // Range selection (replaces unless isMulti is true)
-		        store.toggleSelection("5", false, true, allIds);
-		        expect(useScriptsUiStore.getState().selectedIds).toEqual(["3", "4", "5"]);
+			// Range selection (replaces unless isMulti is true)
+			store.toggleSelection("5", false, true, allIds);
+			expect(useScriptsUiStore.getState().selectedIds).toEqual(["3", "4", "5"]);
 
-		        // Range selection with isMulti=true (appends to existing)
-		        // Current selected: ["3", "4", "5"], lastSelectedId: "5"
-		        // Select "1" with range + multi
-		        store.toggleSelection("1", true, true, allIds);
-		        expect(useScriptsUiStore.getState().selectedIds).toEqual(["3", "4", "5", "1", "2"]);
+			// Range selection with isMulti=true (appends to existing)
+			// Current selected: ["3", "4", "5"], lastSelectedId: "5"
+			// Select "1" with range + multi
+			store.toggleSelection("1", true, true, allIds);
+			expect(useScriptsUiStore.getState().selectedIds).toEqual([
+				"3",
+				"4",
+				"5",
+				"1",
+				"2",
+			]);
 		});
 		it("clearSelection clears selected script and IDs", () => {
 			useScriptsUiStore.setState({

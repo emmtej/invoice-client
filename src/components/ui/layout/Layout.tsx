@@ -1,10 +1,17 @@
-import { AppShell, Box, Burger, Container, Group, Overlay } from "@mantine/core";
+import {
+	AppShell,
+	Box,
+	Burger,
+	Container,
+	Group,
+	Overlay,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type ReactNode, useEffect } from "react";
 import { useInvoicePresetsStore } from "@/features/invoice/store/invoicePresetsStore";
-import { AppFooter } from "./AppFooter";
 import { Navbar } from "../navbar/Navbar";
 import { Sidebar } from "../sidebar/Sidebar";
+import { AppFooter } from "./AppFooter";
 import {
 	APP_CONTENT_MAX_WIDTH,
 	APP_SHELL_HEADER_HEIGHT,

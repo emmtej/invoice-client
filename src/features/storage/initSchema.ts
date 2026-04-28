@@ -1,4 +1,4 @@
-import { PGlite } from "@electric-sql/pglite";
+import type { PGlite } from "@electric-sql/pglite";
 
 export async function initSchema(db: PGlite): Promise<void> {
 	await db.exec(`

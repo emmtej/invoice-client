@@ -7,10 +7,13 @@ import { PreviewPanel } from "./components/PreviewPanel";
 import { ScriptsEmptyState } from "./components/ScriptsEmptyState";
 import { ScriptsHeader } from "./components/ScriptsHeader";
 import { ScriptsLibraryItems } from "./components/ScriptsLibraryItems";
-import { ScriptsModals, useScriptsModalsStore } from "./components/ScriptsModals";
+import {
+	ScriptsModals,
+	useScriptsModalsStore,
+} from "./components/ScriptsModals";
 import { useScriptsEvents } from "./hooks/useScriptsEvents";
-import { useScriptsUpload } from "./hooks/useScriptsUpload";
 import { useScriptsPageController } from "./hooks/useScriptsPageController";
+import { useScriptsUpload } from "./hooks/useScriptsUpload";
 import { useScriptsDataStore } from "./store/useScriptsDataStore";
 import { useScriptsUiStore } from "./store/useScriptsUiStore";
 
@@ -40,9 +43,13 @@ export default function ScriptsView() {
 		})),
 	);
 
-	const setCreateFolderOpened = useScriptsModalsStore((s) => s.setCreateFolderOpened);
+	const setCreateFolderOpened = useScriptsModalsStore(
+		(s) => s.setCreateFolderOpened,
+	);
 	const setMoveModalOpened = useScriptsModalsStore((s) => s.setMoveModalOpened);
-	const setDeleteItemsOpened = useScriptsModalsStore((s) => s.setDeleteItemsOpened);
+	const setDeleteItemsOpened = useScriptsModalsStore(
+		(s) => s.setDeleteItemsOpened,
+	);
 
 	const { isUploading, uploadErrors, handleFileChange, resetUpload } =
 		useScriptsUpload();

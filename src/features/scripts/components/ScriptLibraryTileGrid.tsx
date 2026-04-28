@@ -37,10 +37,14 @@ export function ScriptLibraryTileGrid({
 			styles={{
 				root: {
 					cursor: "pointer",
-					borderColor: isSelected ? "var(--mantine-color-studio-blue-5)" : "rgba(0,0,0,0.05)",
+					borderColor: isSelected
+						? "var(--mantine-color-studio-blue-5)"
+						: "rgba(0,0,0,0.05)",
 					transition: "all 150ms ease",
 					"&:hover": {
-						borderColor: isSelected ? "var(--mantine-color-studio-blue-6)" : "var(--mantine-color-studio-blue-3)",
+						borderColor: isSelected
+							? "var(--mantine-color-studio-blue-6)"
+							: "var(--mantine-color-studio-blue-3)",
 					},
 				},
 			}}
@@ -55,7 +59,14 @@ export function ScriptLibraryTileGrid({
 						bg="gray.0"
 						style={{ borderRadius: "var(--mantine-radius-md)" }}
 					>
-						<FileText size={20} color={isSelected ? "var(--mantine-color-studio-blue-6)" : "var(--mantine-color-gray-6)"} />
+						<FileText
+							size={20}
+							color={
+								isSelected
+									? "var(--mantine-color-studio-blue-6)"
+									: "var(--mantine-color-gray-6)"
+							}
+						/>
 					</Flex>
 					<ActionIcon
 						variant="subtle"
@@ -68,7 +79,10 @@ export function ScriptLibraryTileGrid({
 						style={{
 							opacity: hovered ? 1 : 0,
 							transition: "opacity 150ms ease",
-							"&:hover": { color: "var(--mantine-color-on-air-red-6)", backgroundColor: "var(--mantine-color-on-air-red-0)" },
+							"&:hover": {
+								color: "var(--mantine-color-on-air-red-6)",
+								backgroundColor: "var(--mantine-color-on-air-red-0)",
+							},
 						}}
 					>
 						<Trash2 size={16} />
@@ -76,10 +90,17 @@ export function ScriptLibraryTileGrid({
 				</Group>
 
 				<Box>
-					<Text size="sm" fw={600} c={isSelected ? "studio-blue.8" : "charcoal"} lineClamp={2} mb="xs" h={40}>
+					<Text
+						size="sm"
+						fw={600}
+						c={isSelected ? "studio-blue.8" : "charcoal"}
+						lineClamp={2}
+						mb="xs"
+						h={40}
+					>
 						{script.name}
 					</Text>
-					
+
 					<Stack gap={4}>
 						<Group justify="space-between" wrap="nowrap">
 							<Text size="xs" c="dimmed" className="tabular-nums" truncate>
@@ -87,14 +108,22 @@ export function ScriptLibraryTileGrid({
 							</Text>
 							{script.invalidLineCount > 0 && (
 								<Flex align="center" gap={4}>
-									<AlertCircle size={12} color="var(--mantine-color-on-air-red-5)" />
+									<AlertCircle
+										size={12}
+										color="var(--mantine-color-on-air-red-5)"
+									/>
 									<Text size="xs" c="on-air-red.5" className="tabular-nums">
 										{script.invalidLineCount}
 									</Text>
 								</Flex>
 							)}
 						</Group>
-						<Text size="xs" c="dimmed" className="tabular-nums" style={{ opacity: 0.6 }}>
+						<Text
+							size="xs"
+							c="dimmed"
+							className="tabular-nums"
+							style={{ opacity: 0.6 }}
+						>
 							{dateFormatter.format(script.createdAt)}
 						</Text>
 					</Stack>

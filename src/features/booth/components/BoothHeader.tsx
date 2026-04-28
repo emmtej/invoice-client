@@ -4,11 +4,11 @@ import { BoothSettingsModal } from "./BoothSettingsModal";
 
 export function BoothHeader() {
 	return (
-		<Box px="md" pt="md" flex="0 0 auto">
+		<Box flex="0 0 auto">
 			<Group justify="space-between" align="center" wrap="nowrap">
 				<Box>
-					<PageTitle>Booth</PageTitle>
-					<Text fz="sm" c="gray.5" mt={2}>
+					<PageTitle size="42px">Booth</PageTitle>
+					<Text fz="md" c="gray.7" mt={4} className="page-subtitle">
 						Track your recording sessions line by line
 					</Text>
 				</Box>
