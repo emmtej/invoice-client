@@ -35,58 +35,66 @@
 @import "@mantine/tiptap/styles.css";
 
 @theme {
-	--font-sans: "Poppins", sans-serif;
-	--font-display: "Sneaky Times", serif;
+	--font-sans: "Source Sans 3", sans-serif;
+	--font-display: "Playfair Display", serif;
 
 	/* Color Palette */
-	--color-studio-blue-50: var(--mantine-color-studio-blue-0);
-	--color-studio-blue-100: var(--mantine-color-studio-blue-1);
-	--color-studio-blue-200: var(--mantine-color-studio-blue-2);
-	--color-studio-blue-300: var(--mantine-color-studio-blue-3);
-	--color-studio-blue-400: var(--mantine-color-studio-blue-4);
-	--color-studio-blue-500: var(--mantine-color-studio-blue-5);
-	--color-studio-blue-600: var(--mantine-color-studio-blue-6);
-	--color-studio-blue-700: var(--mantine-color-studio-blue-7);
-	--color-studio-blue-800: var(--mantine-color-studio-blue-8);
-	--color-studio-blue-900: var(--mantine-color-studio-blue-9);
+	--color-forest-50: var(--mantine-color-forest-0);
+	--color-forest-100: var(--mantine-color-forest-1);
+	--color-forest-200: var(--mantine-color-forest-2);
+	--color-forest-300: var(--mantine-color-forest-3);
+	--color-forest-400: var(--mantine-color-forest-4);
+	--color-forest-500: var(--mantine-color-forest-5);
+	--color-forest-600: var(--mantine-color-forest-6);
+	--color-forest-700: var(--mantine-color-forest-7);
+	--color-forest-800: var(--mantine-color-forest-8);
+	--color-forest-900: var(--mantine-color-forest-9);
 
-	--color-on-air-red-50: var(--mantine-color-on-air-red-0);
-	--color-on-air-red-100: var(--mantine-color-on-air-red-1);
-	--color-on-air-red-200: var(--mantine-color-on-air-red-2);
-	--color-on-air-red-300: var(--mantine-color-on-air-red-3);
-	--color-on-air-red-400: var(--mantine-color-on-air-red-4);
-	--color-on-air-red-500: var(--mantine-color-on-air-red-5);
-	--color-on-air-red-600: var(--mantine-color-on-air-red-6);
-	--color-on-air-red-700: var(--mantine-color-on-air-red-7);
-	--color-on-air-red-800: var(--mantine-color-on-air-red-8);
-	--color-on-air-red-900: var(--mantine-color-on-air-red-9);
+	--color-sage-50: var(--mantine-color-sage-0);
+	--color-sage-100: var(--mantine-color-sage-1);
+	--color-sage-200: var(--mantine-color-sage-2);
+	--color-sage-300: var(--mantine-color-sage-3);
+	--color-sage-400: var(--mantine-color-sage-4);
+	--color-sage-500: var(--mantine-color-sage-5);
+	--color-sage-600: var(--mantine-color-sage-6);
+	--color-sage-700: var(--mantine-color-sage-7);
+	--color-sage-800: var(--mantine-color-sage-8);
+	--color-sage-900: var(--mantine-color-sage-9);
 
-	--color-newsprint-beige: #f5f1e8;
-	--color-aged-paper: #ebe4d5;
-	--color-charcoal: #212529;
+	--color-terracotta-50: var(--mantine-color-terracotta-0);
+	--color-terracotta-100: var(--mantine-color-terracotta-1);
+	--color-terracotta-200: var(--mantine-color-terracotta-2);
+	--color-terracotta-300: var(--mantine-color-terracotta-3);
+	--color-terracotta-400: var(--mantine-color-terracotta-4);
+	--color-terracotta-500: var(--mantine-color-terracotta-5);
+	--color-terracotta-600: var(--mantine-color-terracotta-6);
+	--color-terracotta-700: var(--mantine-color-terracotta-7);
+	--color-terracotta-800: var(--mantine-color-terracotta-8);
+	--color-terracotta-900: var(--mantine-color-terracotta-9);
 
-	--radius-xs: 1px;
-	--radius-sm: 2px;
-	--radius-md: 4px;
-	--radius-lg: 8px;
-	--radius-xl: 12px;
+	--color-forest: #2d3a31;
+	--color-sage: #8c9a84;
+	--color-terracotta: #c27b66;
+	--color-alabaster: #f9f8f4;
+	--color-stone: #e6e2da;
 
-	--app-bg: #f5f1e8;
+	--radius-3xl: 24px;
+
+	--app-bg: #f9f8f4;
 }
 
 html,
 body {
 	background-color: var(--app-bg);
-	color: var(--charcoal);
+	color: var(--color-forest);
 	min-height: 100dvh;
 	font-family: var(--font-sans);
 	font-weight: 400;
-	font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 	-webkit-font-smoothing: antialiased;
 	position: relative;
 }
 
-/* Noise overlay */
+/* Paper Grain Overlay */
 body::before {
 	content: "";
 	position: fixed;
@@ -95,9 +103,20 @@ body::before {
 	width: 100%;
 	height: 100%;
 	pointer-events: none;
-	opacity: 0.03;
-	z-index: 100;
+	opacity: 0.015;
+	z-index: 9999;
 	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Tiptap Placeholder */
+.tiptap p.is-editor-empty:first-child::before {
+	color: var(--mantine-color-sage-4);
+	content: attr(data-placeholder);
+	float: left;
+	height: 0;
+	pointer-events: none;
+	font-family: var(--font-display);
+	font-style: italic;
 }
 
 .tabular-nums {

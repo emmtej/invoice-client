@@ -2,191 +2,175 @@ import { createTheme, type MantineColorsTuple } from "@mantine/core";
 
 // Custom local fonts
 const fontSans =
-	'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-const fontDisplay = '"Sneaky Times", serif';
+	'"Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+const fontDisplay = '"Playfair Display", serif';
 
-const studioBlue: MantineColorsTuple = [
-	"#e7e9ed",
-	"#cfd4db",
-	"#a0a9b7",
-	"#707e93",
-	"#415370",
-	"#11284d",
-	"#092648", // 6: Primary Base
-	"#082241",
-	"#071e3a",
-	"#061a32",
+const forest: MantineColorsTuple = [
+	"#f2f4f2",
+	"#e4e8e5",
+	"#c8d0cb",
+	"#aab8b0",
+	"#90a498",
+	"#80988a",
+	"#779284",
+	"#657f72",
+	"#597165",
+	"#2d3a31", // 9: Forest Base
 ];
 
-const onAirRed: MantineColorsTuple = [
-	"#f9e9eb",
-	"#f3d3d8",
-	"#e7a7b1",
-	"#db7b8a",
-	"#cf4f63",
-	"#c4233d",
-	"#c41e3a", // 6: Secondary Base
-	"#b01b34",
-	"#9d182e",
-	"#891528",
+const sage: MantineColorsTuple = [
+	"#f4f6f3",
+	"#e9ede7",
+	"#d1dbcc",
+	"#b8c9b0",
+	"#a3ba98",
+	"#94af86",
+	"#8c9a84", // 6: Sage Base
+	"#7a8773",
+	"#6d7866",
+	"#5c6657",
+];
+
+const terracotta: MantineColorsTuple = [
+	"#fdf4f2",
+	"#f9e9e5",
+	"#f1d2cb",
+	"#e9bbaf",
+	"#e2a797",
+	"#db9380",
+	"#d6836f",
+	"#c27b66", // 7: Terracotta Base
+	"#ad6e5b",
+	"#986150",
 ];
 
 export const appTheme = createTheme({
-	primaryColor: "studio-blue",
-	primaryShade: 6,
+	primaryColor: "forest",
+	primaryShade: 9,
 	colors: {
-		"studio-blue": studioBlue,
-		"on-air-red": onAirRed,
+		forest,
+		sage,
+		terracotta,
 	},
-	black: "#212529", // Charcoal
+	black: "#2D3A31", // Forest
 	white: "#FFFFFF",
 	defaultRadius: "md",
 	radius: {
-		xs: "1px",
-		sm: "2px",
-		md: "4px",
-		lg: "8px",
-		xl: "12px",
+		xs: "2px",
+		sm: "4px",
+		md: "8px",
+		lg: "16px",
+		xl: "32px",
+		"3xl": "24px",
 	},
 	shadows: {
-		sm: "0 4px 12px -2px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02)",
-		md: "0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)",
-		lg: "0 20px 25px -5px rgba(0, 0, 0, 0.04), 0 10px 10px -5px rgba(0, 0, 0, 0.02)",
+		sm: "0 4px 12px -2px rgba(45, 58, 49, 0.04), 0 2px 4px -1px rgba(45, 58, 49, 0.02)",
+		md: "0 10px 15px -3px rgba(45, 58, 49, 0.05), 0 4px 6px -2px rgba(45, 58, 49, 0.02)",
+		lg: "0 20px 25px -5px rgba(45, 58, 49, 0.05), 0 10px 10px -5px rgba(45, 58, 49, 0.02)",
 	},
 	fontFamily: fontSans,
 	headings: {
 		fontFamily: fontDisplay,
-		fontWeight: "700",
+		fontWeight: "600",
 		sizes: {
-			h1: { fontSize: "40px", lineHeight: "1.2" },
-			h2: { fontSize: "32px", lineHeight: "1.25" },
+			h1: { fontSize: "48px", lineHeight: "1.1" },
+			h2: { fontSize: "36px", lineHeight: "1.2" },
 		},
 	},
 	components: {
 		Text: {
-			defaultProps: {},
+			defaultProps: {
+				c: "forest.9",
+			},
 		},
 		TextInput: {
+			defaultProps: {
+				variant: "unstyled",
+			},
 			styles: {
 				input: {
-					fontFamily: "var(--mantine-font-family)",
+					borderBottom: "1px solid #E6E2DA",
+					borderRadius: 0,
+					paddingLeft: 0,
+					paddingRight: 0,
 					"&:focus": {
-						borderColor: "var(--mantine-color-studio-blue-6)",
+						borderBottomColor: "var(--mantine-color-forest-9)",
 					},
 				},
 				label: {
 					fontFamily: "var(--mantine-font-family)",
+					fontSize: "12px",
+					textTransform: "uppercase",
+					letterSpacing: "0.05em",
+					color: "var(--mantine-color-sage-6)",
 				},
 			},
 		},
 		Paper: {
 			defaultProps: {
-				shadow: "sm",
-				withBorder: true,
-				bg: "#EBE4D5", // Aged Paper
+				radius: "3xl",
+				shadow: "md",
+				withBorder: false,
 			},
 			styles: {
 				root: {
-					borderColor: "rgba(0,0,0,0.05)",
+					backgroundColor: "var(--mantine-color-white)",
 					overflow: "hidden",
 				},
 			},
 		},
-		Card: {
-			defaultProps: {
-				bg: "#EBE4D5", // Aged Paper
-			},
-		},
 		Button: {
 			defaultProps: {
-				color: "studio-blue",
+				radius: "xl",
+				variant: "filled",
 			},
 			styles: {
 				root: {
+					textTransform: "uppercase",
+					letterSpacing: "0.1em",
 					fontWeight: 600,
-					transition: "all 150ms ease",
-				},
-			},
-		},
-		Input: {
-			styles: {
-				input: {
-					"&:focus": {
-						borderColor: "var(--mantine-color-studio-blue-6)",
-					},
-				},
-			},
-		},
-		ActionIcon: { defaultProps: {} },
-		Badge: {
-			styles: {
-				root: {
-					textTransform: "capitalize",
-					letterSpacing: "0",
-					fontWeight: 600,
-				},
-			},
-		},
-		Avatar: { defaultProps: {} },
-		ThemeIcon: { defaultProps: {} },
-		SegmentedControl: {
-			styles: {
-				root: {
-					backgroundColor: "rgba(0,0,0,0.05)",
-				},
-				indicator: {
-					boxShadow: "var(--mantine-shadow-sm)",
-				},
-			},
-		},
-		InputWrapper: {
-			styles: {
-				label: {
-					fontSize: "var(--mantine-font-size-sm)",
-					fontWeight: 600,
-					color: "var(--mantine-color-black)",
-					marginBottom: "var(--mantine-spacing-xs)",
-					letterSpacing: "0",
-				},
-			},
-		},
-		Modal: {
-			defaultProps: {
-				centered: true,
-				withinPortal: true,
-				overlayProps: {
-					blur: 3,
-					backgroundOpacity: 0.5,
+					transition: "all 0.3s ease",
 				},
 			},
 		},
 		Table: {
-			defaultProps: {
-				verticalSpacing: "md",
-				horizontalSpacing: "lg",
-				highlightOnHover: true,
-			},
 			styles: {
-				thead: {
-					backgroundColor: "rgba(0,0,0,0.02)",
-				},
 				th: {
-					borderBottom: "1px solid rgba(0,0,0,0.05)",
-					color: "var(--mantine-color-black)",
-					fontSize: "12px",
-					textTransform: "uppercase",
-					letterSpacing: "0.05em",
-					fontWeight: 700,
+					color: "var(--mantine-color-sage-6)",
+					borderBottom: "1px solid #E6E2DA",
 				},
 				td: {
-					borderBottom: "1px solid rgba(0,0,0,0.03)",
+					borderBottom: "1px solid #F2F4F2",
 				},
 			},
 		},
-		Title: {
+		RichTextEditor: {
 			styles: {
 				root: {
-					color: "var(--mantine-color-black)",
+					border: "none",
+					backgroundColor: "transparent",
+				},
+				content: {
+					backgroundColor: "transparent",
+					fontSize: "18px",
+					fontFamily: "var(--mantine-font-family)",
+					lineHeight: "1.6",
+					color: "var(--mantine-color-forest-9)",
+				},
+				toolbar: {
+					backgroundColor: "transparent",
+					borderBottom: "none",
+					padding: "0 0 var(--mantine-spacing-md) 0",
+				},
+				control: {
+					borderRadius: "100px",
+					border: "none",
+					transition: "all 0.3s ease",
+					backgroundColor: "transparent",
+					"&:hover": {
+						backgroundColor: "var(--mantine-color-terracotta-0)",
+						color: "var(--mantine-color-terracotta-7)",
+					},
 				},
 			},
 		},
