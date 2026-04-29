@@ -1,5 +1,5 @@
 import { Box } from "@mantine/core";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { AppModal } from "@/components/ui/modal/AppModal";
 import { useScriptStore } from "@/features/editor";
@@ -17,31 +17,31 @@ export function BoothModals() {
 			})),
 		);
 
-	const [isScriptEditorEditing, setIsScriptEditorEditing] = useState(true);
-
-	const { activeScript, loadScript, closeActiveScript } = useScriptStore(
-		useShallow((s) => ({
-			activeScript: s.activeScript,
-			loadScript: s.loadScript,
-			closeActiveScript: s.closeActiveScript,
-		})),
-	);
+	const { activeScript, loadScript, closeActiveScript, setEditingScriptId } =
+		useScriptStore(
+			useShallow((s) => ({
+				activeScript: s.activeScript,
+				loadScript: s.loadScript,
+				closeActiveScript: s.closeActiveScript,
+				setEditingScriptId: s.setEditingScriptId,
+			})),
+		);
 
 	const handleCloseScriptEditor = useCallback(() => {
-		setIsScriptEditorEditing(false);
+		setEditingScriptId(null);
 		setEditorOpened(false);
 		closeActiveScript();
-	}, [setEditorOpened, closeActiveScript]);
+	}, [setEditorOpened, closeActiveScript, setEditingScriptId]);
 
-	// Load script when editor opens
+	// Load script and force editing mode when editor opens
 	useEffect(() => {
 		if (isEditorOpened && script) {
 			if (activeScript?.id !== script.id) {
 				loadScript(script.id);
 			}
-			setIsScriptEditorEditing(true);
+			setEditingScriptId(script.id);
 		}
-	}, [isEditorOpened, script, activeScript?.id, loadScript]);
+	}, [isEditorOpened, script, activeScript?.id, loadScript, setEditingScriptId]);
 
 	// Sync changes from editor back to booth session
 	useEffect(() => {
@@ -65,14 +65,7 @@ export function BoothModals() {
 			size="90vw"
 		>
 			<Box h="70vh" mih={500}>
-				{activeScript && (
-					<ScriptEditor
-						script={activeScript}
-						isEditing={isScriptEditorEditing}
-						onStartEdit={() => setIsScriptEditorEditing(true)}
-						onStopEdit={() => setIsScriptEditorEditing(false)}
-					/>
-				)}
+				{activeScript && <ScriptEditor script={activeScript} />}
 			</Box>
 		</AppModal>
 	);

@@ -30,13 +30,13 @@ export function AppFooter() {
 						<Receipt
 							size={30}
 							strokeWidth={2}
-							style={{ color: "var(--mantine-color-wave-8)" }}
+							style={{ color: "var(--mantine-color-studio-blue-8)" }}
 						/>
 						<Text size="xl" fw={800} c="gray.8" className="tracking-tighter">
 							InVoice
 						</Text>
 					</Group>
-					<Text size="sm" c="gray.5" maw={300} mb="xl">
+					<Text size="sm" c="gray.5" maw="18.75rem" mb="xl">
 						Billing and script tools for voice actors—soft on the eyes, sharp on
 						the details.
 					</Text>
@@ -45,7 +45,7 @@ export function AppFooter() {
 					</Text>
 				</Grid.Col>
 				<Grid.Col span={{ base: 12, md: 8 }}>
-					<Group justify="flex-end" align="flex-start" gap={80}>
+					<Group justify="flex-end" align="flex-start" gap="xl">
 						{footerLinks.map((group) => (
 							<Stack key={group.title} gap="xs" miw={120}>
 								<Text fw={600} size="sm" mb="xs">
