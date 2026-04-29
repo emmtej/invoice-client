@@ -1,14 +1,32 @@
 import { Box, Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
-import { CloudUpload, Plus } from "lucide-react";
+import { motion } from "framer-motion";
+import { FileUp, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
-import { SectionLabel } from "@/components/ui/text/SectionLabel";
 import { TextEditor } from "./TextEditor";
 
 interface GettingStartedProps {
 	onFileChange: (files: File[]) => void;
 	onPasteProcessed: (html: string) => void;
 }
+
+const itemVariants = {
+	hidden: { opacity: 0, y: -20 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		transition: { duration: 0.8 },
+	},
+};
+
+const editorVariants = {
+	hidden: { opacity: 0, y: 20 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		transition: { duration: 1 },
+	},
+};
 
 export function GettingStarted({
 	onFileChange,
@@ -27,121 +45,91 @@ export function GettingStarted({
 			data-testid="getting-started-view"
 			direction="column"
 			h="100%"
-			bg="white"
+			bg="transparent"
 		>
 			<Stack
 				gap={48}
 				px={48}
 				py={32}
 				flex={1}
-				className="overflow-y-auto max-w-[1100px] mx-auto w-full"
+				className="overflow-y-auto w-full"
 			>
-				{/* Dynamic Action Area */}
-				<Stack gap={32}>
-					{/* Upload Documents */}
-					<Stack gap="lg">
-						<Box px="xs">
-							<SectionLabel letterSpacing={2}>Upload Documents</SectionLabel>
-						</Box>
-						<Paper
-							withBorder
-							p="md"
-							bg="white"
-							className="border-gray-200 hover:border-gray-300 transition-colors group"
-						>
-							<Group justify="space-between" align="center" wrap="nowrap">
-								<Group gap="md" wrap="nowrap">
-									<Box
-										p="sm"
-										bg="white"
-										className="border border-gray-100 text-wave-700 shadow-sm transition-all group-hover:scale-105"
-									>
-										<CloudUpload size={24} strokeWidth={1.5} />
-									</Box>
-									<Stack gap={0}>
-										<Text fw={800} size="sm" c="gray.8" lts={-0.2}>
-											Word Documents (.docx)
-										</Text>
-										<Text size="xs" c="gray.5" fw={500}>
-											Upload files to automatically extract and count dialogue
-											lines.
-										</Text>
-									</Stack>
-								</Group>
-								<DocxUploadButton
-									onChange={onFileChange}
-									multiple
-									size="sm"
-									className="shadow-sm shadow-wave-100 px-6"
+				{/* Top: Horizontal Upload Banner */}
+				<motion.div variants={itemVariants}>
+					<Paper
+						radius="lg"
+						p="sm"
+						bg="white"
+						style={{
+							border: "1px solid var(--mantine-color-sage-2)",
+							boxShadow: "0 4px 12px rgba(45, 58, 49, 0.05)",
+						}}
+					>
+						<Group justify="space-between" align="center" px="sm">
+							<Group gap="md">
+								<Box
+									p={8}
+									style={{
+										backgroundColor: "#DCCFC2", // Soft Clay
+										borderRadius: "8px",
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "center",
+									}}
 								>
-									Select Documents
-								</DocxUploadButton>
+									<FileUp size={20} strokeWidth={2} className="text-forest-900" />
+								</Box>
+								<Box>
+									<Text fw={700} size="sm" c="forest.9">
+										Upload Scripts
+									</Text>
+									<Text size="xs" c="forest.9" opacity={0.7}>
+										Analyze .docx files to extract dialogue automatically
+									</Text>
+								</Box>
 							</Group>
-						</Paper>
-					</Stack>
-					{/* Paste Script */}
-					<Stack gap="lg">
-						<Box px="xs">
-							<SectionLabel letterSpacing={2}>Paste Script</SectionLabel>
-						</Box>
-						<Paper
-							withBorder
-							bg="white"
-							mih={400}
-							className="overflow-hidden flex flex-col border-gray-200 shadow-sm transition-colors hover:border-gray-300"
-						>
-							<TextEditor
-								content={pastedContent}
-								onContentChange={setPastedContent}
-								placeholder="Paste your script here (e.g. Speaker: Text) to analyze it instantly..."
-								additionalMenu={
-									<Flex gap="xs" align="center">
-										{pastedContent.trim() && (
-											<Button
-												variant="filled"
-												size="sm"
-												color="wave"
-												leftSection={<Plus size={16} />}
-												onClick={handleCreateFromPaste}
-												className="shadow-md"
-											>
-												Process Script
-											</Button>
-										)}
-									</Flex>
-								}
-							/>
-						</Paper>
-					</Stack>
-				</Stack>
+							<DocxUploadButton
+								onChange={onFileChange}
+								multiple
+								size="sm"
+								variant="filled"
+								color="forest"
+								style={{ borderRadius: "100px" }}
+							>
+								Select Files
+							</DocxUploadButton>
+						</Group>
+					</Paper>
+				</motion.div>
 
-				{/* Professional Footer Insight */}
-				<Box
-					p="xl"
-					bg="gray.0"
-					style={{
-						border: "1px solid var(--mantine-color-gray-2)",
-					}}
-				>
-					<Group gap={16} wrap="nowrap">
-						<Box
-							p="xs"
-							bg="white"
-							className="text-wave-600 shadow-sm shrink-0"
-							style={{
-								border: "1px solid var(--mantine-color-gray-2)",
-							}}
-						>
-							<Plus size={16} strokeWidth={3} />
-						</Box>
-						<Text size="sm" fw={600} c="gray.5" className="leading-relaxed">
-							<span className="text-wave-800 font-bold">Pro Tip:</span> Our
-							parser identifies dialogue, action lines, and scene markers
-							automatically. Only dialogue lines contribute to the billable word
-							count.
+				{/* Bottom: Paste Editor (Stationery) */}
+				<motion.div variants={editorVariants} style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+					<Stack gap="xs" flex={1}>
+						<Text size="xs" fw={700} tt="uppercase" lts={2} c="sage.6">
+							Or Paste Content
 						</Text>
-					</Group>
-				</Box>
+						<TextEditor
+							content={pastedContent}
+							onContentChange={setPastedContent}
+							placeholder="Paste your script here (e.g. Speaker: Text) to analyze it instantly..."
+							additionalMenu={
+								<Flex gap="xs" align="center">
+									{pastedContent.trim() && (
+										<Button
+											variant="filled"
+											size="md"
+											color="terracotta"
+											leftSection={<Plus size={16} />}
+											onClick={handleCreateFromPaste}
+										>
+											Process Script
+										</Button>
+									)}
+								</Flex>
+							}
+						/>
+					</Stack>
+				</motion.div>
 			</Stack>
 		</Flex>
 	);

@@ -8,19 +8,15 @@ import { TextEditor } from "./TextEditor";
 
 interface ScriptEditorProps {
 	script: Script;
-	isEditing: boolean;
-	onStartEdit: (scriptId: string) => void;
-	onStopEdit: () => void;
 }
 
-function ScriptEditorInner({
-	script,
-	isEditing,
-	onStartEdit,
-	onStopEdit,
-}: ScriptEditorProps) {
+function ScriptEditorInner({ script }: ScriptEditorProps) {
 	const resetScript = useScriptStore((s) => s.resetScript);
 	const syncScriptFromHtml = useScriptStore((s) => s.syncScriptFromHtml);
+	const editingScriptId = useScriptStore((s) => s.editingScriptId);
+	const setEditingScriptId = useScriptStore((s) => s.setEditingScriptId);
+
+	const isEditing = editingScriptId === script.id;
 
 	const [localHtml, setLocalHtml] = useState(script.html);
 
@@ -48,22 +44,17 @@ function ScriptEditorInner({
 
 	const handleReset = useCallback(() => {
 		resetScript(script.id);
-		// Local state will sync because the component might not re-mount but we need to force it.
-		// Since we don't have the original html here synchronously, it will eventually update from store
-		// if we briefly stop editing, but we can't easily do that.
-		// Actually, resetScript updates script.html in the store. We can add an effect that watches script.html
-		// and syncs localHtml if they differ and it's a reset. For now, onStopEdit() is a good way to see it.
-		onStopEdit();
-	}, [script.id, resetScript, onStopEdit]);
+		setEditingScriptId(null);
+	}, [script.id, resetScript, setEditingScriptId]);
 
 	const handleSubmit = useCallback(() => {
 		void syncScriptFromHtml(script.id, localHtml);
-		onStopEdit();
-	}, [script.id, localHtml, syncScriptFromHtml, onStopEdit]);
+		setEditingScriptId(null);
+	}, [script.id, localHtml, syncScriptFromHtml, setEditingScriptId]);
 
 	const handleStartEditClick = useCallback(() => {
-		onStartEdit(script.id);
-	}, [onStartEdit, script.id]);
+		setEditingScriptId(script.id);
+	}, [setEditingScriptId, script.id]);
 
 	if (!isEditing) {
 		return (
@@ -74,7 +65,7 @@ function ScriptEditorInner({
 	}
 
 	return (
-		<Flex direction="column" flex={1} mih={0} bg="white">
+		<Flex direction="column" flex={1} mih={0} bg="transparent">
 			<TextEditor
 				content={script.html}
 				onContentChange={handleContentChange}
@@ -85,13 +76,13 @@ function ScriptEditorInner({
 							color="gray"
 							size="xs"
 							leftSection={<ArrowLeft size={14} />}
-							onClick={onStopEdit}
+							onClick={() => setEditingScriptId(null)}
 						>
 							Back to overview
 						</Button>
 						<Button
 							variant="subtle"
-							color="orange"
+							color="terracotta"
 							size="xs"
 							leftSection={<RotateCcw size={14} />}
 							onClick={handleReset}
@@ -100,11 +91,10 @@ function ScriptEditorInner({
 						</Button>
 						<Button
 							size="xs"
-							color="wave"
+							color="forest"
 							variant="filled"
 							leftSection={<Check size={14} />}
 							onClick={handleSubmit}
-							className="shadow-sm shadow-wave-100"
 						>
 							Finish Editing
 						</Button>

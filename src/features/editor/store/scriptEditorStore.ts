@@ -9,6 +9,8 @@ const PERSISTENCE_KEY = "invoice-editor-persistence-enabled";
 interface ScriptStoreProps {
 	scripts: ScriptMetadata[];
 	activeScript: Script | null;
+	activeScriptId: string | null;
+	editingScriptId: string | null;
 	isDbReady: boolean;
 	isLoading: boolean;
 	persistenceEnabled: boolean;
@@ -23,6 +25,8 @@ interface ScriptStoreActions {
 	removeScripts: (ids: string[]) => Promise<void>;
 	loadScript: (id: string) => Promise<void>;
 	closeActiveScript: () => void;
+	selectScript: (id: string | null) => Promise<void>;
+	setEditingScriptId: (id: string | null) => void;
 	updateHtml: (id: string, html: string) => Promise<void>;
 	resetScript: (id: string) => Promise<void>;
 	updateScriptFromHtml: (
@@ -46,6 +50,8 @@ type ScriptStore = ScriptStoreProps & ScriptStoreActions;
 export const useScriptStore = create<ScriptStore>()((set, get) => ({
 	scripts: [],
 	activeScript: null,
+	activeScriptId: null,
+	editingScriptId: null,
 	isDbReady: false,
 	isLoading: false,
 	persistenceEnabled:
@@ -59,11 +65,13 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 
 		set({ isLoading: true });
 		try {
-			// Drafts are still full Script objects
 			const drafts = await pgliteStore.getAllDraftScripts();
+			const firstDraft = drafts[0] ?? null;
 			set({
 				scripts: drafts.map(({ html, lines, source, ...meta }) => meta),
 				isDbReady: true,
+				activeScriptId: firstDraft?.id ?? null,
+				activeScript: firstDraft,
 				isLoading: false,
 			});
 		} catch (error) {
@@ -133,10 +141,23 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 		if (get().persistenceEnabled) {
 			await pgliteStore.deleteDraftScript(id);
 		}
+
+		const wasActive = get().activeScriptId === id;
+		const wasEditing = get().editingScriptId === id;
+
 		set((state) => ({
 			scripts: state.scripts.filter((s) => s.id !== id),
-			activeScript: get().activeScript?.id === id ? null : get().activeScript,
+			activeScript: wasActive ? null : state.activeScript,
+			activeScriptId: wasActive ? null : state.activeScriptId,
+			editingScriptId: wasEditing ? null : state.editingScriptId,
 		}));
+
+		if (wasActive) {
+			const remaining = get().scripts;
+			if (remaining.length > 0) {
+				await get().selectScript(remaining[0].id);
+			}
+		}
 	},
 
 	removeScripts: async (ids) => {
@@ -144,12 +165,19 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 			await pgliteStore.deleteDraftScripts(ids);
 		}
 		const idsToRemove = new Set(ids);
+		const wasActive =
+			get().activeScriptId !== null &&
+			idsToRemove.has(get().activeScriptId!);
+
 		set((state) => ({
 			scripts: state.scripts.filter((s) => !idsToRemove.has(s.id)),
-			activeScript:
-				get().activeScript && idsToRemove.has(get().activeScript!.id)
+			activeScript: wasActive ? null : state.activeScript,
+			activeScriptId: wasActive ? null : state.activeScriptId,
+			editingScriptId:
+				state.editingScriptId !== null &&
+				idsToRemove.has(state.editingScriptId)
 					? null
-					: get().activeScript,
+					: state.editingScriptId,
 		}));
 	},
 
@@ -174,6 +202,17 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 	},
 
 	closeActiveScript: () => set({ activeScript: null }),
+
+	selectScript: async (id) => {
+		set({ activeScriptId: id });
+		if (id) {
+			await get().loadScript(id);
+		} else {
+			get().closeActiveScript();
+		}
+	},
+
+	setEditingScriptId: (id) => set({ editingScriptId: id }),
 
 	updateHtml: async (id, html) => {
 		const activeScript = get().activeScript;

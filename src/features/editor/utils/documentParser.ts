@@ -9,9 +9,9 @@ import type { DocFile } from "../hooks/useFileUpload";
 import { generateHtmlFromScript } from "./formatParsedLines";
 import { parseHtmlToDocument } from "./parseHtmlToDocument";
 
-const MAIN_PATTERN = /^(\d{1,2}(?::\d{1,2}){1,2})\s+([^:]+):\s*(.*)$/;
-const TIMESTAMP_START_PATTERN = /^(\d{1,2}(?::\d{1,2}){1,2})\s+(.+)$/;
-const NOTES_PATTERN = /\((.*?)\)/g;
+const MAIN_PATTERN = /^(\d{1,2}:[0-5]\d(?::[0-5]\d)?)\s+([^:]+):\s*(.*)$/;
+const TIMESTAMP_START_PATTERN = /^(\d{1,2}:[0-5]\d(?::[0-5]\d)?)\s+(.+)$/;
+
 const SPLIT_PATTERN = /(?:,|\s+(?:and|&))\s+|\//;
 const MARKER_PATTERN = /^(?:Scene|Scena|Blooper|Bloopers|Vlog|Vlogs)\b/i;
 
@@ -26,7 +26,7 @@ export const documentLineParser = (line: string): ParsedLine | null => {
 
 	if (line.indexOf("(") !== -1) {
 		const extracted: string[] = [];
-		cleanLine = line.replace(NOTES_PATTERN, (_, noteContent) => {
+		cleanLine = line.replace(/\((.*?)\)/g, (_, noteContent) => {
 			extracted.push(noteContent.trim());
 			return "";
 		});
@@ -35,7 +35,7 @@ export const documentLineParser = (line: string): ParsedLine | null => {
 
 	cleanLine = cleanLine.trim();
 	if (!cleanLine) {
-		return { type: "invalid", source: line };
+		return null;
 	}
 
 	const match = MAIN_PATTERN.exec(cleanLine);
@@ -158,7 +158,9 @@ export function reparseHtmlToScript(html: string): {
 	html: string;
 } {
 	const doc = parseHtmlToDocument(html);
-	const lines = parseLinesFromNodes(doc.body.querySelectorAll("p, h3"));
+	const lines = parseLinesFromNodes(
+		doc.body.querySelectorAll("p, h1, h2, h3, h4, h5, h6, blockquote, li, div"),
+	);
 	return {
 		lines,
 		overview: getScriptOverview(lines),
@@ -172,22 +174,25 @@ export async function processDocuments(
 	const scripts: Script[] = [];
 
 	for (const doc of documents) {
-		const lines = parseLinesFromNodes(
-			doc.document.querySelectorAll(
-				"p, h1, h2, h3, h4, h5, h6, blockquote, li, div",
-			),
-		);
-		scripts.push({
-			id: generateId(),
-			name: doc.name,
-			source: doc.document,
-			lines,
-			overview: getScriptOverview(lines),
-			html: generateHtmlFromScript(lines),
-			createdAt: new Date(),
-		});
+		try {
+			const lines = parseLinesFromNodes(
+				doc.document.querySelectorAll(
+					"p, h1, h2, h3, h4, h5, h6, blockquote, li, div",
+				),
+			);
+			scripts.push({
+				id: generateId(),
+				name: doc.name,
+				source: doc.document,
+				lines,
+				overview: getScriptOverview(lines),
+				html: generateHtmlFromScript(lines),
+				createdAt: new Date(),
+			});
+		} catch (err) {
+			console.error(`Failed to parse document "${doc.name}":`, err);
+		}
 
-		// Yield to main thread to prevent blocking
 		await new Promise((resolve) => setTimeout(resolve, 0));
 	}
 

@@ -113,6 +113,8 @@ describe("Scripts", () => {
 		useScriptStore.setState({
 			scripts: [],
 			activeScript: null,
+			activeScriptId: null,
+			editingScriptId: null,
 			isLoading: false,
 			persistenceEnabled: false,
 		});
@@ -135,6 +137,8 @@ describe("Scripts", () => {
 
 		useScriptStore.setState({
 			scripts: [mockScript],
+			activeScriptId: mockScript.id,
+			activeScript: mockScript,
 		});
 
 		render(
@@ -161,6 +165,7 @@ describe("Scripts", () => {
 
 		useScriptStore.setState({
 			scripts: [mockScript],
+			activeScriptId: mockScript.id,
 			activeScript: mockScript,
 		});
 

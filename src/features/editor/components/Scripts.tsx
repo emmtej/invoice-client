@@ -1,23 +1,20 @@
 import { Alert, Box, Flex } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { AlertCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { SaveToLibraryModal } from "@/features/storage";
 import { notify } from "@/utils/notifications";
 import { useFileUpload } from "../hooks/useFileUpload";
+import { usePasteHandler } from "../hooks/usePasteHandler";
+import { useScriptModals } from "../hooks/useScriptModals";
 import { useScriptStore } from "../store/scriptEditorStore";
-import { processDocuments, reparseHtmlToScript } from "../utils/documentParser";
+import { processDocuments } from "../utils/documentParser";
 import { ClearAllScriptsModal } from "./ClearAllScriptsModal";
 import { GettingStarted } from "./GettingStarted";
 import { ScriptEditor } from "./ScriptEditor";
 import { ScriptsLoading } from "./ScriptsLoading";
 import { WorkspaceExplorer } from "./WorkspaceExplorer";
 
-/**
- * Main Scripts Feature Component
- * Manages the collection of scripts, their selection, and the editor layout.
- */
 export default function Scripts() {
 	const {
 		docFiles,
@@ -31,12 +28,12 @@ export default function Scripts() {
 	const {
 		scripts,
 		activeScript,
+		activeScriptId,
 		addScripts,
 		removeScript,
 		removeScripts,
 		init,
-		loadScript,
-		closeActiveScript,
+		selectScript,
 		isLoading: isStoreLoading,
 		persistenceEnabled,
 		promoteScriptsToLibrary,
@@ -44,53 +41,34 @@ export default function Scripts() {
 		useShallow((s) => ({
 			scripts: s.scripts,
 			activeScript: s.activeScript,
+			activeScriptId: s.activeScriptId,
 			addScripts: s.addScripts,
 			removeScript: s.removeScript,
 			removeScripts: s.removeScripts,
 			init: s.init,
-			loadScript: s.loadScript,
-			closeActiveScript: s.closeActiveScript,
+			selectScript: s.selectScript,
 			isLoading: s.isLoading,
 			persistenceEnabled: s.persistenceEnabled,
 			promoteScriptsToLibrary: s.promoteScriptsToLibrary,
 		})),
 	);
 
-	// Initial store initialization
+	const [isProcessing, setIsProcessing] = useState(false);
+	const modals = useScriptModals();
+	const { pasteError, clearPasteError, handlePasteProcessed } =
+		usePasteHandler(scripts.length);
+
 	useEffect(() => {
 		init();
 	}, [init]);
 
-	// Local UI State
-	const [activeScriptId, setActiveScriptId] = useState<string | null>(null);
-	const [editingScriptId, setEditingScriptId] = useState<string | null>(null);
-	const [initialSelectDone, setInitialSelectDone] = useState(false);
-	const [pasteError, setPasteError] = useState<string | null>(null);
-	const [isProcessing, setIsProcessing] = useState(false);
-
-	/**
-	 * Logic: Load full script content when activeScriptId changes
-	 */
+	// Restore activeScript if cleared externally (e.g. booth editor modal close)
 	useEffect(() => {
-		if (activeScriptId) {
-			loadScript(activeScriptId);
-		} else {
-			closeActiveScript();
+		if (activeScriptId !== null && activeScript === null && !isStoreLoading) {
+			void selectScript(activeScriptId);
 		}
-	}, [activeScriptId, loadScript, closeActiveScript]);
+	}, [activeScriptId, activeScript, isStoreLoading, selectScript]);
 
-	const [
-		clearAllModalOpened,
-		{ open: openClearAllModal, close: closeClearAllModal },
-	] = useDisclosure(false);
-
-	const [saveModalOpened, { open: openSaveModal, close: closeSaveModal }] =
-		useDisclosure(false);
-
-	/**
-	 * Logic: File Processing
-	 * Converts uploaded DocFiles into Scripts and adds them to the store.
-	 */
 	useEffect(() => {
 		if (!docFiles || docFiles.length === 0) return;
 
@@ -99,114 +77,43 @@ export default function Scripts() {
 			try {
 				const processed = await processDocuments(docFiles);
 				await addScripts(processed);
-
 				if (processed.length > 0) {
-					setActiveScriptId(processed[0].id);
-					setInitialSelectDone(true);
+					await selectScript(processed[0].id);
 				}
-				reset(); // Clear temporary file state
+				reset();
 			} finally {
 				setIsProcessing(false);
 			}
 		};
 
 		handleProcessing();
-	}, [docFiles, addScripts, reset]);
+	}, [docFiles, addScripts, reset, selectScript]);
 
-	/**
-	 * Logic: Auto-selection Fallback
-	 * Ensures a script is selected if available.
-	 */
-	useEffect(() => {
-		if (
-			!initialSelectDone &&
-			scripts.length > 0 &&
-			activeScriptId === null &&
-			!docFiles.length
-		) {
-			setActiveScriptId(scripts[0].id);
-			setInitialSelectDone(true);
-		} else if (scripts.length === 0 && activeScriptId !== null) {
-			setActiveScriptId(null);
-			setInitialSelectDone(false);
-		}
-	}, [scripts, activeScriptId, docFiles.length, initialSelectDone]);
-
-	/**
-	 * Logic: Selection Sync
-	 * Handles cases where the active script is removed from the list.
-	 */
-	useEffect(() => {
-		if (activeScriptId !== null && scripts.length > 0) {
-			const exists = scripts.some((s) => s.id === activeScriptId);
-			if (!exists) {
-				setActiveScriptId(scripts[0].id);
-			}
-		}
-	}, [activeScriptId, scripts]);
-
-	// Handlers
 	const handleConfirmClearAll = useCallback(async () => {
 		const count = scripts.length;
 		await removeScripts(scripts.map((s) => s.id));
+		// Reset file upload state in case an upload was pending
 		reset();
-		setActiveScriptId(null);
-		setInitialSelectDone(false);
-		setEditingScriptId(null);
-		setPasteError(null);
-		closeClearAllModal();
+		clearPasteError();
+		modals.clearAll.close();
 		notify.success({
 			message: `Cleared ${count} ${count === 1 ? "draft" : "drafts"}`,
 		});
-	}, [scripts, removeScripts, reset, closeClearAllModal]);
+	}, [scripts, removeScripts, reset, clearPasteError, modals.clearAll]);
 
-	const handlePasteProcessed = useCallback(
-		(html: string) => {
-			const { lines, overview, html: parsedHtml } = reparseHtmlToScript(html);
+	const isBusy = isStoreLoading || isUploading || isProcessing;
 
-			if (lines.length === 0) {
-				const errorMsg =
-					"No billable dialogue or lines were found in the pasted content. Please check the format.";
-				setPasteError(errorMsg);
-				notify.error({ message: errorMsg });
-				return;
-			}
-
-			const newScript = {
-				id: `pasted-${Date.now()}`,
-				name: `Pasted Content ${scripts.length + 1}`,
-				source: document.implementation.createHTMLDocument(),
-				lines,
-				overview,
-				html: parsedHtml,
-				createdAt: new Date(),
-			};
-
-			addScripts([newScript]);
-			setActiveScriptId(newScript.id);
-			setPasteError(null);
-		},
-		[scripts.length, addScripts],
-	);
-
-	const handleSaveToStorage = useCallback(
-		async (ids: string[], folderId: string | null) => {
-			await promoteScriptsToLibrary(ids, folderId);
-		},
-		[promoteScriptsToLibrary],
-	);
-
-	if (isStoreLoading) {
-		return <ScriptsLoading persistenceEnabled={persistenceEnabled} />;
-	}
-
-	if (isUploading || isProcessing) {
+	if (isBusy) {
 		const message = isUploading
 			? `Uploading documents (${processedCount}/${totalCount})...`
-			: "Analyzing script structure...";
+			: isProcessing
+				? "Analyzing script structure..."
+				: undefined;
 		const subtext = isUploading
 			? "Converting Word documents to HTML"
-			: "Identifying dialogue and speakers";
+			: isProcessing
+				? "Identifying dialogue and speakers"
+				: undefined;
 
 		return (
 			<ScriptsLoading
@@ -228,7 +135,7 @@ export default function Scripts() {
 		>
 			<Flex flex={1} mih={0}>
 				{/* Main Editor Area */}
-				<Flex direction="column" flex={1} miw={0} bg="white">
+				<Flex direction="column" flex={1} miw={0} bg="transparent">
 					{pasteError && (
 						<Box px="lg" pt="md">
 							<Alert
@@ -236,19 +143,14 @@ export default function Scripts() {
 								title="Paste Error"
 								color="red"
 								withCloseButton
-								onClose={() => setPasteError(null)}
+								onClose={clearPasteError}
 							>
 								{pasteError}
 							</Alert>
 						</Box>
 					)}
 					{activeScript ? (
-						<ScriptEditor
-							script={activeScript}
-							isEditing={editingScriptId === activeScript.id}
-							onStartEdit={setEditingScriptId}
-							onStopEdit={() => setEditingScriptId(null)}
-						/>
+						<ScriptEditor script={activeScript} />
 					) : (
 						<GettingStarted
 							onFileChange={handleFileChange}
@@ -262,25 +164,25 @@ export default function Scripts() {
 					<WorkspaceExplorer
 						scripts={scripts}
 						activeScriptId={activeScriptId}
-						onSelect={setActiveScriptId}
+						onSelect={selectScript}
 						onRemove={removeScript}
-						onOpenSaveModal={openSaveModal}
-						onOpenClearAll={openClearAllModal}
+						onOpenSaveModal={modals.save.open}
+						onOpenClearAll={modals.clearAll.open}
 					/>
 				)}
 			</Flex>
 
 			<ClearAllScriptsModal
-				opened={clearAllModalOpened}
-				onClose={closeClearAllModal}
+				opened={modals.clearAll.opened}
+				onClose={modals.clearAll.close}
 				onConfirm={handleConfirmClearAll}
 			/>
 
 			<SaveToLibraryModal
-				opened={saveModalOpened}
-				onClose={closeSaveModal}
+				opened={modals.save.opened}
+				onClose={modals.save.close}
 				scripts={scripts}
-				onConfirm={handleSaveToStorage}
+				onConfirm={promoteScriptsToLibrary}
 			/>
 		</Flex>
 	);

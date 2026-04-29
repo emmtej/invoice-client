@@ -25,6 +25,8 @@ describe("scriptEditorStore", () => {
 		useScriptStore.setState({
 			scripts: [],
 			activeScript: null,
+			activeScriptId: null,
+			editingScriptId: null,
 			isDbReady: false,
 			isLoading: false,
 			persistenceEnabled: true,
