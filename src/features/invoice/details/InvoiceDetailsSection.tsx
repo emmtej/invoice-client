@@ -7,7 +7,6 @@ import {
 	useCombobox,
 } from "@mantine/core";
 import { Calendar } from "lucide-react";
-import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
 import { useInvoicePresetsStore } from "../store/invoicePresetsStore";
 
 interface InvoiceDetailsSectionProps {
@@ -35,17 +34,10 @@ export function InvoiceDetailsSection({
 	));
 
 	return (
-		<SurfaceCard
-			p="xl"
-			style={{
-				backgroundColor: "white",
-				border: "1px solid var(--mantine-color-gray-1)",
-			}}
-		>
-			<Stack gap="xl">
-				<Text size="xs" fw={700} c="gray.7" tt="uppercase" lts={1}>
-					INVOICE DETAILS
-				</Text>
+		<Stack gap="xl">
+			<Text size="xs" fw={700} c="sage.6" tt="uppercase" lts={1}>
+				INVOICE DETAILS
+			</Text>
 				<SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg" maw={800}>
 					<Combobox
 						store={combobox}
@@ -97,7 +89,6 @@ export function InvoiceDetailsSection({
 						})}
 					/>
 				</SimpleGrid>
-			</Stack>
-		</SurfaceCard>
+		</Stack>
 	);
 }

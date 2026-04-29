@@ -9,7 +9,6 @@ import {
 	TextInput,
 } from "@mantine/core";
 import { Pencil, Save, Star } from "lucide-react";
-import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
 import { ActiveProfileDisplay } from "./ActiveProfileDisplay";
 import {
 	getEmptyProfile,
@@ -58,18 +57,11 @@ export function ProfileSection({
 	const hasProfiles = profilesState.profiles.length > 0;
 
 	return (
-		<SurfaceCard
-			p="xl"
-			style={{
-				backgroundColor: "white",
-				border: "1px solid var(--mantine-color-gray-1)",
-			}}
-		>
-			<Stack gap="xl">
-				<Group justify="space-between" align="center">
-					<Text size="xs" fw={700} c="gray.7" tt="uppercase" lts={1}>
-						SENDER PROFILE
-					</Text>
+		<Stack gap="xl">
+			<Group justify="space-between" align="center">
+				<Text size="xs" fw={700} c="sage.6" tt="uppercase" lts={1}>
+					SENDER PROFILE
+				</Text>
 					{hasProfiles && !isEditingProfile && (
 						<Select
 							size="xs"
@@ -233,7 +225,6 @@ export function ProfileSection({
 						{profileSavedMessage}
 					</Text>
 				)}
-			</Stack>
-		</SurfaceCard>
+		</Stack>
 	);
 }

@@ -5,6 +5,7 @@ export type InvoiceProfile = {
 	firstName: string;
 	lastName: string;
 	email: string;
+	avatarUrl?: string;
 };
 
 export const profileSchema = z.object({
@@ -37,12 +38,14 @@ const profileStorageSchema = z.object({
 			label: z.string().default(""),
 			isDefault: z.boolean().default(false),
 			profile: z
-				.object({
-					firstName: z.string().default(""),
-					lastName: z.string().default(""),
-					email: z.string().default(""),
-				})
-				.default({ firstName: "", lastName: "", email: "" }),
+			.object({
+			firstName: z.string().default(""),
+			lastName: z.string().default(""),
+			email: z.string().default(""),
+			avatarUrl: z.string().optional(),
+			})
+			.default({ firstName: "", lastName: "", email: "" }),
+
 		}),
 	),
 	defaultProfileId: z.string().optional(),
@@ -78,6 +81,7 @@ export const getEmptyProfile = (): InvoiceProfile => ({
 	firstName: "",
 	lastName: "",
 	email: "",
+	avatarUrl: "",
 });
 
 export const createProfileWithMeta = (

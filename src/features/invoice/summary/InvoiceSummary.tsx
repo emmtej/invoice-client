@@ -51,21 +51,21 @@ export const InvoiceSummary = memo(
 								style={{
 									fontFamily: "var(--font-display)",
 									fontSize: isLivePreview ? "32px" : "48px",
-									color: "var(--mantine-color-studio-blue-9)",
+									color: "var(--mantine-color-forest-9)",
 								}}
 							>
 								{invoiceTitle || "Invoice"}
 							</Title>
-							<Text size="sm" fw={600} c="gray.6">
+							<Text size="sm" fw={600} c="sage.6">
 								DATE: {invoiceDate || getTodayDateString()}
 							</Text>
 						</Stack>
 						{profile && (
 							<Stack gap={2} align="flex-end">
-								<Text fw={800} size="sm" c="gray.9">
+								<Text fw={700} size="sm" c="forest.9">
 									{profile.firstName} {profile.lastName}
 								</Text>
-								<Text size="xs" c="gray.6">
+								<Text size="xs" c="sage.6">
 									{profile.email}
 								</Text>
 							</Stack>
@@ -76,53 +76,57 @@ export const InvoiceSummary = memo(
 					<Table
 						verticalSpacing="md"
 						horizontalSpacing="0"
-						className="border-t border-gray-100"
+						style={{ borderTop: "1px solid var(--mantine-color-sage-2)" }}
 					>
 						<Table.Thead>
 							<Table.Tr>
 								<Table.Th
 									style={{
-										color: "var(--mantine-color-gray-4)",
+										color: "var(--mantine-color-sage-6)",
 										fontSize: "10px",
 										fontWeight: 800,
 										textTransform: "uppercase",
 										letterSpacing: "1.5px",
+										borderBottom: "1px solid var(--mantine-color-sage-2)",
 									}}
 								>
 									Description
 								</Table.Th>
 								<Table.Th
 									style={{
-										color: "var(--mantine-color-gray-4)",
+										color: "var(--mantine-color-sage-6)",
 										fontSize: "10px",
 										fontWeight: 800,
 										textTransform: "uppercase",
 										letterSpacing: "1.5px",
 										textAlign: "right",
+										borderBottom: "1px solid var(--mantine-color-sage-2)",
 									}}
 								>
 									Qty
 								</Table.Th>
 								<Table.Th
 									style={{
-										color: "var(--mantine-color-gray-4)",
+										color: "var(--mantine-color-sage-6)",
 										fontSize: "10px",
 										fontWeight: 800,
 										textTransform: "uppercase",
 										letterSpacing: "1.5px",
 										textAlign: "right",
+										borderBottom: "1px solid var(--mantine-color-sage-2)",
 									}}
 								>
 									Rate
 								</Table.Th>
 								<Table.Th
 									style={{
-										color: "var(--mantine-color-gray-4)",
+										color: "var(--mantine-color-sage-6)",
 										fontSize: "10px",
 										fontWeight: 800,
 										textTransform: "uppercase",
 										letterSpacing: "1.5px",
 										textAlign: "right",
+										borderBottom: "1px solid var(--mantine-color-sage-2)",
 									}}
 								>
 									Total
@@ -135,14 +139,14 @@ export const InvoiceSummary = memo(
 									<Table.Tr
 										key={sub.id}
 										style={{
-											borderBottom: "1px solid var(--mantine-color-gray-0)",
+											borderBottom: "1px solid var(--mantine-color-forest-0)",
 										}}
 									>
 										<Table.Td>
-											<Text size="sm" fw={700} c="gray.9">
+											<Text size="sm" fw={700} c="forest.9">
 												{sub.label || item.name}
 											</Text>
-											<Text size="xs" c="gray.5" mt={2}>
+											<Text size="xs" c="sage.6" mt={2}>
 												{sub.scriptName}
 											</Text>
 										</Table.Td>
@@ -160,7 +164,7 @@ export const InvoiceSummary = memo(
 											<Text
 												size="sm"
 												fw={800}
-												c="gray.9"
+												c="forest.9"
 												className="tabular-nums"
 											>
 												${sub.amount.toFixed(2)}
@@ -172,7 +176,7 @@ export const InvoiceSummary = memo(
 							{items.length === 0 && (
 								<Table.Tr>
 									<Table.Td colSpan={4} py={48}>
-										<Text size="sm" c="gray.4" ta="center" fs="italic">
+										<Text size="sm" c="sage.3" ta="center" fs="italic">
 											No items added to invoice yet.
 										</Text>
 									</Table.Td>
@@ -184,19 +188,19 @@ export const InvoiceSummary = memo(
 					{/* Totals Section */}
 					<Stack gap="xs" align="flex-end" mt="xl">
 						<Group gap={48}>
-							<Text size="xs" fw={800} c="gray.5" tt="uppercase" lts={1.5}>
+							<Text size="xs" fw={800} c="sage.5" tt="uppercase" lts={1.5}>
 								Subtotal
 							</Text>
 							<Text size="sm" fw={700} className="tabular-nums">
 								${totalAmount.toFixed(2)}
 							</Text>
 						</Group>
-						<Box h={1} w={150} bg="gray.1" my="sm" />
+						<Box h={1} w={150} bg="sage.1" my="sm" />
 						<Group gap={48}>
 							<Text
 								size="sm"
 								fw={800}
-								c="studio-blue.9"
+								c="forest.9"
 								tt="uppercase"
 								lts={1.5}
 							>
@@ -205,7 +209,7 @@ export const InvoiceSummary = memo(
 							<Text
 								size={isLivePreview ? "24px" : "32px"}
 								fw={900}
-								c="studio-blue.9"
+								c="forest.9"
 								className="tabular-nums tracking-tighter"
 							>
 								${totalAmount.toFixed(2)}
@@ -217,11 +221,11 @@ export const InvoiceSummary = memo(
 					<Box
 						mt={64}
 						style={{
-							borderTop: "1px solid var(--mantine-color-gray-1)",
+							borderTop: "1px solid var(--mantine-color-sage-1)",
 							paddingTop: "24px",
 						}}
 					>
-						<Text size="xs" c="gray.4" fw={500} ta="center" lts={0.5}>
+						<Text size="xs" c="sage.4" fw={500} ta="center" lts={0.5}>
 							Thank you for your business. Please remit payment within 30 days.
 						</Text>
 					</Box>

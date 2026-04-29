@@ -1,4 +1,5 @@
-import { Box, Button, Flex, Group, Stack, Text } from "@mantine/core";
+import { Box, Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
+import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -14,6 +15,27 @@ import {
 import { InvoiceItemAdder } from "./items";
 import { ProfileSection, useProfileManager } from "./profile";
 import { InvoiceSummary } from "./summary";
+
+const containerVariants = {
+	hidden: { opacity: 0 },
+	visible: {
+		opacity: 1,
+		transition: {
+			staggerChildren: 0.2,
+		},
+	},
+};
+
+const itemVariants = {
+	hidden: { opacity: 0, y: 20 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		transition: {
+			duration: 0.7,
+		},
+	},
+};
 
 export default function InvoiceView() {
 	const { invoice, addEmptyItem } = useInvoiceStore(
@@ -50,17 +72,28 @@ export default function InvoiceView() {
 	const hasItems = invoice.items.length > 0;
 
 	return (
-		<Flex direction="column" gap="xl" mih="100%">
-			<Stack gap={4} mb="md">
-				<PageTitle>New Invoice</PageTitle>
-				<Text size="lg" c="dimmed" className="page-subtitle">
-					Create a professional billing document for your voice-over projects.
-				</Text>
+		<motion.div
+			initial="hidden"
+			animate="visible"
+			variants={containerVariants}
+			style={{ minHeight: "100%" }}
+		>
+			<Stack gap={4} mb="xl">
+				<motion.div variants={itemVariants}>
+					<PageTitle>
+						New <span style={{ fontStyle: "italic" }}>Invoice</span>
+					</PageTitle>
+				</motion.div>
+				<motion.div variants={itemVariants}>
+					<Text size="lg" className="page-subtitle">
+						Create a professional billing document for your voice-over projects.
+					</Text>
+				</motion.div>
 			</Stack>
 
 			<Flex
 				direction={{ base: "column", lg: "row" }}
-				gap={48}
+				gap={64}
 				align="flex-start"
 				flex={1}
 			>
@@ -68,63 +101,71 @@ export default function InvoiceView() {
 				<Box flex={1} maw={{ lg: 800 }} w="100%">
 					<Stack gap={48}>
 						{/* Step 1: Profile */}
-						<Box>
-							<Group gap="xs" mb="lg">
-								<Text fw={800} size="xl" c="studio-blue.7" opacity={0.5}>
-									01
-								</Text>
-								<Text fw={800} size="xl">
-									Sender Profile
-								</Text>
-							</Group>
-							<ProfileSection {...profileManager} />
-						</Box>
+						<motion.div variants={itemVariants}>
+							<Stack gap="xl">
+								<Group gap="xs">
+									<Text fw={800} size="xl" c="sage.6" opacity={0.5}>
+										01
+									</Text>
+									<Text fw={800} size="xl">
+										Sender Profile
+									</Text>
+								</Group>
+								<Paper p="xl">
+									<ProfileSection {...profileManager} />
+								</Paper>
+							</Stack>
+						</motion.div>
 
 						{/* Step 2: Details */}
-						<Box>
-							<Group gap="xs" mb="lg">
-								<Text fw={800} size="xl" c="studio-blue.7" opacity={0.5}>
-									02
-								</Text>
-								<Text fw={800} size="xl">
-									Invoice Details
-								</Text>
-							</Group>
-							<InvoiceDetailsSection
-								invoiceTitle={invoiceTitle}
-								setInvoiceTitle={setInvoiceTitle}
-								invoiceDate={invoiceDate}
-								setInvoiceDate={setInvoiceDate}
-							/>
-						</Box>
+						<motion.div variants={itemVariants} className="md:translate-y-8">
+							<Stack gap="xl">
+								<Group gap="xs">
+									<Text fw={800} size="xl" c="sage.6" opacity={0.5}>
+										02
+									</Text>
+									<Text fw={800} size="xl">
+										Invoice Details
+									</Text>
+								</Group>
+								<Paper p="xl">
+									<InvoiceDetailsSection
+										invoiceTitle={invoiceTitle}
+										setInvoiceTitle={setInvoiceTitle}
+										invoiceDate={invoiceDate}
+										setInvoiceDate={setInvoiceDate}
+									/>
+								</Paper>
+							</Stack>
+						</motion.div>
 
 						{/* Step 3: Line Items */}
-						<Box>
-							<Group gap="xs" mb="lg">
-								<Text fw={800} size="xl" c="studio-blue.7" opacity={0.5}>
-									03
-								</Text>
-								<Text fw={800} size="xl">
-									Line Items
-								</Text>
-							</Group>
+						<motion.div variants={itemVariants}>
 							<Stack gap="xl">
-								<InvoiceItemAdder
-									newItemName={newItemName}
-									setNewItemName={setNewItemName}
-									handleAddItem={handleAddItem}
-								/>
-								<Stack gap="xl">
-									{invoice.items.map((item) => (
-										<InvoiceItemCard key={item.id} item={item} />
-									))}
-								</Stack>
+								<Group gap="xs">
+									<Text fw={800} size="xl" c="sage.6" opacity={0.5}>
+										03
+									</Text>
+									<Text fw={800} size="xl">
+										Line Items
+									</Text>
+								</Group>
+								<Paper p="xl">
+									<Stack gap="xl">
+										<InvoiceItemAdder
+											newItemName={newItemName}
+											setNewItemName={setNewItemName}
+											handleAddItem={handleAddItem}
+										/>
+										<Stack gap="xl">
+											{invoice.items.map((item) => (
+												<InvoiceItemCard key={item.id} item={item} />
+											))}
+										</Stack>
+									</Stack>
+								</Paper>
 							</Stack>
-						</Box>
-
-						<Box pt="xl" mb={100}>
-							{/* Large action moved to sidebar for better UX focus */}
-						</Box>
+						</motion.div>
 					</Stack>
 				</Box>
 
@@ -138,62 +179,60 @@ export default function InvoiceView() {
 						alignSelf: "flex-start",
 					}}
 				>
-					<Stack gap="xl">
-						<Stack gap="md">
-							<Text
-								fw={700}
-								size="xs"
-								c="gray.7"
-								tt="uppercase"
-								lts={1}
-								ta="center"
-							>
-								Live Preview
-							</Text>
-							<Box
-								bg="white"
-								style={{
-									boxShadow: "0 20px 50px rgba(0,0,0,0.1)",
-									minHeight: "600px",
-									borderRadius: "2px",
-								}}
-							>
-								<InvoiceSummary
-									profile={profileManager.activeProfileForSummary}
-									invoiceTitle={invoiceTitle}
-									invoiceDate={invoiceDate}
-									isLivePreview
-								/>
-							</Box>
-						</Stack>
+					<motion.div variants={itemVariants}>
+						<Stack gap="xl">
+							<Stack gap="md">
+								<Text
+									fw={700}
+									size="xs"
+									c="sage.6"
+									tt="uppercase"
+									lts={1}
+									ta="center"
+								>
+									Live Preview
+								</Text>
+								<Box
+									bg="white"
+									style={{
+										boxShadow:
+											"0 20px 50px rgba(45, 58, 49, 0.1), 0 10px 20px rgba(45, 58, 49, 0.05), 0 5px 10px rgba(45, 58, 49, 0.02)",
+										minHeight: "600px",
+										borderRadius: "4px",
+									}}
+								>
+									<InvoiceSummary
+										profile={profileManager.activeProfileForSummary}
+										invoiceTitle={invoiceTitle}
+										invoiceDate={invoiceDate}
+										isLivePreview
+									/>
+								</Box>
+							</Stack>
 
-						<Group grow gap="md">
-							<Button
-								variant="light"
-								color="studio-blue"
-								size="lg"
-								radius="md"
-								fw={800}
-								disabled={!hasItems}
-							>
-								Full Preview
-							</Button>
-							<Button
-								variant="filled"
-								color="studio-blue"
-								size="lg"
-								radius="md"
-								leftSection={<FileText size={20} />}
-								disabled={!hasItems}
-								className="shadow-md"
-								fw={800}
-							>
-								Export PDF
-							</Button>
-						</Group>
-					</Stack>
+							<Group grow gap="md">
+								<Button
+									variant="outline"
+									color="forest"
+									size="lg"
+									disabled={!hasItems}
+								>
+									Full Preview
+								</Button>
+								<Button
+									variant="filled"
+									color="forest"
+									size="lg"
+									leftSection={<FileText size={20} />}
+									disabled={!hasItems}
+								>
+									Export PDF
+								</Button>
+							</Group>
+						</Stack>
+					</motion.div>
 				</Box>
 			</Flex>
-		</Flex>
+		</motion.div>
 	);
 }

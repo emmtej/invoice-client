@@ -46,8 +46,6 @@ interface InvoicePresetsActions {
 	addTitlePreset: (title: string) => void;
 	updateTitlePreset: (id: string, title: string) => void;
 	deleteTitlePreset: (id: string) => void;
-
-	_migrateFromOldStorage: () => void;
 }
 
 type InvoicePresetsStore = InvoicePresetsState & InvoicePresetsActions;
@@ -167,41 +165,6 @@ export const useInvoicePresetsStore = create<InvoicePresetsStore>()(
 				set((state) => ({
 					titlePresets: state.titlePresets.filter((p) => p.id !== id),
 				})),
-
-			// Migration helper
-			_migrateFromOldStorage: () => {
-				const { ratePresets, profilePresets } =
-					useInvoicePresetsStore.getState();
-				if (ratePresets.length > 0 || profilePresets.length > 0) return;
-
-				const oldRates = localStorage.getItem("invoice-subitem-presets");
-				const oldProfiles = localStorage.getItem("invoice-profiles");
-
-				if (oldRates) {
-					try {
-						const parsed = JSON.parse(oldRates);
-						if (Array.isArray(parsed)) {
-							set({ ratePresets: parsed });
-						}
-					} catch (e) {
-						console.error("Failed to migrate old rate presets", e);
-					}
-				}
-
-				if (oldProfiles) {
-					try {
-						const parsed = JSON.parse(oldProfiles);
-						if (parsed && Array.isArray(parsed.profiles)) {
-							set({
-								profilePresets: parsed.profiles,
-								defaultProfileId: parsed.defaultProfileId || null,
-							});
-						}
-					} catch (e) {
-						console.error("Failed to migrate old profile presets", e);
-					}
-				}
-			},
 		}),
 		{
 			name: "invoice-presets-storage",

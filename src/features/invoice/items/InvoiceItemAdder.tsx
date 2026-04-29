@@ -1,6 +1,5 @@
 import { Box, Button, Group, Stack, Text, TextInput } from "@mantine/core";
 import { Plus } from "lucide-react";
-import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
 
 interface InvoiceItemAdderProps {
 	newItemName: string;
@@ -14,18 +13,11 @@ export function InvoiceItemAdder({
 	handleAddItem,
 }: InvoiceItemAdderProps) {
 	return (
-		<SurfaceCard
-			p="xl"
-			style={{
-				backgroundColor: "white",
-				border: "1px solid var(--mantine-color-gray-1)",
-			}}
-		>
-			<Stack gap="lg">
-				<Box>
-					<Text fw={800} size="lg" c="gray.9">
-						Add Project Category
-					</Text>
+		<Stack gap="lg">
+			<Box>
+				<Text fw={800} size="lg" c="forest.9">
+					Add Project Category
+				</Text>
 					<Text size="sm" c="gray.7" mt={4}>
 						Group your scripts into categories like "Commercials", "E-learning",
 						or by Episode.
@@ -58,7 +50,6 @@ export function InvoiceItemAdder({
 						Add Category
 					</Button>
 				</Group>
-			</Stack>
-		</SurfaceCard>
+		</Stack>
 	);
 }
