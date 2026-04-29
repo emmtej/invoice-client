@@ -47,7 +47,7 @@ export function LandingHero() {
 
 						{/* Overlay for text contrast - matching dark foam color */}
 						<Overlay
-							gradient="linear-gradient(90deg, #1A1B1E 35%, rgba(26, 27, 30, 0.8) 50%, rgba(26, 27, 30, 0) 100%)"
+							gradient="linear-gradient(90deg, rgba(26, 27, 30, 1) 0%, rgba(26, 27, 30, 0.9) 40%, rgba(26, 27, 30, 0) 100%)"
 							zIndex={2}
 						/>
 
@@ -67,7 +67,7 @@ export function LandingHero() {
 										Professional Invoice
 									</Title>
 								</div>
-								<Text c="white" size="md" fw={400} style={{ opacity: 0.8 }}>
+								<Text c="white" size="md" fw={400} style={{ opacity: 0.9 }}>
 									InVoice handles the word counts so you can focus on the
 									performance. Automated parsing for DOCX and text scripts.
 								</Text>
@@ -77,7 +77,8 @@ export function LandingHero() {
 										to="/register"
 										size="md"
 										radius="sm"
-										color="wave"
+										variant="filled"
+										color="studio-blue"
 										onMouseEnter={() => initDb()}
 									>
 										Get Started
@@ -87,9 +88,17 @@ export function LandingHero() {
 										to="/editor"
 										size="md"
 										radius="sm"
-										variant="white"
-										color="gray"
+										variant="outline"
 										onMouseEnter={() => initDb()}
+										styles={{
+											root: {
+												color: "white",
+												borderColor: "white",
+												"&:hover": {
+													backgroundColor: "rgba(255, 255, 255, 0.1)",
+												},
+											},
+										}}
 									>
 										Try Editor
 									</Button>

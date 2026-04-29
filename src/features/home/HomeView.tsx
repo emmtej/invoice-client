@@ -1,6 +1,5 @@
 import {
 	Button,
-	Grid,
 	Group,
 	Paper,
 	SimpleGrid,
@@ -55,51 +54,53 @@ const tools = [
 		description: "Parse scripts and track dialogue",
 		icon: Pencil,
 		to: "/editor",
-		color: "wave" as const,
+		color: "on-air-red" as const,
 	},
 	{
 		title: "Invoices",
 		description: "Build and export invoice lines",
 		icon: Receipt,
 		to: "/invoice",
-		color: "wave" as const,
+		color: "on-air-red" as const,
 	},
 	{
 		title: "Dashboard",
 		description: "Your hub for recent activity",
 		icon: LayoutDashboard,
 		to: "/dashboard",
-		color: "gray" as const,
+		color: "brand-dark" as const,
 	},
 	{
 		title: "Profile",
 		description: "Account and defaults",
 		icon: User,
 		to: "/profile",
-		color: "studio" as const,
+		color: "studio-blue" as const,
 	},
 ];
 
 export default function HomeView() {
-	const featureIcons: Array<"studio" | "wave" | "gray"> = [
-		"wave",
-		"wave",
-		"gray",
-		"studio",
+	const featureIcons: Array<"studio-blue" | "on-air-red" | "brand-dark"> = [
+		"on-air-red",
+		"on-air-red",
+		"brand-dark",
+		"studio-blue",
 	];
 
 	const featureItems = features.map((feature, i) => (
-		<div key={feature.title}>
-			<ThemeIcon size={44} variant="light" color={featureIcons[i] ?? "wave"}>
-				<feature.icon size={26} strokeWidth={1.5} />
+		<Stack key={feature.title} gap="sm">
+			<ThemeIcon size={48} variant="light" color={featureIcons[i] ?? "on-air-red"}>
+				<feature.icon size={26} strokeWidth={2} />
 			</ThemeIcon>
-			<Text fz="lg" mt="sm" fw={500}>
-				{feature.title}
-			</Text>
-			<Text c="gray.5" fz="sm" lh={1.6}>
-				{feature.description}
-			</Text>
-		</div>
+			<div>
+				<Text fz="lg" fw={700} c="brand-dark.6">
+					{feature.title}
+				</Text>
+				<Text c="brand-dark.4" fz="sm" lh={1.6}>
+					{feature.description}
+				</Text>
+			</div>
+		</Stack>
 	));
 
 	const toolItems = tools.map((tool) => (
@@ -108,25 +109,23 @@ export default function HomeView() {
 			component={Link}
 			to={tool.to}
 			withBorder
-			p="md"
+			p="lg"
 			onMouseEnter={() => initDb()}
+			className="interactive-card"
 			style={{
-				transition: "transform 200ms ease, box-shadow 200ms ease",
-				cursor: "pointer",
 				textDecoration: "none",
 				color: "inherit",
 			}}
-			className="hover:-translate-y-1 hover:shadow-md"
 		>
 			<Group wrap="nowrap">
 				<ThemeIcon color={tool.color} variant="light" size="xl">
 					<tool.icon size={24} />
 				</ThemeIcon>
 				<div>
-					<Text fw={600} size="sm">
+					<Text fw={700} size="sm" c="brand-dark.6">
 						{tool.title}
 					</Text>
-					<Text size="xs" c="gray.5">
+					<Text size="xs" c="brand-dark.4">
 						{tool.description}
 					</Text>
 				</div>
@@ -135,7 +134,7 @@ export default function HomeView() {
 	));
 
 	return (
-		<Stack gap={100} pb={40}>
+		<Stack gap={100} py={60}>
 			<LandingHero />
 
 			<section>
@@ -145,10 +144,11 @@ export default function HomeView() {
 							order={2}
 							size="32px"
 							className="tracking-tight text-balance"
+							c="brand-dark.6"
 						>
 							Quick access
 						</Title>
-						<Text c="gray.5" size="lg" className="text-pretty">
+						<Text c="brand-dark.4" size="lg" className="text-pretty">
 							Jump straight into your workflow
 						</Text>
 					</div>
@@ -159,39 +159,42 @@ export default function HomeView() {
 			</section>
 
 			<section>
-				<Grid gutter={60}>
-					<Grid.Col span={{ base: 12, md: 5 }}>
+				<Stack gap={60}>
+					<div className="text-center md:max-w-2xl md:mx-auto">
 						<Title
 							order={2}
 							size="32px"
 							className="tracking-tight text-balance"
 							mb="md"
+							c="brand-dark.6"
 						>
 							Everything you need to bill with confidence
 						</Title>
-						<Text c="gray.5" mb="lg" size="lg" className="text-pretty">
+						<Text c="brand-dark.4" size="lg" className="text-pretty">
 							Whether you are recording from a home booth or a studio session,
 							InVoice keeps your script data and invoice math aligned—without
 							switching between a dozen browser tabs.
 						</Text>
+					</div>
 
+					<SimpleGrid cols={{ base: 1, sm: 2 }} spacing={60}>
+						{featureItems}
+					</SimpleGrid>
+
+					<div className="text-center">
 						<Button
 							variant="outline"
-							color="wave"
-							size="md"
+							size="lg"
 							component={Link}
 							to="/dashboard"
 						>
 							View dashboard
 						</Button>
-					</Grid.Col>
-					<Grid.Col span={{ base: 12, md: 7 }}>
-						<SimpleGrid cols={{ base: 1, sm: 2 }} spacing={40}>
-							{featureItems}
-						</SimpleGrid>
-					</Grid.Col>
-				</Grid>
+					</div>
+				</Stack>
 			</section>
 		</Stack>
 	);
 }
+
+
