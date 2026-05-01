@@ -6,18 +6,13 @@ import {
 } from "@/features/storage/pgliteClient";
 import { scriptContents, scripts } from "@/features/storage/schema";
 import type { ScriptSummary } from "@/features/storage/types";
-import type { Script } from "@/types/Script";
+import type { Script, ScriptOverview } from "@/types/Script";
 
 function mapToScriptSummary(row: {
 	id: string;
 	name: string;
 	folderId: string | null;
-	overview: {
-		totalLines: number;
-		characterCount: number;
-		wordCount: number;
-		estimatedReadingTime: string;
-	};
+	overview: ScriptOverview;
 	createdAt: Date;
 	lastAccessedAt: Date | null;
 }): ScriptSummary {

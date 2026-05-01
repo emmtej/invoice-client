@@ -48,7 +48,7 @@ export const useScriptsUiStore = create<ScriptsUiStore>()((set, get) => ({
 			const script = await scriptsQueries.getScriptById(scriptId);
 			set({ selectedScript: script, isPreviewLoading: false });
 			if (script) {
-				scriptsQueries.touchScript(scriptId); // fire-and-forget
+				void scriptsQueries.touchScript(scriptId);
 			}
 		} catch (error) {
 			console.error("Failed to load script preview:", error);

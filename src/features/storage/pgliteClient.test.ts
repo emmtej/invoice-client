@@ -8,6 +8,10 @@ vi.mock("@electric-sql/pglite", () => ({
 	PGlite: { create: mockCreate },
 }));
 
+vi.mock("./runMigrations", () => ({
+	runMigrations: vi.fn().mockResolvedValue(undefined),
+}));
+
 import { getDb, getDrizzleDb, initDb, resetDb } from "./pgliteClient";
 
 describe("pgliteClient", () => {
