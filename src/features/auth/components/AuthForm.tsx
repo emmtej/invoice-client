@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
+import { Button, Group, TextInput } from "@mantine/core";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -56,12 +56,18 @@ export function LoginFields() {
 					type="email"
 					placeholder="Email"
 					size="md"
+					variant="unstyled"
 					{...register("email")}
 				/>
 			</FormField>
 
 			<FormField label="Password" error={errors.password?.message} required>
-				<PasswordInput type="password" size="md" {...register("password")} />
+				<TextInput
+					type="password"
+					size="md"
+					variant="unstyled"
+					{...register("password")}
+				/>
 			</FormField>
 
 			<ErrorMessage message={errors.root?.message} />
@@ -138,6 +144,7 @@ export function RegisterFields() {
 						type="text"
 						placeholder="John"
 						size="md"
+						variant="unstyled"
 						{...register("firstname")}
 					/>
 				</FormField>
@@ -146,6 +153,7 @@ export function RegisterFields() {
 						type="text"
 						placeholder="Smith"
 						size="md"
+						variant="unstyled"
 						{...register("lastname")}
 					/>
 				</FormField>
@@ -155,6 +163,7 @@ export function RegisterFields() {
 					type="email"
 					placeholder="Email"
 					size="md"
+					variant="unstyled"
 					{...register("email")}
 				/>
 			</FormField>
@@ -164,13 +173,19 @@ export function RegisterFields() {
 				required
 				mb="sm"
 			>
-				<TextInput type="email" size="md" {...register("confirmEmail")} />
+				<TextInput
+					type="email"
+					size="md"
+					variant="unstyled"
+					{...register("confirmEmail")}
+				/>
 			</FormField>
 			<Group grow gap="md" mb="sm">
 				<FormField label="Password" error={errors.password?.message} required>
-					<PasswordInput
+					<TextInput
 						type="password"
 						size="md"
+						variant="unstyled"
 						{...register("password")}
 						placeholder="8 to 128 chars"
 					/>
@@ -180,9 +195,10 @@ export function RegisterFields() {
 					error={errors.confirmPassword?.message}
 					required
 				>
-					<PasswordInput
+					<TextInput
 						type="password"
 						size="md"
+						variant="unstyled"
 						{...register("confirmPassword")}
 					/>
 				</FormField>
