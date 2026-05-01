@@ -3,6 +3,7 @@
  */
 
 import { MantineProvider } from "@mantine/core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -31,7 +32,14 @@ globalThis.ResizeObserver = vi.fn().mockImplementation(() => ({
 }));
 
 function wrap(ui: ReactElement) {
-	return <MantineProvider theme={appTheme}>{ui}</MantineProvider>;
+	const queryClient = new QueryClient({
+		defaultOptions: { queries: { retry: false } },
+	});
+	return (
+		<QueryClientProvider client={queryClient}>
+			<MantineProvider theme={appTheme}>{ui}</MantineProvider>
+		</QueryClientProvider>
+	);
 }
 
 afterEach(() => {
@@ -71,6 +79,8 @@ describe("InvoiceItemCard", () => {
 		const emptyItem: InvoiceItem = { ...mockItem, subitems: [] };
 		render(wrap(<InvoiceItemCard item={emptyItem} />));
 
-		expect(screen.getByText("No sub-items added yet.")).toBeTruthy();
+		expect(
+			screen.getByText("No line items added to this category yet."),
+		).toBeTruthy();
 	});
 });
