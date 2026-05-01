@@ -13,7 +13,7 @@ ENV CLIENT_PORT=$CLIENT_PORT
 COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 # Copy source code
 COPY . .

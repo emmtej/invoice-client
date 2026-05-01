@@ -5,6 +5,15 @@ const fontSans =
 	'"Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const fontDisplay = '"Playfair Display", serif';
 
+export type BrandColor =
+	| "forest"
+	| "sage"
+	| "terracotta"
+	| "wave"
+	| "studio"
+	| "on-air-red"
+	| "brand-dark";
+
 const forest: MantineColorsTuple = [
 	"#f2f4f2",
 	"#e4e8e5",
@@ -44,6 +53,58 @@ const terracotta: MantineColorsTuple = [
 	"#986150",
 ];
 
+const wave: MantineColorsTuple = [
+	"#e0f7f7",
+	"#b3ebeb",
+	"#80dcdc",
+	"#4dcdcd",
+	"#26bebe",
+	"#00adad", // 5: Wave Base
+	"#009898",
+	"#007f7f",
+	"#006464",
+	"#004a4a",
+];
+
+const studio: MantineColorsTuple = [
+	"#f0f4ff",
+	"#d6e0ff",
+	"#adc1ff",
+	"#82a0ff",
+	"#5c83ff",
+	"#3a6aff", // 5: Studio Base
+	"#2557e6",
+	"#1844cc",
+	"#0e32a3",
+	"#072080",
+];
+
+const onAirRed: MantineColorsTuple = [
+	"#fff1f0",
+	"#ffd9d6",
+	"#ffb0a8",
+	"#ff8478",
+	"#ff5d4f",
+	"#ff3d2e", // 5: On-Air Base — recording indicator
+	"#e62a1c",
+	"#bf1f13",
+	"#99170d",
+	"#7a1109",
+];
+
+const brandDark: MantineColorsTuple = [
+	"#f4f5f4",
+	"#e6e8e6",
+	"#c8ccca",
+	"#a4abaa", // 3
+	"#7c8584", // 4: secondary body text
+	"#5b6463",
+	"#3f4847", // 6: primary heading text
+	"#2d3534",
+	"#1f2625",
+	"#13191a",
+];
+
 export const appTheme = createTheme({
 	primaryColor: "forest",
 	primaryShade: 9,
@@ -51,6 +112,10 @@ export const appTheme = createTheme({
 		forest,
 		sage,
 		terracotta,
+		wave,
+		studio,
+		"on-air-red": onAirRed,
+		"brand-dark": brandDark,
 	},
 	black: "#2D3A31", // Forest
 	white: "#FFFFFF",
@@ -138,6 +203,10 @@ export const appTheme = createTheme({
 				th: {
 					color: "var(--mantine-color-sage-6)",
 					borderBottom: "1px solid #E6E2DA",
+					fontSize: "11px",
+					fontWeight: 800,
+					textTransform: "uppercase",
+					letterSpacing: "1px",
 				},
 				td: {
 					borderBottom: "1px solid #F2F4F2",

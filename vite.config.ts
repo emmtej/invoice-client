@@ -1,7 +1,9 @@
 import { fileURLToPath, URL } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, loadEnv } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
@@ -10,13 +12,15 @@ export default defineConfig(({ mode }) => {
 
 	const SERVER_PORT = Number(env.CLIENT_PORT);
 
-	if (!SERVER_PORT) {
+	// Only the dev server needs a port; `vite build` (CI, Docker) does not.
+	if (mode === "development" && !SERVER_PORT) {
 		throw new Error("No valid port found in .env.local (CLIENT_PORT)");
 	}
 
 	return {
 		plugins: [
-			devtools(),
+			TanStackRouterVite(),
+			...(mode === "development" ? [devtools()] : []),
 			viteReact({
 				babel: {
 					plugins: ["babel-plugin-react-compiler"],
@@ -29,20 +33,11 @@ export default defineConfig(({ mode }) => {
 				avif: { quality: 70 },
 			}),
 			tailwindcss(),
-			{
-				name: "import-meta-resolve-polyfill",
-				transform(code, _id) {
-					if (code.includes("import.meta.resolve")) {
-						return {
-							code: code.replace(
-								/import\.meta\.resolve/g,
-								"((s, p) => new URL(s, p || import.meta.url).href)",
-							),
-							map: null,
-						};
-					}
-				},
-			},
+			visualizer({
+				filename: "dist/stats.html",
+				gzipSize: true,
+				brotliSize: true,
+			}),
 		],
 		optimizeDeps: {
 			exclude: ["@electric-sql/pglite"],
