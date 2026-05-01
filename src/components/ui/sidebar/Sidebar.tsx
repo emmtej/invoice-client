@@ -1,4 +1,5 @@
 import { Box, ScrollArea } from "@mantine/core";
+import type { LucideIcon } from "lucide-react";
 import { MENU } from "@/config/menu";
 import { useUserStore } from "@/store/userStore";
 import { LinksGroup } from "./NavLinksGroup";
@@ -7,11 +8,13 @@ import { UserButton } from "./UserButton";
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 	const user = useUserStore((store) => store.user);
 
-	const links = MENU.filter((item) => item.icon).map((item) => (
+	const links = MENU.filter(
+		(item): item is typeof item & { icon: LucideIcon } => item.icon != null,
+	).map((item) => (
 		<LinksGroup
 			key={item.path || item.label}
 			label={item.label}
-			icon={item.icon!}
+			icon={item.icon}
 			href={item.path}
 			initiallyOpened={item.initiallyOpened ?? false}
 			links={item.children?.map((child) => ({

@@ -23,7 +23,7 @@ export function LoginFields() {
 		resolver: zodResolver(loginSchema),
 	});
 
-	const { login } = useUserStore((store) => store);
+	const login = useUserStore((store) => store.login);
 	const navigate = useNavigate();
 	const isMountedRef = useRef(true);
 

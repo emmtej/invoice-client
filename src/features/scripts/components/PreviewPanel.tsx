@@ -80,7 +80,7 @@ export function PreviewPanel({
 }: PreviewPanelProps) {
 	const navigate = useNavigate();
 
-	const handleEdit = () => {
+	const handleOpenInEditor = () => {
 		if (!script) return;
 		useScriptStore.getState().addScripts([script]);
 		void navigate({ to: "/editor" });
