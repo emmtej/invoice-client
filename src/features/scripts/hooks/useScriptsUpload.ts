@@ -1,46 +1,35 @@
-import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
 	pgliteStore,
 	processDocuments,
 	useFileUpload,
 } from "@/features/editor";
-import { useScriptsDataStore } from "../store/useScriptsDataStore";
 import { useScriptsUiStore } from "../store/useScriptsUiStore";
+import { scriptKeys } from "./useScriptsQuery";
 
 export function useScriptsUpload() {
 	const currentFolderId = useScriptsUiStore((s) => s.currentFolderId);
-	const refresh = useScriptsDataStore((s) => s.refresh);
+	const queryClient = useQueryClient();
 
 	const {
-		docFiles,
 		isLoading: isUploading,
 		processedCount,
 		totalCount,
 		errors: uploadErrors,
 		handleFileChange,
 		reset: resetUpload,
-	} = useFileUpload();
-
-	useEffect(() => {
-		if (docFiles.length === 0) return;
-		let cancelled = false;
-
-		(async () => {
+	} = useFileUpload({
+		onSuccess: async (docFiles) => {
 			const processed = await processDocuments(docFiles);
 			const newScripts = processed.map((s) => ({
 				...s,
 				folderId: currentFolderId,
 			}));
 			await pgliteStore.saveScripts(newScripts);
-			if (cancelled) return;
-			await refresh(currentFolderId);
+			await queryClient.invalidateQueries({ queryKey: scriptKeys.all });
 			resetUpload();
-		})();
-
-		return () => {
-			cancelled = true;
-		};
-	}, [docFiles, currentFolderId, refresh, resetUpload]);
+		},
+	});
 
 	return {
 		isUploading,

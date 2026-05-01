@@ -19,7 +19,7 @@ export interface ScriptMetadata {
 }
 
 export interface Script extends ScriptMetadata {
-	source: Document;
+	source?: Document;
 	lines: ParsedLine[];
 	html: string;
 }

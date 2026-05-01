@@ -1,5 +1,4 @@
 import { Box, Center, Flex, Loader } from "@mantine/core";
-import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { BreadcrumbNav } from "./components/BreadcrumbNav";
 import { MultiSelectToolbar } from "./components/MultiSelectToolbar";
@@ -18,12 +17,7 @@ import { useScriptsDataStore } from "./store/useScriptsDataStore";
 import { useScriptsUiStore } from "./store/useScriptsUiStore";
 
 export default function ScriptsView() {
-	const init = useScriptsDataStore((s) => s.init);
-	const isLoading = useScriptsDataStore((s) => s.isLoading);
-	const breadcrumb = useScriptsDataStore((s) => s.breadcrumb);
-	const hasMoreScripts = useScriptsDataStore((s) => s.hasMoreScripts);
 	const duplicateItems = useScriptsDataStore((s) => s.duplicateItems);
-	const scripts = useScriptsDataStore((s) => s.scripts);
 
 	const {
 		selectedScript,
@@ -55,8 +49,14 @@ export default function ScriptsView() {
 		useScriptsUpload();
 
 	const {
+		folders,
+		scripts,
+		breadcrumb,
+		folderChildItemCounts,
 		allCurrentIds,
+		isLoading,
 		isLoadingMore,
+		hasMoreScripts,
 		isRoot,
 		isEmpty,
 		currentFolderName,
@@ -65,10 +65,6 @@ export default function ScriptsView() {
 	} = useScriptsPageController();
 
 	useScriptsEvents(allCurrentIds);
-
-	useEffect(() => {
-		init();
-	}, [init]);
 
 	return (
 		<Flex direction="column" h="100%" rowGap="md">
@@ -90,7 +86,7 @@ export default function ScriptsView() {
 
 			{isLoading ? (
 				<Center flex={1}>
-					<Loader color="studio-blue" size="sm" />
+					<Loader color="studio" size="sm" />
 				</Center>
 			) : isEmpty ? (
 				<Box flex={1} px="md">
@@ -105,6 +101,9 @@ export default function ScriptsView() {
 				<Flex flex={1} mih={0}>
 					<Box flex={1} p="md" miw={0} style={{ overflowY: "auto" }}>
 						<ScriptsLibraryItems
+							folders={folders}
+							scripts={scripts}
+							folderItemCounts={folderChildItemCounts}
 							onNavigateFolder={handleNavigate}
 							hasMoreScripts={hasMoreScripts}
 							isLoadingMore={isLoadingMore}
@@ -137,7 +136,11 @@ export default function ScriptsView() {
 				</Flex>
 			)}
 
-			<ScriptsModals currentFolderName={currentFolderName} />
+			<ScriptsModals
+				currentFolderName={currentFolderName}
+				folders={folders}
+				scripts={scripts}
+			/>
 		</Flex>
 	);
 }

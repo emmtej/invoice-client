@@ -39,13 +39,13 @@ export function ScriptLibraryTile({
 				root: {
 					cursor: "pointer",
 					borderColor: isSelected
-						? "var(--mantine-color-studio-blue-5)"
+						? "var(--mantine-color-studio-5)"
 						: "rgba(0,0,0,0.05)",
 					transition: "border-color 150ms ease, background-color 150ms ease",
 					"&:hover": {
 						borderColor: isSelected
-							? "var(--mantine-color-studio-blue-6)"
-							: "var(--mantine-color-studio-blue-3)",
+							? "var(--mantine-color-studio-6)"
+							: "var(--mantine-color-studio-3)",
 						backgroundColor: isSelected
 							? "rgba(17, 40, 77, 0.08)"
 							: "rgba(17, 40, 77, 0.02)",
@@ -58,16 +58,14 @@ export function ScriptLibraryTile({
 					<FileText
 						size={20}
 						color={
-							isSelected
-								? "var(--mantine-color-studio-blue-6)"
-								: "rgba(0,0,0,0.2)"
+							isSelected ? "var(--mantine-color-studio-6)" : "rgba(0,0,0,0.2)"
 						}
 						style={{ flexShrink: 0 }}
 					/>
 					<Text
 						size="sm"
 						fw={600}
-						c={isSelected ? "studio-blue.8" : "charcoal"}
+						c={isSelected ? "studio.8" : "charcoal"}
 						truncate
 						style={{ flex: 1, minWidth: 0 }}
 					>

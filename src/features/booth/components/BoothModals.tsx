@@ -41,7 +41,13 @@ export function BoothModals() {
 			}
 			setEditingScriptId(script.id);
 		}
-	}, [isEditorOpened, script, activeScript?.id, loadScript, setEditingScriptId]);
+	}, [
+		isEditorOpened,
+		script,
+		activeScript?.id,
+		loadScript,
+		setEditingScriptId,
+	]);
 
 	// Sync changes from editor back to booth session
 	useEffect(() => {

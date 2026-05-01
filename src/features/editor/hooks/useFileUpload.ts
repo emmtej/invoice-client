@@ -17,7 +17,9 @@ interface UseFileUpload {
 	reset: () => void;
 }
 
-export function useFileUpload(): UseFileUpload {
+export function useFileUpload(options?: {
+	onSuccess?: (files: DocFile[]) => void;
+}): UseFileUpload {
 	const [docFiles, setDocFiles] = useState<DocFile[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [processedCount, setProcessedCount] = useState<number>(0);
@@ -32,53 +34,57 @@ export function useFileUpload(): UseFileUpload {
 		};
 	}, []);
 
-	const processFiles = useCallback(async (newFiles: File[]) => {
-		setIsLoading(true);
-		setErrors([]);
-		setTotalCount(newFiles.length);
-		setProcessedCount(0);
+	const processFiles = useCallback(
+		async (newFiles: File[]) => {
+			setIsLoading(true);
+			setErrors([]);
+			setTotalCount(newFiles.length);
+			setProcessedCount(0);
 
-		const successfulDocs: DocFile[] = [];
-		const newErrors: string[] = [];
+			const successfulDocs: DocFile[] = [];
+			const newErrors: string[] = [];
 
-		for (const file of newFiles) {
-			if (!isMountedRef.current) break;
+			for (const file of newFiles) {
+				if (!isMountedRef.current) break;
 
-			try {
-				if (!file.name.endsWith(".docx")) {
-					throw new Error(`File "${file.name}" is not a .docx file.`);
+				try {
+					if (!file.name.endsWith(".docx")) {
+						throw new Error(`File "${file.name}" is not a .docx file.`);
+					}
+
+					const arrayBuffer = await file.arrayBuffer();
+					const { value } = await mammoth.convertToHtml({ arrayBuffer });
+					const document = parseHtmlToDocument(value);
+
+					successfulDocs.push({
+						name: file.name,
+						document,
+					});
+				} catch (err) {
+					console.error(err);
+					newErrors.push(
+						err instanceof Error ? err.message : `Failed to parse ${file.name}`,
+					);
+				} finally {
+					setProcessedCount((prev) => prev + 1);
 				}
-
-				const arrayBuffer = await file.arrayBuffer();
-				const { value } = await mammoth.convertToHtml({ arrayBuffer });
-				const document = parseHtmlToDocument(value);
-
-				successfulDocs.push({
-					name: file.name,
-					document,
-				});
-			} catch (err) {
-				console.error(err);
-				newErrors.push(
-					err instanceof Error ? err.message : `Failed to parse ${file.name}`,
-				);
-			} finally {
-				setProcessedCount((prev) => prev + 1);
 			}
-		}
 
-		if (!isMountedRef.current) return;
+			if (!isMountedRef.current) return;
 
-		if (newErrors.length > 0) {
-			setErrors((prev) => [...prev, ...newErrors]);
-		}
+			if (newErrors.length > 0) {
+				setErrors((prev) => [...prev, ...newErrors]);
+			}
 
-		if (successfulDocs.length > 0) {
-			setDocFiles((prev) => [...prev, ...successfulDocs]);
-		}
+			if (successfulDocs.length > 0) {
+				setDocFiles((prev) => [...prev, ...successfulDocs]);
+				options?.onSuccess?.(successfulDocs);
+			}
 
-		setIsLoading(false);
-	}, []);
+			setIsLoading(false);
+		},
+		[options],
+	);
 
 	const handleFileChange = useCallback(
 		(input: React.ChangeEvent<HTMLInputElement> | File[]) => {
@@ -91,7 +97,7 @@ export function useFileUpload(): UseFileUpload {
 			}
 
 			if (incomingFiles.length > 0) {
-				processFiles(incomingFiles);
+				void processFiles(incomingFiles);
 			}
 		},
 		[processFiles],

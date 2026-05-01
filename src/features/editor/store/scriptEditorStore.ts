@@ -1,198 +1,102 @@
 import { create } from "zustand";
+import { reparseHtmlToScript } from "@/features/editor/utils/documentParser";
 import type { Script, ScriptMetadata } from "@/types/Script";
-import { reparseHtmlToScript } from "../utils/documentParser";
-import { generateHtmlFromScript } from "../utils/formatParsedLines";
 import { pgliteStore } from "./pgliteStore";
 
-const PERSISTENCE_KEY = "invoice-editor-persistence-enabled";
-
-interface ScriptStoreProps {
+interface ScriptStoreState {
 	scripts: ScriptMetadata[];
-	activeScript: Script | null;
 	activeScriptId: string | null;
+	activeScript: Script | null;
 	editingScriptId: string | null;
-	isDbReady: boolean;
 	isLoading: boolean;
 	persistenceEnabled: boolean;
 }
 
 interface ScriptStoreActions {
 	init: () => Promise<void>;
-	togglePersistence: (enabled: boolean) => Promise<void>;
-	setScripts: (newScripts: ScriptMetadata[]) => void;
 	addScripts: (newScripts: Script[]) => Promise<void>;
+	loadScript: (id: string) => Promise<void>;
+	selectScript: (id: string | null) => Promise<void>;
+	closeActiveScript: () => void;
+	setEditingScriptId: (id: string | null) => void;
 	removeScript: (id: string) => Promise<void>;
 	removeScripts: (ids: string[]) => Promise<void>;
-	loadScript: (id: string) => Promise<void>;
-	closeActiveScript: () => void;
-	selectScript: (id: string | null) => Promise<void>;
-	setEditingScriptId: (id: string | null) => void;
-	updateHtml: (id: string, html: string) => Promise<void>;
-	resetScript: (id: string) => Promise<void>;
-	updateScriptFromHtml: (
-		id: string,
-		html: string,
-		shouldUpdateHtml?: boolean,
-	) => Promise<void>;
-	syncScriptFromHtml: (
-		id: string,
-		html: string,
-		shouldUpdateHtml?: boolean,
-	) => Promise<void>;
 	promoteScriptsToLibrary: (
 		ids: string[],
 		folderId: string | null,
 	) => Promise<void>;
+	updateActiveScript: (content: string) => void;
+	saveActiveScript: () => Promise<void>;
+	resetScript: (id: string) => Promise<void>;
+	syncScriptFromHtml: (
+		id: string,
+		html: string,
+		save?: boolean,
+	) => Promise<void>;
 }
 
-type ScriptStore = ScriptStoreProps & ScriptStoreActions;
+export type ScriptStore = ScriptStoreState & ScriptStoreActions;
 
-export const useScriptStore = create<ScriptStore>()((set, get) => ({
+export const useScriptStore = create<ScriptStore>((set, get) => ({
 	scripts: [],
-	activeScript: null,
 	activeScriptId: null,
+	activeScript: null,
 	editingScriptId: null,
-	isDbReady: false,
 	isLoading: false,
-	persistenceEnabled:
-		typeof localStorage !== "undefined" &&
-		typeof localStorage.getItem === "function"
-			? localStorage.getItem(PERSISTENCE_KEY) === "true"
-			: false,
+	persistenceEnabled: true,
 
 	init: async () => {
-		if (!get().persistenceEnabled) return;
-
 		set({ isLoading: true });
 		try {
+			await pgliteStore.cleanExpiredDrafts();
 			const drafts = await pgliteStore.getAllDraftScripts();
-			const firstDraft = drafts[0] ?? null;
 			set({
-				scripts: drafts.map(({ html, lines, source, ...meta }) => meta),
-				isDbReady: true,
-				activeScriptId: firstDraft?.id ?? null,
-				activeScript: firstDraft,
+				scripts: drafts,
 				isLoading: false,
 			});
-		} catch (error) {
-			console.error("Failed to initialize PGLite database:", error);
-			set({ isDbReady: false, isLoading: false });
-		}
-	},
 
-	togglePersistence: async (enabled: boolean) => {
-		if (enabled === get().persistenceEnabled) return;
-
-		if (enabled) {
-			set({ isLoading: true });
-			try {
-				// Note: this part might need more care since get().scripts is now metadata
-				// For simplicity in this refactor, we'll assume persistence is usually
-				// enabled early or handled via promotion.
-				if (typeof localStorage !== "undefined") {
-					localStorage.setItem(PERSISTENCE_KEY, "true");
+			const { activeScriptId } = get();
+			if (activeScriptId) {
+				const script = await pgliteStore.getScriptFull(activeScriptId);
+				if (script) {
+					set({ activeScript: script });
+				} else {
+					set({ activeScriptId: null, activeScript: null });
 				}
-				set({
-					persistenceEnabled: true,
-					isDbReady: true,
-					isLoading: false,
-				});
-			} catch (error) {
-				console.error("Failed to enable PGLite persistence:", error);
-				set({ isLoading: false });
 			}
-		} else {
-			if (typeof localStorage !== "undefined") {
-				localStorage.setItem(PERSISTENCE_KEY, "false");
-			}
-			set({ persistenceEnabled: false, isDbReady: false });
+		} catch (error) {
+			console.error("Failed to initialize script store:", error);
+			set({ isLoading: false });
 		}
 	},
-
-	setScripts: (scripts) =>
-		set({
-			scripts,
-		}),
 
 	addScripts: async (newScripts) => {
-		const existingIds = new Set(get().scripts.map((s) => s.id));
-		const uniqueNewScripts = newScripts.filter((s) => !existingIds.has(s.id));
+		const { scripts: currentScripts } = get();
+		const currentIds = new Set(currentScripts.map((s) => s.id));
+		const uniqueNewScripts = newScripts.filter((s) => !currentIds.has(s.id));
 
-		if (uniqueNewScripts.length > 0) {
-			if (!get().persistenceEnabled) {
-				await get().togglePersistence(true);
-			}
+		if (uniqueNewScripts.length === 0) return;
 
-			if (get().persistenceEnabled) {
-				await pgliteStore.saveDraftScripts(uniqueNewScripts);
-			}
-
-			const newMetadata = uniqueNewScripts.map(
-				({ html, lines, source, ...meta }) => meta,
-			);
+		try {
+			await pgliteStore.saveDraftScripts(uniqueNewScripts);
+			const newMetadata: ScriptMetadata[] = uniqueNewScripts.map((s) => ({
+				id: s.id,
+				name: s.name,
+				overview: s.overview,
+				createdAt: s.createdAt,
+			}));
 
 			set((state) => ({
 				scripts: [...state.scripts, ...newMetadata],
 			}));
+		} catch (error) {
+			console.error("Failed to add scripts:", error);
 		}
-	},
-
-	removeScript: async (id) => {
-		if (get().persistenceEnabled) {
-			await pgliteStore.deleteDraftScript(id);
-		}
-
-		const wasActive = get().activeScriptId === id;
-		const wasEditing = get().editingScriptId === id;
-
-		set((state) => ({
-			scripts: state.scripts.filter((s) => s.id !== id),
-			activeScript: wasActive ? null : state.activeScript,
-			activeScriptId: wasActive ? null : state.activeScriptId,
-			editingScriptId: wasEditing ? null : state.editingScriptId,
-		}));
-
-		if (wasActive) {
-			const remaining = get().scripts;
-			if (remaining.length > 0) {
-				await get().selectScript(remaining[0].id);
-			}
-		}
-	},
-
-	removeScripts: async (ids) => {
-		if (get().persistenceEnabled) {
-			await pgliteStore.deleteDraftScripts(ids);
-		}
-		const idsToRemove = new Set(ids);
-		const wasActive =
-			get().activeScriptId !== null &&
-			idsToRemove.has(get().activeScriptId!);
-
-		set((state) => ({
-			scripts: state.scripts.filter((s) => !idsToRemove.has(s.id)),
-			activeScript: wasActive ? null : state.activeScript,
-			activeScriptId: wasActive ? null : state.activeScriptId,
-			editingScriptId:
-				state.editingScriptId !== null &&
-				idsToRemove.has(state.editingScriptId)
-					? null
-					: state.editingScriptId,
-		}));
 	},
 
 	loadScript: async (id) => {
-		set({ isLoading: true });
+		set({ activeScriptId: id, isLoading: true });
 		try {
-			// First check drafts
-			const drafts = await pgliteStore.getAllDraftScripts();
-			const draft = drafts.find((d) => d.id === id);
-			if (draft) {
-				set({ activeScript: draft, isLoading: false });
-				return;
-			}
-
-			// Then check library
 			const script = await pgliteStore.getScriptFull(id);
 			set({ activeScript: script, isLoading: false });
 		} catch (error) {
@@ -201,100 +105,130 @@ export const useScriptStore = create<ScriptStore>()((set, get) => ({
 		}
 	},
 
-	closeActiveScript: () => set({ activeScript: null }),
-
 	selectScript: async (id) => {
-		set({ activeScriptId: id });
-		if (id) {
-			await get().loadScript(id);
-		} else {
-			get().closeActiveScript();
-		}
-	},
-
-	setEditingScriptId: (id) => set({ editingScriptId: id }),
-
-	updateHtml: async (id, html) => {
-		const activeScript = get().activeScript;
-		if (!activeScript || activeScript.id !== id) return;
-
-		const updatedScript = { ...activeScript, html };
-		if (get().persistenceEnabled) {
-			await pgliteStore.saveDraftScript(updatedScript);
-		}
-
-		set({ activeScript: updatedScript });
-	},
-
-	resetScript: async (id) => {
-		const activeScript = get().activeScript;
-		if (!activeScript || activeScript.id !== id) return;
-
-		const updatedScript = {
-			...activeScript,
-			html: generateHtmlFromScript(activeScript.lines),
-		};
-		if (get().persistenceEnabled) {
-			await pgliteStore.saveDraftScript(updatedScript);
-		}
-
-		set({ activeScript: updatedScript });
-	},
-
-	updateScriptFromHtml: async (
-		id: string,
-		html: string,
-		shouldUpdateHtml = true,
-	) => {
-		await get().syncScriptFromHtml(id, html, shouldUpdateHtml);
-	},
-
-	syncScriptFromHtml: async (
-		id: string,
-		html: string,
-		shouldUpdateHtml = true,
-	) => {
-		const activeScript = get().activeScript;
-		if (!activeScript || activeScript.id !== id) return;
-
-		const { lines, overview, html: newHtml } = reparseHtmlToScript(html);
-		const finalHtml = shouldUpdateHtml ? newHtml : html;
-
-		const hasStructureChanged =
-			activeScript.lines.length !== lines.length ||
-			activeScript.overview.wordCount !== overview.wordCount ||
-			activeScript.lines[0]?.source !== lines[0]?.source ||
-			activeScript.lines[activeScript.lines.length - 1]?.source !==
-				lines[lines.length - 1]?.source;
-
-		if (activeScript.html === finalHtml && !hasStructureChanged) {
+		if (id === null) {
+			set({ activeScriptId: null, activeScript: null });
 			return;
 		}
+		await get().loadScript(id);
+	},
 
-		const updatedScript = {
-			...activeScript,
-			lines,
-			overview,
-			html: finalHtml,
-		};
+	closeActiveScript: () => {
+		set({ activeScriptId: null, activeScript: null, editingScriptId: null });
+	},
 
-		if (get().persistenceEnabled) {
-			await pgliteStore.saveDraftScript(updatedScript);
+	setEditingScriptId: (id) => {
+		set({ editingScriptId: id });
+	},
+
+	removeScript: async (id) => {
+		try {
+			await pgliteStore.deleteDraftScripts([id]);
+			set((state) => ({
+				scripts: state.scripts.filter((s) => s.id !== id),
+				activeScriptId:
+					state.activeScriptId === id ? null : state.activeScriptId,
+				activeScript: state.activeScriptId === id ? null : state.activeScript,
+				editingScriptId:
+					state.editingScriptId === id ? null : state.editingScriptId,
+			}));
+		} catch (error) {
+			console.error("Failed to remove script:", error);
 		}
+	},
 
-		// Update active script AND metadata in the list if overview changed
-		set((state) => ({
-			activeScript: updatedScript,
-			scripts: state.scripts.map((s) => (s.id === id ? { ...s, overview } : s)),
-		}));
+	removeScripts: async (ids) => {
+		try {
+			await pgliteStore.deleteDraftScripts(ids);
+			const idSet = new Set(ids);
+			set((state) => ({
+				scripts: state.scripts.filter((s) => !idSet.has(s.id)),
+				activeScriptId:
+					state.activeScriptId && idSet.has(state.activeScriptId)
+						? null
+						: state.activeScriptId,
+				activeScript:
+					state.activeScriptId && idSet.has(state.activeScriptId)
+						? null
+						: state.activeScript,
+				editingScriptId:
+					state.editingScriptId && idSet.has(state.editingScriptId)
+						? null
+						: state.editingScriptId,
+			}));
+		} catch (error) {
+			console.error("Failed to remove scripts:", error);
+		}
 	},
 
 	promoteScriptsToLibrary: async (ids, folderId) => {
-		if (ids.length === 0 || !get().persistenceEnabled) return;
-		await pgliteStore.promoteDraftsToScripts(ids, folderId);
-		const idsToPromote = new Set(ids);
-		set((state) => ({
-			scripts: state.scripts.filter((script) => !idsToPromote.has(script.id)),
-		}));
+		set({ isLoading: true });
+		try {
+			await pgliteStore.promoteDraftsToScripts(ids, folderId);
+			const idSet = new Set(ids);
+			set((state) => ({
+				scripts: state.scripts.filter((s) => !idSet.has(s.id)),
+				activeScriptId:
+					state.activeScriptId && idSet.has(state.activeScriptId)
+						? null
+						: state.activeScriptId,
+				activeScript:
+					state.activeScriptId && idSet.has(state.activeScriptId)
+						? null
+						: state.activeScript,
+				isLoading: false,
+			}));
+		} catch (error) {
+			console.error("Failed to promote scripts:", error);
+			set({ isLoading: false });
+		}
+	},
+
+	updateActiveScript: (content) => {
+		const { activeScript } = get();
+		if (!activeScript) return;
+
+		set({
+			activeScript: {
+				...activeScript,
+				html: content,
+			},
+		});
+	},
+
+	saveActiveScript: async () => {
+		const { activeScript } = get();
+		if (!activeScript) return;
+
+		try {
+			await pgliteStore.saveDraftScript(activeScript);
+		} catch (error) {
+			console.error("Failed to save active script:", error);
+		}
+	},
+
+	resetScript: async (id) => {
+		// Just re-load from DB to reset
+		await get().loadScript(id);
+	},
+
+	syncScriptFromHtml: async (id, html, save = true) => {
+		const { activeScript } = get();
+		if (!activeScript || activeScript.id !== id) return;
+
+		const { lines, overview } = reparseHtmlToScript(html);
+
+		const updatedScript: Script = {
+			...activeScript,
+			html,
+			lines,
+			overview,
+		};
+
+		set({ activeScript: updatedScript });
+
+		if (save) {
+			await pgliteStore.saveDraftScript(updatedScript);
+		}
 	},
 }));

@@ -7,7 +7,11 @@ export function useScriptModals() {
 		useDisclosure(false);
 
 	return {
-		clearAll: { opened: clearAllOpened, open: openClearAll, close: closeClearAll },
+		clearAll: {
+			opened: clearAllOpened,
+			open: openClearAll,
+			close: closeClearAll,
+		},
 		save: { opened: saveOpened, open: openSave, close: closeSave },
 	};
 }

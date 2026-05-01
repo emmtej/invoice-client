@@ -91,7 +91,7 @@ export function RegisterFields() {
 	});
 
 	// Optionally wire up a register function if added to userStore later
-	const { register: registerUser } = useUserStore((store) => store);
+	const registerUser = useUserStore((store) => store.register);
 	const navigate = useNavigate();
 	const isMountedRef = useRef(true);
 

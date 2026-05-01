@@ -1,5 +1,9 @@
-import { asc, count, desc, eq, inArray, isNull, sql } from "drizzle-orm";
-import { getDrizzleDb, initDb } from "@/features/storage/pgliteClient";
+import { count, desc, eq, inArray, isNull } from "drizzle-orm";
+import {
+	type DbTransaction,
+	getDrizzleDb,
+	initDb,
+} from "@/features/storage/pgliteClient";
 import { scriptContents, scripts } from "@/features/storage/schema";
 import type { ScriptSummary } from "@/features/storage/types";
 import type { Script } from "@/types/Script";
@@ -8,7 +12,12 @@ function mapToScriptSummary(row: {
 	id: string;
 	name: string;
 	folderId: string | null;
-	overview: { wordCount?: number; invalidLines?: number[] };
+	overview: {
+		totalLines: number;
+		characterCount: number;
+		wordCount: number;
+		estimatedReadingTime: string;
+	};
 	createdAt: Date;
 	lastAccessedAt: Date | null;
 }): ScriptSummary {
@@ -17,9 +26,9 @@ function mapToScriptSummary(row: {
 		name: row.name,
 		folderId: row.folderId ?? null,
 		wordCount: row.overview.wordCount ?? 0,
-		invalidLineCount: row.overview.invalidLines?.length ?? 0,
+		invalidLineCount: 0, // Not stored in DB meta currently
 		createdAt: row.createdAt,
-		lastAccessedAt: row.lastAccessedAt ?? null,
+		lastAccessedAt: row.lastAccessedAt,
 	};
 }
 
@@ -37,7 +46,8 @@ export const scriptsQueries = {
 				lastAccessedAt: scripts.lastAccessedAt,
 			})
 			.from(scripts)
-			.orderBy(asc(scripts.name));
+			.orderBy(desc(scripts.lastAccessedAt));
+
 		return result.map(mapToScriptSummary);
 	},
 
@@ -56,15 +66,12 @@ export const scriptsQueries = {
 			.where(
 				folderId ? eq(scripts.folderId, folderId) : isNull(scripts.folderId),
 			)
-			.orderBy(asc(scripts.name));
+			.orderBy(desc(scripts.lastAccessedAt));
+
 		return result.map(mapToScriptSummary);
 	},
 
-	async getRecentScripts(
-		limit: number,
-		offset: number,
-	): Promise<ScriptSummary[]> {
-		await initDb();
+	async getRecentScripts(limit = 10, offset = 0): Promise<ScriptSummary[]> {
 		const db = await getDrizzleDb();
 		const result = await db
 			.select({
@@ -76,20 +83,17 @@ export const scriptsQueries = {
 				lastAccessedAt: scripts.lastAccessedAt,
 			})
 			.from(scripts)
-			.orderBy(
-				sql`COALESCE(${scripts.lastAccessedAt}, ${scripts.createdAt}) DESC`,
-				desc(scripts.createdAt),
-				desc(scripts.id),
-			)
+			.orderBy(desc(scripts.lastAccessedAt))
 			.limit(limit)
 			.offset(offset);
+
 		return result.map(mapToScriptSummary);
 	},
 
 	async getScriptsInFolderPaginated(
 		folderId: string | null,
-		limit: number,
-		offset: number,
+		limit = 10,
+		offset = 0,
 	): Promise<ScriptSummary[]> {
 		const db = await getDrizzleDb();
 		const result = await db
@@ -105,13 +109,10 @@ export const scriptsQueries = {
 			.where(
 				folderId ? eq(scripts.folderId, folderId) : isNull(scripts.folderId),
 			)
-			.orderBy(
-				sql`COALESCE(${scripts.lastAccessedAt}, ${scripts.createdAt}) DESC`,
-				desc(scripts.createdAt),
-				desc(scripts.id),
-			)
+			.orderBy(desc(scripts.lastAccessedAt))
 			.limit(limit)
 			.offset(offset);
+
 		return result.map(mapToScriptSummary);
 	},
 
@@ -123,92 +124,49 @@ export const scriptsQueries = {
 			.where(
 				folderId ? eq(scripts.folderId, folderId) : isNull(scripts.folderId),
 			);
-		return result?.value ?? 0;
+		return result.value;
 	},
 
 	async countAllScripts(): Promise<number> {
 		const db = await getDrizzleDb();
 		const [result] = await db.select({ value: count() }).from(scripts);
-		return result?.value ?? 0;
-	},
-
-	async touchScript(id: string): Promise<void> {
-		const db = await getDrizzleDb();
-		await db
-			.update(scripts)
-			.set({ lastAccessedAt: new Date() })
-			.where(eq(scripts.id, id));
+		return result.value;
 	},
 
 	async getScriptById(id: string): Promise<Script | null> {
 		const db = await getDrizzleDb();
-		const [row] = await db
+		const result = await db
 			.select()
 			.from(scripts)
 			.innerJoin(scriptContents, eq(scripts.id, scriptContents.scriptId))
-			.where(eq(scripts.id, id));
+			.where(eq(scripts.id, id))
+			.limit(1);
 
-		if (!row) return null;
+		if (result.length === 0) return null;
 
+		const row = result[0];
 		return {
-			...row.scripts,
-			...row.script_contents,
+			id: row.scripts.id,
+			name: row.scripts.name,
+			overview: row.scripts.overview,
+			html: row.script_contents.html,
+			lines: row.script_contents.lines,
 			groupName: row.scripts.groupName ?? undefined,
 			label: row.scripts.label ?? undefined,
-			folderId: row.scripts.folderId ?? null,
-			source: document.implementation.createHTMLDocument(),
+			folderId: row.scripts.folderId ?? undefined,
+			createdAt: row.scripts.createdAt,
 		};
-	},
-
-	async deleteScript(id: string): Promise<void> {
-		const db = await getDrizzleDb();
-		await db.delete(scripts).where(eq(scripts.id, id));
-	},
-
-	async moveScripts(
-		ids: string[],
-		targetFolderId: string | null,
-	): Promise<void> {
-		const db = await getDrizzleDb();
-		await db
-			.update(scripts)
-			.set({ folderId: targetFolderId })
-			.where(inArray(scripts.id, ids));
-	},
-
-	async duplicateScript(id: string, newId: string): Promise<void> {
-		const db = await getDrizzleDb();
-		const [row] = await db
-			.select()
-			.from(scripts)
-			.innerJoin(scriptContents, eq(scripts.id, scriptContents.scriptId))
-			.where(eq(scripts.id, id));
-
-		if (!row) return;
-
-		await db.transaction(async (tx) => {
-			await tx.insert(scripts).values({
-				...row.scripts,
-				id: newId,
-				name: `${row.scripts.name} (Copy)`,
-				createdAt: new Date(),
-				lastAccessedAt: null,
-			});
-			await tx.insert(scriptContents).values({
-				...row.script_contents,
-				scriptId: newId,
-			});
-		});
 	},
 
 	async saveScript(script: Script): Promise<void> {
 		const db = await getDrizzleDb();
-		await db.transaction(async (tx) => {
+
+		await db.transaction(async (tx: DbTransaction) => {
 			await this.saveScriptTx(tx, script);
 		});
 	},
 
-	async saveScriptTx(tx: any, script: Script): Promise<void> {
+	async saveScriptTx(tx: DbTransaction, script: Script): Promise<void> {
 		const { id, name, html, overview, lines, groupName, label, folderId } =
 			script;
 
@@ -221,6 +179,7 @@ export const scriptsQueries = {
 				groupName: groupName ?? null,
 				label: label ?? null,
 				folderId: folderId ?? null,
+				lastAccessedAt: new Date(),
 			})
 			.onConflictDoUpdate({
 				target: scripts.id,
@@ -230,6 +189,7 @@ export const scriptsQueries = {
 					groupName: groupName ?? null,
 					label: label ?? null,
 					folderId: folderId ?? null,
+					lastAccessedAt: new Date(),
 				},
 			});
 
@@ -249,11 +209,31 @@ export const scriptsQueries = {
 			});
 	},
 
+	async deleteScripts(ids: string[]): Promise<void> {
+		if (ids.length === 0) return;
+		const db = await getDrizzleDb();
+
+		await db.transaction(async (tx: DbTransaction) => {
+			await tx
+				.delete(scriptContents)
+				.where(inArray(scriptContents.scriptId, ids));
+			await tx.delete(scripts).where(inArray(scripts.id, ids));
+		});
+	},
+
+	async touchScript(id: string): Promise<void> {
+		const db = await getDrizzleDb();
+		await db
+			.update(scripts)
+			.set({ lastAccessedAt: new Date() })
+			.where(eq(scripts.id, id));
+	},
+
 	async saveScripts(scriptsList: Script[]): Promise<void> {
 		if (scriptsList.length === 0) return;
 		const db = await getDrizzleDb();
 
-		await db.transaction(async (tx) => {
+		await db.transaction(async (tx: DbTransaction) => {
 			for (const script of scriptsList) {
 				await this.saveScriptTx(tx, script);
 			}

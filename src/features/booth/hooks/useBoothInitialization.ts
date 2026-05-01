@@ -18,17 +18,34 @@ export function useBoothInitialization() {
 
 	// Handle browser close/refresh for active sessions
 	useEffect(() => {
-		const handleBeforeUnload = () => {
-			const { sessionId, status: currentStatus } = useBoothStore.getState();
-			if (
-				sessionId &&
-				(currentStatus === "running" || currentStatus === "paused")
-			) {
-				boothQueries.abandonSession(sessionId);
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === "hidden") {
+				const { sessionId, status: currentStatus } = useBoothStore.getState();
+				if (
+					sessionId &&
+					(currentStatus === "running" || currentStatus === "paused")
+				) {
+					// Mark as potentially abandoned in localStorage
+					localStorage.setItem("booth-abandoned-session", sessionId);
+				}
 			}
 		};
 
-		window.addEventListener("beforeunload", handleBeforeUnload);
-		return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-	}, []);
+		window.addEventListener("visibilitychange", handleVisibilityChange);
+		window.addEventListener("pagehide", handleVisibilityChange);
+
+		// On mount, check if there was an abandoned session
+		const abandonedId = localStorage.getItem("booth-abandoned-session");
+		if (abandonedId) {
+			void boothQueries.abandonSession(abandonedId).then(() => {
+				localStorage.removeItem("booth-abandoned-session");
+				void loadSessions();
+			});
+		}
+
+		return () => {
+			window.removeEventListener("visibilitychange", handleVisibilityChange);
+			window.removeEventListener("pagehide", handleVisibilityChange);
+		};
+	}, [loadSessions]);
 }

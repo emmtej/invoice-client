@@ -38,13 +38,13 @@ export function ScriptLibraryTileGrid({
 				root: {
 					cursor: "pointer",
 					borderColor: isSelected
-						? "var(--mantine-color-studio-blue-5)"
+						? "var(--mantine-color-studio-5)"
 						: "rgba(0,0,0,0.05)",
 					transition: "all 150ms ease",
 					"&:hover": {
 						borderColor: isSelected
-							? "var(--mantine-color-studio-blue-6)"
-							: "var(--mantine-color-studio-blue-3)",
+							? "var(--mantine-color-studio-6)"
+							: "var(--mantine-color-studio-3)",
 					},
 				},
 			}}
@@ -63,7 +63,7 @@ export function ScriptLibraryTileGrid({
 							size={20}
 							color={
 								isSelected
-									? "var(--mantine-color-studio-blue-6)"
+									? "var(--mantine-color-studio-6)"
 									: "var(--mantine-color-gray-6)"
 							}
 						/>
@@ -93,7 +93,7 @@ export function ScriptLibraryTileGrid({
 					<Text
 						size="sm"
 						fw={600}
-						c={isSelected ? "studio-blue.8" : "charcoal"}
+						c={isSelected ? "studio.8" : "charcoal"}
 						lineClamp={2}
 						mb="xs"
 						h={40}

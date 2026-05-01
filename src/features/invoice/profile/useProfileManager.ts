@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 import { useInvoicePresetsStore } from "../store/invoicePresetsStore";
 import {
 	getEmptyProfile,
@@ -40,11 +40,9 @@ export function useProfileManager() {
 			setProfileSavedMessage("");
 		};
 
-	const isProfileValid = useMemo(() => {
-		return profileSchema.safeParse(editingProfile).success;
-	}, [editingProfile]);
+	const isProfileValid = profileSchema.safeParse(editingProfile).success;
 
-	const handleSaveProfile = useCallback(() => {
+	const handleSaveProfile = () => {
 		if (!isProfileValid) {
 			setProfileSavedMessage(
 				"Please fill out all required fields correctly before saving.",
@@ -63,15 +61,9 @@ export function useProfileManager() {
 
 		setIsEditingProfile(false);
 		setProfileSavedMessage("Profile saved.");
-	}, [
-		editingProfile,
-		isProfileValid,
-		selectedProfileId,
-		addProfilePreset,
-		updateProfilePreset,
-	]);
+	};
 
-	const handleCancelEdit = useCallback(() => {
+	const handleCancelEdit = () => {
 		if (profilePresets.length === 0) {
 			setEditingProfile(getEmptyProfile());
 			setIsEditingProfile(true);
@@ -88,13 +80,13 @@ export function useProfileManager() {
 		setEditingProfile(currentProfile?.profile ?? getEmptyProfile());
 		setIsEditingProfile(false);
 		setProfileSavedMessage("");
-	}, [profilePresets, selectedProfileId, defaultProfileId]);
+	};
 
-	const handleSetAsDefault = useCallback(() => {
+	const handleSetAsDefault = () => {
 		if (!selectedProfileId || selectedProfileId === ADD_PROFILE_VALUE) return;
 		setDefaultProfile(selectedProfileId);
 		setProfileSavedMessage("Default profile updated.");
-	}, [selectedProfileId, setDefaultProfile]);
+	};
 
 	const handleSelectProfile = (value: string | null) => {
 		if (!value) return;

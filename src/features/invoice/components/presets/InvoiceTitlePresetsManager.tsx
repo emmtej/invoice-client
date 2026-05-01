@@ -9,6 +9,7 @@ import {
 	TextInput,
 	Tooltip,
 } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
@@ -38,9 +39,17 @@ export function InvoiceTitlePresetsManager() {
 	};
 
 	const handleDelete = (id: string) => {
-		if (window.confirm("Are you sure you want to delete this title preset?")) {
-			deleteTitlePreset(id);
-		}
+		modals.openConfirmModal({
+			title: "Delete title preset",
+			children: (
+				<Text size="sm">
+					Are you sure you want to delete this title preset?
+				</Text>
+			),
+			labels: { confirm: "Delete", cancel: "Cancel" },
+			confirmProps: { color: "red" },
+			onConfirm: () => deleteTitlePreset(id),
+		});
 	};
 
 	return (
@@ -57,7 +66,7 @@ export function InvoiceTitlePresetsManager() {
 				</Box>
 				<Button
 					leftSection={<Plus size={16} />}
-					color="studio-blue"
+					color="studio"
 					onClick={handleOpenAdd}
 				>
 					Add Title
@@ -114,7 +123,7 @@ export function InvoiceTitlePresetsManager() {
 						</Text>
 						<Button
 							variant="subtle"
-							color="studio-blue"
+							color="studio"
 							onClick={handleOpenAdd}
 							leftSection={<Plus size={16} />}
 						>
@@ -186,7 +195,7 @@ function TitlePresetModal({
 						Cancel
 					</Button>
 					<Button
-						color="studio-blue"
+						color="studio"
 						onClick={() => onSave(title)}
 						disabled={!title.trim()}
 					>

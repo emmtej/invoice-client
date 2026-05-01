@@ -12,17 +12,18 @@ import {
 	ThemeIcon,
 	UnstyledButton,
 } from "@mantine/core";
+import { useQueryClient } from "@tanstack/react-query";
 import { FileText, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
 import { processDocuments, useFileUpload } from "@/features/editor";
+import {
+	scriptKeys,
+	useRecentScriptsInfinite,
+} from "@/features/scripts/hooks/useScriptsQuery";
 import { scriptsQueries } from "@/features/scripts/store/scriptsQueries";
-import type { ScriptSummary } from "@/features/storage/types";
 import type { Script } from "@/types/Script";
-
-const INITIAL_LIMIT = 5;
-const LOAD_MORE_BATCH = 10;
 
 interface ScriptSelectorProps {
 	onSelect: (script: Script) => void;
@@ -35,60 +36,36 @@ export function ScriptSelector({
 	onLoadingChange,
 	hideLoader,
 }: ScriptSelectorProps) {
-	const [scripts, setScripts] = useState<ScriptSummary[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
+	const queryClient = useQueryClient();
 	const [loadingScriptId, setLoadingScriptId] = useState<string | null>(null);
-	const [offset, setOffset] = useState(INITIAL_LIMIT);
-	const [hasMore, setHasMore] = useState(false);
-	const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+	const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
+		useRecentScriptsInfinite();
+
+	const scripts = data?.pages.flatMap((page) => page.scripts) ?? [];
 
 	const {
-		docFiles,
 		isLoading: isUploading,
 		errors: uploadErrors,
 		handleFileChange,
 		reset: resetUpload,
-	} = useFileUpload();
-
-	useEffect(() => {
-		onLoadingChange?.(isLoading);
-	}, [isLoading, onLoadingChange]);
-
-	useEffect(() => {
-		(async () => {
-			try {
-				const [initial, total] = await Promise.all([
-					scriptsQueries.getRecentScripts(INITIAL_LIMIT, 0),
-					scriptsQueries.countAllScripts(),
-				]);
-				setScripts(initial);
-				setHasMore(total > INITIAL_LIMIT);
-			} finally {
-				setIsLoading(false);
-			}
-		})();
-	}, []);
-
-	useEffect(() => {
-		(async () => {
-			if (docFiles.length === 0) return;
+	} = useFileUpload({
+		onSuccess: async (docFiles) => {
 			const processed = await processDocuments(docFiles);
 			if (processed.length > 0) {
 				await scriptsQueries.saveScripts(processed);
-				const [refreshed, total] = await Promise.all([
-					scriptsQueries.getRecentScripts(INITIAL_LIMIT, 0),
-					scriptsQueries.countAllScripts(),
-				]);
-				setScripts(refreshed);
-				setOffset(INITIAL_LIMIT);
-				setHasMore(total > INITIAL_LIMIT);
+				queryClient.invalidateQueries({ queryKey: scriptKeys.all });
 				if (processed.length === 1) {
 					onSelect(processed[0]);
 				}
 			}
 			resetUpload();
-		})();
-	}, [docFiles, onSelect, resetUpload]);
+		},
+	});
+
+	useEffect(() => {
+		onLoadingChange?.(isLoading);
+	}, [isLoading, onLoadingChange]);
 
 	const handleScriptClick = async (id: string) => {
 		setLoadingScriptId(id);
@@ -96,28 +73,16 @@ export function ScriptSelector({
 			const script = await scriptsQueries.getScriptById(id);
 			if (script) {
 				onSelect(script);
-				scriptsQueries.touchScript(id); // fire-and-forget
+				await scriptsQueries.touchScript(id);
+				queryClient.invalidateQueries({ queryKey: scriptKeys.all });
 			}
 		} finally {
 			setLoadingScriptId(null);
 		}
 	};
 
-	const handleLoadMore = async () => {
-		setIsLoadingMore(true);
-		try {
-			const more = await scriptsQueries.getRecentScripts(
-				LOAD_MORE_BATCH,
-				offset,
-			);
-			const newOffset = offset + more.length;
-			const total = await scriptsQueries.countAllScripts();
-			setScripts((prev) => [...prev, ...more]);
-			setOffset(newOffset);
-			setHasMore(newOffset < total);
-		} finally {
-			setIsLoadingMore(false);
-		}
+	const handleLoadMore = () => {
+		fetchNextPage();
 	};
 
 	if (isLoading && !hideLoader) {
@@ -147,7 +112,7 @@ export function ScriptSelector({
 					onChange={handleFileChange}
 					multiple={true}
 					variant="filled"
-					color="studio-blue"
+					color="studio"
 					size="md"
 					loading={isUploading}
 					leftSection={<Upload size={18} />}
@@ -259,13 +224,13 @@ export function ScriptSelector({
 						))}
 					</SimpleGrid>
 
-					{hasMore && (
+					{hasNextPage && (
 						<Center pt="md">
 							<Button
 								variant="subtle"
 								color="gray"
 								onClick={handleLoadMore}
-								loading={isLoadingMore}
+								loading={isFetchingNextPage}
 								size="sm"
 								fw={700}
 							>

@@ -1,6 +1,7 @@
 import {
 	ActionIcon,
 	Badge,
+	Box,
 	Button,
 	Group,
 	Stack,
@@ -8,6 +9,7 @@ import {
 	TextInput,
 	Tooltip,
 } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { Pencil, Plus, Star, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
@@ -42,9 +44,18 @@ export function InvoiceProfilePresetsManager() {
 	};
 
 	const handleDelete = (id: string) => {
-		if (window.confirm("Are you sure you want to delete this profile?")) {
-			deleteProfilePreset(id);
-		}
+		modals.openConfirmModal({
+			title: "Delete profile",
+			children: (
+				<Text size="sm">
+					Are you sure you want to delete this profile? This action cannot be
+					undone.
+				</Text>
+			),
+			labels: { confirm: "Delete", cancel: "Cancel" },
+			confirmProps: { color: "red" },
+			onConfirm: () => deleteProfilePreset(id),
+		});
 	};
 
 	return (
@@ -61,7 +72,7 @@ export function InvoiceProfilePresetsManager() {
 				</Box>
 				<Button
 					leftSection={<Plus size={16} />}
-					color="studio-blue"
+					color="studio"
 					onClick={handleOpenAdd}
 				>
 					Add Profile
@@ -81,7 +92,7 @@ export function InvoiceProfilePresetsManager() {
 											</Text>
 											{profile.isDefault && (
 												<Badge
-													color="studio-blue"
+													color="studio"
 													variant="light"
 													leftSection={<Star size={12} />}
 												>
@@ -140,7 +151,7 @@ export function InvoiceProfilePresetsManager() {
 						</Text>
 						<Button
 							variant="subtle"
-							color="studio-blue"
+							color="studio"
 							onClick={handleOpenAdd}
 							leftSection={<Plus size={16} />}
 						>
@@ -239,7 +250,7 @@ function ProfileModal({
 						Cancel
 					</Button>
 					<Button
-						color="studio-blue"
+						color="studio"
 						onClick={() =>
 							onSave({ firstName, lastName, email }, { isDefault })
 						}
@@ -252,6 +263,3 @@ function ProfileModal({
 		</AppModal>
 	);
 }
-
-// Helper to use Box
-import { Box } from "@mantine/core";

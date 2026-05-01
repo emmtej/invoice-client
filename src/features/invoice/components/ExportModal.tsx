@@ -62,7 +62,7 @@ export const ExportModal = ({
 					<Button
 						leftSection={<Copy size={16} />}
 						onClick={handleCopyAsText}
-						color={clipboard.copied ? "teal" : "studio-blue"}
+						color={clipboard.copied ? "teal" : "studio"}
 						variant="light"
 					>
 						{clipboard.copied ? "Copied!" : "Copy as Text"}

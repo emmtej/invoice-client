@@ -1,7 +1,9 @@
 import { Button, Group, Stack, Text } from "@mantine/core";
+import { useQueryClient } from "@tanstack/react-query";
 import { create } from "zustand";
 import { AppModal } from "@/components/ui/modal/AppModal";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
+import { scriptKeys } from "../hooks/useScriptsQuery";
 import { useScriptsDataStore } from "../store/useScriptsDataStore";
 import { useScriptsUiStore } from "../store/useScriptsUiStore";
 import { CreateFolderModal } from "./CreateFolderModal";
@@ -37,18 +39,19 @@ export const useScriptsModalsStore = create<ModalsState>((set) => ({
 
 interface ScriptsModalsProps {
 	currentFolderName?: string;
+	folders: Folder[];
+	scripts: ScriptSummary[];
 }
 
-export function ScriptsModals({ currentFolderName }: ScriptsModalsProps) {
+export function ScriptsModals({
+	currentFolderName,
+	folders,
+	scripts,
+}: ScriptsModalsProps) {
+	const queryClient = useQueryClient();
 	const { currentFolderId, selectedIds, clearSelection } = useScriptsUiStore();
-	const {
-		createFolder,
-		deleteFolder,
-		deleteScript,
-		refresh,
-		folders,
-		scripts,
-	} = useScriptsDataStore();
+	const { createFolder, deleteFolder, deleteScript, moveItems } =
+		useScriptsDataStore();
 
 	const {
 		deleteFolderTarget,
@@ -63,6 +66,9 @@ export function ScriptsModals({ currentFolderName }: ScriptsModalsProps) {
 		setDeleteItemsOpened,
 	} = useScriptsModalsStore();
 
+	const invalidateScripts = () =>
+		queryClient.invalidateQueries({ queryKey: scriptKeys.all });
+
 	const onConfirmDeleteSelected = async () => {
 		const folderIds = selectedIds.filter((id) =>
 			folders.some((f) => f.id === id),
@@ -74,30 +80,14 @@ export function ScriptsModals({ currentFolderName }: ScriptsModalsProps) {
 		for (const id of folderIds) await deleteFolder(id);
 		for (const id of scriptIds) await deleteScript(id);
 
-		await refresh(currentFolderId);
+		await invalidateScripts();
 		clearSelection();
 		setDeleteItemsOpened(false);
 	};
 
 	const onConfirmMoveSelected = async (targetFolderId: string | null) => {
-		const folderIds = selectedIds.filter((id) =>
-			folders.some((f) => f.id === id),
-		);
-		const scriptIds = selectedIds.filter((id) =>
-			scripts.some((s) => s.id === id),
-		);
-
-		const { folderQueries } = await import("@/features/storage/folderQueries");
-		const { scriptsQueries } = await import("../store/scriptsQueries");
-
-		if (folderIds.length > 0) {
-			await folderQueries.moveFolders(folderIds, targetFolderId);
-		}
-		if (scriptIds.length > 0) {
-			await scriptsQueries.moveScripts(scriptIds, targetFolderId);
-		}
-
-		await refresh(currentFolderId);
+		await moveItems(selectedIds, targetFolderId);
+		await invalidateScripts();
 		clearSelection();
 		setMoveModalOpened(false);
 	};
@@ -137,6 +127,7 @@ export function ScriptsModals({ currentFolderName }: ScriptsModalsProps) {
 				onClose={() => setCreateFolderOpened(false)}
 				onConfirm={async (name) => {
 					await createFolder(name, currentFolderId);
+					await invalidateScripts();
 					setCreateFolderOpened(false);
 				}}
 				parentFolderName={currentFolderName}
@@ -156,7 +147,7 @@ export function ScriptsModals({ currentFolderName }: ScriptsModalsProps) {
 				onConfirm={async () => {
 					if (deleteFolderTarget) {
 						await deleteFolder(deleteFolderTarget.id);
-						await refresh(currentFolderId);
+						await invalidateScripts();
 						setDeleteFolderTarget(null);
 					}
 				}}
@@ -169,7 +160,7 @@ export function ScriptsModals({ currentFolderName }: ScriptsModalsProps) {
 				onConfirm={async () => {
 					if (deleteScriptTarget) {
 						await deleteScript(deleteScriptTarget.id);
-						await refresh(currentFolderId);
+						await invalidateScripts();
 						setDeleteScriptTarget(null);
 					}
 				}}

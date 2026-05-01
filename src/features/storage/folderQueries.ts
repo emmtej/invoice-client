@@ -1,184 +1,144 @@
-import { asc, count, desc, eq, inArray, isNull, sql } from "drizzle-orm";
+import { desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { getDrizzleDb } from "./pgliteClient";
 import { folders, scripts } from "./schema";
 import type { Folder } from "./types";
 
-export async function getFoldersAtLevel(
-	parentId: string | null,
-): Promise<Folder[]> {
-	const db = await getDrizzleDb();
-	const result = await db
-		.select()
-		.from(folders)
-		.where(parentId ? eq(folders.parentId, parentId) : isNull(folders.parentId))
-		.orderBy(asc(folders.name));
-
-	return result.map((row) => ({
-		...row,
-		parentId: row.parentId ?? null,
-	}));
-}
-
-export async function getRecentFolders(
-	parentId: string | null,
-	limit: number,
-): Promise<Folder[]> {
-	const db = await getDrizzleDb();
-	const result = await db
-		.select()
-		.from(folders)
-		.where(parentId ? eq(folders.parentId, parentId) : isNull(folders.parentId))
-		.orderBy(desc(folders.createdAt))
-		.limit(limit);
-
-	return result.map((row) => ({
-		...row,
-		parentId: row.parentId ?? null,
-	}));
-}
-
-export async function getAllFolders(): Promise<Folder[]> {
-	const db = await getDrizzleDb();
-	const result = await db
-		.select()
-		.from(folders)
-		.orderBy(sql`${folders.parentId} ASC NULLS FIRST`, asc(folders.name));
-
-	return result.map((row) => ({
-		...row,
-		parentId: row.parentId ?? null,
-	}));
-}
-
-export async function createFolder(
-	id: string,
-	name: string,
-	parentId: string | null,
-): Promise<Folder> {
-	const db = await getDrizzleDb();
-
-	if (parentId) {
-		const [parent] = await db
-			.select({ parentId: folders.parentId })
+export const folderQueries = {
+	async getAllFolders(): Promise<Folder[]> {
+		const db = await getDrizzleDb();
+		const result = await db
+			.select()
 			.from(folders)
-			.where(eq(folders.id, parentId));
+			.orderBy(desc(folders.createdAt));
 
-		if (!parent) {
-			throw new Error("Parent folder not found");
+		return result.map((row) => ({
+			id: row.id,
+			name: row.name,
+			parentId: row.parentId,
+			createdAt: row.createdAt,
+		}));
+	},
+
+	async getRecentFolders(
+		parentId: string | null = null,
+		limit = 10,
+	): Promise<Folder[]> {
+		const db = await getDrizzleDb();
+		const result = await db
+			.select()
+			.from(folders)
+			.where(
+				parentId ? eq(folders.parentId, parentId) : isNull(folders.parentId),
+			)
+			.orderBy(desc(folders.createdAt))
+			.limit(limit);
+
+		return result.map((row) => ({
+			id: row.id,
+			name: row.name,
+			parentId: row.parentId,
+			createdAt: row.createdAt,
+		}));
+	},
+
+	async getFolderById(id: string): Promise<Folder | null> {
+		const db = await getDrizzleDb();
+		const result = await db.select().from(folders).where(eq(folders.id, id));
+
+		if (result.length === 0) return null;
+		const row = result[0];
+		return {
+			id: row.id,
+			name: row.name,
+			parentId: row.parentId,
+			createdAt: row.createdAt,
+		};
+	},
+
+	async getFolderBreadcrumb(folderId: string): Promise<Folder[]> {
+		const breadcrumb: Folder[] = [];
+		let currentId: string | null = folderId;
+
+		while (currentId) {
+			const folder = await this.getFolderById(currentId);
+			if (!folder) break;
+			breadcrumb.unshift(folder);
+			currentId = folder.parentId;
 		}
-		if (parent.parentId !== null) {
-			throw new Error("Maximum folder depth of 2 levels exceeded");
-		}
-	}
 
-	const [newFolder] = await db
-		.insert(folders)
-		.values({ id, name, parentId })
-		.returning();
+		return breadcrumb;
+	},
 
-	return {
-		...newFolder,
-		parentId: newFolder.parentId ?? null,
-	};
-}
+	async createFolder(
+		id: string,
+		name: string,
+		parentId: string | null = null,
+	): Promise<void> {
+		const db = await getDrizzleDb();
+		await db.insert(folders).values({
+			id,
+			name,
+			parentId,
+		});
+	},
 
-export async function deleteFolder(id: string): Promise<void> {
-	const db = await getDrizzleDb();
-	await db.delete(folders).where(eq(folders.id, id));
-}
+	async updateFolder(id: string, name: string): Promise<void> {
+		const db = await getDrizzleDb();
+		await db.update(folders).set({ name }).where(eq(folders.id, id));
+	},
 
-export async function getFolderBreadcrumb(
-	folderId: string,
-): Promise<{ id: string; name: string }[]> {
-	const db = await getDrizzleDb();
-	const crumbs: { id: string; name: string }[] = [];
-	let currentId: string | null = folderId;
+	async deleteFolder(id: string): Promise<void> {
+		const db = await getDrizzleDb();
+		// Note: We might want to move scripts to root or delete them.
+		// For now, let's just delete the folder (Drizzle/DB might handle FKs if set).
+		await db.delete(folders).where(eq(folders.id, id));
+	},
 
-	while (currentId) {
-		const [folder] = await db
+	async getChildItemCountsForFolders(
+		folderIds: string[],
+	): Promise<Record<string, number>> {
+		if (folderIds.length === 0) return {};
+		const db = await getDrizzleDb();
+
+		const result = await db
 			.select({
-				id: folders.id,
-				name: folders.name,
-				parentId: folders.parentId,
+				folderId: scripts.folderId,
+				count: sql<number>`count(*)`,
 			})
-			.from(folders)
-			.where(eq(folders.id, currentId));
+			.from(scripts)
+			.where(inArray(scripts.folderId, folderIds))
+			.groupBy(scripts.folderId);
 
-		if (!folder) break;
+		const counts: Record<string, number> = {};
+		for (const row of result) {
+			if (row.folderId) {
+				counts[row.folderId] = row.count;
+			}
+		}
+		return counts;
+	},
+};
 
-		crumbs.unshift({ id: folder.id, name: folder.name });
-		currentId = folder.parentId;
-	}
-
-	return crumbs;
-}
+export const {
+	createFolder,
+	deleteFolder,
+	getAllFolders,
+	getChildItemCountsForFolders,
+	getFolderBreadcrumb,
+	getFolderById,
+	getRecentFolders,
+} = folderQueries;
 
 export async function getScriptCountInFolder(
 	folderId: string | null,
 ): Promise<number> {
 	const db = await getDrizzleDb();
-	const [result] = await db
-		.select({ value: count() })
+	const result = await db
+		.select({ count: sql<number>`count(*)` })
 		.from(scripts)
 		.where(
 			folderId ? eq(scripts.folderId, folderId) : isNull(scripts.folderId),
 		);
 
-	return result?.value ?? 0;
+	return result[0]?.count ?? 0;
 }
-
-export async function getChildItemCountsForFolders(
-	folderIds: string[],
-): Promise<Record<string, number>> {
-	if (folderIds.length === 0) return {};
-	const db = await getDrizzleDb();
-	const counts = Object.fromEntries(folderIds.map((id) => [id, 0])) as Record<
-		string,
-		number
-	>;
-
-	const folderCounts = await db
-		.select({ parentId: folders.parentId, value: count() })
-		.from(folders)
-		.where(inArray(folders.parentId, folderIds))
-		.groupBy(folders.parentId);
-
-	for (const row of folderCounts) {
-		if (row.parentId) counts[row.parentId] += row.value;
-	}
-
-	const scriptCounts = await db
-		.select({ folderId: scripts.folderId, value: count() })
-		.from(scripts)
-		.where(inArray(scripts.folderId, folderIds))
-		.groupBy(scripts.folderId);
-
-	for (const row of scriptCounts) {
-		if (row.folderId) counts[row.folderId] += row.value;
-	}
-
-	return counts;
-}
-
-export async function moveFolders(
-	ids: string[],
-	targetFolderId: string | null,
-): Promise<void> {
-	const db = await getDrizzleDb();
-	await db
-		.update(folders)
-		.set({ parentId: targetFolderId })
-		.where(inArray(folders.id, ids));
-}
-
-export const folderQueries = {
-	getFoldersAtLevel,
-	getRecentFolders,
-	getAllFolders,
-	createFolder,
-	deleteFolder,
-	getFolderBreadcrumb,
-	getScriptCountInFolder,
-	getChildItemCountsForFolders,
-	moveFolders,
-};

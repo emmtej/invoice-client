@@ -34,13 +34,13 @@ export function FolderCardGrid({
 				root: {
 					cursor: "pointer",
 					borderColor: isSelected
-						? "var(--mantine-color-studio-blue-5)"
+						? "var(--mantine-color-studio-5)"
 						: "rgba(0,0,0,0.05)",
 					transition: "all 150ms ease",
 					"&:hover": {
 						borderColor: isSelected
-							? "var(--mantine-color-studio-blue-6)"
-							: "var(--mantine-color-studio-blue-3)",
+							? "var(--mantine-color-studio-6)"
+							: "var(--mantine-color-studio-3)",
 					},
 				},
 			}}
@@ -52,10 +52,10 @@ export function FolderCardGrid({
 						justify="center"
 						w={40}
 						h={40}
-						bg="studio-blue.0"
+						bg="studio.0"
 						style={{ borderRadius: "var(--mantine-radius-md)" }}
 					>
-						<FolderIcon size={20} color="var(--mantine-color-studio-blue-6)" />
+						<FolderIcon size={20} color="var(--mantine-color-studio-6)" />
 					</Flex>
 					<ActionIcon
 						variant="subtle"

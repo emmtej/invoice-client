@@ -1,30 +1,30 @@
-import { Center, Paper, Stack, Text } from "@mantine/core";
-import React from "react";
+import { Button, Code, Stack, Text } from "@mantine/core";
+import type { ReactNode } from "react";
+import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 
-export class RouterErrorBoundary extends React.Component<
-	{ children: React.ReactNode },
-	{ hasError: boolean }
-> {
-	state = { hasError: false };
-	static getDerivedStateFromError() {
-		return { hasError: true };
-	}
-	render() {
-		if (this.state.hasError)
-			return (
-				<Center mih="50vh">
-					<Paper withBorder p="xl" maw={420} w="100%" bg="white">
-						<Stack gap="sm">
-							<Text fw={800} c="gray.8">
-								Something went wrong loading this page.
-							</Text>
-							<Text size="sm" c="gray.5">
-								Refresh the page or navigate to another section and try again.
-							</Text>
-						</Stack>
-					</Paper>
-				</Center>
-			);
-		return this.props.children;
-	}
+function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+	return (
+		<Stack align="center" p="xl">
+			<Text fw={800} c="red.8">
+				Something went wrong
+			</Text>
+			<Code>{(error as Error).message}</Code>
+			<Button onClick={resetErrorBoundary} mt="md" color="red">
+				Try again
+			</Button>
+		</Stack>
+	);
+}
+
+export function RouterErrorBoundary({ children }: { children: ReactNode }) {
+	return (
+		<ErrorBoundary
+			FallbackComponent={ErrorFallback}
+			onError={(error, info) =>
+				console.error("Router error:", error, info.componentStack)
+			}
+		>
+			{children}
+		</ErrorBoundary>
+	);
 }

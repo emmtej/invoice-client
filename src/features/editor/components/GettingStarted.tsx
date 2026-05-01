@@ -77,7 +77,11 @@ export function GettingStarted({
 										justifyContent: "center",
 									}}
 								>
-									<FileUp size={20} strokeWidth={2} className="text-forest-900" />
+									<FileUp
+										size={20}
+										strokeWidth={2}
+										className="text-forest-900"
+									/>
 								</Box>
 								<Box>
 									<Text fw={700} size="sm" c="forest.9">
@@ -103,7 +107,10 @@ export function GettingStarted({
 				</motion.div>
 
 				{/* Bottom: Paste Editor (Stationery) */}
-				<motion.div variants={editorVariants} style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+				<motion.div
+					variants={editorVariants}
+					style={{ flex: 1, display: "flex", flexDirection: "column" }}
+				>
 					<Stack gap="xs" flex={1}>
 						<Text size="xs" fw={700} tt="uppercase" lts={2} c="sage.6">
 							Or Paste Content

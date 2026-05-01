@@ -1,56 +1,65 @@
-import { useMemo, useState } from "react";
-import { useScriptsDataStore } from "../store/useScriptsDataStore";
 import { useScriptsUiStore } from "../store/useScriptsUiStore";
+import {
+	useFolderBreadcrumb,
+	useFolderChildItemCounts,
+	useFolders,
+	useScriptsInfinite,
+} from "./useScriptsQuery";
 
 export function useScriptsPageController() {
 	const currentFolderId = useScriptsUiStore((s) => s.currentFolderId);
 	const setCurrentFolder = useScriptsUiStore((s) => s.setCurrentFolder);
-	const fetchFolderData = useScriptsDataStore((s) => s.fetchFolderData);
-	const loadMoreScripts = useScriptsDataStore((s) => s.loadMoreScripts);
 
-	const folders = useScriptsDataStore((s) => s.folders);
-	const scripts = useScriptsDataStore((s) => s.scripts);
-	const breadcrumb = useScriptsDataStore((s) => s.breadcrumb);
+	const { data: folderData, isLoading: isLoadingFolders } =
+		useFolders(currentFolderId);
+	const {
+		data: scriptData,
+		isLoading: isLoadingScripts,
+		hasNextPage,
+		isFetchingNextPage,
+		fetchNextPage,
+	} = useScriptsInfinite(currentFolderId);
+	const { data: breadcrumb = [] } = useFolderBreadcrumb(currentFolderId);
 
-	const [isLoadingMore, setIsLoadingMore] = useState(false);
+	const folders = folderData ?? [];
+	const scripts = scriptData?.pages.flatMap((page) => page.scripts) ?? [];
 
-	const allCurrentIds = useMemo(
-		() => [...folders.map((f) => f.id), ...scripts.map((s) => s.id)],
-		[folders, scripts],
-	);
+	const { data: folderChildItemCounts = {} } =
+		useFolderChildItemCounts(folders);
 
-	const handleNavigate = async (folderId: string | null) => {
+	const allCurrentIds = [
+		...folders.map((f) => f.id),
+		...scripts.map((s) => s.id),
+	];
+
+	const handleNavigate = (folderId: string | null) => {
 		setCurrentFolder(folderId);
-		await fetchFolderData(folderId);
 	};
 
-	const handleLoadMore = async () => {
-		setIsLoadingMore(true);
-		try {
-			await loadMoreScripts(currentFolderId);
-		} finally {
-			setIsLoadingMore(false);
-		}
+	const handleLoadMore = () => {
+		fetchNextPage();
 	};
 
-	const isRoot = useMemo(() => currentFolderId === null, [currentFolderId]);
+	const isRoot = currentFolderId === null;
 
-	const isEmpty = useMemo(
-		() => folders.length === 0 && scripts.length === 0,
-		[folders.length, scripts.length],
-	);
+	const isEmpty =
+		!isLoadingFolders &&
+		!isLoadingScripts &&
+		folders.length === 0 &&
+		scripts.length === 0;
 
-	const currentFolderName = useMemo(
-		() =>
-			breadcrumb.length > 0
-				? breadcrumb[breadcrumb.length - 1].name
-				: undefined,
-		[breadcrumb],
-	);
+	const currentFolderName =
+		breadcrumb.length > 0 ? breadcrumb[breadcrumb.length - 1].name : undefined;
 
 	return {
+		folders,
+		scripts,
+		breadcrumb,
+		folderChildItemCounts,
 		allCurrentIds,
-		isLoadingMore,
+		isLoading: isLoadingFolders || isLoadingScripts,
+		isLoadingMore: isFetchingNextPage,
+		hasMoreScripts: hasNextPage,
 		isRoot,
 		isEmpty,
 		currentFolderName,

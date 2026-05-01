@@ -7,7 +7,7 @@ import {
 	TextInput,
 } from "@mantine/core";
 import { Pencil, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ParsedLine } from "@/types/Script";
 
 interface TeleprompterLineProps {
@@ -38,6 +38,12 @@ export function TeleprompterLine({
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValue, setEditValue] = useState("");
 	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (isEditing) {
+			inputRef.current?.focus();
+		}
+	}, [isEditing]);
 
 	const isReadable = line.type === "dialogue" || line.type === "action";
 	const isSceneMode = trackingMode === "scene";
@@ -87,12 +93,11 @@ export function TeleprompterLine({
 	const startEditing = () => {
 		setEditValue(content);
 		setIsEditing(true);
-		setTimeout(() => inputRef.current?.focus(), 0);
 	};
 
 	const saveEdit = () => {
 		if (editValue !== content) {
-			onEdit(lineIndex, editValue);
+			void onEdit(lineIndex, editValue);
 		}
 		setIsEditing(false);
 	};

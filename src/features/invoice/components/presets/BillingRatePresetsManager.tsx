@@ -1,5 +1,6 @@
 import {
 	ActionIcon,
+	Box,
 	Button,
 	Group,
 	NumberInput,
@@ -9,8 +10,9 @@ import {
 	TextInput,
 	Tooltip,
 } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
 import { AppModal } from "@/components/ui/modal/AppModal";
 import type { InvoiceSubitemPreset } from "../../presets/subitemPresets";
@@ -35,9 +37,17 @@ export function BillingRatePresetsManager() {
 	};
 
 	const handleDelete = (id: string) => {
-		if (window.confirm("Are you sure you want to delete this preset?")) {
-			deleteRatePreset(id);
-		}
+		modals.openConfirmModal({
+			title: "Delete billing rate",
+			children: (
+				<Text size="sm">
+					Are you sure you want to delete this billing rate preset?
+				</Text>
+			),
+			labels: { confirm: "Delete", cancel: "Cancel" },
+			confirmProps: { color: "red" },
+			onConfirm: () => deleteRatePreset(id),
+		});
 	};
 
 	return (
@@ -54,7 +64,7 @@ export function BillingRatePresetsManager() {
 				</Box>
 				<Button
 					leftSection={<Plus size={16} />}
-					color="studio-blue"
+					color="studio"
 					onClick={handleOpenAdd}
 				>
 					Add Preset
@@ -127,7 +137,7 @@ export function BillingRatePresetsManager() {
 						</Text>
 						<Button
 							variant="subtle"
-							color="studio-blue"
+							color="studio"
 							onClick={handleOpenAdd}
 							leftSection={<Plus size={16} />}
 						>
@@ -226,7 +236,7 @@ function RatePresetModal({
 						Cancel
 					</Button>
 					<Button
-						color="studio-blue"
+						color="studio"
 						onClick={() =>
 							onSave({
 								subitemLabel: label,
@@ -243,7 +253,3 @@ function RatePresetModal({
 		</AppModal>
 	);
 }
-
-// Helper to use Box
-import { Box } from "@mantine/core";
-import { useEffect } from "react";

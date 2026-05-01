@@ -80,10 +80,10 @@ export function PreviewPanel({
 }: PreviewPanelProps) {
 	const navigate = useNavigate();
 
-	const handleOpenInEditor = () => {
+	const handleEdit = () => {
 		if (!script) return;
 		useScriptStore.getState().addScripts([script]);
-		navigate({ to: "/editor" });
+		void navigate({ to: "/editor" });
 	};
 
 	return (
@@ -99,7 +99,7 @@ export function PreviewPanel({
 			<Flex direction="column" h="100%" w="100%">
 				{isLoading ? (
 					<Center flex={1}>
-						<Loader color="studio-blue" size="sm" />
+						<Loader color="studio" size="sm" />
 					</Center>
 				) : script ? (
 					<>
@@ -125,7 +125,7 @@ export function PreviewPanel({
 								</ActionIcon>
 							</Flex>
 							<Flex gap="xs" wrap="wrap">
-								<Badge variant="light" color="studio-blue" size="sm">
+								<Badge variant="light" color="studio" size="sm">
 									{script.overview.wordCount.toLocaleString()} words
 								</Badge>
 								<Badge variant="light" color="gray" size="sm">
@@ -158,7 +158,7 @@ export function PreviewPanel({
 
 						<Box p="md" style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}>
 							<Button
-								color="studio-blue"
+								color="studio"
 								fullWidth
 								leftSection={<ExternalLink size={16} />}
 								onClick={handleOpenInEditor}

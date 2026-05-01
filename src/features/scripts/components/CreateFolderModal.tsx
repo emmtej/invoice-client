@@ -51,7 +51,7 @@ export function CreateFolderModal({
 				value={name}
 				onChange={(e) => setName(e.currentTarget.value)}
 				onKeyDown={(e) => {
-					if (e.key === "Enter") handleSubmit();
+					if (e.key === "Enter") void handleSubmit();
 				}}
 				data-autofocus
 				mb="lg"
@@ -61,7 +61,7 @@ export function CreateFolderModal({
 					Cancel
 				</Button>
 				<Button
-					color="studio-blue"
+					color="studio"
 					onClick={handleSubmit}
 					loading={isSubmitting}
 					disabled={!name.trim()}

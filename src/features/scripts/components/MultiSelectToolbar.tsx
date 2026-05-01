@@ -27,7 +27,7 @@ export function MultiSelectToolbar({
 				<Paper
 					shadow="md"
 					p="xs"
-					bg="studio-blue.9"
+					bg="studio.9"
 					radius="md"
 					style={{
 						...styles,

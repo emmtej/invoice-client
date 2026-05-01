@@ -12,12 +12,12 @@ import {
 	TextInput,
 } from "@mantine/core";
 import { FileUp, Library } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 import { AppModal } from "@/components/ui/modal/AppModal";
 import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
 import { processDocuments } from "@/features/editor/utils/documentParser";
-import { scriptsQueries } from "@/features/scripts/store/scriptsQueries";
+import { useAllScripts } from "@/features/scripts/hooks/useScriptsQuery";
 import { useSubitemPresets } from "../presets/useSubitemPresets";
 import { type ScriptForInvoice, useInvoiceStore } from "../store/invoiceStore";
 
@@ -50,53 +50,35 @@ export function SubitemModal({
 	const [saveAsPreset, setSaveAsPreset] = useState(false);
 
 	// Scripts from library
-	const [libraryScripts, setLibraryScripts] = useState<ScriptForInvoice[]>([]);
+	const { data: scriptsData } = useAllScripts();
+	const libraryScripts = useMemo(() => {
+		return (scriptsData ?? []).map((s) => ({
+			id: s.id,
+			name: s.name,
+			overview: { wordCount: s.wordCount },
+		}));
+	}, [scriptsData]);
+
 	const [selectedLibraryScriptIds, setSelectedLibraryScriptIds] = useState<
 		string[]
 	>([]);
 
 	// Uploaded scripts
-	const { docFiles, handleFileChange, reset: resetUpload } = useFileUpload();
 	const [uploadedScripts, setUploadedScripts] = useState<ScriptForInvoice[]>(
 		[],
 	);
-
-	// Load all scripts from library when modal opens
-	useEffect(() => {
-		let active = true;
-		if (opened) {
-			scriptsQueries.getAllScripts().then((scripts) => {
-				if (!active) return;
-				setLibraryScripts(
-					scripts.map((s) => ({
-						id: s.id,
-						name: s.name,
-						overview: { wordCount: s.wordCount },
-					})),
-				);
-			});
-		}
-		return () => {
-			active = false;
-		};
-	}, [opened]);
-
-	// Process uploaded files
-	useEffect(() => {
-		if (docFiles.length > 0) {
-			const handleProcessing = async () => {
-				const processed = await processDocuments(docFiles);
-				const newScripts: ScriptForInvoice[] = processed.map((p) => ({
-					id: p.id,
-					name: p.name,
-					overview: { wordCount: p.overview.wordCount },
-				}));
-				setUploadedScripts((prev) => [...prev, ...newScripts]);
-				resetUpload();
-			};
-			handleProcessing();
-		}
-	}, [docFiles, resetUpload]);
+	const { handleFileChange, reset: resetUpload } = useFileUpload({
+		onSuccess: async (docFiles) => {
+			const processed = await processDocuments(docFiles);
+			const newScripts: ScriptForInvoice[] = processed.map((p) => ({
+				id: p.id,
+				name: p.name,
+				overview: { wordCount: p.overview.wordCount },
+			}));
+			setUploadedScripts((prev) => [...prev, ...newScripts]);
+			resetUpload();
+		},
+	});
 
 	// Handle preset selection
 	const handlePresetChange = (id: string | null) => {
@@ -130,10 +112,6 @@ export function SubitemModal({
 		let finalPerWords = perWords;
 
 		if (billingType === "fixed-rate") {
-			// To achieve a fixed amount using the word-count based store logic:
-			// amount = (totalWordCount / perWords) * rate
-			// We set rate = fixedAmount and perWords = totalWordCount
-			// If totalWordCount is 0, we'll just use 1 and it will result in 0 amount if wordCount is 0.
 			finalRate = fixedAmount;
 			finalPerWords = Math.max(1, totalWordCount);
 		}
@@ -186,7 +164,7 @@ export function SubitemModal({
 				<Tabs
 					value={activeTab}
 					onChange={(val) => setActiveTab(val as "upload" | "library")}
-					color="studio-blue"
+					color="studio"
 				>
 					<Tabs.List grow>
 						<Tabs.Tab value="upload" leftSection={<FileUp size={16} />}>
@@ -249,7 +227,7 @@ export function SubitemModal({
 						onChange={(val) =>
 							setBillingType(val as "word-count" | "fixed-rate")
 						}
-						color="studio-blue"
+						color="studio"
 						data={[
 							{ label: "Word Count", value: "word-count" },
 							{ label: "Fixed Rate", value: "fixed-rate" },
@@ -291,7 +269,7 @@ export function SubitemModal({
 						label="Save as Preset"
 						checked={saveAsPreset}
 						onChange={(e) => setSaveAsPreset(e.currentTarget.checked)}
-						color="studio-blue"
+						color="studio"
 					/>
 				</Stack>
 
@@ -300,7 +278,7 @@ export function SubitemModal({
 						Cancel
 					</Button>
 					<Button
-						color="studio-blue"
+						color="studio"
 						onClick={handleAdd}
 						disabled={!subitemLabel || currentScripts.length === 0}
 					>

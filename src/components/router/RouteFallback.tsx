@@ -1,19 +1,9 @@
 import { Center, Loader, Paper, Stack, Text } from "@mantine/core";
-import { useEffect, useState } from "react";
-import { getDbStatus } from "@/features/storage/pgliteClient";
+import { usePgliteStore } from "@/features/storage/store/usePgliteStore";
 
 export function RouteFallback({ label }: { label: string }) {
-	const [isDbInitializing, setIsDbInitializing] = useState(
-		getDbStatus().isInitializing,
-	);
-
-	useEffect(() => {
-		const interval = setInterval(() => {
-			const { isInitializing } = getDbStatus();
-			setIsDbInitializing(isInitializing);
-		}, 100);
-		return () => clearInterval(interval);
-	}, []);
+	const status = usePgliteStore((s) => s.status);
+	const isDbInitializing = status === "initializing";
 
 	return (
 		<Center mih="50vh">

@@ -17,7 +17,7 @@ export function ScriptsEmptyState({ isRoot }: ScriptsEmptyStateProps) {
 					<FolderOpen
 						size={48}
 						strokeWidth={1.5}
-						color="var(--mantine-color-studio-blue-3)"
+						color="var(--mantine-color-studio-3)"
 					/>
 				}
 				title={isRoot ? "No scripts yet" : "This folder is empty"}

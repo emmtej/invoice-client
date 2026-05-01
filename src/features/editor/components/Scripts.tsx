@@ -16,14 +16,7 @@ import { ScriptsLoading } from "./ScriptsLoading";
 import { WorkspaceExplorer } from "./WorkspaceExplorer";
 
 export default function Scripts() {
-	const {
-		docFiles,
-		handleFileChange,
-		reset,
-		isLoading: isUploading,
-		processedCount,
-		totalCount,
-	} = useFileUpload();
+	const [isProcessing, setIsProcessing] = useState(false);
 
 	const {
 		scripts,
@@ -53,26 +46,14 @@ export default function Scripts() {
 		})),
 	);
 
-	const [isProcessing, setIsProcessing] = useState(false);
-	const modals = useScriptModals();
-	const { pasteError, clearPasteError, handlePasteProcessed } =
-		usePasteHandler(scripts.length);
-
-	useEffect(() => {
-		init();
-	}, [init]);
-
-	// Restore activeScript if cleared externally (e.g. booth editor modal close)
-	useEffect(() => {
-		if (activeScriptId !== null && activeScript === null && !isStoreLoading) {
-			void selectScript(activeScriptId);
-		}
-	}, [activeScriptId, activeScript, isStoreLoading, selectScript]);
-
-	useEffect(() => {
-		if (!docFiles || docFiles.length === 0) return;
-
-		const handleProcessing = async () => {
+	const {
+		handleFileChange,
+		reset,
+		isLoading: isUploading,
+		processedCount,
+		totalCount,
+	} = useFileUpload({
+		onSuccess: async (docFiles) => {
 			setIsProcessing(true);
 			try {
 				const processed = await processDocuments(docFiles);
@@ -84,10 +65,24 @@ export default function Scripts() {
 			} finally {
 				setIsProcessing(false);
 			}
-		};
+		},
+	});
 
-		handleProcessing();
-	}, [docFiles, addScripts, reset, selectScript]);
+	const modals = useScriptModals();
+	const { pasteError, clearPasteError, handlePasteProcessed } = usePasteHandler(
+		scripts.length,
+	);
+
+	useEffect(() => {
+		init();
+	}, [init]);
+
+	// Restore activeScript if cleared externally (e.g. booth editor modal close)
+	useEffect(() => {
+		if (activeScriptId !== null && activeScript === null && !isStoreLoading) {
+			void selectScript(activeScriptId);
+		}
+	}, [activeScriptId, activeScript, isStoreLoading, selectScript]);
 
 	const handleConfirmClearAll = useCallback(async () => {
 		const count = scripts.length;

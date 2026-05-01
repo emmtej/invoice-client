@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 import { generateId } from "@/utils/id";
 
 export const DEFAULT_RATE_PER_WORD = 0.1;
@@ -127,7 +128,7 @@ function createOneSubitem(
 
 export const useInvoiceStore = create<InvoiceStore>()(
 	persist(
-		(set) => ({
+		immer((set) => ({
 			invoice: {
 				id: generateId(),
 				defaultRatePerWord: DEFAULT_RATE_PER_WORD,
@@ -151,21 +152,12 @@ export const useInvoiceStore = create<InvoiceStore>()(
 						rate,
 						ratePerWords,
 					);
-					if (!newSubitem) return state;
-					const itemExists = state.invoice.items.some(
-						(item) => item.id === itemId,
-					);
-					if (!itemExists) return state;
-					return {
-						invoice: {
-							...state.invoice,
-							items: state.invoice.items.map((item) =>
-								item.id === itemId
-									? { ...item, subitems: [...item.subitems, newSubitem] }
-									: item,
-							),
-						},
-					};
+					if (!newSubitem) return;
+
+					const item = state.invoice.items.find((i) => i.id === itemId);
+					if (item) {
+						item.subitems.push(newSubitem);
+					}
 				}),
 
 			addSubitemsAsNewItem: (
@@ -185,146 +177,92 @@ export const useInvoiceStore = create<InvoiceStore>()(
 						rate,
 						ratePerWords,
 					);
-					if (!subitem) return state;
-					const newItem: InvoiceItem = {
+					if (!subitem) return;
+
+					state.invoice.items.push({
 						id: generateId(),
 						name: itemName,
 						subitems: [subitem],
-					};
-					return {
-						invoice: {
-							...state.invoice,
-							items: [...state.invoice.items, newItem],
-						},
-					};
+					});
 				}),
 
 			updateItemName: (itemId, name) =>
-				set((state) => ({
-					invoice: {
-						...state.invoice,
-						items: state.invoice.items.map((item) =>
-							item.id === itemId
-								? { ...item, name: name.trim() === "" ? item.name : name }
-								: item,
-						),
-					},
-				})),
+				set((state) => {
+					const item = state.invoice.items.find((i) => i.id === itemId);
+					if (item) {
+						item.name = name.trim() === "" ? item.name : name;
+					}
+				}),
 
 			updateSubitemRate: (itemId, subitemId, rate) =>
-				set((state) => ({
-					invoice: {
-						...state.invoice,
-						items: state.invoice.items.map((item) =>
-							item.id === itemId
-								? {
-										...item,
-										subitems: item.subitems.map((sub) => {
-											if (sub.id !== subitemId) return sub;
-											return {
-												...sub,
-												ratePerWord: rate,
-												amount: calculateSubitemAmount(
-													sub.wordCount,
-													rate,
-													sub.ratePerWords,
-												),
-											};
-										}),
-									}
-								: item,
-						),
-					},
-				})),
+				set((state) => {
+					const item = state.invoice.items.find((i) => i.id === itemId);
+					if (!item) return;
+					const sub = item.subitems.find((s) => s.id === subitemId);
+					if (sub) {
+						sub.ratePerWord = rate;
+						sub.amount = calculateSubitemAmount(
+							sub.wordCount,
+							rate,
+							sub.ratePerWords,
+						);
+					}
+				}),
 
 			updateSubitemUnit: (itemId, subitemId, unit) =>
-				set((state) => ({
-					invoice: {
-						...state.invoice,
-						items: state.invoice.items.map((item) =>
-							item.id === itemId
-								? {
-										...item,
-										subitems: item.subitems.map((sub) => {
-											if (sub.id !== subitemId) return sub;
-											return {
-												...sub,
-												ratePerWords: unit,
-												amount: calculateSubitemAmount(
-													sub.wordCount,
-													sub.ratePerWord,
-													unit,
-												),
-											};
-										}),
-									}
-								: item,
-						),
-					},
-				})),
+				set((state) => {
+					const item = state.invoice.items.find((i) => i.id === itemId);
+					if (!item) return;
+					const sub = item.subitems.find((s) => s.id === subitemId);
+					if (sub) {
+						sub.ratePerWords = unit;
+						sub.amount = calculateSubitemAmount(
+							sub.wordCount,
+							sub.ratePerWord,
+							unit,
+						);
+					}
+				}),
 
 			updateSubitemLabel: (itemId, subitemId, label) =>
-				set((state) => ({
-					invoice: {
-						...state.invoice,
-						items: state.invoice.items.map((item) =>
-							item.id === itemId
-								? {
-										...item,
-										subitems: item.subitems.map((sub) =>
-											sub.id === subitemId ? { ...sub, label } : sub,
-										),
-									}
-								: item,
-						),
-					},
-				})),
+				set((state) => {
+					const item = state.invoice.items.find((i) => i.id === itemId);
+					if (!item) return;
+					const sub = item.subitems.find((s) => s.id === subitemId);
+					if (sub) {
+						sub.label = label;
+					}
+				}),
 
 			removeSubitem: (itemId, subitemId) =>
 				set((state) => {
-					const items = state.invoice.items.map((item) => {
-						if (item.id !== itemId) return item;
-						const subitems = item.subitems.filter(
-							(sub) => sub.id !== subitemId,
-						);
-						return { ...item, subitems };
-					});
-					return {
-						invoice: { ...state.invoice, items },
-					};
+					const item = state.invoice.items.find((i) => i.id === itemId);
+					if (item) {
+						item.subitems = item.subitems.filter((s) => s.id !== subitemId);
+					}
 				}),
 
 			removeItem: (itemId) =>
-				set((state) => ({
-					invoice: {
-						...state.invoice,
-						items: state.invoice.items.filter((item) => item.id !== itemId),
-					},
-				})),
+				set((state) => {
+					state.invoice.items = state.invoice.items.filter(
+						(i) => i.id !== itemId,
+					);
+				}),
 
 			resetInvoice: () =>
-				set((state) => ({
-					invoice: {
-						...state.invoice,
-						items: [],
-					},
-				})),
+				set((state) => {
+					state.invoice.items = [];
+				}),
 
 			addEmptyItem: (name) =>
 				set((state) => {
-					const newItem: InvoiceItem = {
+					state.invoice.items.push({
 						id: generateId(),
 						name: name.trim() || "New item",
 						subitems: [],
-					};
-					return {
-						invoice: {
-							...state.invoice,
-							items: [...state.invoice.items, newItem],
-						},
-					};
+					});
 				}),
-		}),
+		})),
 		{
 			name: "invoice-store",
 			storage: createJSONStorage(() => {

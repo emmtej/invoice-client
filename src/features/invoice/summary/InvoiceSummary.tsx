@@ -197,13 +197,7 @@ export const InvoiceSummary = memo(
 						</Group>
 						<Box h={1} w={150} bg="sage.1" my="sm" />
 						<Group gap={48}>
-							<Text
-								size="sm"
-								fw={800}
-								c="forest.9"
-								tt="uppercase"
-								lts={1.5}
-							>
+							<Text size="sm" fw={800} c="forest.9" tt="uppercase" lts={1.5}>
 								Total Due
 							</Text>
 							<Text

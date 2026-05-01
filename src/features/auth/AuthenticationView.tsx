@@ -1,4 +1,5 @@
 import {
+	Alert,
 	Anchor,
 	Box,
 	Divider,
@@ -8,6 +9,7 @@ import {
 	Text,
 } from "@mantine/core";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { Info } from "lucide-react";
 import { PageTitle } from "@/components/ui/text/PageTitle";
 import { AuthForm } from "@/features/auth/components/AuthForm";
 import { OAuthProviders } from "@/features/auth/components/OAuthProviders";
@@ -19,9 +21,9 @@ function AuthenticationView() {
 
 	const handleModeChange = (value: string) => {
 		if (value === "login") {
-			navigate({ to: "/login", replace: true });
+			void navigate({ to: "/login", replace: true });
 		} else {
-			navigate({ to: "/register", replace: true });
+			void navigate({ to: "/register", replace: true });
 		}
 	};
 
@@ -41,6 +43,21 @@ function AuthenticationView() {
 					display="flex"
 					style={{ flexDirection: "column", justifyContent: "center" }}
 				>
+					{import.meta.env.VITE_DEMO_MODE === "true" && (
+						<Alert
+							icon={<Info size={16} />}
+							title="Demo Mode"
+							color="wave"
+							variant="light"
+							mb="xl"
+						>
+							Use{" "}
+							<Text span fw={700}>
+								test@example.com
+							</Text>{" "}
+							to log in. This is a mock authentication for demo purposes.
+						</Alert>
+					)}
 					<Box mb={40}>
 						<PageTitle size="42px">Get Started with InVoice</PageTitle>
 						<Text c="gray.5" mt="sm" size="lg" className="page-subtitle">

@@ -167,7 +167,7 @@ export function SessionHistory({
 
 						<Group justify="space-between" mt={8}>
 							<Group gap={8}>
-								<Text size="xs" ff="monospace" fw={700} c="studio-blue.7">
+								<Text size="xs" ff="monospace" fw={700} c="studio.7">
 									{formatTime(s.elapsedMs)}
 								</Text>
 								<Text size="xs" c="gray.3">

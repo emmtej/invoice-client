@@ -36,13 +36,13 @@ export function FolderCard({
 				root: {
 					cursor: "pointer",
 					borderColor: isSelected
-						? "var(--mantine-color-studio-blue-5)"
+						? "var(--mantine-color-studio-5)"
 						: "rgba(0,0,0,0.05)",
 					transition: "border-color 150ms ease, background-color 150ms ease",
 					"&:hover": {
 						borderColor: isSelected
-							? "var(--mantine-color-studio-blue-6)"
-							: "var(--mantine-color-studio-blue-3)",
+							? "var(--mantine-color-studio-6)"
+							: "var(--mantine-color-studio-3)",
 						backgroundColor: isSelected
 							? "rgba(17, 40, 77, 0.08)"
 							: "rgba(17, 40, 77, 0.02)",
@@ -54,7 +54,7 @@ export function FolderCard({
 				<Flex align="flex-start" gap="sm" miw={0} style={{ flex: 1 }}>
 					<FolderIcon
 						size={20}
-						color="var(--mantine-color-studio-blue-5)"
+						color="var(--mantine-color-studio-5)"
 						style={{ flexShrink: 0, marginTop: 2 }}
 					/>
 					<Stack gap={4} miw={0} style={{ flex: 1 }}>

@@ -75,21 +75,25 @@ const tools = [
 		description: "Account and defaults",
 		icon: User,
 		to: "/profile",
-		color: "studio-blue" as const,
+		color: "studio" as const,
 	},
 ];
 
 export default function HomeView() {
-	const featureIcons: Array<"studio-blue" | "on-air-red" | "brand-dark"> = [
+	const featureIcons: Array<"studio" | "on-air-red" | "brand-dark"> = [
 		"on-air-red",
 		"on-air-red",
 		"brand-dark",
-		"studio-blue",
+		"studio",
 	];
 
 	const featureItems = features.map((feature, i) => (
 		<Stack key={feature.title} gap="sm">
-			<ThemeIcon size={48} variant="light" color={featureIcons[i] ?? "on-air-red"}>
+			<ThemeIcon
+				size={48}
+				variant="light"
+				color={featureIcons[i] ?? "on-air-red"}
+			>
 				<feature.icon size={26} strokeWidth={2} />
 			</ThemeIcon>
 			<div>
@@ -196,5 +200,3 @@ export default function HomeView() {
 		</Stack>
 	);
 }
-
-

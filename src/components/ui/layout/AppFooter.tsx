@@ -30,7 +30,7 @@ export function AppFooter() {
 						<Receipt
 							size={30}
 							strokeWidth={2}
-							style={{ color: "var(--mantine-color-studio-blue-8)" }}
+							style={{ color: "var(--mantine-color-studio-8)" }}
 						/>
 						<Text size="xl" fw={800} c="gray.8" className="tracking-tighter">
 							InVoice

@@ -9,7 +9,7 @@ import {
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useState } from "react";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
-import { useScriptsDataStore } from "../store/useScriptsDataStore";
+import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { useScriptsUiStore } from "../store/useScriptsUiStore";
 import { sortByName } from "../utils/sortByName";
 import { FolderCard } from "./FolderCard";
@@ -19,6 +19,9 @@ import { ScriptLibraryTileGrid } from "./ScriptLibraryTileGrid";
 import { useScriptsModalsStore } from "./ScriptsModals";
 
 interface ScriptsLibraryItemsProps {
+	folders: Folder[];
+	scripts: ScriptSummary[];
+	folderItemCounts: Record<string, number>;
 	onNavigateFolder: (folderId: string) => void;
 	hasMoreScripts: boolean;
 	isLoadingMore: boolean;
@@ -27,16 +30,15 @@ interface ScriptsLibraryItemsProps {
 }
 
 export function ScriptsLibraryItems({
+	folders,
+	scripts,
+	folderItemCounts,
 	onNavigateFolder,
 	hasMoreScripts,
 	isLoadingMore,
 	onLoadMore,
 	allCurrentIds,
 }: ScriptsLibraryItemsProps) {
-	const folders = useScriptsDataStore((s) => s.folders);
-	const scripts = useScriptsDataStore((s) => s.scripts);
-	const folderItemCounts = useScriptsDataStore((s) => s.folderChildItemCounts);
-
 	const viewMode = useScriptsUiStore((s) => s.viewMode);
 	const selectedScriptId = useScriptsUiStore(
 		(s) => s.selectedScript?.id ?? null,
@@ -158,7 +160,7 @@ export function ScriptsLibraryItems({
 					<Box ta="center" pt="sm">
 						<Button
 							variant="light"
-							color="studio-blue"
+							color="studio"
 							onClick={onLoadMore}
 							loading={isLoadingMore}
 						>
@@ -243,7 +245,7 @@ export function ScriptsLibraryItems({
 				<Box ta="center" pt="sm">
 					<Button
 						variant="light"
-						color="studio-blue"
+						color="studio"
 						onClick={onLoadMore}
 						loading={isLoadingMore}
 					>

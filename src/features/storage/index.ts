@@ -5,7 +5,8 @@ export {
 	getAllFolders,
 	getChildItemCountsForFolders,
 	getFolderBreadcrumb,
-	getFoldersAtLevel,
+	getFolderById,
+	getRecentFolders,
 	getScriptCountInFolder,
 } from "./folderQueries";
 export { getDb, initDb, resetDb } from "./pgliteClient";

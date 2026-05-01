@@ -94,7 +94,7 @@ export function ScriptSelectionPanel({
 										size={56}
 										radius="lg"
 										variant="filled"
-										color="studio-blue"
+										color="studio"
 									>
 										<FileText size={30} />
 									</ThemeIcon>

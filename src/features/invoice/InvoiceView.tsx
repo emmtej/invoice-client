@@ -1,5 +1,4 @@
 import { Box, Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
-import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -15,27 +14,6 @@ import {
 import { InvoiceItemAdder } from "./items";
 import { ProfileSection, useProfileManager } from "./profile";
 import { InvoiceSummary } from "./summary";
-
-const containerVariants = {
-	hidden: { opacity: 0 },
-	visible: {
-		opacity: 1,
-		transition: {
-			staggerChildren: 0.2,
-		},
-	},
-};
-
-const itemVariants = {
-	hidden: { opacity: 0, y: 20 },
-	visible: {
-		opacity: 1,
-		y: 0,
-		transition: {
-			duration: 0.7,
-		},
-	},
-};
 
 export default function InvoiceView() {
 	const { invoice, addEmptyItem } = useInvoiceStore(
@@ -72,23 +50,18 @@ export default function InvoiceView() {
 	const hasItems = invoice.items.length > 0;
 
 	return (
-		<motion.div
-			initial="hidden"
-			animate="visible"
-			variants={containerVariants}
-			style={{ minHeight: "100%" }}
-		>
-			<Stack gap={4} mb="xl">
-				<motion.div variants={itemVariants}>
+		<Box className="fade-up" style={{ minHeight: "100%" }}>
+			<Stack gap={4} mb="xl" className="fade-up stagger-1">
+				<Box>
 					<PageTitle>
 						New <span style={{ fontStyle: "italic" }}>Invoice</span>
 					</PageTitle>
-				</motion.div>
-				<motion.div variants={itemVariants}>
+				</Box>
+				<Box>
 					<Text size="lg" className="page-subtitle">
 						Create a professional billing document for your voice-over projects.
 					</Text>
-				</motion.div>
+				</Box>
 			</Stack>
 
 			<Flex
@@ -101,7 +74,7 @@ export default function InvoiceView() {
 				<Box flex={1} maw={{ lg: 800 }} w="100%">
 					<Stack gap={48}>
 						{/* Step 1: Profile */}
-						<motion.div variants={itemVariants}>
+						<Box className="fade-up stagger-2">
 							<Stack gap="xl">
 								<Group gap="xs">
 									<Text fw={800} size="xl" c="sage.6" opacity={0.5}>
@@ -115,10 +88,10 @@ export default function InvoiceView() {
 									<ProfileSection {...profileManager} />
 								</Paper>
 							</Stack>
-						</motion.div>
+						</Box>
 
 						{/* Step 2: Details */}
-						<motion.div variants={itemVariants} className="md:translate-y-8">
+						<Box className="fade-up stagger-3">
 							<Stack gap="xl">
 								<Group gap="xs">
 									<Text fw={800} size="xl" c="sage.6" opacity={0.5}>
@@ -137,10 +110,10 @@ export default function InvoiceView() {
 									/>
 								</Paper>
 							</Stack>
-						</motion.div>
+						</Box>
 
 						{/* Step 3: Line Items */}
-						<motion.div variants={itemVariants}>
+						<Box className="fade-up stagger-4">
 							<Stack gap="xl">
 								<Group gap="xs">
 									<Text fw={800} size="xl" c="sage.6" opacity={0.5}>
@@ -165,7 +138,7 @@ export default function InvoiceView() {
 									</Stack>
 								</Paper>
 							</Stack>
-						</motion.div>
+						</Box>
 					</Stack>
 				</Box>
 
@@ -178,8 +151,9 @@ export default function InvoiceView() {
 						top: "100px",
 						alignSelf: "flex-start",
 					}}
+					className="fade-up stagger-5"
 				>
-					<motion.div variants={itemVariants}>
+					<Box>
 						<Stack gap="xl">
 							<Stack gap="md">
 								<Text
@@ -230,9 +204,9 @@ export default function InvoiceView() {
 								</Button>
 							</Group>
 						</Stack>
-					</motion.div>
+					</Box>
 				</Box>
 			</Flex>
-		</motion.div>
+		</Box>
 	);
 }

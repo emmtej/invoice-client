@@ -118,69 +118,24 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 				{/* Table Area */}
 				<Box p="xl">
 					{item.subitems.length > 0 ? (
-						<Table
-							verticalSpacing="md"
-							horizontalSpacing="sm"
-						>
+						<Table verticalSpacing="md" horizontalSpacing="sm">
 							<Table.Thead>
 								<Table.Tr>
-									<Table.Th
-										style={{
-											color: "var(--mantine-color-sage-6)",
-											fontSize: "11px",
-											fontWeight: 800,
-											textTransform: "uppercase",
-											letterSpacing: "1px",
-											borderBottom: "1px solid var(--mantine-color-sage-1)",
-										}}
-									>
-										Line Item / Description
-									</Table.Th>
-									<Table.Th
-										style={{
-											color: "var(--mantine-color-sage-6)",
-											fontSize: "11px",
-											fontWeight: 800,
-											textTransform: "uppercase",
-											letterSpacing: "1px",
-											textAlign: "right",
-											borderBottom: "1px solid var(--mantine-color-sage-1)",
-										}}
-									>
-										Qty
-									</Table.Th>
-									<Table.Th
-										style={{
-											color: "var(--mantine-color-sage-6)",
-											fontSize: "11px",
-											fontWeight: 800,
-											textTransform: "uppercase",
-											letterSpacing: "1px",
-											textAlign: "right",
-											borderBottom: "1px solid var(--mantine-color-sage-1)",
-										}}
-									>
-										Rate
-									</Table.Th>
-									<Table.Th
-										style={{
-											color: "var(--mantine-color-sage-6)",
-											fontSize: "11px",
-											fontWeight: 800,
-											textTransform: "uppercase",
-											letterSpacing: "1px",
-											textAlign: "right",
-											borderBottom: "1px solid var(--mantine-color-sage-1)",
-										}}
-									>
-										Total
-									</Table.Th>
-									<Table.Th w={50} style={{ borderBottom: "1px solid var(--mantine-color-sage-1)" }} />
+									<Table.Th>Line Item / Description</Table.Th>
+									<Table.Th style={{ textAlign: "right" }}>Qty</Table.Th>
+									<Table.Th style={{ textAlign: "right" }}>Rate</Table.Th>
+									<Table.Th style={{ textAlign: "right" }}>Total</Table.Th>
+									<Table.Th w={50} />
 								</Table.Tr>
 							</Table.Thead>
 							<Table.Tbody>
 								{item.subitems.map((sub) => (
-									<Table.Tr key={sub.id} style={{ borderBottom: "1px solid var(--mantine-color-sage-0)" }}>
+									<Table.Tr
+										key={sub.id}
+										style={{
+											borderBottom: "1px solid var(--mantine-color-sage-0)",
+										}}
+									>
 										<Table.Td>
 											<Stack gap={2}>
 												<Group gap={6}>
@@ -211,13 +166,23 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 											</Stack>
 										</Table.Td>
 										<Table.Td style={{ textAlign: "right" }}>
-											<Text size="sm" fw={600} className="tabular-nums" c="forest.9">
+											<Text
+												size="sm"
+												fw={600}
+												className="tabular-nums"
+												c="forest.9"
+											>
 												{sub.wordCount.toLocaleString()}
 											</Text>
 										</Table.Td>
 										<Table.Td style={{ textAlign: "right" }}>
 											<Group justify="flex-end" gap={4}>
-												<Text size="sm" fw={600} className="tabular-nums" c="forest.9">
+												<Text
+													size="sm"
+													fw={600}
+													className="tabular-nums"
+													c="forest.9"
+												>
 													${sub.ratePerWord.toFixed(2)}
 												</Text>
 												<ActionIcon
@@ -267,7 +232,10 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 						<Box
 							py="xl"
 							ta="center"
-							style={{ border: "2px dashed var(--mantine-color-sage-1)", borderRadius: "var(--mantine-radius-md)" }}
+							style={{
+								border: "2px dashed var(--mantine-color-sage-1)",
+								borderRadius: "var(--mantine-radius-md)",
+							}}
 						>
 							<Text size="sm" c="sage.4" fw={500}>
 								No line items added to this category yet.

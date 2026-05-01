@@ -1,3 +1,4 @@
+import { Box, Paper } from "@mantine/core";
 import { Link, RichTextEditor } from "@mantine/tiptap";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -6,7 +7,6 @@ import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Box, Paper } from "@mantine/core";
 import { type ReactNode, useEffect } from "react";
 
 const normalizeHtml = (html: string) =>

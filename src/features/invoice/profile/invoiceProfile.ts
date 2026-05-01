@@ -38,14 +38,13 @@ const profileStorageSchema = z.object({
 			label: z.string().default(""),
 			isDefault: z.boolean().default(false),
 			profile: z
-			.object({
-			firstName: z.string().default(""),
-			lastName: z.string().default(""),
-			email: z.string().default(""),
-			avatarUrl: z.string().optional(),
-			})
-			.default({ firstName: "", lastName: "", email: "" }),
-
+				.object({
+					firstName: z.string().default(""),
+					lastName: z.string().default(""),
+					email: z.string().default(""),
+					avatarUrl: z.string().optional(),
+				})
+				.default({ firstName: "", lastName: "", email: "" }),
 		}),
 	),
 	defaultProfileId: z.string().optional(),

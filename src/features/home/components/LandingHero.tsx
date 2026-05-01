@@ -78,7 +78,7 @@ export function LandingHero() {
 										size="md"
 										radius="sm"
 										variant="filled"
-										color="studio-blue"
+										color="studio"
 										onMouseEnter={() => initDb()}
 									>
 										Get Started

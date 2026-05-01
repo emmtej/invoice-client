@@ -25,10 +25,7 @@ export function MoveToFolderModal({
 
 	useEffect(() => {
 		if (opened) {
-			folderQueries.getAllFolders().then((allFolders) => {
-				// We can only move folders to root or other top-level folders if they aren't already at max depth.
-				// For simplicity, let's allow moving to any folder except itself or its children.
-				// However, the project says max depth is 2 levels.
+			void folderQueries.getAllFolders().then((allFolders) => {
 				setFolders(allFolders);
 			});
 		}
@@ -70,7 +67,7 @@ export function MoveToFolderModal({
 						Cancel
 					</Button>
 					<Button
-						color="studio-blue"
+						color="studio"
 						onClick={() =>
 							onConfirm(selectedFolderId === "root" ? null : selectedFolderId)
 						}

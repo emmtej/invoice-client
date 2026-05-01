@@ -77,6 +77,8 @@ export const scriptContentsRelations = relations(scriptContents, ({ one }) => ({
 	}),
 }));
 
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+
 export const scriptDrafts = pgTable(
 	"script_drafts",
 	{
@@ -112,3 +114,12 @@ export const boothSessions = pgTable("booth_sessions", {
 	startedAt: timestamp("started_at").defaultNow().notNull(),
 	completedAt: timestamp("completed_at"),
 });
+
+export const insertScriptSchema = createInsertSchema(scripts);
+export const selectScriptSchema = createSelectSchema(scripts);
+export const insertFolderSchema = createInsertSchema(folders);
+export const selectFolderSchema = createSelectSchema(folders);
+export const insertScriptDraftSchema = createInsertSchema(scriptDrafts);
+export const selectScriptDraftSchema = createSelectSchema(scriptDrafts);
+export const insertBoothSessionSchema = createInsertSchema(boothSessions);
+export const selectBoothSessionSchema = createSelectSchema(boothSessions);
