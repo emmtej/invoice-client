@@ -33,11 +33,15 @@ export default defineConfig(({ mode }) => {
 				avif: { quality: 70 },
 			}),
 			tailwindcss(),
-			visualizer({
-				filename: "dist/stats.html",
-				gzipSize: true,
-				brotliSize: true,
-			}),
+			...(process.env.ANALYZE
+				? [
+						visualizer({
+							filename: "dist/stats.html",
+							gzipSize: true,
+							brotliSize: true,
+						}),
+					]
+				: []),
 		],
 		optimizeDeps: {
 			exclude: ["@electric-sql/pglite"],
