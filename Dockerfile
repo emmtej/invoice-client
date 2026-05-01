@@ -9,7 +9,7 @@ WORKDIR /app
 ARG CLIENT_PORT=3000
 ENV CLIENT_PORT=$CLIENT_PORT
 
-ARG VITE_DEMO_MODE=false
+ARG VITE_DEMO_MODE=true
 ENV VITE_DEMO_MODE=$VITE_DEMO_MODE
 
 # Copy package.json and lock file for better caching
