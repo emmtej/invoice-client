@@ -54,7 +54,7 @@ export function ScriptSelector({
 			const processed = await processDocuments(docFiles);
 			if (processed.length > 0) {
 				await scriptsQueries.saveScripts(processed);
-				queryClient.invalidateQueries({ queryKey: scriptKeys.all });
+				await queryClient.invalidateQueries({ queryKey: scriptKeys.all });
 				if (processed.length === 1) {
 					onSelect(processed[0]);
 				}
@@ -74,7 +74,7 @@ export function ScriptSelector({
 			if (script) {
 				onSelect(script);
 				await scriptsQueries.touchScript(id);
-				queryClient.invalidateQueries({ queryKey: scriptKeys.all });
+				await queryClient.invalidateQueries({ queryKey: scriptKeys.all });
 			}
 		} finally {
 			setLoadingScriptId(null);

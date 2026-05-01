@@ -3,8 +3,10 @@ import {
 	getScriptOverview,
 } from "@/features/editor/utils/documentParser";
 import { generateHtmlFromScript } from "@/features/editor/utils/formatParsedLines";
+import type { LineTimingEntry } from "@/features/storage/types";
 import type { Script } from "@/types/Script";
 import { generateId } from "@/utils/id";
+import type { BoothSession } from "./boothQueries";
 import type { BoothState, BoothStatus } from "./types";
 import {
 	findNextUncompletedLine,
@@ -48,15 +50,10 @@ export const boothMachine = {
 
 	restoreSession: (
 		script: Script,
-		session: {
-			id: string;
-			status: string;
-			elapsedMs: number;
-			lineTimings: { lineIndex: number; elapsedMs: number }[];
-		},
+		session: BoothSession,
 	): Partial<BoothState> => {
 		const completedLineIndices = session.lineTimings.map(
-			(timing: { lineIndex: number }) => timing.lineIndex,
+			(timing: LineTimingEntry) => timing.lineIndex,
 		);
 		const nextLine = findNextUncompletedLine(script, completedLineIndices);
 
