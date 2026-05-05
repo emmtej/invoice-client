@@ -9,9 +9,9 @@ import "./styles.css";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
-import { reportWebVitals } from "./lib/vitals";
 import { router } from "./router.tsx";
 import { appTheme } from "./theme";
+import { reportWebVitals } from "./utils/vitals";
 
 const queryClient = new QueryClient({
 	defaultOptions: {

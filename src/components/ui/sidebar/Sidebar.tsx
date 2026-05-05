@@ -1,7 +1,7 @@
 import { Box, ScrollArea } from "@mantine/core";
 import type { LucideIcon } from "lucide-react";
 import { MENU } from "@/config/menu";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/features/user/store/userStore";
 import { LinksGroup } from "./NavLinksGroup";
 import { UserButton } from "./UserButton";
 

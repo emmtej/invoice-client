@@ -3,5 +3,5 @@ import { getDrizzleDb } from "./pgliteClient";
 
 export async function runMigrations() {
 	const db = await getDrizzleDb();
-	await migrate(db, { migrationsFolder: "./drizzle" });
+	await migrate(db, { migrationsFolder: "./src/features/storage/migrations" });
 }

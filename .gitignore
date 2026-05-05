@@ -22,3 +22,4 @@ CLAUDE.md
 specs/TODO.md
 .gemini/
 *.tsbuildinfo
+src/routeTree.gen.ts

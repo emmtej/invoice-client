@@ -1,7 +1,7 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { RouterErrorBoundary } from "@/components/router/RouterErrorBoundary";
 import { Layout } from "@/components/ui/layout/Layout";
+import { RouterErrorBoundary } from "@/routes/components/RouterErrorBoundary";
 
 export const Route = createRootRoute({
 	component: () => (

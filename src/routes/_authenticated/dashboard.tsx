@@ -1,8 +1,8 @@
 import { Button, Stack, Text } from "@mantine/core";
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
-import { RouteFallback } from "@/components/router/RouteFallback";
 import { DashboardView } from "@/features/user";
+import { RouteFallback } from "@/routes/components/RouteFallback";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
 	errorComponent: ({ reset }) => (
