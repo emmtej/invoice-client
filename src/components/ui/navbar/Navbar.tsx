@@ -1,7 +1,13 @@
-import { Anchor, Avatar, Group, Text, UnstyledButton } from "@mantine/core";
+import {
+	Anchor,
+	Avatar,
+	Group,
+	Text,
+	Title,
+	UnstyledButton,
+} from "@mantine/core";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Receipt } from "lucide-react";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/features/user/store/userStore";
 import { LinkButton } from "../button/ButtonLink";
 import { APP_SHELL_HEADER_HEIGHT } from "../layout/layout-constants";
 
@@ -60,25 +66,53 @@ export function Navbar() {
 				style={{
 					display: "flex",
 					alignItems: "center",
-					gap: "var(--mantine-spacing-sm)",
 					textDecoration: "none",
 					color: "inherit",
 				}}
 			>
-				<Receipt
-					size={28}
-					strokeWidth={2}
-					style={{ color: "var(--mantine-color-wave-8)" }}
-				/>
-				<Text
-					size="xl"
-					fw={800}
-					c="gray.8"
-					className="tracking-tighter"
-					visibleFrom="xs"
+				<Title
+					order={3}
+					c="forest.9"
+					style={{
+						display: "flex",
+						alignItems: "baseline",
+						lineHeight: 1,
+					}}
 				>
-					InVoice
-				</Text>
+					<span
+						style={{
+							fontWeight: 900,
+							letterSpacing: "-0.08em",
+						}}
+					>
+						In
+					</span>
+					<span
+						style={{
+							fontStyle: "italic",
+							fontWeight: 900,
+							color: "var(--mantine-color-wave-8)",
+							fontSize: "1.4em",
+							margin: "0 -0.04em",
+							position: "relative",
+							top: "0.02em",
+							zIndex: 1,
+						}}
+					>
+						V
+					</span>
+					<span
+						style={{
+							fontWeight: 400,
+							letterSpacing: "0.12em",
+							fontFamily: "var(--mantine-font-family)",
+							color: "var(--mantine-color-gray-6)",
+							fontSize: "0.85em",
+						}}
+					>
+						oice
+					</span>
+				</Title>
 			</UnstyledButton>
 
 			{user === null ? (

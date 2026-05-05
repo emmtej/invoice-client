@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
 
 	return {
 		plugins: [
-			TanStackRouterVite(),
+			TanStackRouterVite({ routeFileIgnorePattern: "components" }),
 			...(mode === "development" ? [devtools()] : []),
 			viteReact({
 				babel: {
