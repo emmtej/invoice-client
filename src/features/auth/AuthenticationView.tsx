@@ -32,7 +32,7 @@ function AuthenticationView() {
 			<Paper
 				radius="3xl"
 				bg="white"
-				className="flex overflow-hidden min-h-[650px] w-full max-w-[1000px] border border-gray-100 shadow-xl"
+				className="flex overflow-hidden min-h-[650px] w-full max-w-[1000px] border border-stone shadow-xl"
 			>
 				{/* Left Form Column */}
 				<Box
@@ -58,7 +58,7 @@ function AuthenticationView() {
 						</Alert>
 					)}
 					<Box mb={40}>
-						<PageTitle size="42px">Get Started with InVoice</PageTitle>
+						<PageTitle>Get Started with InVoice</PageTitle>
 						<Text c="brand-dark.4" mt="sm" size="lg" className="page-subtitle">
 							Professional script management and word-count based invoicing for
 							voice artists.
@@ -93,7 +93,7 @@ function AuthenticationView() {
 					<Divider
 						my="md"
 						label="Or continue with"
-						className="border-gray-50"
+						className="border-brand-dark-50"
 					/>
 					<OAuthProviders />
 				</Box>
@@ -101,7 +101,7 @@ function AuthenticationView() {
 				{/* Right Image Column */}
 				<Box
 					w={{ base: "0%", md: "50%" }}
-					className="hidden md:block relative bg-brand-dark-50/30 border-l border-gray-100"
+					className="hidden md:block relative bg-brand-dark-50/30 border-l border-stone"
 				>
 					<Flex
 						h="100%"
@@ -109,7 +109,7 @@ function AuthenticationView() {
 						direction="column"
 						align="center"
 						justify="center"
-						className="text-brand-dark-200"
+						className="text-brand-dark-400"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +129,7 @@ function AuthenticationView() {
 							<circle cx="9" cy="9" r="2" />
 							<path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
 						</svg>
-						<Text size="lg" fw={700} c="brand-dark.3">
+						<Text size="lg" fw={700} c="brand-dark.5">
 							Professional Studio Interface
 						</Text>
 					</Flex>

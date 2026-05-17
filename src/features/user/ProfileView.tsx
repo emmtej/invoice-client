@@ -15,7 +15,7 @@ export default function ProfileView() {
 	return (
 		<Stack gap="md">
 			<Box mb="xl">
-				<PageTitle size="40px">Profile</PageTitle>
+				<PageTitle>Profile</PageTitle>
 				<Text c="brand-dark.4" size="sm" mt={4} className="page-subtitle">
 					Account settings and defaults will live here. For now, open the editor
 					or invoices to keep working.
@@ -28,7 +28,7 @@ export default function ProfileView() {
 				maw={480}
 				bg="white"
 				withBorder
-				className="border-gray-100 shadow-sm"
+				className="border-stone shadow-sm"
 			>
 				<Stack gap="md">
 					<Group gap="sm">
