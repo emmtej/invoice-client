@@ -45,9 +45,9 @@ export const WorkspaceExplorer = memo(
 		return (
 			<Box
 				w={300}
-				bg="gray.0"
+				bg="brand-dark.0"
 				visibleFrom="md"
-				className="flex flex-col h-full border-l border-gray-200"
+				className="flex flex-col h-full border-l border-brand-dark-200"
 			>
 				<Box p="lg" pb={0}>
 					<Group gap="sm" mb="xs">
@@ -74,7 +74,7 @@ export const WorkspaceExplorer = memo(
 					</Box>
 					<Group justify="space-between" align="center" mb="md">
 						<Group gap="xs">
-							<Layers size={16} className="text-gray-400" />
+							<Layers size={16} className="text-brand-dark-300" />
 							<SectionLabel>Documents ({scripts.length})</SectionLabel>
 						</Group>
 						<Group gap={4}>
@@ -82,7 +82,7 @@ export const WorkspaceExplorer = memo(
 								<ActionIcon
 									data-testid="clear-all-documents-trigger"
 									variant="subtle"
-									color="gray"
+									color="brand-dark.5"
 									size="sm"
 									onClick={onOpenClearAll}
 								>
@@ -114,7 +114,7 @@ export const WorkspaceExplorer = memo(
 								${
 									activeScriptId === script.id
 										? "bg-wave-100 border-wave-300 shadow-sm"
-										: "bg-white border-transparent hover:bg-gray-50 hover:border-gray-100"
+										: "bg-white border-transparent hover:bg-brand-dark-50 hover:border-stone"
 								}
 							`}
 							>
@@ -123,7 +123,7 @@ export const WorkspaceExplorer = memo(
 										size="sm"
 										fw={700}
 										truncate
-										c={activeScriptId === script.id ? "wave.9" : "gray.7"}
+										c={activeScriptId === script.id ? "wave.9" : "brand-dark.5"}
 									>
 										{script.name}
 									</Text>
@@ -137,7 +137,7 @@ export const WorkspaceExplorer = memo(
 									)}
 									<ActionIcon
 										variant="subtle"
-										color="gray"
+										color="brand-dark.5"
 										size="xs"
 										className="opacity-0 group-hover:opacity-100"
 										onClick={(e) => {
@@ -153,7 +153,7 @@ export const WorkspaceExplorer = memo(
 					</Stack>
 				</ScrollArea>
 
-				<Box p="lg" className="border-t border-gray-200 bg-gray-50">
+				<Box p="lg" className="border-t border-brand-dark-200 bg-brand-dark-50">
 					<Button
 						fullWidth
 						color="wave"

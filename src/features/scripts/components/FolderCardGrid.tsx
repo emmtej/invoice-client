@@ -22,7 +22,7 @@ export function FolderCardGrid({
 
 	return (
 		<Card
-			bg={isSelected ? "rgba(17, 40, 77, 0.05)" : "white"}
+			bg={isSelected ? "var(--mantine-color-studio-0)" : "white"}
 			shadow={hovered ? "md" : "sm"}
 			p="md"
 			withBorder
@@ -35,7 +35,7 @@ export function FolderCardGrid({
 					cursor: "pointer",
 					borderColor: isSelected
 						? "var(--mantine-color-studio-5)"
-						: "rgba(0,0,0,0.05)",
+						: "color-mix(in srgb, var(--mantine-color-forest-9) 5%, transparent)",
 					transition: "all 150ms ease",
 					"&:hover": {
 						borderColor: isSelected
@@ -59,12 +59,13 @@ export function FolderCardGrid({
 					</Flex>
 					<ActionIcon
 						variant="subtle"
-						color="gray"
+						color="brand-dark.5"
 						size="sm"
 						onClick={(e: React.MouseEvent) => {
 							e.stopPropagation();
 							onDelete();
 						}}
+						aria-label="Delete folder"
 						style={{
 							opacity: hovered ? 1 : 0,
 							transition: "opacity 150ms ease",
@@ -79,11 +80,11 @@ export function FolderCardGrid({
 				</Group>
 
 				<Box>
-					<Text size="sm" fw={600} c="charcoal" truncate mb={4}>
+					<Text size="sm" fw={600} c="brand-dark.7" truncate mb={4}>
 						{folder.name}
 					</Text>
 					{itemCount > 0 ? (
-						<Text size="xs" c="dimmed" className="tabular-nums">
+						<Text size="xs" c="brand-dark.4" className="tabular-nums">
 							{itemCount === 1 ? "1 item" : `${itemCount} items`}
 						</Text>
 					) : (
@@ -91,10 +92,10 @@ export function FolderCardGrid({
 							<FolderOpen
 								size={14}
 								strokeWidth={2}
-								color="rgba(0,0,0,0.2)"
+								color="color-mix(in srgb, var(--mantine-color-forest-9) 20%, transparent)"
 								aria-hidden
 							/>
-							<Text size="xs" c="dimmed">
+							<Text size="xs" c="brand-dark.4">
 								Empty
 							</Text>
 						</Flex>

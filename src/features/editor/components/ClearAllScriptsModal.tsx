@@ -18,12 +18,12 @@ export const ClearAllScriptsModal = memo(
 				size="sm"
 			>
 				<Stack gap="md">
-					<Text size="sm" c="gray.5">
+					<Text size="sm" c="brand-dark.4">
 						This removes every document from the workspace, including pasted
 						scripts. Invoice line items you already created are not removed.
 					</Text>
 					<Group justify="flex-end" gap="xs" mt="xs">
-						<Button variant="subtle" color="gray" onClick={onClose}>
+						<Button variant="subtle" color="brand-dark.5" onClick={onClose}>
 							Cancel
 						</Button>
 						<Button

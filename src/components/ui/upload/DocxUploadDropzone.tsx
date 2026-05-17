@@ -70,13 +70,13 @@ export function DocxUploadDropzone({
 							<FileUp size={iconSize} strokeWidth={2} />
 						</ThemeIcon>
 						<Stack gap={2}>
-							<Text size="sm" fw={600} c="gray.8">
+							<Text size="sm" fw={600} c="brand-dark.7">
 								{isCompact
 									? "Drop Word documents here or click to browse"
 									: "Drop Word documents here"}
 							</Text>
 							{!isCompact && (
-								<Text size="xs" c="dimmed">
+								<Text size="xs" c="brand-dark.4">
 									.docx only — or click to choose files
 								</Text>
 							)}

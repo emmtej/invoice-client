@@ -75,7 +75,7 @@ export function SaveToLibraryModal({
 			radius="md"
 		>
 			<Stack gap="md">
-				<Text size="sm" c="gray.6">
+				<Text size="sm" c="brand-dark.4">
 					Choose a destination and select items to move to library.
 				</Text>
 
@@ -136,7 +136,7 @@ export function SaveToLibraryModal({
 							<Group gap="xs" justify="flex-end">
 								<Button
 									variant="subtle"
-									color="gray"
+									color="brand-dark.5"
 									size="xs"
 									radius="md"
 									onClick={() => {
@@ -184,7 +184,7 @@ export function SaveToLibraryModal({
 				/>
 
 				<Group justify="flex-end" mt="md">
-					<Button variant="subtle" color="gray" onClick={onClose} radius="md">
+					<Button variant="subtle" color="brand-dark.5" onClick={onClose} radius="md">
 						Cancel
 					</Button>
 					<Button

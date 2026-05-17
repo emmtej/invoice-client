@@ -11,40 +11,34 @@ export function BreadcrumbNav({ breadcrumb, onNavigate }: BreadcrumbNavProps) {
 		<Box component="nav" aria-label="Folder path" pt="sm" pb="xs">
 			<Breadcrumbs
 				separator={
-					<ChevronRight size={14} strokeWidth={2.5} className="text-black/10" />
+					<ChevronRight
+						size={14}
+						strokeWidth={2.5}
+						className="text-brand-dark-200"
+					/>
 				}
 				separatorMargin="sm"
 			>
 				<UnstyledButton
 					onClick={() => onNavigate(null)}
-					c="dimmed"
-					style={{
-						display: "flex",
-						alignItems: "center",
-						"&:hover": { color: "var(--mantine-color-charcoal-light)" },
-					}}
+					aria-label="All scripts"
+					className="flex items-center text-brand-dark-500 hover:text-brand-dark-700 transition-colors"
 				>
 					<Home size={16} />
 				</UnstyledButton>
 				{breadcrumb.map((segment, index) => {
 					const isLast = index === breadcrumb.length - 1;
 					return isLast ? (
-						<Text key={segment.id} size="sm" fw={700} c="charcoal">
+						<Text key={segment.id} size="sm" fw={700} c="brand-dark.7">
 							{segment.name}
 						</Text>
 					) : (
 						<UnstyledButton
 							key={segment.id}
 							onClick={() => onNavigate(segment.id)}
+							className="text-brand-dark-500 hover:text-brand-dark-700 transition-colors"
 						>
-							<Text
-								size="sm"
-								fw={500}
-								c="dimmed"
-								style={{
-									"&:hover": { color: "var(--mantine-color-charcoal-light)" },
-								}}
-							>
+							<Text size="sm" fw={500}>
 								{segment.name}
 							</Text>
 						</UnstyledButton>

@@ -32,7 +32,7 @@ export function ScriptLibraryTile({
 				${
 					isSelected
 						? "bg-studio-50 border-studio-400 shadow-sm"
-						: "bg-white border-gray-100 hover:bg-gray-50 hover:border-studio-200"
+						: "bg-white border-stone hover:bg-brand-dark-50 hover:border-studio-200"
 				}
 			`}
 		>
@@ -41,7 +41,7 @@ export function ScriptLibraryTile({
 					<FileText
 						size={20}
 						className={`flex-shrink-0 ${
-							isSelected ? "text-studio-600" : "text-gray-400"
+							isSelected ? "text-studio-600" : "text-brand-dark-300"
 						}`}
 					/>
 					<Text
@@ -62,7 +62,7 @@ export function ScriptLibraryTile({
 					visibleFrom="sm"
 					className="flex-shrink-0"
 				>
-					<Text size="xs" c="dimmed" className="tabular-nums">
+					<Text size="xs" c="brand-dark.4" className="tabular-nums">
 						{script.wordCount.toLocaleString()} words
 					</Text>
 					{script.invalidLineCount > 0 && (
@@ -73,19 +73,20 @@ export function ScriptLibraryTile({
 							</Text>
 						</Flex>
 					)}
-					<Text size="xs" c="dimmed" className="tabular-nums opacity-60">
+					<Text size="xs" c="brand-dark.4" className="tabular-nums opacity-60">
 						{dateFormatter.format(script.createdAt)}
 					</Text>
 				</Group>
 
 				<ActionIcon
 					variant="subtle"
-					color="gray"
+					color="brand-dark.5"
 					size="sm"
 					onClick={(e: React.MouseEvent) => {
 						e.stopPropagation();
 						onDelete();
 					}}
+					aria-label="Delete script"
 					className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-on-air-red-600"
 				>
 					<Trash2 size={14} />
@@ -93,7 +94,7 @@ export function ScriptLibraryTile({
 			</Flex>
 
 			<Group gap="xs" mt="xs" hiddenFrom="sm" wrap="wrap">
-				<Text size="xs" c="dimmed" className="tabular-nums">
+				<Text size="xs" c="brand-dark.4" className="tabular-nums">
 					{script.wordCount.toLocaleString()} words
 				</Text>
 				{script.invalidLineCount > 0 && (
@@ -104,7 +105,7 @@ export function ScriptLibraryTile({
 						</Text>
 					</Flex>
 				)}
-				<Text size="xs" c="dimmed" className="tabular-nums opacity-60">
+				<Text size="xs" c="brand-dark.4" className="tabular-nums opacity-60">
 					{dateFormatter.format(script.createdAt)}
 				</Text>
 			</Group>

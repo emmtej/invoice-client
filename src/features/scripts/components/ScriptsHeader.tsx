@@ -40,18 +40,18 @@ export function ScriptsHeader({
 	return (
 		<>
 			{/* Breadcrumb orientation bar */}
-			<Box px="md" py="xs" className="border-b border-gray-100">
+			<Box px="md" py="xs" className="border-b border-stone">
 				<Breadcrumbs
 					separator={
 						<ChevronRight
 							size={14}
 							strokeWidth={2.5}
-							className="text-gray-200"
+							className="text-brand-dark-200"
 						/>
 					}
 					separatorMargin="md"
 				>
-					<Text size="xs" fw={800} tt="uppercase" lts={1.5} c="dimmed">
+					<Text size="xs" fw={800} tt="uppercase" lts={1.5} c="brand-dark.5">
 						Script Tools
 					</Text>
 					<Text size="xs" fw={900} tt="uppercase" lts={1.5} c="brand-dark.6">
@@ -66,15 +66,16 @@ export function ScriptsHeader({
 					<PageTitle>Scripts</PageTitle>
 
 					<Group gap="xs">
-						<Group gap={0} className="bg-gray-100 p-0.5 rounded-md">
+						<Group gap={0} className="bg-brand-dark-100 p-0.5 rounded-md">
 							<Tooltip label="List view" openDelay={500}>
 								<ActionIcon
 									variant={viewMode === "list" ? "white" : "transparent"}
-									color={viewMode === "list" ? "brand-dark.6" : "dimmed"}
+									color={viewMode === "list" ? "brand-dark.6" : "brand-dark.5"}
 									onClick={() => onViewModeChange("list")}
 									size="md"
 									radius="sm"
 									className={viewMode === "list" ? "shadow-sm" : ""}
+									aria-label="List view"
 								>
 									<List size={18} />
 								</ActionIcon>
@@ -82,11 +83,12 @@ export function ScriptsHeader({
 							<Tooltip label="Grid view" openDelay={500}>
 								<ActionIcon
 									variant={viewMode === "grid" ? "white" : "transparent"}
-									color={viewMode === "grid" ? "brand-dark.6" : "dimmed"}
+									color={viewMode === "grid" ? "brand-dark.6" : "brand-dark.5"}
 									onClick={() => onViewModeChange("grid")}
 									size="md"
 									radius="sm"
 									className={viewMode === "grid" ? "shadow-sm" : ""}
+									aria-label="Grid view"
 								>
 									<Grid size={18} />
 								</ActionIcon>

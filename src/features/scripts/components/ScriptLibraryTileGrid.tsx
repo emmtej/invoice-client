@@ -26,7 +26,7 @@ export function ScriptLibraryTileGrid({
 
 	return (
 		<Card
-			bg={isSelected ? "rgba(17, 40, 77, 0.05)" : "white"}
+			bg={isSelected ? "var(--mantine-color-studio-0)" : "white"}
 			shadow={hovered ? "md" : "sm"}
 			p="md"
 			withBorder
@@ -39,7 +39,7 @@ export function ScriptLibraryTileGrid({
 					cursor: "pointer",
 					borderColor: isSelected
 						? "var(--mantine-color-studio-5)"
-						: "rgba(0,0,0,0.05)",
+						: "color-mix(in srgb, var(--mantine-color-forest-9) 5%, transparent)",
 					transition: "all 150ms ease",
 					"&:hover": {
 						borderColor: isSelected
@@ -56,7 +56,7 @@ export function ScriptLibraryTileGrid({
 						justify="center"
 						w={40}
 						h={40}
-						bg="gray.0"
+						bg="brand-dark.0"
 						style={{ borderRadius: "var(--mantine-radius-md)" }}
 					>
 						<FileText
@@ -70,12 +70,13 @@ export function ScriptLibraryTileGrid({
 					</Flex>
 					<ActionIcon
 						variant="subtle"
-						color="gray"
+						color="brand-dark.5"
 						size="sm"
 						onClick={(e: React.MouseEvent) => {
 							e.stopPropagation();
 							onDelete();
 						}}
+						aria-label="Delete script"
 						style={{
 							opacity: hovered ? 1 : 0,
 							transition: "opacity 150ms ease",
@@ -93,7 +94,7 @@ export function ScriptLibraryTileGrid({
 					<Text
 						size="sm"
 						fw={600}
-						c={isSelected ? "studio.8" : "charcoal"}
+						c={isSelected ? "studio.8" : "brand-dark.7"}
 						lineClamp={2}
 						mb="xs"
 						h={40}
@@ -103,7 +104,7 @@ export function ScriptLibraryTileGrid({
 
 					<Stack gap={4}>
 						<Group justify="space-between" wrap="nowrap">
-							<Text size="xs" c="dimmed" className="tabular-nums" truncate>
+							<Text size="xs" c="brand-dark.4" className="tabular-nums" truncate>
 								{script.wordCount.toLocaleString()} words
 							</Text>
 							{script.invalidLineCount > 0 && (
@@ -120,7 +121,7 @@ export function ScriptLibraryTileGrid({
 						</Group>
 						<Text
 							size="xs"
-							c="dimmed"
+							c="brand-dark.4"
 							className="tabular-nums"
 							style={{ opacity: 0.6 }}
 						>

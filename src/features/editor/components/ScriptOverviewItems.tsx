@@ -55,7 +55,7 @@ export const TypeBadge = memo(({ type }: { type: ParsedLine["type"] }) => {
 
 export const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 	return (
-		<Table.Tr className="transition-colors hover:bg-gray-50/50">
+		<Table.Tr className="transition-colors hover:bg-brand-dark-50/50">
 			<Table.Td py="md" w={180}>
 				<TypeBadge type={line.type} />
 			</Table.Td>
@@ -72,7 +72,7 @@ export const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 					{line.type === "dialogue" && (
 						<Badge
 							variant="outline"
-							color="gray"
+							color="brand-dark.5"
 							size="sm"
 							radius="xl"
 							className="border-dashed bg-white flex-shrink-0"

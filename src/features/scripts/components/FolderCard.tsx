@@ -29,7 +29,7 @@ export function FolderCard({
 				${
 					isSelected
 						? "bg-studio-50 border-studio-400 shadow-sm"
-						: "bg-white border-gray-100 hover:bg-gray-50 hover:border-studio-200"
+						: "bg-white border-stone hover:bg-brand-dark-50 hover:border-studio-200"
 				}
 			`}
 		>
@@ -44,7 +44,7 @@ export function FolderCard({
 							{folder.name}
 						</Text>
 						{itemCount > 0 ? (
-							<Text size="xs" c="dimmed" className="tabular-nums">
+							<Text size="xs" c="brand-dark.4" className="tabular-nums">
 								{itemCount === 1 ? "1 item" : `${itemCount} items`}
 							</Text>
 						) : (
@@ -52,10 +52,10 @@ export function FolderCard({
 								<FolderOpen
 									size={14}
 									strokeWidth={2}
-									className="text-gray-300 flex-shrink-0"
+									className="text-brand-dark-300 flex-shrink-0"
 									aria-hidden
 								/>
-								<Text size="xs" c="dimmed">
+								<Text size="xs" c="brand-dark.4">
 									Empty
 								</Text>
 							</Flex>
@@ -64,12 +64,13 @@ export function FolderCard({
 				</Flex>
 				<ActionIcon
 					variant="subtle"
-					color="gray"
+					color="brand-dark.5"
 					size="sm"
 					onClick={(e: React.MouseEvent) => {
 						e.stopPropagation();
 						onDelete();
 					}}
+					aria-label="Delete folder"
 					className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-on-air-red-600"
 				>
 					<Trash2 size={14} />

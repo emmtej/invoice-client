@@ -64,7 +64,7 @@ export function MoveToFolderModal({
 					allowDeselect={false}
 				/>
 				<Group justify="flex-end" mt="md">
-					<Button variant="subtle" color="gray" onClick={onClose}>
+					<Button variant="subtle" color="brand-dark.5" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button

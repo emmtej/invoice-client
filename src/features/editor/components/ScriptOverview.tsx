@@ -41,7 +41,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 			<Box
 				p="lg"
 				bg="white"
-				className="border-b border-gray-100 sticky top-0 z-[20]"
+				className="border-b border-stone sticky top-0 z-[20]"
 			>
 				<Flex justify="space-between" align="center" mb={16} gap="xl">
 					<Group gap={20}>
@@ -182,10 +182,10 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						>
 							<Table.Thead bg="white" className="sticky top-0 z-[10]">
 								<Table.Tr>
-									<Table.Th py="md" className="border-b border-gray-100">
+									<Table.Th py="md" className="border-b border-stone">
 										<SectionLabel letterSpacing={2}>Category</SectionLabel>
 									</Table.Th>
-									<Table.Th py="md" className="border-b border-gray-100">
+									<Table.Th py="md" className="border-b border-stone">
 										<SectionLabel letterSpacing={2}>
 											Script Content
 										</SectionLabel>

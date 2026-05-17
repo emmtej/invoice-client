@@ -1,5 +1,4 @@
 import { Box, Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
-import { motion } from "framer-motion";
 import { FileUp, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
 import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
@@ -9,24 +8,6 @@ interface GettingStartedProps {
 	onFileChange: (files: File[]) => void;
 	onPasteProcessed: (html: string) => void;
 }
-
-const itemVariants = {
-	hidden: { opacity: 0, y: -20 },
-	visible: {
-		opacity: 1,
-		y: 0,
-		transition: { duration: 0.8 },
-	},
-};
-
-const editorVariants = {
-	hidden: { opacity: 0, y: 20 },
-	visible: {
-		opacity: 1,
-		y: 0,
-		transition: { duration: 1 },
-	},
-};
 
 export function GettingStarted({
 	onFileChange,
@@ -46,6 +27,7 @@ export function GettingStarted({
 			direction="column"
 			h="100%"
 			bg="transparent"
+			className="fade-up"
 		>
 			<Stack
 				gap={48}
@@ -55,7 +37,7 @@ export function GettingStarted({
 				className="overflow-y-auto w-full"
 			>
 				{/* Top: Horizontal Upload Banner */}
-				<motion.div variants={itemVariants}>
+				<Box>
 					<Paper
 						radius="lg"
 						p="sm"
@@ -70,7 +52,7 @@ export function GettingStarted({
 								<Box
 									p={8}
 									style={{
-										backgroundColor: "#DCCFC2", // Soft Clay
+										backgroundColor: "var(--mantine-color-terracotta-1)",
 										borderRadius: "8px",
 										display: "flex",
 										alignItems: "center",
@@ -104,15 +86,12 @@ export function GettingStarted({
 							</DocxUploadButton>
 						</Group>
 					</Paper>
-				</motion.div>
+				</Box>
 
 				{/* Bottom: Paste Editor (Stationery) */}
-				<motion.div
-					variants={editorVariants}
-					style={{ flex: 1, display: "flex", flexDirection: "column" }}
-				>
+				<Box style={{ flex: 1, display: "flex", flexDirection: "column" }}>
 					<Stack gap="xs" flex={1}>
-						<Text size="xs" fw={700} tt="uppercase" lts={2} c="sage.6">
+						<Text size="xs" fw={700} tt="uppercase" lts={2} c="brand-dark.5">
 							Or Paste Content
 						</Text>
 						<TextEditor
@@ -136,7 +115,7 @@ export function GettingStarted({
 							}
 						/>
 					</Stack>
-				</motion.div>
+				</Box>
 			</Stack>
 		</Flex>
 	);

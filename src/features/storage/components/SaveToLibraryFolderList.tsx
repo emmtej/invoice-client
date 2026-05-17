@@ -64,7 +64,7 @@ export function SaveToLibraryFolderList({
 							className={`w-full px-3 py-2 text-left transition-colors border-l-4 ${
 								selected
 									? "bg-wave-50 border-wave-500"
-									: "hover:bg-gray-50 border-transparent"
+									: "hover:bg-brand-dark-50 border-transparent"
 							}`}
 						>
 							<Group gap="xs" wrap="nowrap">
@@ -72,7 +72,7 @@ export function SaveToLibraryFolderList({
 									<Text
 										size="sm"
 										fw={selected ? 700 : 500}
-										c={selected ? "wave.7" : "gray.8"}
+										c={selected ? "wave.7" : "brand-dark.7"}
 									>
 										{row.label}
 									</Text>
@@ -87,7 +87,7 @@ export function SaveToLibraryFolderList({
 										{row.depth > 0 && !searchQuery && (
 											<ChevronRight
 												size={14}
-												className="flex-shrink-0 text-gray-400"
+												className="flex-shrink-0 text-brand-dark-300"
 											/>
 										)}
 										<FolderIcon
@@ -101,7 +101,7 @@ export function SaveToLibraryFolderList({
 										<Text
 											size="sm"
 											fw={selected ? 700 : 500}
-											c={selected ? "wave.7" : "gray.8"}
+											c={selected ? "wave.7" : "brand-dark.7"}
 											truncate
 										>
 											{row.label}
@@ -110,7 +110,7 @@ export function SaveToLibraryFolderList({
 								)}
 								<Text
 									size="xs"
-									c={selected ? "wave.4" : "gray.4"}
+									c={selected ? "wave.4" : "brand-dark.4"}
 									ml="auto"
 									fw={500}
 								>
@@ -122,7 +122,7 @@ export function SaveToLibraryFolderList({
 				})}
 				{rows.length === 0 && (
 					<Box p="md" style={{ textAlign: "center" }}>
-						<Text size="sm" c="gray.5 italic">
+						<Text size="sm" c="brand-dark.4" fs="italic">
 							No folders found
 						</Text>
 					</Box>

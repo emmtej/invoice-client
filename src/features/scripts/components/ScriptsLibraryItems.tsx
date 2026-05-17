@@ -92,25 +92,25 @@ export function ScriptsLibraryItems({
 						styles={{
 							root: {
 								"&:hover": {
-									backgroundColor: "rgba(0,0,0,0.03)",
+									backgroundColor: "color-mix(in srgb, var(--mantine-color-forest-9) 3%, transparent)",
 								},
 							},
 						}}
 					>
-						<SectionLabel size="xs" c="dimmed">
+						<SectionLabel size="xs" c="brand-dark.4">
 							Name
 						</SectionLabel>
 						{sortAscending ? (
-							<ArrowUp size={14} color="rgba(0,0,0,0.3)" />
+							<ArrowUp size={14} color="color-mix(in srgb, var(--mantine-color-forest-9) 30%, transparent)" />
 						) : (
-							<ArrowDown size={14} color="rgba(0,0,0,0.3)" />
+							<ArrowDown size={14} color="color-mix(in srgb, var(--mantine-color-forest-9) 30%, transparent)" />
 						)}
 					</UnstyledButton>
 				</Box>
 
 				{sortedFolders.length > 0 && (
 					<Box>
-						<Text size="sm" fw={600} c="dimmed" mb="md" px="md">
+						<Text size="sm" fw={600} c="brand-dark.4" mb="md" px="md">
 							Folders
 						</Text>
 						<SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }} spacing="md">
@@ -134,7 +134,7 @@ export function ScriptsLibraryItems({
 
 				{sortedScripts.length > 0 && (
 					<Box>
-						<Text size="sm" fw={600} c="dimmed" mb="md" px="md">
+						<Text size="sm" fw={600} c="brand-dark.4" mb="md" px="md">
 							Files
 						</Text>
 						<SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }} spacing="md">
@@ -189,18 +189,18 @@ export function ScriptsLibraryItems({
 					styles={{
 						root: {
 							"&:hover": {
-								backgroundColor: "rgba(0,0,0,0.03)",
+								backgroundColor: "color-mix(in srgb, var(--mantine-color-forest-9) 3%, transparent)",
 							},
 						},
 					}}
 				>
-					<SectionLabel size="xs" c="dimmed">
+					<SectionLabel size="xs" c="brand-dark.4">
 						Name
 					</SectionLabel>
 					{sortAscending ? (
-						<ArrowUp size={14} color="rgba(0,0,0,0.3)" />
+						<ArrowUp size={14} color="color-mix(in srgb, var(--mantine-color-forest-9) 30%, transparent)" />
 					) : (
-						<ArrowDown size={14} color="rgba(0,0,0,0.3)" />
+						<ArrowDown size={14} color="color-mix(in srgb, var(--mantine-color-forest-9) 30%, transparent)" />
 					)}
 				</UnstyledButton>
 			</Box>

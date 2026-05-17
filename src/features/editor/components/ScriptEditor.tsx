@@ -73,7 +73,7 @@ function ScriptEditorInner({ script }: ScriptEditorProps) {
 					<Group gap="xs">
 						<Button
 							variant="subtle"
-							color="gray"
+							color="brand-dark.5"
 							size="xs"
 							radius="xl"
 							leftSection={<ArrowLeft size={14} />}

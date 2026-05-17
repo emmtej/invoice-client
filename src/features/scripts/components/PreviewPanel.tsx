@@ -23,11 +23,11 @@ interface PreviewPanelProps {
 
 function LinePreview({ line, index }: { line: ParsedLine; index: number }) {
 	return (
-		<Box py={4} px="xs" className="border-b border-gray-50 last:border-0">
+		<Box py={4} px="xs" className="border-b border-brand-dark-50 last:border-0">
 			<Flex gap="xs" align="flex-start">
 				<Text
 					size="xs"
-					c="dimmed"
+					c="brand-dark.4"
 					className="tabular-nums opacity-50 text-right w-6 flex-shrink-0"
 				>
 					{index + 1}
@@ -38,12 +38,12 @@ function LinePreview({ line, index }: { line: ParsedLine; index: number }) {
 							<Text size="xs" fw={600} c="brand-dark.7" truncate>
 								{line.speakers.join(", ")}
 							</Text>
-							<Text size="xs" c="dimmed" lineClamp={1}>
+							<Text size="xs" c="brand-dark.4" lineClamp={1}>
 								{line.content}
 							</Text>
 						</>
 					) : line.type === "action" ? (
-						<Text size="xs" c="dimmed" className="italic" lineClamp={1}>
+						<Text size="xs" c="brand-dark.4" className="italic" lineClamp={1}>
 							{line.notes?.join(" ") || line.source}
 						</Text>
 					) : line.type === "invalid" || line.type === "malformed" ? (
@@ -59,7 +59,7 @@ function LinePreview({ line, index }: { line: ParsedLine; index: number }) {
 							</Text>
 						</Flex>
 					) : (
-						<Text size="xs" c="dimmed" lineClamp={1}>
+						<Text size="xs" c="brand-dark.4" lineClamp={1}>
 							{line.source}
 						</Text>
 					)}
@@ -83,7 +83,10 @@ export function PreviewPanel({
 	};
 
 	return (
-		<Box w={380} className="border-l border-gray-100 flex-shrink-0 flex h-full">
+		<Box
+			w={{ base: "100%", md: "min(380px, 35vw)" }}
+			className="border-l border-stone flex-shrink-0 flex h-full"
+		>
 			<Flex direction="column" h="100%" w="100%">
 				{isLoading ? (
 					<Center flex={1}>
@@ -91,7 +94,7 @@ export function PreviewPanel({
 					</Center>
 				) : script ? (
 					<>
-						<Box p="md" className="border-b border-gray-100">
+						<Box p="md" className="border-b border-stone">
 							<Flex justify="space-between" align="flex-start" mb="sm">
 								<Text
 									size="md"
@@ -104,7 +107,7 @@ export function PreviewPanel({
 								</Text>
 								<ActionIcon
 									variant="subtle"
-									color="gray"
+									color="brand-dark.5"
 									size="sm"
 									onClick={onClose}
 									className="ml-2"
@@ -116,7 +119,7 @@ export function PreviewPanel({
 								<Badge variant="light" color="studio" size="sm" radius="md">
 									{script.overview.wordCount.toLocaleString()} words
 								</Badge>
-								<Badge variant="light" color="gray" size="sm" radius="md">
+								<Badge variant="light" color="brand-dark.5" size="sm" radius="md">
 									{script.overview.totalLines} lines
 								</Badge>
 								{script.overview.invalidLines.length > 0 && (
@@ -142,14 +145,14 @@ export function PreviewPanel({
 									/>
 								))}
 								{script.lines.length > 30 && (
-									<Text size="xs" c="dimmed" ta="center" py="xs">
+									<Text size="xs" c="brand-dark.4" ta="center" py="xs">
 										… {script.lines.length - 30} more lines
 									</Text>
 								)}
 							</Stack>
 						</ScrollArea>
 
-						<Box p="md" className="border-t border-gray-100 bg-gray-50">
+						<Box p="md" className="border-t border-stone bg-brand-dark-50">
 							<Button
 								color="studio"
 								fullWidth

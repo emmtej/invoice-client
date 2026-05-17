@@ -110,7 +110,7 @@ export function ScriptsModals({
 					<Group justify="flex-end">
 						<Button
 							variant="subtle"
-							color="gray"
+							color="brand-dark.5"
 							onClick={() => setDeleteItemsOpened(false)}
 						>
 							Cancel
