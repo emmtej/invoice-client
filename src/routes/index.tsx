@@ -3,4 +3,7 @@ import { HomeView } from "@/features/home";
 
 export const Route = createFileRoute("/")({
 	component: HomeView,
+	staticData: {
+		layoutMode: "flush",
+	},
 });
