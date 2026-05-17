@@ -16,7 +16,7 @@ import {
 	Trash2,
 } from "lucide-react";
 import { memo, useMemo } from "react";
-import { SectionLabel } from "@/components/ui/text/SectionLabel";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import type { ScriptMetadata } from "@/types/Script";
 
 interface WorkspaceExplorerProps {

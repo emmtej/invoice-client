@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { boothRepository } from "@/features/storage/repository/boothRepository";
-import { useBoothStore } from "../store/useBoothStore";
+import { boothRepository } from "@/features/storage/boothRepository";
+import { useBoothStore } from "../store";
 import { useBoothKeyboard } from "./useBoothKeyboard";
 import { useTimer } from "./useTimer";
 

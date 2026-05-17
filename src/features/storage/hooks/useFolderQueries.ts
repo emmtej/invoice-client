@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { folderRepository } from "../repository/folderRepository";
+import { folderRepository } from "../folderRepository";
 import { scriptQueryKeys } from "./useScriptQueries";
 
 export const folderQueryKeys = {

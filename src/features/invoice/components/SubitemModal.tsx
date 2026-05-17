@@ -1,11 +1,11 @@
 import { Button, Group, Select, Stack } from "@mantine/core";
 import { useMemo, useState } from "react";
-import { AppModal } from "@/components/ui/modal/AppModal";
+import { AppModal } from "@/components/ui/AppModal";
 import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
-import { processDocuments } from "@/features/editor/utils/documentParser";
+import { processDocuments } from "@/features/editor/documentParser";
 import { useAllScripts } from "@/features/scripts/hooks/useScriptsQuery";
-import { useSubitemPresets } from "../presets/useSubitemPresets";
-import { type ScriptForInvoice, useInvoiceStore } from "../store/invoiceStore";
+import { useSubitemPresets } from "../hooks/useSubitemPresets";
+import { type ScriptForInvoice, useInvoiceStore } from "../store";
 import { SubitemBillingForm } from "./SubitemBillingForm";
 import { SubitemSourceSelector } from "./SubitemSourceSelector";
 

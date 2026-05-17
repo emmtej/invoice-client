@@ -1,8 +1,8 @@
 import { Box, Stack, Tabs, Text } from "@mantine/core";
-import { PageTitle } from "@/components/ui/text/PageTitle";
-import { BillingRatePresetsManager } from "./components/presets/BillingRatePresetsManager";
-import { InvoiceProfilePresetsManager } from "./components/presets/InvoiceProfilePresetsManager";
-import { InvoiceTitlePresetsManager } from "./components/presets/InvoiceTitlePresetsManager";
+import { PageTitle } from "@/components/ui/PageTitle";
+import { BillingRatePresetsManager } from "./components/BillingRatePresetsManager";
+import { InvoiceProfilePresetsManager } from "./components/InvoiceProfilePresetsManager";
+import { InvoiceTitlePresetsManager } from "./components/InvoiceTitlePresetsManager";
 
 export function PresetsView() {
 	return (

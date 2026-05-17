@@ -8,7 +8,7 @@ import {
 	type TextInputProps,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { AppModal } from "@/components/ui/modal/AppModal";
+import { AppModal } from "@/components/ui/AppModal";
 
 interface EditValueModalProps {
 	opened: boolean;

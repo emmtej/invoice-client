@@ -8,7 +8,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { appTheme } from "@/theme";
-import type { InvoiceItem } from "../store/invoiceStore";
+import type { InvoiceItem } from "../store";
 import { InvoiceItemCard } from "./InvoiceItemCard";
 
 Object.defineProperty(window, "matchMedia", {

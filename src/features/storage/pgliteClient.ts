@@ -2,7 +2,7 @@ import type { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { runMigrations } from "./runMigrations";
 import * as schema from "./schema";
-import { usePgliteStore } from "./store/usePgliteStore";
+import { usePgliteStore } from "./usePgliteStore";
 
 export type DrizzleDb = ReturnType<typeof drizzle<typeof schema>>;
 export type DbTransaction = Parameters<

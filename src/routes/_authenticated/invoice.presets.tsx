@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PresetsView } from "@/features/invoice";
+import PresetsView from "@/features/invoice/PresetsView";
 import { AuthenticatedRouteError } from "@/routes/components/AuthenticatedRouteError";
 import { AuthenticatedRouteShell } from "@/routes/components/AuthenticatedRouteShell";
 

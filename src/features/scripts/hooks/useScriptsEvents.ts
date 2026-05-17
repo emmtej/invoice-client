@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useScriptsUiStore } from "../store/useScriptsUiStore";
+import { useScriptsUiStore } from "../useScriptsUiStore";
 
 export function useScriptsEvents(allCurrentIds: string[]) {
 	const selectAll = useScriptsUiStore((s) => s.selectAll);

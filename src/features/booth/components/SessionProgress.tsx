@@ -1,6 +1,6 @@
 import { Group, Progress, Text } from "@mantine/core";
 import { useShallow } from "zustand/react/shallow";
-import { useBoothStore } from "../store/useBoothStore";
+import { useBoothStore } from "../store";
 
 export function SessionProgress() {
 	const { script, completedLineIndices } = useBoothStore(

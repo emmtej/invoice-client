@@ -1,15 +1,15 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { Layout } from "@/components/ui/layout/Layout";
+import { AppLayout } from "@/components/ui/AppLayout";
 import { RouterErrorBoundary } from "@/routes/components/RouterErrorBoundary";
 
 export const Route = createRootRoute({
 	component: () => (
 		<RouterErrorBoundary>
-			<Layout>
+			<AppLayout>
 				<Outlet />
 				{import.meta.env.DEV && <TanStackRouterDevtools />}
-			</Layout>
+			</AppLayout>
 		</RouterErrorBoundary>
 	),
 });

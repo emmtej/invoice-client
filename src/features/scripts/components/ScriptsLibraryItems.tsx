@@ -8,10 +8,10 @@ import {
 } from "@mantine/core";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useState } from "react";
-import { SectionLabel } from "@/components/ui/text/SectionLabel";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
-import { useScriptsUiStore } from "../store/useScriptsUiStore";
-import { sortByName } from "../utils/sortByName";
+import { useScriptsUiStore } from "../useScriptsUiStore";
+import { sortByName } from "../sortByName";
 import { FolderCard } from "./FolderCard";
 import { FolderCardGrid } from "./FolderCardGrid";
 import { ScriptLibraryTile } from "./ScriptLibraryTile";

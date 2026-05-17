@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { EditorView } from "@/features/editor";
+import EditorView from "@/features/editor/EditorView";
 import { AuthenticatedRouteError } from "@/routes/components/AuthenticatedRouteError";
 import { AuthenticatedRouteShell } from "@/routes/components/AuthenticatedRouteShell";
 

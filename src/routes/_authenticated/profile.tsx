@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ProfileView } from "@/features/user";
+import ProfileView from "@/features/user/ProfileView";
 import { AuthenticatedRouteError } from "@/routes/components/AuthenticatedRouteError";
 import { AuthenticatedRouteShell } from "@/routes/components/AuthenticatedRouteShell";
 

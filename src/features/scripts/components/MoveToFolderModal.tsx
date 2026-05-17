@@ -1,7 +1,7 @@
 import { Button, Group, Select, Stack, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { AppModal } from "@/components/ui/modal/AppModal";
-import { folderRepository } from "@/features/storage/repository/folderRepository";
+import { AppModal } from "@/components/ui/AppModal";
+import { folderRepository } from "@/features/storage/folderRepository";
 import type { Folder } from "@/features/storage/types";
 
 interface MoveToFolderModalProps {

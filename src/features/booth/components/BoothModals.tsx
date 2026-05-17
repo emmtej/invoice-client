@@ -1,10 +1,10 @@
 import { Box } from "@mantine/core";
 import { useCallback, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { AppModal } from "@/components/ui/modal/AppModal";
-import { useScriptStore } from "@/features/editor";
+import { AppModal } from "@/components/ui/AppModal";
+import { useScriptStore } from "@/features/editor/scriptEditorStore";
 import { ScriptEditor } from "@/features/editor/components/ScriptEditor";
-import { useBoothStore } from "../store/useBoothStore";
+import { useBoothStore } from "../store";
 
 export function BoothModals() {
 	const { script, isEditorOpened, setEditorOpened, updateScript } =

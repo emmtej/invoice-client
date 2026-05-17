@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BoothView } from "@/features/booth";
+import BoothView from "@/features/booth/BoothView";
 import { AuthenticatedRouteError } from "@/routes/components/AuthenticatedRouteError";
 import { AuthenticatedRouteShell } from "@/routes/components/AuthenticatedRouteShell";
 

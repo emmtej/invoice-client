@@ -2,7 +2,7 @@ import { Button, Flex, Group } from "@mantine/core";
 import { ArrowLeft, Check, RotateCcw } from "lucide-react";
 import { memo, useCallback, useEffect, useState } from "react";
 import type { Script } from "@/types/Script";
-import { useScriptStore } from "../store/scriptEditorStore";
+import { useScriptStore } from "../scriptEditorStore";
 import { ScriptOverview } from "./ScriptOverview";
 import { TextEditor } from "./TextEditor";
 

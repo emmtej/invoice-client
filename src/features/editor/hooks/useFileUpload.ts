@@ -1,6 +1,6 @@
 import mammoth from "mammoth";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { parseHtmlToDocument } from "../utils/parseHtmlToDocument";
+import { parseHtmlToDocument } from "../parseHtmlToDocument";
 
 export interface DocFile {
 	name: string;

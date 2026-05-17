@@ -6,7 +6,7 @@ import { BoothModals } from "./components/BoothModals";
 import { CompletedSessionView } from "./components/CompletedSessionView";
 import { SelectionView } from "./components/SelectionView";
 import { useBoothInitialization } from "./hooks/useBoothInitialization";
-import { useBoothStore } from "./store/useBoothStore";
+import { useBoothStore } from "./store";
 
 export default function BoothView() {
 	useBoothInitialization();

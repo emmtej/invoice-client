@@ -1,9 +1,9 @@
 import { Button, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { ArrowLeft, Clock, Hash, Timer } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
-import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
+import { SurfaceCard } from "@/components/ui/SurfaceCard";
 import { formatTime } from "../hooks/useTimer";
-import { useBoothStore } from "../store/useBoothStore";
+import { useBoothStore } from "../store";
 
 function StatCard({
 	icon,

@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
 import { FileUp, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
-import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
+import { DocxUploadButton } from "@/components/ui/DocxUploadButton";
 import { TextEditor } from "./TextEditor";
 
 interface GettingStartedProps {

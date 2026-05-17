@@ -2,9 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { processDocuments, useFileUpload } from "@/features/editor";
-import { scriptRepository } from "@/features/storage/repository/scriptRepository";
-import { useScriptsUiStore } from "../store/useScriptsUiStore";
+import { processDocuments } from "@/features/editor/documentParser";
+import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
+import { scriptRepository } from "@/features/storage/scriptRepository";
+import { useScriptsUiStore } from "../useScriptsUiStore";
 import { useScriptsUpload } from "./useScriptsUpload";
 
 vi.mock("@/features/editor", () => ({
@@ -12,7 +13,7 @@ vi.mock("@/features/editor", () => ({
 	processDocuments: vi.fn(),
 }));
 
-vi.mock("@/features/storage/repository/scriptRepository", () => ({
+vi.mock("@/features/storage/scriptRepository", () => ({
 	scriptRepository: {
 		saveScripts: vi.fn().mockResolvedValue(undefined),
 	},

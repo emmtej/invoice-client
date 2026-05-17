@@ -1,5 +1,5 @@
 import { Box, Group, Text } from "@mantine/core";
-import { PageTitle } from "@/components/ui/text/PageTitle";
+import { PageTitle } from "@/components/ui/PageTitle";
 import { BoothSettingsModal } from "./BoothSettingsModal";
 
 export function BoothHeader() {

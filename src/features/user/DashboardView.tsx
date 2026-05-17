@@ -15,9 +15,9 @@ import {
 	Plus,
 	Receipt,
 } from "lucide-react";
-import { scriptRepository } from "@/features/storage/repository/scriptRepository";
-import { boothRepository } from "@/features/storage/repository/boothRepository";
-import { BentoCard } from "@/components/ui/card/BentoCard";
+import { scriptRepository } from "@/features/storage/scriptRepository";
+import { boothRepository } from "@/features/storage/boothRepository";
+import { BentoCard } from "@/components/ui/BentoCard";
 
 export default function DashboardView() {
 	const { data: recentScripts = [] } = useQuery({

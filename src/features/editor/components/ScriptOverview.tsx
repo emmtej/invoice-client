@@ -13,8 +13,8 @@ import {
 } from "@mantine/core";
 import { Edit3, Filter, MessageSquare, Search, Zap } from "lucide-react";
 import { memo, useMemo, useState } from "react";
-import { EmptyState } from "@/components/ui/feedback/EmptyState";
-import { SectionLabel } from "@/components/ui/text/SectionLabel";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import type { Script } from "@/types/Script";
 import { ScriptLineRow } from "./ScriptOverviewItems";
 

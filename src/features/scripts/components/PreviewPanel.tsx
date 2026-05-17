@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { useNavigate } from "@tanstack/react-router";
 import { AlertCircle, ExternalLink, X } from "lucide-react";
-import { useScriptStore } from "@/features/editor";
+import { useScriptStore } from "@/features/editor/scriptEditorStore";
 import type { ParsedLine, Script } from "@/types/Script";
 
 interface PreviewPanelProps {

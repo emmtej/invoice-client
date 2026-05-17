@@ -1,5 +1,5 @@
 import { Box, Checkbox, ScrollArea, Stack } from "@mantine/core";
-import { SectionLabel } from "@/components/ui/text/SectionLabel";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import type { ScriptMetadata } from "@/types/Script";
 
 interface SaveToLibraryScriptListProps {

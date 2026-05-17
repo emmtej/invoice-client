@@ -11,8 +11,8 @@ import {
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { Trash2 } from "lucide-react";
-import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
-import type { BoothSession } from "@/features/storage/repository/boothRepository";
+import { SurfaceCard } from "@/components/ui/SurfaceCard";
+import type { BoothSession } from "@/features/storage/boothRepository";
 import { formatTime } from "../hooks/useTimer";
 
 interface SessionHistoryProps {

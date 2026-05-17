@@ -1,8 +1,8 @@
 import { Checkbox, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useShallow } from "zustand/react/shallow";
-import { useBoothSettingsStore } from "../store/useBoothSettingsStore";
-import { useBoothStore } from "../store/useBoothStore";
+import { useBoothSettingsStore } from "../boothSettingsStore";
+import { useBoothStore } from "../store";
 import { SessionStatsDisplay } from "./SessionStatsDisplay";
 import { SessionTimerDisplay } from "./SessionTimerDisplay";
 

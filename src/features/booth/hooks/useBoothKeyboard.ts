@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useBoothStore } from "../store/useBoothStore";
+import { useBoothStore } from "../store";
 
 export function useBoothKeyboard() {
 	useEffect(() => {

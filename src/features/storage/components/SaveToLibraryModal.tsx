@@ -9,8 +9,8 @@ import {
 } from "@mantine/core";
 import { FolderPlus, Search, X } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { AppModal } from "@/components/ui/modal/AppModal";
-import { SectionLabel } from "@/components/ui/text/SectionLabel";
+import { AppModal } from "@/components/ui/AppModal";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import type { ScriptMetadata } from "@/types/Script";
 import { useSaveToLibraryModal } from "../hooks/useSaveToLibraryModal";
 import { SaveToLibraryFolderList } from "./SaveToLibraryFolderList";

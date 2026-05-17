@@ -5,11 +5,11 @@ import {
 	useAllFolders,
 	useFolderChildItemCounts,
 } from "@/features/scripts/hooks/useScriptsQuery";
-import { folderRepository } from "@/features/storage/repository/folderRepository";
+import { folderRepository } from "@/features/storage/folderRepository";
 import type { ScriptMetadata } from "@/types/Script";
 import { generateId } from "@/utils/id";
 import { notify } from "@/utils/notifications";
-import { buildFolderRows, type FolderListRow } from "../utils/buildFolderRows";
+import { buildFolderRows, type FolderListRow } from "../buildFolderRows";
 
 interface UseSaveToLibraryModalProps {
 	opened: boolean;

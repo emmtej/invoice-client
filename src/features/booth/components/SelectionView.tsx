@@ -1,7 +1,7 @@
 import { Box, Center, Flex, Loader, Stack, Text } from "@mantine/core";
 import { type ReactNode, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useBoothStore } from "../store/useBoothStore";
+import { useBoothStore } from "../store";
 import { OngoingSessionCard } from "./OngoingSessionCard";
 import { ScriptSelectionPanel } from "./ScriptSelectionPanel";
 import { SelectionSidebar } from "./SelectionSidebar";

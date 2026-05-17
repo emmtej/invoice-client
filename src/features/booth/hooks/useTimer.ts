@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useBoothStore } from "../store/useBoothStore";
+import { useBoothStore } from "../store";
 
 const TICK_INTERVAL_MS = 100;
 

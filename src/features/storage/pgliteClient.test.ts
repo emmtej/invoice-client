@@ -14,7 +14,7 @@ vi.mock("./runMigrations", () => ({
 }));
 
 import { getDb, getDrizzleDb, initDb, resetDb } from "./pgliteClient";
-import { usePgliteStore } from "./store/usePgliteStore";
+import { usePgliteStore } from "./usePgliteStore";
 
 describe("pgliteClient", () => {
 	beforeEach(() => {

@@ -1,5 +1,5 @@
 import { createRouter } from "@tanstack/react-router";
-import type { AppLayoutMode } from "@/components/ui/layout/layout-constants";
+import type { AppLayoutMode } from "@/components/ui/layout-constants";
 import { routeTree } from "./routeTree.gen";
 
 declare module "@tanstack/react-router" {

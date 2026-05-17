@@ -11,7 +11,7 @@ import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { router } from "./router.tsx";
 import { appTheme } from "./theme";
-import { reportWebVitals } from "./utils/vitals";
+import { reportWebVitals } from "@/utils/vitals";
 
 const queryClient = new QueryClient({
 	defaultOptions: {

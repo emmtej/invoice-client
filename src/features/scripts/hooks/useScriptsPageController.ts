@@ -1,4 +1,4 @@
-import { useScriptsUiStore } from "../store/useScriptsUiStore";
+import { useScriptsUiStore } from "../useScriptsUiStore";
 import {
 	useFolderBreadcrumb,
 	useFolderChildItemCounts,

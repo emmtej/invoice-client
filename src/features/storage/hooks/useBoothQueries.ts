@@ -3,7 +3,7 @@ import type { LineTimingEntry } from "@/features/storage/types";
 import {
 	type BoothSession,
 	boothRepository,
-} from "../repository/boothRepository";
+} from "../boothRepository";
 
 export const boothQueryKeys = {
 	all: ["booth-sessions"] as const,

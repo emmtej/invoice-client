@@ -1,7 +1,7 @@
 import { MultiSelect, Stack, Tabs, Text } from "@mantine/core";
 import { FileUp, Library } from "lucide-react";
-import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
-import type { ScriptForInvoice } from "../store/invoiceStore";
+import { DocxUploadButton } from "@/components/ui/DocxUploadButton";
+import type { ScriptForInvoice } from "../store";
 
 interface SubitemSourceSelectorProps {
 	activeTab: "upload" | "library";

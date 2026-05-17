@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 import type { Script } from "@/types/Script";
 import { notify } from "@/utils/notifications";
-import { useScriptStore } from "../store/scriptEditorStore";
-import { reparseHtmlToScript } from "../utils/documentParser";
+import { useScriptStore } from "../scriptEditorStore";
+import { reparseHtmlToScript } from "../documentParser";
 
 export function usePasteHandler(scriptCount: number) {
 	const addScripts = useScriptStore((s) => s.addScripts);

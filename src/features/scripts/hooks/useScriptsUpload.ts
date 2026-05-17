@@ -1,8 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { processDocuments, useFileUpload } from "@/features/editor";
-import { scriptRepository } from "@/features/storage/repository/scriptRepository";
+import { processDocuments } from "@/features/editor/documentParser";
+import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
+import { scriptRepository } from "@/features/storage/scriptRepository";
 import type { Script } from "@/types/Script";
-import { useScriptsUiStore } from "../store/useScriptsUiStore";
+import { useScriptsUiStore } from "../useScriptsUiStore";
 import { scriptKeys } from "./useScriptsQuery";
 
 export function useScriptsUpload() {

@@ -15,8 +15,8 @@ import {
 	Grid,
 	List,
 } from "lucide-react";
-import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
-import { PageTitle } from "@/components/ui/text/PageTitle";
+import { DocxUploadButton } from "@/components/ui/DocxUploadButton";
+import { PageTitle } from "@/components/ui/PageTitle";
 
 interface ScriptsHeaderProps {
 	uploadErrors: string[];

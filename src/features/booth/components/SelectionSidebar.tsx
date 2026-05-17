@@ -1,10 +1,10 @@
 import { Box } from "@mantine/core";
 import { useCallback } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { SectionLabel } from "@/components/ui/text/SectionLabel";
-import type { BoothSession } from "@/features/storage/repository/boothRepository";
-import { scriptRepository } from "@/features/storage/repository/scriptRepository";
-import { useBoothStore } from "../store/useBoothStore";
+import { SectionLabel } from "@/components/ui/SectionLabel";
+import type { BoothSession } from "@/features/storage/boothRepository";
+import { scriptRepository } from "@/features/storage/scriptRepository";
+import { useBoothStore } from "../store";
 import { SessionHistory } from "./SessionHistory";
 
 interface SelectionSidebarProps {

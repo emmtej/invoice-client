@@ -1,6 +1,6 @@
 import { Stack } from "@mantine/core";
 import { FolderOpen } from "lucide-react";
-import { EmptyState } from "@/components/ui/feedback/EmptyState";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 interface ScriptsEmptyStateProps {
 	isRoot: boolean;

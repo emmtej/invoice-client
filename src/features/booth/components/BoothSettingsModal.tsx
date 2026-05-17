@@ -11,8 +11,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { Settings2 } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
-import { AppModal } from "@/components/ui/modal/AppModal";
-import { useBoothSettingsStore } from "../store/useBoothSettingsStore";
+import { AppModal } from "@/components/ui/AppModal";
+import { useBoothSettingsStore } from "../boothSettingsStore";
 
 export function BoothSettingsModal() {
 	const [opened, { open, close }] = useDisclosure(false);

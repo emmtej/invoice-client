@@ -1,6 +1,6 @@
 import { Button, Group, Stack, Text } from "@mantine/core";
 import { memo } from "react";
-import { AppModal } from "@/components/ui/modal/AppModal";
+import { AppModal } from "@/components/ui/AppModal";
 
 interface ClearAllScriptsModalProps {
 	opened: boolean;

@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { Link } from "@tanstack/react-router";
 import { Mic, User } from "lucide-react";
-import { PageTitle } from "@/components/ui/text/PageTitle";
+import { PageTitle } from "@/components/ui/PageTitle";
 
 export default function ProfileView() {
 	return (

@@ -1,8 +1,8 @@
 import { Box, ScrollArea } from "@mantine/core";
 import { useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useBoothSettingsStore } from "../store/useBoothSettingsStore";
-import { useBoothStore } from "../store/useBoothStore";
+import { useBoothSettingsStore } from "../boothSettingsStore";
+import { useBoothStore } from "../store";
 import { TeleprompterLine } from "./TeleprompterLine";
 
 export function ScriptTeleprompter() {

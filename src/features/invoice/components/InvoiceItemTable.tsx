@@ -1,6 +1,6 @@
 import { ActionIcon, Group, Stack, Table, Text } from "@mantine/core";
 import { Pencil, Trash2 } from "lucide-react";
-import type { InvoiceSubitem } from "../store/invoiceStore";
+import type { InvoiceSubitem } from "../store";
 
 interface InvoiceItemTableProps {
 	subitems: InvoiceSubitem[];

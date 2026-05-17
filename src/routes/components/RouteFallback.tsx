@@ -1,7 +1,7 @@
 import { Button, Center, Loader, Paper, Stack, Text } from "@mantine/core";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { initDb, resetDb } from "@/features/storage/pgliteClient";
-import { usePgliteStore } from "@/features/storage/store/usePgliteStore";
+import { usePgliteStore } from "@/features/storage/usePgliteStore";
 
 export function RouteFallback({ label }: { label: string }) {
 	const status = usePgliteStore((s) => s.status);

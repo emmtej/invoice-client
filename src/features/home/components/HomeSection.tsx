@@ -2,7 +2,7 @@
 
 import { Box } from "@mantine/core";
 import type { ReactNode } from "react";
-import { APP_CONTENT_INSET_X } from "@/components/ui/layout/layout-constants";
+import { APP_CONTENT_INSET_X } from "@/components/ui/layout-constants";
 
 interface HomeSectionProps {
 	children: ReactNode;

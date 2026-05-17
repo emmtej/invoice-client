@@ -1,11 +1,11 @@
 import { Button, Group, Stack, Text } from "@mantine/core";
 import { useQueryClient } from "@tanstack/react-query";
 import { create } from "zustand";
-import { AppModal } from "@/components/ui/modal/AppModal";
+import { AppModal } from "@/components/ui/AppModal";
 import type { Folder, ScriptSummary } from "@/features/storage/types";
 import { scriptKeys } from "../hooks/useScriptsQuery";
-import { useScriptsDataStore } from "../store/useScriptsDataStore";
-import { useScriptsUiStore } from "../store/useScriptsUiStore";
+import { useScriptsDataStore } from "../useScriptsDataStore";
+import { useScriptsUiStore } from "../useScriptsUiStore";
 import { CreateFolderModal } from "./CreateFolderModal";
 import { DeleteFolderModal } from "./DeleteFolderModal";
 import { DeleteScriptModal } from "./DeleteScriptModal";

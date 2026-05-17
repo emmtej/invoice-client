@@ -5,7 +5,7 @@ import {
 	type InvoiceItem,
 	type InvoiceSubitem,
 	useInvoiceStore,
-} from "../store/invoiceStore";
+} from "../store";
 import { EditValueModal } from "./EditValueModal";
 import { InvoiceItemTable } from "./InvoiceItemTable";
 import { SubitemModal } from "./SubitemModal";

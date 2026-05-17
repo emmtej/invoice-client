@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Script } from "@/types/Script";
-import { scriptRepository } from "../repository/scriptRepository";
+import { scriptRepository } from "../scriptRepository";
 
 export const scriptQueryKeys = {
 	all: ["scripts"] as const,

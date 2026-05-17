@@ -12,9 +12,9 @@ import {
 } from "@mantine/core";
 import { AlertCircle, CheckCircle2, FileText, Hash, Type } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
-import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
-import { useBoothSettingsStore } from "../store/useBoothSettingsStore";
-import { useBoothStore } from "../store/useBoothStore";
+import { SurfaceCard } from "@/components/ui/SurfaceCard";
+import { useBoothSettingsStore } from "../boothSettingsStore";
+import { useBoothStore } from "../store";
 import { ScriptSelector } from "./ScriptSelector";
 
 interface ScriptSelectionPanelProps {

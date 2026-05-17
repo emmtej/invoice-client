@@ -1,6 +1,6 @@
 import { Box, Breadcrumbs, Stack, Text } from "@mantine/core";
 import { ChevronRight } from "lucide-react";
-import { PageTitle } from "@/components/ui/text/PageTitle";
+import { PageTitle } from "@/components/ui/PageTitle";
 import Scripts from "./components/Scripts";
 
 export default function EditorView() {

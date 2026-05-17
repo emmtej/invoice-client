@@ -1,8 +1,8 @@
 import { Button, Group, Stack, Text } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { Copy, FileDown } from "lucide-react";
-import { AppModal } from "@/components/ui/modal/AppModal";
-import type { InvoiceItem } from "../store/invoiceStore";
+import { AppModal } from "@/components/ui/AppModal";
+import type { InvoiceItem } from "../store";
 
 type ExportModalProps = {
 	opened: boolean;

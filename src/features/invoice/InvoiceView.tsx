@@ -2,18 +2,16 @@ import { Box, Button, Flex, Group, Stack, Text } from "@mantine/core";
 import { FileText } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
+import { useInvoiceStore } from "@/features/invoice/store";
 import { notify } from "@/utils/notifications";
-import { BentoCard } from "@/components/ui/card/BentoCard";
-import { InvoiceItemCard } from "./components";
-import {
-	InvoiceDetailsSection,
-	loadInvoiceDefaults,
-	saveInvoiceDefaults,
-} from "./details";
-import { InvoiceItemAdder } from "./items";
-import { ProfileSection, useProfileManager } from "./profile";
-import { InvoiceSummary } from "./summary";
+import { BentoCard } from "@/components/ui/BentoCard";
+import { InvoiceDetailsSection } from "./components/InvoiceDetailsSection";
+import { InvoiceItemAdder } from "./components/InvoiceItemAdder";
+import { InvoiceItemCard } from "./components/InvoiceItemCard";
+import { InvoiceSummary } from "./components/InvoiceSummary";
+import { ProfileSection } from "./components/ProfileSection";
+import { loadInvoiceDefaults, saveInvoiceDefaults } from "./constants";
+import { useProfileManager } from "./hooks/useProfileManager";
 
 export default function InvoiceView() {
 	const { invoice, addEmptyItem } = useInvoiceStore(

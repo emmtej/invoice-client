@@ -8,7 +8,7 @@ import {
 	UnstyledButton,
 } from "@mantine/core";
 import { ChevronRight, Folder as FolderIcon } from "lucide-react";
-import type { FolderListRow } from "../utils/buildFolderRows";
+import type { FolderListRow } from "../buildFolderRows";
 
 const FOLDER_ICON_COLOR = "var(--mantine-color-gray-6)";
 

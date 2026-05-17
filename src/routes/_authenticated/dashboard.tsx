@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DashboardView } from "@/features/user";
+import DashboardView from "@/features/user/DashboardView";
 import { AuthenticatedRouteError } from "@/routes/components/AuthenticatedRouteError";
 import { AuthenticatedRouteShell } from "@/routes/components/AuthenticatedRouteShell";
 

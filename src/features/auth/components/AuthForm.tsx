@@ -3,9 +3,9 @@ import { Button, Group, TextInput } from "@mantine/core";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { FormField } from "@/components/ui/form/FormField";
+import { FormField } from "@/components/ui/FormField";
 import { ErrorMessage } from "@/features/auth/components/ErrorMessage";
-import { useUserStore } from "@/features/user/store/userStore";
+import { useUserStore } from "@/features/user/userStore";
 import {
 	type LoginSchema,
 	loginSchema,

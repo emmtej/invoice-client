@@ -1,6 +1,6 @@
 import { Button, Flex, Text, TextInput } from "@mantine/core";
 import { useState } from "react";
-import { AppModal } from "@/components/ui/modal/AppModal";
+import { AppModal } from "@/components/ui/AppModal";
 
 interface CreateFolderModalProps {
 	opened: boolean;

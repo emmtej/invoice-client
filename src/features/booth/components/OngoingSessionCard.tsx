@@ -1,10 +1,10 @@
 import { Badge, Box, Button, Group, Text } from "@mantine/core";
 import { Clock } from "lucide-react";
 import { useCallback } from "react";
-import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
-import type { BoothSession } from "@/features/storage/repository/boothRepository";
-import { scriptRepository } from "@/features/storage/repository/scriptRepository";
-import { useBoothStore } from "../store/useBoothStore";
+import { SurfaceCard } from "@/components/ui/SurfaceCard";
+import type { BoothSession } from "@/features/storage/boothRepository";
+import { scriptRepository } from "@/features/storage/scriptRepository";
+import { useBoothStore } from "../store";
 
 interface OngoingSessionCardProps {
 	session: BoothSession;

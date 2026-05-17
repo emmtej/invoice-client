@@ -13,8 +13,8 @@ import {
 import { useScriptsEvents } from "./hooks/useScriptsEvents";
 import { useScriptsPageController } from "./hooks/useScriptsPageController";
 import { useScriptsUpload } from "./hooks/useScriptsUpload";
-import { useScriptsDataStore } from "./store/useScriptsDataStore";
-import { useScriptsUiStore } from "./store/useScriptsUiStore";
+import { useScriptsDataStore } from "./useScriptsDataStore";
+import { useScriptsUiStore } from "./useScriptsUiStore";
 
 export default function ScriptsView() {
 	const duplicateItems = useScriptsDataStore((s) => s.duplicateItems);

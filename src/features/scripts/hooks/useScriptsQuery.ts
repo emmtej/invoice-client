@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { folderRepository } from "@/features/storage/repository/folderRepository";
-import { scriptRepository } from "@/features/storage/repository/scriptRepository";
+import { folderRepository } from "@/features/storage/folderRepository";
+import { scriptRepository } from "@/features/storage/scriptRepository";
 import type { Folder } from "@/features/storage/types";
 
 export const scriptKeys = {

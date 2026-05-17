@@ -2,8 +2,8 @@ import { Button, Group, Text } from "@mantine/core";
 import { PenSquare } from "lucide-react";
 import { useCallback } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useScriptStore } from "@/features/editor";
-import { useBoothStore } from "../store/useBoothStore";
+import { useScriptStore } from "@/features/editor/scriptEditorStore";
+import { useBoothStore } from "../store";
 
 export function ActiveSessionHeader() {
 	const { script, setEditorOpened } = useBoothStore(

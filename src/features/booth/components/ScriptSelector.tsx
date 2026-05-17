@@ -15,14 +15,15 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { FileText, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
-import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
-import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
-import { processDocuments, useFileUpload } from "@/features/editor";
+import { DocxUploadButton } from "@/components/ui/DocxUploadButton";
+import { SurfaceCard } from "@/components/ui/SurfaceCard";
+import { processDocuments } from "@/features/editor/documentParser";
+import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
 import {
 	scriptKeys,
 	useRecentScriptsInfinite,
 } from "@/features/scripts/hooks/useScriptsQuery";
-import { scriptRepository } from "@/features/storage/repository/scriptRepository";
+import { scriptRepository } from "@/features/storage/scriptRepository";
 import type { Script } from "@/types/Script";
 
 interface ScriptSelectorProps {
