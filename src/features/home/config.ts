@@ -1,15 +1,26 @@
 import type { LucideIcon } from "lucide-react";
-import { LayoutDashboard, Pencil, Receipt, User } from "lucide-react";
+import {
+	Activity,
+	FileText,
+	LayoutDashboard,
+	Mic,
+	Pencil,
+	Receipt,
+	User,
+} from "lucide-react";
 import type { FeatureConfig } from "@/types/navigation";
 
 export const homeConfig: FeatureConfig = {};
+
+export type HomeToolPriority = "primary" | "secondary";
 
 export type HomeTool = {
 	title: string;
 	description: string;
 	icon: LucideIcon;
 	to: string;
-	color: "on-air-red" | "brand-dark" | "studio";
+	color: "red" | "gray" | "blue";
+	priority: HomeToolPriority;
 };
 
 export const HOME_TOOLS: HomeTool[] = [
@@ -18,38 +29,78 @@ export const HOME_TOOLS: HomeTool[] = [
 		description: "Parse scripts and track dialogue",
 		icon: Pencil,
 		to: "/editor",
-		color: "on-air-red",
+		color: "red",
+		priority: "primary",
 	},
 	{
 		title: "Invoices",
 		description: "Build and export invoice lines",
 		icon: Receipt,
 		to: "/invoice",
-		color: "on-air-red",
+		color: "red",
+		priority: "primary",
 	},
 	{
 		title: "Dashboard",
 		description: "Your hub for recent activity",
 		icon: LayoutDashboard,
 		to: "/dashboard",
-		color: "brand-dark",
+		color: "gray",
+		priority: "secondary",
 	},
 	{
 		title: "Profile",
 		description: "Account and defaults",
 		icon: User,
 		to: "/profile",
-		color: "studio",
+		color: "blue",
+		priority: "secondary",
 	},
 ];
 
-export const BENTO_SECTION_COPY = {
-	eyebrow: "Core Capabilities",
-	description:
-		"Whether you're recording from a home booth or a studio session, InVoice keeps your script data and invoice math aligned.",
-} as const;
-
 export const FEATURES_SECTION_COPY = {
 	title: "Ready to start?",
-	description: "Jump straight into your local-first workflow.",
+	description: "Open a tool and stay in your local workflow.",
+} as const;
+
+export const CAPABILITIES_SECTION_COPY = {
+	eyebrow: "Studio workflow",
+	title: "From script to sent invoice.",
+	description:
+		"Parse dialogue, track sessions, and ship line items your clients can read without spreadsheet gymnastics.",
+} as const;
+
+export type CapabilityRowId = "billing" | "workflow" | "export";
+
+export type CapabilityRow = {
+	id: CapabilityRowId;
+	title: string;
+	body: string;
+	icon: LucideIcon;
+};
+
+export const CAPABILITY_ROWS: CapabilityRow[] = [
+	{
+		id: "billing",
+		title: "Built for voice talent",
+		body: "Line-item invoicing tuned for sessions, pickups, and script-based word counts so booth time maps cleanly to billable lines.",
+		icon: Mic,
+	},
+	{
+		id: "workflow",
+		title: "Script-aware workflow",
+		body: "Parse and review scripts in one place, then flow dialogue counts straight into invoice items without retyping.",
+		icon: Activity,
+	},
+	{
+		id: "export",
+		title: "Calm desk, clear exports",
+		body: "A distraction-free workspace plus client-ready PDF summaries you can hand to accounting when the session wraps.",
+		icon: FileText,
+	},
+];
+
+export const SCROLL_PEEK_COPY = {
+	label: "How it works",
+	peekTitle: CAPABILITIES_SECTION_COPY.title,
 } as const;

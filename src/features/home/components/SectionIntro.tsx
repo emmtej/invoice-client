@@ -2,10 +2,10 @@
 
 import { Stack, Text } from "@mantine/core";
 import type { ReactNode } from "react";
+import { EyebrowPill } from "./EyebrowPill";
 
 interface SectionIntroProps {
 	eyebrow?: string;
-	eyebrowColor?: string;
 	title: ReactNode;
 	description: string;
 	align?: "left" | "center";
@@ -14,7 +14,6 @@ interface SectionIntroProps {
 
 export function SectionIntro({
 	eyebrow,
-	eyebrowColor = "terracotta.7",
 	title,
 	description,
 	align = "left",
@@ -27,23 +26,12 @@ export function SectionIntro({
 			className={maxWidthClassName}
 		>
 			{eyebrow ? (
-				<Text
-					size="xs"
-					fw={700}
-					tt="uppercase"
-					lts="0.2em"
-					c={eyebrowColor}
-					className="mb-6"
-				>
-					{eyebrow}
-				</Text>
+				<EyebrowPill className="mb-6">{eyebrow}</EyebrowPill>
 			) : null}
-			<h2
-				className={`text-4xl md:text-5xl font-sans font-semibold tracking-tight text-forest ${eyebrow ? "mb-6" : ""}`}
-			>
+			<h2 className="text-4xl font-sans font-semibold tracking-tight md:text-5xl">
 				{title}
 			</h2>
-			<Text className="text-lg text-brand-dark-4 leading-relaxed max-w-[55ch]">
+			<Text c="dimmed" className="max-w-[55ch] text-lg leading-relaxed">
 				{description}
 			</Text>
 		</Stack>

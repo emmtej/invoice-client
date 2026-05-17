@@ -1,12 +1,14 @@
 "use client";
 
-import { Box, Container } from "@mantine/core";
+import { Box } from "@mantine/core";
 import type { ReactNode } from "react";
-import { APP_CONTENT_MAX_WIDTH } from "@/components/ui/layout/layout-constants";
+import { APP_CONTENT_INSET_X } from "@/components/ui/layout/layout-constants";
 
 interface HomeSectionProps {
 	children: ReactNode;
+	/** Full-bleed shell only: background, borders, overflow, min-height. */
 	className?: string;
+	/** Content column: vertical rhythm, alignment. Horizontal inset is always applied. */
 	containerClassName?: string;
 	align?: "left" | "center";
 }
@@ -18,6 +20,7 @@ export function HomeSection({
 	align = "left",
 }: HomeSectionProps) {
 	const containerClasses = [
+		APP_CONTENT_INSET_X,
 		align === "center" ? "text-center" : "",
 		containerClassName ?? "",
 	]
@@ -26,14 +29,7 @@ export function HomeSection({
 
 	return (
 		<Box component="section" className={className}>
-			<Container
-				maw={APP_CONTENT_MAX_WIDTH}
-				w="100%"
-				px="md"
-				className={containerClasses || undefined}
-			>
-				{children}
-			</Container>
+			<div className={containerClasses}>{children}</div>
 		</Box>
 	);
 }

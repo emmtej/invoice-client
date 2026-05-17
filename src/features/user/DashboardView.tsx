@@ -14,32 +14,10 @@ import {
 	FileText,
 	Plus,
 	Receipt,
-	Sparkles,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { scriptRepository } from "@/features/storage/repository/scriptRepository";
 import { boothRepository } from "@/features/storage/repository/boothRepository";
 import { BentoCard } from "@/components/ui/card/BentoCard";
-import React from "react";
-
-/** 
- * Isolated component for the "Live Status" breathing effect to prevent parent re-renders 
- */
-const LiveStatusIndicator = React.memo(() => (
-	<motion.div
-		animate={{
-			scale: [1, 1.2, 1],
-			opacity: [0.5, 1, 0.5],
-		}}
-		transition={{
-			duration: 2,
-			repeat: Infinity,
-			ease: "easeInOut",
-		}}
-		className="w-2 h-2 rounded-full bg-wave-5 shadow-[0_0_8px_rgba(0,173,173,0.5)]"
-	/>
-));
-LiveStatusIndicator.displayName = "LiveStatusIndicator";
 
 export default function DashboardView() {
 	const { data: recentScripts = [] } = useQuery({
@@ -58,204 +36,153 @@ export default function DashboardView() {
 
 	return (
 		<Box className="min-h-[100dvh] pb-12">
-			{/* Hero Section */}
 			<Box mb={48}>
-				<motion.div
-					initial={{ opacity: 0, x: -20 }}
-					animate={{ opacity: 1, x: 0 }}
-					transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-				>
-					<Text 
-						className="text-5xl md:text-7xl font-sans font-semibold tracking-tighter leading-none"
-						c="forest.9"
-					>
-						Welcome back.
-					</Text>
-					<Text 
-						className="text-lg md:text-xl text-brand-dark-4 mt-6 max-w-[65ch] leading-relaxed"
-					>
-						Your workspace is ready. Jump back into your latest scripts or 
-						generate your next invoice with precision.
-					</Text>
-				</motion.div>
+				<Text className="text-5xl md:text-7xl font-sans font-semibold tracking-tighter leading-none">
+					Welcome back.
+				</Text>
+				<Text className="text-lg md:text-xl mt-6 max-w-[65ch] leading-relaxed" c="dimmed">
+					Your workspace is ready. Jump back into your latest scripts or
+					generate your next invoice with precision.
+				</Text>
 			</Box>
 
-			{/* Bento Grid */}
 			<Box className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[minmax(180px,auto)]">
-				
-				{/* Main Action Card - Spans 8 cols */}
-				<BentoCard 
-					index={1} 
-					className="md:col-span-8 md:row-span-2 bg-forest-9 group relative"
-				>
+				<BentoCard className="md:col-span-8 md:row-span-2">
 					<Stack justify="space-between" h="100%">
 						<Box>
-							<Group justify="space-between" align="flex-start">
-								<ThemeIcon variant="light" color="sage.0" size={48} radius="xl">
-									<Receipt size={24} strokeWidth={1.5} className="text-forest-9" />
-								</ThemeIcon>
-								<motion.div
-									animate={{ rotate: [0, 10, 0] }}
-									transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-								>
-									<Sparkles size={20} className="text-sage-3 opacity-40" />
-								</motion.div>
-							</Group>
-							
-							<Text className="text-3xl font-sans font-semibold mt-8 text-white tracking-tight">
+							<ThemeIcon variant="light" color="gray" size={48}>
+								<Receipt size={24} strokeWidth={1.5} />
+							</ThemeIcon>
+
+							<Text className="text-3xl font-sans font-semibold mt-8 tracking-tight">
 								Create New Invoice
 							</Text>
-							<Text className="text-sage-1/70 mt-4 max-w-[40ch]">
-								Instantly pull word counts and line items from your script library 
+							<Text c="dimmed" className="mt-4 max-w-[40ch]">
+								Instantly pull word counts and line items from your script library
 								to generate professional, accurate invoices.
 							</Text>
 						</Box>
 
-						<Group>
-							<Button
-								component={Link}
-								to="/invoice"
-								size="lg"
-								radius="xl"
-								color="sage.4"
-								className="bg-sage-4 hover:bg-sage-3 text-forest-9 transition-all hover:translate-x-1"
-								rightSection={<ArrowRight size={18} />}
-							>
-								Get Started
-							</Button>
-						</Group>
+						<Button
+							component={Link}
+							to="/invoice"
+							size="lg"
+							rightSection={<ArrowRight size={18} strokeWidth={1.5} />}
+						>
+							Get Started
+						</Button>
 					</Stack>
-
-					{/* Decorative element */}
-					<Box className="absolute top-[-10%] right-[-5%] w-64 h-64 bg-sage-4/10 rounded-full blur-3xl pointer-events-none" />
 				</BentoCard>
 
-				{/* Quick Stats - Spans 4 cols */}
-				<BentoCard index={2} className="md:col-span-4 md:row-span-1">
+				<BentoCard className="md:col-span-4 md:row-span-1">
 					<Stack gap="xs">
 						<Group justify="space-between">
-							<Text className="text-xs font-mono uppercase tracking-widest text-brand-dark-4">
+							<Text className="text-xs font-mono uppercase tracking-widest" c="dimmed">
 								Recording Stats
 							</Text>
-							<Activity size={14} className="text-wave-5" />
+							<Activity size={14} />
 						</Group>
-						
+
 						<Group align="baseline" gap={4} mt="sm">
 							<Text className="text-4xl font-sans font-bold tracking-tight">
 								{hours}h {minutes}m
 							</Text>
 						</Group>
-						<Text className="text-xs text-brand-dark-3">
+						<Text size="xs" c="dimmed">
 							Total time in the booth
 						</Text>
 					</Stack>
 				</BentoCard>
 
-				{/* Live Status Card - Spans 4 cols */}
-				<BentoCard index={3} className="md:col-span-4 md:row-span-1 border-wave-2/30">
+				<BentoCard className="md:col-span-4 md:row-span-1">
 					<Stack gap="xs" h="100%" justify="center">
 						<Group gap="sm">
-							<LiveStatusIndicator />
-							<Text className="text-sm font-semibold text-brand-dark-7">
+							<span className="h-2 w-2 rounded-full bg-green-6" aria-hidden />
+							<Text size="sm" fw={600}>
 								System Status: Active
 							</Text>
 						</Group>
-						<Text className="text-xs text-brand-dark-4 mt-2">
-							All local databases and cloud syncs are running smoothly.
+						<Text size="xs" c="dimmed" mt={2}>
+							All local databases are running smoothly.
 						</Text>
 					</Stack>
 				</BentoCard>
 
-				{/* Recent Scripts - Spans 6 cols */}
-				<BentoCard index={4} className="md:col-span-6 md:row-span-2">
+				<BentoCard className="md:col-span-6 md:row-span-2">
 					<Stack gap="xl">
 						<Group justify="space-between">
 							<Stack gap={0}>
 								<Text className="text-xl font-sans font-semibold tracking-tight">
 									Recent Scripts
 								</Text>
-								<Text className="text-xs text-brand-dark-3 uppercase tracking-tighter mt-1">
-									Intelligent Sorting
+								<Text size="xs" c="dimmed" tt="uppercase" mt={1}>
+									Recently opened
 								</Text>
 							</Stack>
-							<Button 
-								variant="subtle" 
-								color="brand-dark" 
-								size="compact-xs" 
-								radius="xl"
+							<Button
+								variant="subtle"
+								color="gray"
+								size="compact-xs"
 								component={Link}
-								to="/dashboard" // Adjust as needed
+								to="/scripts"
 							>
 								View All
 							</Button>
 						</Group>
 
 						<Stack gap="md">
-							<AnimatePresence mode="popLayout">
-								{recentScripts.length > 0 ? (
-									recentScripts.map((script, i) => (
-										<motion.div
-											key={script.id}
-											layoutId={script.id}
-											initial={{ opacity: 0, y: 10 }}
-											animate={{ opacity: 1, y: 0 }}
-											transition={{ delay: 0.1 * i }}
-											className="group cursor-pointer"
-										>
-											<Group justify="space-between" className="p-4 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
-												<Group gap="md">
-													<ThemeIcon variant="light" color="forest.0" radius="md">
-														<FileText size={16} className="text-forest-9" />
-													</ThemeIcon>
-													<Stack gap={0}>
-														<Text className="text-sm font-semibold truncate max-w-[180px]">
-															{script.name}
-														</Text>
-														<Text className="text-[10px] text-brand-dark-4 font-mono">
-															{script.wordCount.toLocaleString()} WORDS
-														</Text>
-													</Stack>
-												</Group>
-												<ArrowRight size={14} className="text-slate-300 group-hover:text-forest-9 group-hover:translate-x-1 transition-all" />
-											</Group>
-										</motion.div>
-									))
-								) : (
-									<Stack align="center" py="xl" gap="xs" className="opacity-40">
-										<FileText size={32} strokeWidth={1} />
-										<Text className="text-xs font-sans">No recent scripts</Text>
-									</Stack>
-								)}
-							</AnimatePresence>
+							{recentScripts.length > 0 ? (
+								recentScripts.map((script) => (
+									<Group
+										key={script.id}
+										justify="space-between"
+										className="rounded-2xl border p-4"
+									>
+										<Group gap="md">
+											<ThemeIcon variant="light" color="blue">
+												<FileText size={16} />
+											</ThemeIcon>
+											<Stack gap={0}>
+												<Text size="sm" fw={600} truncate maw={180}>
+													{script.name}
+												</Text>
+												<Text size="xs" c="dimmed">
+													{script.wordCount.toLocaleString()} words
+												</Text>
+											</Stack>
+										</Group>
+										<ArrowRight size={14} strokeWidth={1.5} />
+									</Group>
+								))
+							) : (
+								<Stack align="center" py="xl" gap="xs" c="dimmed">
+									<FileText size={32} strokeWidth={1} />
+									<Text size="xs">No recent scripts</Text>
+								</Stack>
+							)}
 						</Stack>
 					</Stack>
 				</BentoCard>
 
-				{/* New Features Card - Spans 6 cols */}
-				<BentoCard index={5} className="md:col-span-6 md:row-span-2 bg-slate-50 border-dashed border-slate-300">
-					<Stack h="100%" justify="center" align="center" gap="lg" className="text-center">
-						<Box className="p-4 bg-white rounded-3xl shadow-sm border border-slate-100">
-							<Plus size={32} className="text-slate-300" />
+				<BentoCard className="md:col-span-6 md:row-span-2 border-dashed">
+					<Stack h="100%" justify="center" align="center" gap="lg" ta="center">
+						<Box className="rounded-3xl border p-4">
+							<Plus size={32} strokeWidth={1.5} />
 						</Box>
 						<Stack gap={4}>
-							<Text className="text-lg font-sans font-semibold tracking-tight text-brand-dark-7">
+							<Text className="text-lg font-sans font-semibold tracking-tight">
 								New Recording Session
 							</Text>
-							<Text className="text-sm text-brand-dark-4 max-w-[30ch]">
-								Start a fresh session in the booth and track your progress in real-time.
+							<Text size="sm" c="dimmed" maw={280}>
+								Start a fresh session in the booth and track your progress in
+								real-time.
 							</Text>
 						</Stack>
-						<Button
-							variant="outline"
-							color="brand-dark"
-							radius="xl"
-							className="border-slate-300 text-brand-dark-6 hover:bg-white"
-						>
+						<Button variant="outline" color="gray" component={Link} to="/booth">
 							Launch Booth
 						</Button>
 					</Stack>
 				</BentoCard>
-
 			</Box>
 		</Box>
 	);

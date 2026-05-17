@@ -1,19 +1,21 @@
 "use client";
 
 import { Stack } from "@mantine/core";
-import { BentoSection } from "./components/BentoSection";
+import { CapabilitiesSection } from "./components/CapabilitiesSection";
 import { FeaturesSection } from "./components/FeaturesSection";
 import { LandingHero } from "./components/LandingHero";
+import { ScrollPeek } from "./components/ScrollPeek";
 
 export default function HomeView() {
 	return (
 		<Stack
 			gap={0}
-			className="bg-alabaster selection:bg-terracotta-100 selection:text-terracotta-900"
+			className="relative z-[2] w-full selection: selection:"
 		>
 			<LandingHero />
-			<BentoSection />
 			<FeaturesSection />
+			<ScrollPeek />
+			<CapabilitiesSection />
 		</Stack>
 	);
 }
