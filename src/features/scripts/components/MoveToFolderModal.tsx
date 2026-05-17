@@ -1,6 +1,7 @@
-import { Button, Group, Modal, Select, Stack, Text } from "@mantine/core";
+import { Button, Group, Select, Stack, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { folderQueries } from "@/features/storage/folderQueries";
+import { AppModal } from "@/components/ui/modal/AppModal";
+import { folderRepository } from "@/features/storage/repository/folderRepository";
 import type { Folder } from "@/features/storage/types";
 
 interface MoveToFolderModalProps {
@@ -25,7 +26,7 @@ export function MoveToFolderModal({
 
 	useEffect(() => {
 		if (opened) {
-			void folderQueries.getAllFolders().then((allFolders) => {
+			void folderRepository.getAllFolders().then((allFolders) => {
 				setFolders(allFolders);
 			});
 		}
@@ -42,7 +43,7 @@ export function MoveToFolderModal({
 	];
 
 	return (
-		<Modal
+		<AppModal
 			opened={opened}
 			onClose={onClose}
 			title="Move to folder"
@@ -76,6 +77,6 @@ export function MoveToFolderModal({
 					</Button>
 				</Group>
 			</Stack>
-		</Modal>
+		</AppModal>
 	);
 }

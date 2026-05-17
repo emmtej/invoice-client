@@ -1,6 +1,5 @@
 import { ActionIcon, Card, Flex, Group, Text } from "@mantine/core";
 import { AlertCircle, FileText, Trash2 } from "lucide-react";
-import { useState } from "react";
 import type { ScriptSummary } from "@/features/storage/types";
 
 interface ScriptLibraryTileProps {
@@ -22,52 +21,35 @@ export function ScriptLibraryTile({
 	onClick,
 	onDelete,
 }: ScriptLibraryTileProps) {
-	const [hovered, setHovered] = useState(false);
-
 	return (
 		<Card
-			bg={isSelected ? "rgba(17, 40, 77, 0.05)" : "white"}
-			shadow="xs"
-			py="sm"
-			px="md"
+			radius="md"
+			p="sm"
 			withBorder
-			w="100%"
 			onClick={onClick}
-			onMouseEnter={() => setHovered(true)}
-			onMouseLeave={() => setHovered(false)}
-			styles={{
-				root: {
-					cursor: "pointer",
-					borderColor: isSelected
-						? "var(--mantine-color-studio-5)"
-						: "rgba(0,0,0,0.05)",
-					transition: "border-color 150ms ease, background-color 150ms ease",
-					"&:hover": {
-						borderColor: isSelected
-							? "var(--mantine-color-studio-6)"
-							: "var(--mantine-color-studio-3)",
-						backgroundColor: isSelected
-							? "rgba(17, 40, 77, 0.08)"
-							: "rgba(17, 40, 77, 0.02)",
-					},
-				},
-			}}
+			className={`
+				w-full cursor-pointer transition-all duration-150 group
+				${
+					isSelected
+						? "bg-studio-50 border-studio-400 shadow-sm"
+						: "bg-white border-gray-100 hover:bg-gray-50 hover:border-studio-200"
+				}
+			`}
 		>
 			<Flex align="center" justify="space-between" gap="md" wrap="nowrap">
-				<Flex align="center" gap="sm" miw={0} style={{ flex: 1 }}>
+				<Flex align="center" gap="sm" className="flex-1 min-w-0">
 					<FileText
 						size={20}
-						color={
-							isSelected ? "var(--mantine-color-studio-6)" : "rgba(0,0,0,0.2)"
-						}
-						style={{ flexShrink: 0 }}
+						className={`flex-shrink-0 ${
+							isSelected ? "text-studio-600" : "text-gray-400"
+						}`}
 					/>
 					<Text
 						size="sm"
 						fw={600}
-						c={isSelected ? "studio.8" : "charcoal"}
+						c={isSelected ? "studio.7" : "brand-dark.7"}
 						truncate
-						style={{ flex: 1, minWidth: 0 }}
+						className="flex-1 min-w-0"
 					>
 						{script.name}
 					</Text>
@@ -78,28 +60,20 @@ export function ScriptLibraryTile({
 					wrap="nowrap"
 					justify="flex-end"
 					visibleFrom="sm"
-					style={{ flexShrink: 0 }}
+					className="flex-shrink-0"
 				>
 					<Text size="xs" c="dimmed" className="tabular-nums">
 						{script.wordCount.toLocaleString()} words
 					</Text>
 					{script.invalidLineCount > 0 && (
 						<Flex align="center" gap={4}>
-							<AlertCircle
-								size={14}
-								color="var(--mantine-color-on-air-red-5)"
-							/>
+							<AlertCircle size={14} className="text-on-air-500" />
 							<Text size="xs" c="on-air-red.5" className="tabular-nums">
 								{script.invalidLineCount}
 							</Text>
 						</Flex>
 					)}
-					<Text
-						size="xs"
-						c="dimmed"
-						className="tabular-nums"
-						style={{ opacity: 0.6 }}
-					>
+					<Text size="xs" c="dimmed" className="tabular-nums opacity-60">
 						{dateFormatter.format(script.createdAt)}
 					</Text>
 				</Group>
@@ -112,12 +86,7 @@ export function ScriptLibraryTile({
 						e.stopPropagation();
 						onDelete();
 					}}
-					style={{
-						flexShrink: 0,
-						opacity: hovered ? 1 : 0,
-						transition: "opacity 150ms ease",
-						"&:hover": { color: "var(--mantine-color-on-air-red-6)" },
-					}}
+					className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-on-air-red-600"
 				>
 					<Trash2 size={14} />
 				</ActionIcon>
@@ -129,18 +98,13 @@ export function ScriptLibraryTile({
 				</Text>
 				{script.invalidLineCount > 0 && (
 					<Flex align="center" gap={4}>
-						<AlertCircle size={12} color="var(--mantine-color-on-air-red-5)" />
+						<AlertCircle size={12} className="text-on-air-500" />
 						<Text size="xs" c="on-air-red.5" className="tabular-nums">
 							{script.invalidLineCount}
 						</Text>
 					</Flex>
 				)}
-				<Text
-					size="xs"
-					c="dimmed"
-					className="tabular-nums"
-					style={{ opacity: 0.6 }}
-				>
+				<Text size="xs" c="dimmed" className="tabular-nums opacity-60">
 					{dateFormatter.format(script.createdAt)}
 				</Text>
 			</Group>

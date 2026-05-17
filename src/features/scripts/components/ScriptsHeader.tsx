@@ -40,19 +40,13 @@ export function ScriptsHeader({
 	return (
 		<>
 			{/* Breadcrumb orientation bar */}
-			<Box
-				px="md"
-				py="xs"
-				style={{
-					borderBottom: "1px solid rgba(0,0,0,0.05)",
-				}}
-			>
+			<Box px="md" py="xs" className="border-b border-gray-100">
 				<Breadcrumbs
 					separator={
 						<ChevronRight
 							size={14}
 							strokeWidth={2.5}
-							className="text-black/10"
+							className="text-gray-200"
 						/>
 					}
 					separatorMargin="md"
@@ -60,7 +54,7 @@ export function ScriptsHeader({
 					<Text size="xs" fw={800} tt="uppercase" lts={1.5} c="dimmed">
 						Script Tools
 					</Text>
-					<Text size="xs" fw={900} tt="uppercase" lts={1.5} c="charcoal">
+					<Text size="xs" fw={900} tt="uppercase" lts={1.5} c="brand-dark.6">
 						Scripts
 					</Text>
 				</Breadcrumbs>
@@ -72,20 +66,15 @@ export function ScriptsHeader({
 					<PageTitle>Scripts</PageTitle>
 
 					<Group gap="xs">
-						<Group gap={0} bg="black/5" p={2} style={{ borderRadius: 6 }}>
+						<Group gap={0} className="bg-gray-100 p-0.5 rounded-md">
 							<Tooltip label="List view" openDelay={500}>
 								<ActionIcon
 									variant={viewMode === "list" ? "white" : "transparent"}
-									color={viewMode === "list" ? "charcoal" : "dimmed"}
+									color={viewMode === "list" ? "brand-dark.6" : "dimmed"}
 									onClick={() => onViewModeChange("list")}
 									size="md"
 									radius="sm"
-									style={{
-										boxShadow:
-											viewMode === "list"
-												? "0 1px 3px rgba(0,0,0,0.1)"
-												: "none",
-									}}
+									className={viewMode === "list" ? "shadow-sm" : ""}
 								>
 									<List size={18} />
 								</ActionIcon>
@@ -93,16 +82,11 @@ export function ScriptsHeader({
 							<Tooltip label="Grid view" openDelay={500}>
 								<ActionIcon
 									variant={viewMode === "grid" ? "white" : "transparent"}
-									color={viewMode === "grid" ? "charcoal" : "dimmed"}
+									color={viewMode === "grid" ? "brand-dark.6" : "dimmed"}
 									onClick={() => onViewModeChange("grid")}
 									size="md"
 									radius="sm"
-									style={{
-										boxShadow:
-											viewMode === "grid"
-												? "0 1px 3px rgba(0,0,0,0.1)"
-												: "none",
-									}}
+									className={viewMode === "grid" ? "shadow-sm" : ""}
 								>
 									<Grid size={18} />
 								</ActionIcon>
@@ -111,7 +95,7 @@ export function ScriptsHeader({
 
 						<Button
 							variant="subtle"
-							color="charcoal"
+							color="brand-dark.6"
 							leftSection={<FolderPlus size={16} />}
 							onClick={onCreateFolder}
 							size="sm"

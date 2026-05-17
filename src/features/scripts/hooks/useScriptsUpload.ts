@@ -1,9 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
-import {
-	pgliteStore,
-	processDocuments,
-	useFileUpload,
-} from "@/features/editor";
+import { processDocuments, useFileUpload } from "@/features/editor";
+import { scriptRepository } from "@/features/storage/repository/scriptRepository";
+import type { Script } from "@/types/Script";
 import { useScriptsUiStore } from "../store/useScriptsUiStore";
 import { scriptKeys } from "./useScriptsQuery";
 
@@ -21,11 +19,11 @@ export function useScriptsUpload() {
 	} = useFileUpload({
 		onSuccess: async (docFiles) => {
 			const processed = await processDocuments(docFiles);
-			const newScripts = processed.map((s) => ({
+			const newScripts = processed.map((s: Script) => ({
 				...s,
 				folderId: currentFolderId,
 			}));
-			await pgliteStore.saveScripts(newScripts);
+			await scriptRepository.saveScripts(newScripts);
 			await queryClient.invalidateQueries({ queryKey: scriptKeys.all });
 			resetUpload();
 		},

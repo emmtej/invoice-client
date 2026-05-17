@@ -1,8 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { folderQueries } from "@/features/storage/folderQueries";
-import { initDb } from "@/features/storage/pgliteClient";
+import { folderRepository } from "@/features/storage/repository/folderRepository";
+import { scriptRepository } from "@/features/storage/repository/scriptRepository";
 import type { Folder } from "@/features/storage/types";
-import { scriptsQueries } from "../store/scriptsQueries";
 
 export const scriptKeys = {
 	all: ["scripts"] as const,
@@ -33,14 +32,12 @@ const LOAD_MORE_BATCH = 10;
 export function useScripts(folderId: string | null) {
 	return useQuery({
 		queryKey: scriptKeys.list(folderId),
-		queryFn: async () => {
-			await initDb();
-			return scriptsQueries.getScriptsInFolderPaginated(
+		queryFn: () =>
+			scriptRepository.getScriptsInFolderPaginated(
 				folderId,
 				INITIAL_SCRIPT_LIMIT,
 				0,
-			);
-		},
+			),
 	});
 }
 
@@ -48,13 +45,12 @@ export function useScriptsInfinite(folderId: string | null) {
 	return useInfiniteQuery({
 		queryKey: scriptKeys.infinite(folderId),
 		queryFn: async ({ pageParam = 0 }) => {
-			await initDb();
-			const scripts = await scriptsQueries.getScriptsInFolderPaginated(
+			const scripts = await scriptRepository.getScriptsInFolderPaginated(
 				folderId,
 				pageParam === 0 ? INITIAL_SCRIPT_LIMIT : LOAD_MORE_BATCH,
 				pageParam,
 			);
-			const totalCount = await scriptsQueries.countScriptsInFolder(folderId);
+			const totalCount = await scriptRepository.countScriptsInFolder(folderId);
 			return {
 				scripts,
 				nextOffset: pageParam + scripts.length,
@@ -75,12 +71,11 @@ export function useRecentScriptsInfinite() {
 	return useInfiniteQuery({
 		queryKey: scriptKeys.recentInfinite(),
 		queryFn: async ({ pageParam = 0 }) => {
-			await initDb();
-			const scripts = await scriptsQueries.getRecentScripts(
+			const scripts = await scriptRepository.getRecentScripts(
 				pageParam === 0 ? INITIAL_SCRIPT_LIMIT : LOAD_MORE_BATCH,
 				pageParam,
 			);
-			const totalCount = await scriptsQueries.countAllScripts();
+			const totalCount = await scriptRepository.countAllScripts();
 			return {
 				scripts,
 				nextOffset: pageParam + scripts.length,
@@ -100,40 +95,30 @@ export function useRecentScriptsInfinite() {
 export function useAllScripts() {
 	return useQuery({
 		queryKey: [...scriptKeys.all, "all"] as const,
-		queryFn: async () => {
-			await initDb();
-			return scriptsQueries.getAllScripts();
-		},
+		queryFn: () => scriptRepository.getAllScripts(),
 	});
 }
 
 export function useAllFolders() {
 	return useQuery({
 		queryKey: scriptKeys.folders.all,
-		queryFn: async () => {
-			await initDb();
-			return folderQueries.getAllFolders();
-		},
+		queryFn: () => folderRepository.getAllFolders(),
 	});
 }
 
 export function useFolders(parentId: string | null) {
 	return useQuery({
 		queryKey: scriptKeys.folders.list(parentId),
-		queryFn: async () => {
-			await initDb();
-			return folderQueries.getRecentFolders(parentId, 100); // Using 100 as a reasonable limit for "all" folders at level
-		},
+		queryFn: () => folderRepository.getRecentFolders(parentId, 100),
 	});
 }
 
 export function useFolderBreadcrumb(folderId: string | null) {
 	return useQuery({
 		queryKey: scriptKeys.folders.breadcrumb(folderId || "root"),
-		queryFn: async () => {
+		queryFn: () => {
 			if (!folderId) return [];
-			await initDb();
-			return folderQueries.getFolderBreadcrumb(folderId);
+			return folderRepository.getFolderBreadcrumb(folderId);
 		},
 		enabled: !!folderId,
 	});
@@ -143,10 +128,9 @@ export function useFolderChildItemCounts(folders: Folder[]) {
 	const folderIds = folders.map((f) => f.id);
 	return useQuery({
 		queryKey: scriptKeys.folders.counts(folderIds),
-		queryFn: async () => {
+		queryFn: () => {
 			if (folderIds.length === 0) return {};
-			await initDb();
-			return folderQueries.getChildItemCountsForFolders(folderIds);
+			return folderRepository.getChildItemCountsForFolders(folderIds);
 		},
 		enabled: folderIds.length > 0,
 	});
