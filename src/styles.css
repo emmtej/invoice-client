@@ -1,42 +1,23 @@
-@font-face {
-	font-family: "Sneaky Times";
-	src:
-		url("./assets/fonts/Sneaky-Times.woff2") format("woff2"),
-		url("./assets/fonts/Sneaky-Times.woff") format("woff");
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
-}
+@import "@fontsource/geist-sans/400.css";
+@import "@fontsource/geist-sans/500.css";
+@import "@fontsource/geist-sans/600.css";
+@import "@fontsource/geist-sans/700.css";
+@import "@fontsource/playfair-display/500.css";
+@import "@fontsource/playfair-display/600.css";
 
-@font-face {
-	font-family: "Poppins";
-	src:
-		url("./assets/fonts/Poppins-Variable.woff2") format("woff2-variations"),
-		url("./assets/fonts/Poppins-Variable.woff") format("woff");
-	font-weight: 100 900;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: "Poppins";
-	src:
-		url("./assets/fonts/Poppins-VariableItalic.woff2") format("woff2-variations"),
-		url("./assets/fonts/Poppins-VariableItalic.woff") format("woff");
-	font-weight: 100 900;
-	font-style: italic;
-	font-display: swap;
-}
-
-@import "tailwindcss";
 @import "@mantine/core/styles.css";
 @import "@mantine/dropzone/styles.css";
 @import "@mantine/notifications/styles.css";
 @import "@mantine/tiptap/styles.css";
+@import "tailwindcss";
 
 @theme {
-	--font-sans: "Source Sans 3", sans-serif;
+	--font-sans: "Geist Sans", sans-serif;
 	--font-display: "Playfair Display", serif;
+
+	/* Semantic aliases */
+	--charcoal: var(--mantine-color-brand-dark-7);
+	--color-charcoal: var(--charcoal);
 
 	/* Color Palette */
 	--color-forest-50: var(--mantine-color-forest-0);
@@ -117,15 +98,15 @@
 	--color-brand-dark-900: var(--mantine-color-brand-dark-9);
 
 	--color-forest: #2d3a31;
-
 	--color-sage: #8c9a84;
 	--color-terracotta: #c27b66;
 	--color-alabaster: #f9f8f4;
 	--color-stone: #e6e2da;
+	--color-surface: #faf9f5;
 
 	--radius-3xl: 24px;
-
-	--app-bg: #f9f8f4;
+	--app-bg: var(--color-alabaster);
+	--motion-ease-out: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 html,
@@ -204,10 +185,10 @@ body::before {
 /* Redesigned rich text editor toolbar */
 .rich-text-editor-toolbar {
 	padding: var(--mantine-spacing-sm);
-	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	border-bottom: 1px solid color-mix(in srgb, var(--color-forest) 8%, transparent);
 	gap: var(--mantine-spacing-xs);
 	align-items: center;
-	background-color: rgba(0, 0, 0, 0.02);
+	background-color: color-mix(in srgb, var(--color-forest) 3%, var(--color-alabaster));
 }
 
 .rich-text-editor-toolbar .editor-additional-menu {
@@ -219,25 +200,24 @@ body::before {
 
 /* Custom soft component styles */
 .mantine-Button-root {
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 2px 4px color-mix(in srgb, var(--color-forest) 8%, transparent);
 }
 
-.mantine-Paper-root {
-	transition: transform 150ms ease, box-shadow 150ms ease;
+.mantine-Paper-root.interactive-card {
+	transition:
+		transform 200ms var(--motion-ease-out),
+		box-shadow 200ms var(--motion-ease-out);
 }
 
-.mantine-Paper-root:hover {
-	/* Only apply to cards that should be interactive */
-	&.interactive-card {
-		transform: translateY(-2px);
-		box-shadow: var(--mantine-shadow-md);
-	}
+.mantine-Paper-root.interactive-card:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--mantine-shadow-md);
 }
 
 @keyframes fadeUp {
 	from {
 		opacity: 0;
-		transform: translateY(20px);
+		transform: translateY(8px);
 	}
 	to {
 		opacity: 1;
@@ -246,12 +226,5 @@ body::before {
 }
 
 .fade-up {
-	opacity: 0;
-	animation: fadeUp 0.7s ease-out forwards;
+	animation: fadeUp 200ms var(--motion-ease-out) forwards;
 }
-
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-.stagger-5 { animation-delay: 0.5s; }

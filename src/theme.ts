@@ -1,8 +1,16 @@
 import { createTheme, type MantineColorsTuple } from "@mantine/core";
 
-// Custom local fonts
+/** Semantic surface tokens (also exposed in styles.css @theme) */
+export const tokens = {
+	alabaster: "#f9f8f4",
+	stone: "#e6e2da",
+	forestBorderLight: "#f2f4f2",
+	surface: "#faf9f5",
+	forest: "#2d3a31",
+} as const;
+
 const fontSans =
-	'"Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+	'"Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const fontDisplay = '"Playfair Display", serif';
 
 export type BrandColor =
@@ -12,7 +20,8 @@ export type BrandColor =
 	| "wave"
 	| "studio"
 	| "on-air-red"
-	| "brand-dark";
+	| "brand-dark"
+	| "charcoal";
 
 const forest: MantineColorsTuple = [
 	"#f2f4f2",
@@ -105,6 +114,11 @@ const brandDark: MantineColorsTuple = [
 	"#13191a",
 ];
 
+/** Alias for headings and emphasis text (same scale as brand-dark) */
+const charcoal = brandDark;
+
+const motionEase = "cubic-bezier(0.25, 1, 0.5, 1)";
+
 export const appTheme = createTheme({
 	primaryColor: "forest",
 	primaryShade: 9,
@@ -116,9 +130,10 @@ export const appTheme = createTheme({
 		studio,
 		"on-air-red": onAirRed,
 		"brand-dark": brandDark,
+		charcoal,
 	},
-	black: "#2D3A31", // Forest
-	white: "#FFFFFF",
+	black: tokens.forest,
+	white: tokens.surface,
 	defaultRadius: "md",
 	radius: {
 		xs: "2px",
@@ -154,7 +169,7 @@ export const appTheme = createTheme({
 			},
 			styles: {
 				input: {
-					borderBottom: "1px solid #E6E2DA",
+					borderBottom: `1px solid ${tokens.stone}`,
 					borderRadius: 0,
 					paddingLeft: 0,
 					paddingRight: 0,
@@ -167,7 +182,7 @@ export const appTheme = createTheme({
 					fontSize: "12px",
 					textTransform: "uppercase",
 					letterSpacing: "0.05em",
-					color: "var(--mantine-color-sage-6)",
+					color: "var(--mantine-color-brand-dark-5)",
 				},
 			},
 		},
@@ -194,22 +209,22 @@ export const appTheme = createTheme({
 					textTransform: "uppercase",
 					letterSpacing: "0.1em",
 					fontWeight: 600,
-					transition: "all 0.3s ease",
+					transition: `background-color 200ms ${motionEase}, color 200ms ${motionEase}, box-shadow 200ms ${motionEase}, transform 200ms ${motionEase}`,
 				},
 			},
 		},
 		Table: {
 			styles: {
 				th: {
-					color: "var(--mantine-color-sage-6)",
-					borderBottom: "1px solid #E6E2DA",
+					color: "var(--mantine-color-brand-dark-5)",
+					borderBottom: `1px solid ${tokens.stone}`,
 					fontSize: "11px",
 					fontWeight: 800,
 					textTransform: "uppercase",
 					letterSpacing: "1px",
 				},
 				td: {
-					borderBottom: "1px solid #F2F4F2",
+					borderBottom: `1px solid ${tokens.forestBorderLight}`,
 				},
 			},
 		},
@@ -234,7 +249,7 @@ export const appTheme = createTheme({
 				control: {
 					borderRadius: "100px",
 					border: "none",
-					transition: "all 0.3s ease",
+					transition: `background-color 200ms ${motionEase}, color 200ms ${motionEase}`,
 					backgroundColor: "transparent",
 					"&:hover": {
 						backgroundColor: "var(--mantine-color-terracotta-0)",
