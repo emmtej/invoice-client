@@ -53,15 +53,8 @@ export function TeleprompterLine({
 			<Box
 				py="md"
 				px="md"
-				bg={isCurrent && isSceneMode ? "wave.0" : "transparent"}
-				className={`
-					border-b border-dashed border-brand-dark-200 transition-colors duration-150
-					${
-						isCurrent && isSceneMode
-							? "border-l-[3px] border-l-wave-500"
-							: "border-l-[3px] border-l-transparent"
-					}
-				`}
+				bg={isCurrent && isSceneMode ? "blue.0" : "transparent"}
+				className={`border-b border-dashed transition-colors duration-150 ${ isCurrent && isSceneMode ? "border-l-[3px] border-l-blue-500" : "border-l-[3px] border-l-transparent" }`}
 			>
 				<Group gap="sm" wrap="nowrap">
 					{isSceneMode && (
@@ -69,14 +62,14 @@ export function TeleprompterLine({
 							checked={isCompleted}
 							onChange={() => onCompleteScene(lineIndex)}
 							disabled={!isSessionRunning || isCompleted}
-							color="wave"
+							color="blue"
 							className="flex-shrink-0"
 						/>
 					)}
 					<Text
 						size="xs"
 						fw={800}
-						c={isCompleted ? "brand-dark.2" : "brand-dark.4"}
+						c="dimmed"
 						tt="uppercase"
 						lts={1}
 						className="flex-1"
@@ -113,16 +106,8 @@ export function TeleprompterLine({
 			py="sm"
 			px="md"
 			align="flex-start"
-			bg={isCurrent && !isSceneMode ? "wave.0" : "transparent"}
-			className={`
-				transition-all duration-150
-				${isCompleted ? "opacity-40" : "opacity-100"}
-				${
-					isCurrent && !isSceneMode
-						? "border-l-[3px] border-l-wave-500"
-						: "border-l-[3px] border-l-transparent"
-				}
-			`}
+			bg={isCurrent && !isSceneMode ? "blue.0" : "transparent"}
+			className={`transition-all duration-150 ${isCompleted ? "opacity-40" : "opacity-100"} ${ isCurrent && !isSceneMode ? "border-l-[3px] border-l-blue-500" : "border-l-[3px] border-l-transparent" }`}
 		>
 			{!isSceneMode && (
 				<Checkbox
@@ -130,7 +115,7 @@ export function TeleprompterLine({
 					onChange={() => onComplete(lineIndex)}
 					disabled={!isSessionRunning || isCompleted}
 					mt={4}
-					color="wave"
+					color="blue"
 					className="flex-shrink-0"
 				/>
 			)}
@@ -154,7 +139,7 @@ export function TeleprompterLine({
 						<ActionIcon
 							size="sm"
 							variant="subtle"
-							color="brand-dark.5"
+							color="gray"
 							radius="md"
 							onClick={cancelEdit}
 							aria-label="Cancel editing"
@@ -166,7 +151,7 @@ export function TeleprompterLine({
 					<Text
 						size="md"
 						fw={500}
-						c={isCompleted ? "brand-dark.2" : "brand-dark.7"}
+						c="dimmed"
 						className={isCompleted ? "line-through" : ""}
 					>
 						{content}
@@ -179,7 +164,7 @@ export function TeleprompterLine({
 					<ActionIcon
 						size="sm"
 						variant="subtle"
-						color="brand-dark.5"
+						color="gray"
 						radius="md"
 						onClick={startEditing}
 						aria-label="Edit line"

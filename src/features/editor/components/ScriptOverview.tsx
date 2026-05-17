@@ -41,7 +41,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 			<Box
 				p="lg"
 				bg="white"
-				className="border-b border-stone sticky top-0 z-[20]"
+				className="border-b sticky top-0 z-[20]"
 			>
 				<Flex justify="space-between" align="center" mb={16} gap="xl">
 					<Group gap={20}>
@@ -49,24 +49,23 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 							<Group gap="sm">
 								<Title
 									order={1}
-									className="tracking-tight text-balance text-4xl"
+									className="tracking-tight text-4xl"
 								>
 									{script.name}
 								</Title>
 								{overview.invalidLines.length === 0 && (
 									<Badge
 										variant="dot"
-										color="wave"
+										color="blue"
 										size="sm"
 										radius="xl"
-										className="border-wave-100 bg-wave-50 text-wave-700"
 									>
 										Verified
 									</Badge>
 								)}
 							</Group>
 							<Group gap="xs">
-								<Badge variant="dot" color="wave" size="sm" radius="xl">
+								<Badge variant="dot" color="blue" size="sm" radius="xl">
 									{overview.totalLines} Lines
 								</Badge>
 							</Group>
@@ -78,12 +77,12 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						<Group gap={8} wrap="nowrap">
 							<Box
 								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
-								c="brand-dark.4"
+								c="dimmed"
 							>
 								<MessageSquare size={12} strokeWidth={2.5} />
 								<span>Words</span>
 							</Box>
-							<Text fw={800} size="sm" className="text-wave-700 tabular-nums">
+							<Text fw={800} size="sm" className="tabular-nums">
 								{overview.wordCount}
 							</Text>
 						</Group>
@@ -91,12 +90,12 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						<Group gap={8} wrap="nowrap">
 							<Box
 								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
-								c="brand-dark.4"
+								c="dimmed"
 							>
 								<Zap size={12} strokeWidth={2.5} />
 								<span>Valid</span>
 							</Box>
-							<Text fw={600} size="sm" c="brand-dark.7">
+							<Text fw={600} size="sm" >
 								{overview.validLines.length}
 							</Text>
 						</Group>
@@ -104,18 +103,18 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						<Group gap={8} wrap="nowrap">
 							<Box
 								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
-								c="brand-dark.4"
+								c="dimmed"
 							>
 								<Search size={12} strokeWidth={2.5} />
 								<span>Health</span>
 							</Box>
 							<Group gap={6}>
 								{overview.invalidLines.length > 0 ? (
-									<Text fw={600} size="sm" color="on-air-red.6">
+									<Text fw={600} size="sm" color="red">
 										{overview.invalidLines.length} Issues
 									</Text>
 								) : (
-									<Text fw={600} size="sm" c="wave.7">
+									<Text fw={600} size="sm" c="blue">
 										Ready
 									</Text>
 								)}
@@ -135,7 +134,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						size="sm"
 						radius="md"
 						leftSection={
-							<Box className="flex items-center text-brand-dark-300">
+							<Box className="flex items-center">
 								<Filter size={14} />
 							</Box>
 						}
@@ -151,7 +150,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 					{onEdit && (
 						<Button
 							variant="filled"
-							color="wave"
+							color="blue"
 							size="sm"
 							radius="xl"
 							leftSection={<Edit3 size={16} />}
@@ -182,10 +181,10 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						>
 							<Table.Thead bg="white" className="sticky top-0 z-[10]">
 								<Table.Tr>
-									<Table.Th py="md" className="border-b border-stone">
+									<Table.Th py="md" className="border-b">
 										<SectionLabel letterSpacing={2}>Category</SectionLabel>
 									</Table.Th>
-									<Table.Th py="md" className="border-b border-stone">
+									<Table.Th py="md" className="border-b">
 										<SectionLabel letterSpacing={2}>
 											Script Content
 										</SectionLabel>

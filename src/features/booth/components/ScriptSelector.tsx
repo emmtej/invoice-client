@@ -88,7 +88,7 @@ export function ScriptSelector({
 	if (isLoading && !hideLoader) {
 		return (
 			<Center py="xl">
-				<Loader color="wave" size="sm" />
+				<Loader color="blue" size="sm" />
 			</Center>
 		);
 	}
@@ -101,10 +101,10 @@ export function ScriptSelector({
 		<Stack gap={48}>
 			<Group justify="space-between" align="center">
 				<Box>
-					<Text fw={800} size="xl" c="brand-dark.8" lts={-0.2}>
+					<Text fw={800} size="xl" c="dimmed" lts={-0.2}>
 						Select a Script
 					</Text>
-					<Text size="sm" c="brand-dark.5" mt={2} fw={500}>
+					<Text size="sm" c="dimmed" mt={2} fw={500}>
 						Choose from your library or import a new document to begin.
 					</Text>
 				</Box>
@@ -112,7 +112,7 @@ export function ScriptSelector({
 					onChange={handleFileChange}
 					multiple={true}
 					variant="filled"
-					color="studio"
+					color="blue"
 					size="md"
 					loading={isUploading}
 					leftSection={<Upload size={18} />}
@@ -140,18 +140,18 @@ export function ScriptSelector({
 					style={{
 						borderStyle: "dashed",
 						borderWidth: 2,
-						borderColor: "var(--color-stone)",
+						borderColor: "var(--mantine-color-gray-3)",
 					}}
 				>
 					<Stack align="center" gap="lg" py="xl">
-						<ThemeIcon size={64} radius="xl" variant="light" color="brand-dark.5">
+						<ThemeIcon size={64} radius="xl" variant="light" color="gray">
 							<FileText size={32} strokeWidth={1.5} />
 						</ThemeIcon>
 						<Stack gap={4} align="center">
-							<Text fw={800} size="lg" c="brand-dark.8">
+							<Text fw={800} size="lg" c="dimmed">
 								Your script library is empty
 							</Text>
-							<Text size="sm" c="brand-dark.5" ta="center" maw={400}>
+							<Text size="sm" c="dimmed" ta="center" maw={400}>
 								Upload a Word document to automatically extract dialogue lines
 								and start your first recording session.
 							</Text>
@@ -161,7 +161,7 @@ export function ScriptSelector({
 							multiple={true}
 							size="md"
 							variant="light"
-							color="wave"
+							color="blue"
 							loading={isUploading}
 							leftSection={<Upload size={16} />}
 						>
@@ -187,17 +187,17 @@ export function ScriptSelector({
 										backgroundColor: "white",
 										border:
 											loadingScriptId === s.id
-												? "2px solid var(--mantine-color-wave-4)"
-												: "1px solid var(--color-stone)",
+												? "2px solid var(--mantine-color-blue-6)"
+												: "1px solid var(--mantine-color-gray-3)",
 									}}
-									className="group-hover:border-[var(--mantine-color-wave-3)] group-hover:shadow-lg group-hover:-translate-y-1 group-active:scale-[0.98]"
+									className="group-hover:border-blue-4"
 								>
 									<Stack gap="md">
 										<Group gap="sm" wrap="nowrap">
-											<ThemeIcon variant="light" color="brand-dark.5" size="md">
+											<ThemeIcon variant="light" color="gray" size="md">
 												<FileText size={18} />
 											</ThemeIcon>
-											<Text fw={700} size="sm" truncate="end" c="brand-dark.7">
+											<Text fw={700} size="sm" truncate="end" >
 												{s.name}
 											</Text>
 										</Group>
@@ -205,15 +205,15 @@ export function ScriptSelector({
 											<Badge
 												size="sm"
 												variant="light"
-												color="wave"
+												color="blue"
 												className="font-bold"
 											>
 												{s.wordCount.toLocaleString()} words
 											</Badge>
 											{loadingScriptId === s.id ? (
-												<Loader size={14} color="wave" />
+												<Loader size={14} color="blue" />
 											) : (
-												<Text size="xs" c="brand-dark.5" fw={600} tt="uppercase">
+												<Text size="xs" c="dimmed" fw={600} tt="uppercase">
 													Select
 												</Text>
 											)}
@@ -228,7 +228,7 @@ export function ScriptSelector({
 						<Center pt="md">
 							<Button
 								variant="subtle"
-								color="brand-dark.5"
+								color="gray"
 								onClick={handleLoadMore}
 								loading={isFetchingNextPage}
 								size="sm"

@@ -35,7 +35,7 @@ export function ActiveProfileDisplay({ profile }: ActiveProfileDisplayProps) {
 					</Box>
 				) : (
 					<Box
-						bg="sage.0"
+						bg="gray.0"
 						style={{
 							width: 64,
 							height: 80,
@@ -45,19 +45,19 @@ export function ActiveProfileDisplay({ profile }: ActiveProfileDisplayProps) {
 							borderRadius: "32px 32px 0 0", // Arch shape
 						}}
 					>
-						<User size={32} className="text-sage-300" strokeWidth={1.5} />
+						<User size={32} strokeWidth={1.5} />
 					</Box>
 				)}
 				<Stack gap="xs" style={{ flex: 1 }}>
 					<Group gap="xs">
-						<Text size="sm" fw={700} c="forest.9">
+						<Text size="sm" fw={700} >
 							{fullName || "—"}
 						</Text>
 					</Group>
 					{profile.email?.trim() && (
 						<Group gap="xs">
-							<AtSign size={14} className="text-sage-400" strokeWidth={2} />
-							<Text size="xs" c="brand-dark.5">
+							<AtSign size={14} strokeWidth={2} />
+							<Text size="xs" c="dimmed">
 								{profile.email}
 							</Text>
 						</Group>

@@ -23,19 +23,19 @@ export function OngoingSessionCard({ session }: OngoingSessionCardProps) {
 	}, [session, restoreSession]);
 
 	return (
-		<SurfaceCard className="border-2 border-wave-300 bg-wave-50 shadow-sm">
+		<SurfaceCard className="border-2 shadow-sm">
 			<Group justify="space-between" align="center">
 				<Box>
-					<Text fw={800} size="xl" c="brand-dark.7" lts={-0.2}>
+					<Text fw={800} size="xl"  lts={-0.2}>
 						{session.scriptName}
 					</Text>
-					<Text size="sm" c="brand-dark.4" fw={500}>
+					<Text size="sm" c="dimmed" fw={500}>
 						Started {new Date(session.startedAt).toLocaleString()}
 					</Text>
 					<Group gap="md" mt={12}>
 						<Badge
 							variant="filled"
-							color="wave"
+							color="blue"
 							size="md"
 							radius="xl"
 							className="font-bold"
@@ -43,8 +43,8 @@ export function OngoingSessionCard({ session }: OngoingSessionCardProps) {
 							{session.completedLines} / {session.totalLines} lines
 						</Badge>
 						<Group gap="xs">
-							<Clock size={16} className="text-brand-dark-300" />
-							<Text size="sm" c="brand-dark.4" ff="monospace" fw={700}>
+							<Clock size={16} />
+							<Text size="sm" c="dimmed" ff="monospace" fw={700}>
 								{Math.floor(session.elapsedMs / 1000 / 60)}m{" "}
 								{Math.floor((session.elapsedMs / 1000) % 60)
 									.toString()
@@ -55,7 +55,7 @@ export function OngoingSessionCard({ session }: OngoingSessionCardProps) {
 					</Group>
 				</Box>
 				<Button
-					color="wave"
+					color="blue"
 					size="lg"
 					radius="xl"
 					onClick={handleSelectSession}

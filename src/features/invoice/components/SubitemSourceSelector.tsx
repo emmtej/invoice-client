@@ -26,7 +26,7 @@ export function SubitemSourceSelector({
 		<Tabs
 			value={activeTab}
 			onChange={(val) => onTabChange(val as "upload" | "library")}
-			color="studio"
+			color="blue"
 		>
 			<Tabs.List grow>
 				<Tabs.Tab value="upload" leftSection={<FileUp size={16} />}>
@@ -44,7 +44,7 @@ export function SubitemSourceSelector({
 					</DocxUploadButton>
 					{uploadedScripts.length > 0 && (
 						<Stack gap={4}>
-							<Text size="xs" fw={700} c="brand-dark.5">
+							<Text size="xs" fw={700} c="dimmed">
 								UPLOADED DOCUMENTS:
 							</Text>
 							{uploadedScripts.map((s) => (

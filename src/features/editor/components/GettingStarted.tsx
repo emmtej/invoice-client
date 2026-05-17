@@ -27,7 +27,6 @@ export function GettingStarted({
 			direction="column"
 			h="100%"
 			bg="transparent"
-			className="fade-up"
 		>
 			<Stack
 				gap={48}
@@ -43,8 +42,8 @@ export function GettingStarted({
 						p="sm"
 						bg="white"
 						style={{
-							border: "1px solid var(--mantine-color-sage-2)",
-							boxShadow: "0 4px 12px rgba(45, 58, 49, 0.05)",
+							border: "1px solid var(--mantine-color-gray-5)",
+							boxShadow: "var(--mantine-shadow-sm)",
 						}}
 					>
 						<Group justify="space-between" align="center" px="sm">
@@ -52,7 +51,7 @@ export function GettingStarted({
 								<Box
 									p={8}
 									style={{
-										backgroundColor: "var(--mantine-color-terracotta-1)",
+										backgroundColor: "var(--mantine-color-orange-6)",
 										borderRadius: "8px",
 										display: "flex",
 										alignItems: "center",
@@ -62,14 +61,13 @@ export function GettingStarted({
 									<FileUp
 										size={20}
 										strokeWidth={2}
-										className="text-forest-900"
 									/>
 								</Box>
 								<Box>
-									<Text fw={700} size="sm" c="forest.9">
+									<Text fw={700} size="sm" >
 										Upload Scripts
 									</Text>
-									<Text size="xs" c="forest.9" opacity={0.7}>
+									<Text size="xs"  opacity={0.7}>
 										Analyze .docx files to extract dialogue automatically
 									</Text>
 								</Box>
@@ -79,7 +77,7 @@ export function GettingStarted({
 								multiple
 								size="sm"
 								variant="filled"
-								color="forest"
+								color="blue"
 								style={{ borderRadius: "100px" }}
 							>
 								Select Files
@@ -91,7 +89,7 @@ export function GettingStarted({
 				{/* Bottom: Paste Editor (Stationery) */}
 				<Box style={{ flex: 1, display: "flex", flexDirection: "column" }}>
 					<Stack gap="xs" flex={1}>
-						<Text size="xs" fw={700} tt="uppercase" lts={2} c="brand-dark.5">
+						<Text size="xs" fw={700} tt="uppercase" lts={2} c="dimmed">
 							Or Paste Content
 						</Text>
 						<TextEditor
@@ -104,7 +102,7 @@ export function GettingStarted({
 										<Button
 											variant="filled"
 											size="md"
-											color="terracotta"
+											color="blue"
 											leftSection={<Plus size={16} />}
 											onClick={handleCreateFromPaste}
 										>

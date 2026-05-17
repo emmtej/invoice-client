@@ -12,12 +12,11 @@ export default function EditorView() {
 						<ChevronRight
 							size={14}
 							strokeWidth={2.5}
-							className="text-sage-200"
 						/>
 					}
 					separatorMargin="md"
 				>
-					<Text size="xs" fw={700} tt="uppercase" lts={1.5} c="brand-dark.5">
+					<Text size="xs" fw={700} tt="uppercase" lts={1.5} c="dimmed">
 						Script Tools
 					</Text>
 					<Text
@@ -25,7 +24,7 @@ export default function EditorView() {
 						fw={800}
 						tt="uppercase"
 						lts={1.5}
-						c="forest.9"
+						
 						style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}
 					>
 						Editor

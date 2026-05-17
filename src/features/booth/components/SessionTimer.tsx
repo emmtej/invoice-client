@@ -52,7 +52,7 @@ export function SessionTimer() {
 				</Text>
 			),
 			labels: { confirm: "Stop Session", cancel: "Keep Recording" },
-			confirmProps: { color: "studio" },
+			confirmProps: { color: "blue" },
 			onConfirm: stopSession,
 		});
 	};
@@ -74,12 +74,12 @@ export function SessionTimer() {
 						onChange={(event) => {
 							shouldResetTimer = event.currentTarget.checked;
 						}}
-						color="wave"
+						color="blue"
 					/>
 				</Stack>
 			),
 			labels: { confirm: "Reset Take", cancel: "Cancel" },
-			confirmProps: { color: "studio" },
+			confirmProps: { color: "blue" },
 			onConfirm: () => restartSession(shouldResetTimer),
 		});
 	};

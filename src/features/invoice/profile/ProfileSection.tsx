@@ -59,7 +59,7 @@ export function ProfileSection({
 	return (
 		<Stack gap="xl">
 			<Group justify="space-between" align="center">
-				<Text size="xs" fw={700} c="brand-dark.5" tt="uppercase" lts={1}>
+				<Text size="xs" fw={700} c="dimmed" tt="uppercase" lts={1}>
 					SENDER PROFILE
 				</Text>
 				{hasProfiles && !isEditingProfile && (
@@ -86,7 +86,7 @@ export function ProfileSection({
 			{(!hasProfiles || isEditingProfile) && (
 				<Stack gap="xl">
 					{!hasProfiles && (
-						<Text size="sm" c="brand-dark.5" fw={500}>
+						<Text size="sm" c="dimmed" fw={500}>
 							Create your first invoice profile. It will be saved and can be
 							reused later.
 						</Text>
@@ -143,7 +143,7 @@ export function ProfileSection({
 							<Button
 								onClick={handleCancelEdit}
 								variant="subtle"
-								color="brand-dark.5"
+								color="gray"
 								fw={700}
 							>
 								Cancel
@@ -153,7 +153,7 @@ export function ProfileSection({
 							onClick={handleSaveProfile}
 							disabled={!isProfileValid}
 							variant="filled"
-							color="studio"
+							color="blue"
 							px="xl"
 							fw={800}
 							leftSection={<Save size={16} />}
@@ -177,7 +177,7 @@ export function ProfileSection({
 									onClick={handleSetAsDefault}
 									size="xs"
 									variant="subtle"
-									color="studio"
+									color="blue"
 									leftSection={<Star size={14} />}
 									fw={700}
 								>
@@ -200,7 +200,7 @@ export function ProfileSection({
 								}}
 								size="xs"
 								variant="light"
-								color="studio"
+								color="blue"
 								leftSection={<Pencil size={14} />}
 								fw={700}
 							>
@@ -219,7 +219,7 @@ export function ProfileSection({
 						profileSavedMessage === "Profile saved." ||
 						profileSavedMessage === "Default profile updated."
 							? "teal"
-							: "on-air-red"
+							: "red"
 					}
 				>
 					{profileSavedMessage}

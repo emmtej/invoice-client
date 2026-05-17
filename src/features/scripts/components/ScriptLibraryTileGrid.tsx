@@ -26,7 +26,7 @@ export function ScriptLibraryTileGrid({
 
 	return (
 		<Card
-			bg={isSelected ? "var(--mantine-color-studio-0)" : "white"}
+			bg={isSelected ? "blue.0" : "white"}
 			shadow={hovered ? "md" : "sm"}
 			p="md"
 			withBorder
@@ -38,13 +38,11 @@ export function ScriptLibraryTileGrid({
 				root: {
 					cursor: "pointer",
 					borderColor: isSelected
-						? "var(--mantine-color-studio-5)"
-						: "color-mix(in srgb, var(--mantine-color-forest-9) 5%, transparent)",
-					transition: "all 150ms ease",
+						? "var(--mantine-color-blue-4)"
+						: "var(--mantine-color-gray-3)",
+					transition: "border-color 150ms ease",
 					"&:hover": {
-						borderColor: isSelected
-							? "var(--mantine-color-studio-6)"
-							: "var(--mantine-color-studio-3)",
+						borderColor: "var(--mantine-color-blue-4)",
 					},
 				},
 			}}
@@ -56,21 +54,21 @@ export function ScriptLibraryTileGrid({
 						justify="center"
 						w={40}
 						h={40}
-						bg="brand-dark.0"
+						bg="gray.0"
 						style={{ borderRadius: "var(--mantine-radius-md)" }}
 					>
 						<FileText
 							size={20}
 							color={
 								isSelected
-									? "var(--mantine-color-studio-6)"
+									? "var(--mantine-color-blue-6)"
 									: "var(--mantine-color-gray-6)"
 							}
 						/>
 					</Flex>
 					<ActionIcon
 						variant="subtle"
-						color="brand-dark.5"
+						color="gray"
 						size="sm"
 						onClick={(e: React.MouseEvent) => {
 							e.stopPropagation();
@@ -81,8 +79,8 @@ export function ScriptLibraryTileGrid({
 							opacity: hovered ? 1 : 0,
 							transition: "opacity 150ms ease",
 							"&:hover": {
-								color: "var(--mantine-color-on-air-red-6)",
-								backgroundColor: "var(--mantine-color-on-air-red-0)",
+								color: "var(--mantine-color-red-6)",
+								backgroundColor: "var(--mantine-color-red-0)",
 							},
 						}}
 					>
@@ -94,7 +92,7 @@ export function ScriptLibraryTileGrid({
 					<Text
 						size="sm"
 						fw={600}
-						c={isSelected ? "studio.8" : "brand-dark.7"}
+						
 						lineClamp={2}
 						mb="xs"
 						h={40}
@@ -104,16 +102,16 @@ export function ScriptLibraryTileGrid({
 
 					<Stack gap={4}>
 						<Group justify="space-between" wrap="nowrap">
-							<Text size="xs" c="brand-dark.4" className="tabular-nums" truncate>
+							<Text size="xs" c="dimmed" className="tabular-nums" truncate>
 								{script.wordCount.toLocaleString()} words
 							</Text>
 							{script.invalidLineCount > 0 && (
 								<Flex align="center" gap={4}>
 									<AlertCircle
 										size={12}
-										color="var(--mantine-color-on-air-red-5)"
+										color="var(--mantine-color-red-5)"
 									/>
-									<Text size="xs" c="on-air-red.5" className="tabular-nums">
+									<Text size="xs" c="red" className="tabular-nums">
 										{script.invalidLineCount}
 									</Text>
 								</Flex>
@@ -121,7 +119,7 @@ export function ScriptLibraryTileGrid({
 						</Group>
 						<Text
 							size="xs"
-							c="brand-dark.4"
+							c="dimmed"
 							className="tabular-nums"
 							style={{ opacity: 0.6 }}
 						>

@@ -35,7 +35,7 @@ export function InvoiceDetailsSection({
 
 	return (
 		<Stack gap="xl">
-			<Text size="xs" fw={700} c="brand-dark.5" tt="uppercase" lts={1}>
+			<Text size="xs" fw={700} c="dimmed" tt="uppercase" lts={1}>
 				INVOICE DETAILS
 			</Text>
 			<SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg" maw={800}>

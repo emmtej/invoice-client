@@ -20,11 +20,11 @@ export const ScriptsLoading = memo(
 		return (
 			<Flex h="100%" align="center" justify="center">
 				<Stack align="center" gap="xs">
-					<Loader size="sm" color="wave" />
-					<Text size="sm" fw={700} c="brand-dark.4" tt="uppercase" lts={1}>
+					<Loader size="sm" color="blue" />
+					<Text size="sm" fw={700} c="dimmed" tt="uppercase" lts={1}>
 						{message || defaultMessage}
 					</Text>
-					<Text size="xs" c="brand-dark.4">
+					<Text size="xs" c="dimmed">
 						{subtext || defaultSubtext}
 					</Text>
 				</Stack>

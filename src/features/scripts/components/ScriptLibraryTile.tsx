@@ -27,27 +27,18 @@ export function ScriptLibraryTile({
 			p="sm"
 			withBorder
 			onClick={onClick}
-			className={`
-				w-full cursor-pointer transition-all duration-150 group
-				${
-					isSelected
-						? "bg-studio-50 border-studio-400 shadow-sm"
-						: "bg-white border-stone hover:bg-brand-dark-50 hover:border-studio-200"
-				}
-			`}
+			className={`w-full cursor-pointer transition-all duration-150 group ${isSelected ? "border-blue-3 shadow-sm" : "bg-white hover:bg-gray-0 hover:border-gray-3"}`}
 		>
 			<Flex align="center" justify="space-between" gap="md" wrap="nowrap">
 				<Flex align="center" gap="sm" className="flex-1 min-w-0">
 					<FileText
 						size={20}
-						className={`flex-shrink-0 ${
-							isSelected ? "text-studio-600" : "text-brand-dark-300"
-						}`}
+						className="flex-shrink-0"
 					/>
 					<Text
 						size="sm"
 						fw={600}
-						c={isSelected ? "studio.7" : "brand-dark.7"}
+						
 						truncate
 						className="flex-1 min-w-0"
 					>
@@ -62,50 +53,50 @@ export function ScriptLibraryTile({
 					visibleFrom="sm"
 					className="flex-shrink-0"
 				>
-					<Text size="xs" c="brand-dark.4" className="tabular-nums">
+					<Text size="xs" c="dimmed" className="tabular-nums">
 						{script.wordCount.toLocaleString()} words
 					</Text>
 					{script.invalidLineCount > 0 && (
 						<Flex align="center" gap={4}>
-							<AlertCircle size={14} className="text-on-air-500" />
-							<Text size="xs" c="on-air-red.5" className="tabular-nums">
+							<AlertCircle size={14} />
+							<Text size="xs" c="red" className="tabular-nums">
 								{script.invalidLineCount}
 							</Text>
 						</Flex>
 					)}
-					<Text size="xs" c="brand-dark.4" className="tabular-nums opacity-60">
+					<Text size="xs" c="dimmed" className="tabular-nums opacity-60">
 						{dateFormatter.format(script.createdAt)}
 					</Text>
 				</Group>
 
 				<ActionIcon
 					variant="subtle"
-					color="brand-dark.5"
+					color="gray"
 					size="sm"
 					onClick={(e: React.MouseEvent) => {
 						e.stopPropagation();
 						onDelete();
 					}}
 					aria-label="Delete script"
-					className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-on-air-red-600"
+					className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
 				>
 					<Trash2 size={14} />
 				</ActionIcon>
 			</Flex>
 
 			<Group gap="xs" mt="xs" hiddenFrom="sm" wrap="wrap">
-				<Text size="xs" c="brand-dark.4" className="tabular-nums">
+				<Text size="xs" c="dimmed" className="tabular-nums">
 					{script.wordCount.toLocaleString()} words
 				</Text>
 				{script.invalidLineCount > 0 && (
 					<Flex align="center" gap={4}>
-						<AlertCircle size={12} className="text-on-air-500" />
-						<Text size="xs" c="on-air-red.5" className="tabular-nums">
+						<AlertCircle size={12} />
+						<Text size="xs" c="red" className="tabular-nums">
 							{script.invalidLineCount}
 						</Text>
 					</Flex>
 				)}
-				<Text size="xs" c="brand-dark.4" className="tabular-nums opacity-60">
+				<Text size="xs" c="dimmed" className="tabular-nums opacity-60">
 					{dateFormatter.format(script.createdAt)}
 				</Text>
 			</Group>

@@ -1,4 +1,4 @@
-import { Box, Paper } from "@mantine/core";
+import { Paper } from "@mantine/core";
 import { Link, RichTextEditor } from "@mantine/tiptap";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -84,32 +84,17 @@ export function TextEditor({
 				overflow: "hidden",
 				flex: 1,
 				minHeight: 400,
-				boxShadow: "0 25px 50px -12px rgba(45, 58, 49, 0.05)",
+				boxShadow: "var(--mantine-shadow-sm)",
 				display: "flex",
 				flexDirection: "column",
 			}}
 		>
-			{/* Paper Grain Overlay */}
-			<Box
-				style={{
-					position: "absolute",
-					top: 0,
-					left: 0,
-					width: "100%",
-					height: "100%",
-					pointerEvents: "none",
-					zIndex: 10,
-					opacity: 0.015,
-					backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-				}}
-			/>
-
 			<RichTextEditor
 				editor={editor}
 				className="flex h-full w-full flex-col"
 				style={{ flex: 1, minHeight: 0, position: "relative", zIndex: 1 }}
 			>
-				<RichTextEditor.Toolbar className="flex rich-text-editor-toolbar">
+				<RichTextEditor.Toolbar className="flex">
 					<RichTextEditor.ControlsGroup>
 						<RichTextEditor.Bold />
 						<RichTextEditor.Italic />

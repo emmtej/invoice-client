@@ -38,9 +38,9 @@ export function CreateFolderModal({
 	return (
 		<AppModal opened={opened} onClose={handleClose} title="New Folder">
 			{parentFolderName && (
-				<Text size="sm" c="brand-dark.4" mb="md">
+				<Text size="sm" c="dimmed" mb="md">
 					Creating inside{" "}
-					<Text span fw={600} c="brand-dark.7">
+					<Text span fw={600} >
 						{parentFolderName}
 					</Text>
 				</Text>
@@ -59,14 +59,14 @@ export function CreateFolderModal({
 			<Flex justify="flex-end" gap="sm">
 				<Button
 					variant="subtle"
-					color="brand-dark.5"
+					color="gray"
 					onClick={handleClose}
 					disabled={isSubmitting}
 				>
 					Cancel
 				</Button>
 				<Button
-					color="studio"
+					color="blue"
 					onClick={handleSubmit}
 					loading={isSubmitting}
 					disabled={!name.trim()}

@@ -34,7 +34,7 @@ export function SaveToLibraryScriptList({
 							label={s.name}
 							checked={selectedIds.has(s.id)}
 							onChange={() => onToggle(s.id)}
-							color="wave"
+							color="blue"
 							size="sm"
 							styles={{
 								label: { cursor: "pointer" },

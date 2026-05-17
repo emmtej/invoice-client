@@ -24,27 +24,20 @@ export function FolderCard({
 			p="sm"
 			withBorder
 			onClick={onClick}
-			className={`
-				w-full cursor-pointer transition-all duration-150 group
-				${
-					isSelected
-						? "bg-studio-50 border-studio-400 shadow-sm"
-						: "bg-white border-stone hover:bg-brand-dark-50 hover:border-studio-200"
-				}
-			`}
+			className={`w-full cursor-pointer transition-all duration-150 group ${isSelected ? "border-blue-3 shadow-sm" : "bg-white hover:bg-gray-0 hover:border-gray-3"}`}
 		>
 			<Flex align="flex-start" justify="space-between" gap="sm">
 				<Flex align="flex-start" gap="sm" className="flex-1 min-w-0">
 					<FolderIcon
 						size={20}
-						className="text-studio-500 flex-shrink-0 mt-0.5"
+						className="flex-shrink-0 mt-0.5"
 					/>
 					<Stack gap={4} className="flex-1 min-w-0">
-						<Text size="sm" fw={600} c="brand-dark.7" truncate>
+						<Text size="sm" fw={600} truncate>
 							{folder.name}
 						</Text>
 						{itemCount > 0 ? (
-							<Text size="xs" c="brand-dark.4" className="tabular-nums">
+							<Text size="xs" c="dimmed" className="tabular-nums">
 								{itemCount === 1 ? "1 item" : `${itemCount} items`}
 							</Text>
 						) : (
@@ -52,10 +45,10 @@ export function FolderCard({
 								<FolderOpen
 									size={14}
 									strokeWidth={2}
-									className="text-brand-dark-300 flex-shrink-0"
+									className="flex-shrink-0"
 									aria-hidden
 								/>
-								<Text size="xs" c="brand-dark.4">
+								<Text size="xs" c="dimmed">
 									Empty
 								</Text>
 							</Flex>
@@ -64,14 +57,14 @@ export function FolderCard({
 				</Flex>
 				<ActionIcon
 					variant="subtle"
-					color="brand-dark.5"
+					color="gray"
 					size="sm"
 					onClick={(e: React.MouseEvent) => {
 						e.stopPropagation();
 						onDelete();
 					}}
 					aria-label="Delete folder"
-					className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-on-air-red-600"
+					className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
 				>
 					<Trash2 size={14} />
 				</ActionIcon>

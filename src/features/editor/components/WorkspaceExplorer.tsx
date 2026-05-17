@@ -45,36 +45,36 @@ export const WorkspaceExplorer = memo(
 		return (
 			<Box
 				w={300}
-				bg="brand-dark.0"
+				bg="gray.0"
 				visibleFrom="md"
-				className="flex flex-col h-full border-l border-brand-dark-200"
+				className="flex flex-col h-full border-l"
 			>
 				<Box p="lg" pb={0}>
 					<Group gap="sm" mb="xs">
-						<LayoutDashboard size={18} className="text-wave-700" />
+						<LayoutDashboard size={18} />
 						<SectionLabel letterSpacing={2}>Workspace Overview</SectionLabel>
 					</Group>
 					<Box
 						p="md"
-						className="bg-wave-50 border border-wave-200 mb-6 rounded-md"
+						className="border mb-6 rounded-md"
 					>
 						<Stack gap={4}>
 							<Text
 								fw={800}
 								size="28px"
-								c="wave.8"
+								c="blue"
 								className="tabular-nums leading-none"
 							>
 								{totalWords.toLocaleString()}
 							</Text>
-							<Text size="xs" fw={700} c="wave.7" tt="uppercase" lts={1}>
+							<Text size="xs" fw={700} c="blue" tt="uppercase" lts={1}>
 								Billable Words
 							</Text>
 						</Stack>
 					</Box>
 					<Group justify="space-between" align="center" mb="md">
 						<Group gap="xs">
-							<Layers size={16} className="text-brand-dark-300" />
+							<Layers size={16} />
 							<SectionLabel>Documents ({scripts.length})</SectionLabel>
 						</Group>
 						<Group gap={4}>
@@ -82,7 +82,7 @@ export const WorkspaceExplorer = memo(
 								<ActionIcon
 									data-testid="clear-all-documents-trigger"
 									variant="subtle"
-									color="brand-dark.5"
+									color="gray"
 									size="sm"
 									onClick={onOpenClearAll}
 								>
@@ -92,7 +92,7 @@ export const WorkspaceExplorer = memo(
 							<Tooltip label="Upload new document">
 								<ActionIcon
 									variant="subtle"
-									color="wave"
+									color="blue"
 									size="sm"
 									onClick={() => onSelect(null)}
 								>
@@ -109,21 +109,14 @@ export const WorkspaceExplorer = memo(
 							<Box
 								key={script.id}
 								onClick={() => onSelect(script.id)}
-								className={`
-								group flex items-center justify-between p-3 cursor-pointer transition-all border rounded-md
-								${
-									activeScriptId === script.id
-										? "bg-wave-100 border-wave-300 shadow-sm"
-										: "bg-white border-transparent hover:bg-brand-dark-50 hover:border-stone"
-								}
-							`}
+								className={`group flex items-center justify-between p-3 cursor-pointer transition-all border rounded-md ${activeScriptId === script.id ? "bg-blue-0 border-blue-3 shadow-sm" : "bg-white border-transparent hover:bg-gray-0"}`}
 							>
 								<Box className="flex-1 min-w-0">
 									<Text
 										size="sm"
 										fw={700}
 										truncate
-										c={activeScriptId === script.id ? "wave.9" : "brand-dark.5"}
+										c={activeScriptId === script.id ? "blue" : "dimmed"}
 									>
 										{script.name}
 									</Text>
@@ -133,11 +126,11 @@ export const WorkspaceExplorer = memo(
 										{script.overview.wordCount}
 									</Text>
 									{script.overview.invalidLines.length > 0 && (
-										<AlertCircle size={14} className="text-on-air-red-6" />
+										<AlertCircle size={14} color="var(--mantine-color-orange-6)" />
 									)}
 									<ActionIcon
 										variant="subtle"
-										color="brand-dark.5"
+										color="gray"
 										size="xs"
 										className="opacity-0 group-hover:opacity-100"
 										onClick={(e) => {
@@ -153,10 +146,10 @@ export const WorkspaceExplorer = memo(
 					</Stack>
 				</ScrollArea>
 
-				<Box p="lg" className="border-t border-brand-dark-200 bg-brand-dark-50">
+				<Box p="lg" className="border-t">
 					<Button
 						fullWidth
-						color="wave"
+						color="blue"
 						size="md"
 						onClick={onOpenSaveModal}
 						disabled={scripts.length === 0}

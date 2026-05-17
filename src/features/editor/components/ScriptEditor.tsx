@@ -73,7 +73,7 @@ function ScriptEditorInner({ script }: ScriptEditorProps) {
 					<Group gap="xs">
 						<Button
 							variant="subtle"
-							color="brand-dark.5"
+							color="gray"
 							size="xs"
 							radius="xl"
 							leftSection={<ArrowLeft size={14} />}
@@ -83,7 +83,7 @@ function ScriptEditorInner({ script }: ScriptEditorProps) {
 						</Button>
 						<Button
 							variant="subtle"
-							color="terracotta"
+							color="blue"
 							size="xs"
 							radius="xl"
 							leftSection={<RotateCcw size={14} />}
@@ -93,7 +93,7 @@ function ScriptEditorInner({ script }: ScriptEditorProps) {
 						</Button>
 						<Button
 							size="xs"
-							color="forest"
+							color="blue"
 							radius="xl"
 							variant="filled"
 							leftSection={<Check size={14} />}

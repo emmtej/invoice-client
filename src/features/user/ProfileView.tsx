@@ -16,30 +16,30 @@ export default function ProfileView() {
 		<Stack gap="md">
 			<Box mb="xl">
 				<PageTitle>Profile</PageTitle>
-				<Text c="brand-dark.4" size="sm" mt={4} className="page-subtitle">
+				<Text c="dimmed" size="sm" mt={4}>
 					Account settings and defaults will live here. For now, open the editor
 					or invoices to keep working.
 				</Text>
 			</Box>
 
 			<Paper
-				radius="3xl"
+				
 				p="lg"
 				maw={480}
 				bg="white"
 				withBorder
-				className="border-stone shadow-sm"
+				className="shadow-sm"
 			>
 				<Stack gap="md">
 					<Group gap="sm">
-						<ThemeIcon size={32} variant="light" color="wave" radius="md">
+						<ThemeIcon size={32} variant="light" color="blue" radius="md">
 							<User size={18} strokeWidth={1.5} />
 						</ThemeIcon>
 						<div>
-							<Text fw={600} size="sm" c="brand-dark.7">
+							<Text fw={600} size="sm" >
 								Voice workflow
 							</Text>
-							<Text size="xs" c="brand-dark.3">
+							<Text size="xs" c="dimmed">
 								Parse scripts and build invoices from the same workspace.
 							</Text>
 						</div>
@@ -48,7 +48,7 @@ export default function ProfileView() {
 						component={Link}
 						to="/editor"
 						variant="light"
-						color="wave"
+						color="blue"
 						size="sm"
 						radius="xl"
 						leftSection={<Mic size={16} />}

@@ -22,8 +22,8 @@ export function SessionProgress() {
 
 	return (
 		<Group gap="md" align="center" px="md">
-			<Progress value={pct} color="wave" flex={1} size="lg" radius="xl" />
-			<Text size="sm" fw={500} c="brand-dark.4" style={{ whiteSpace: "nowrap" }}>
+			<Progress value={pct} color="blue" flex={1} size="lg" radius="xl" />
+			<Text size="sm" fw={500} c="dimmed" style={{ whiteSpace: "nowrap" }}>
 				{completed} of {totalReadable} lines &mdash; {remaining} remaining
 			</Text>
 		</Group>

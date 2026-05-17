@@ -36,7 +36,7 @@ export const InvoiceSummary = memo(
 			<Box
 				p={padding}
 				bg="white"
-				className="h-full text-brand-dark-900 font-sans"
+				className="h-full font-sans"
 			>
 				<Stack gap={48}>
 					{/* Header */}
@@ -44,20 +44,20 @@ export const InvoiceSummary = memo(
 						<Stack gap="xs">
 							<Title
 								order={1}
-								className={`font-display text-forest-900 ${isLivePreview ? "text-3xl" : "text-5xl"}`}
+								className={`font-display ${isLivePreview ? "text-3xl" : "text-5xl"}`}
 							>
 								{invoiceTitle || "Invoice"}
 							</Title>
-							<Text size="sm" fw={600} c="brand-dark.5">
+							<Text size="sm" fw={600} c="dimmed">
 								DATE: {invoiceDate || getTodayDateString()}
 							</Text>
 						</Stack>
 						{profile && (
 							<Stack gap={2} align="flex-end">
-								<Text fw={700} size="sm" c="forest.9">
+								<Text fw={700} size="sm" >
 									{profile.firstName} {profile.lastName}
 								</Text>
-								<Text size="xs" c="brand-dark.5">
+								<Text size="xs" c="dimmed">
 									{profile.email}
 								</Text>
 							</Stack>
@@ -68,20 +68,20 @@ export const InvoiceSummary = memo(
 					<Table
 						verticalSpacing="md"
 						horizontalSpacing="0"
-						className="border-t border-sage-100"
+						className="border-t"
 					>
 						<Table.Thead>
 							<Table.Tr>
-								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-brand-dark-500 border-b border-sage-100">
+								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest border-b">
 									Description
 								</Table.Th>
-								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-brand-dark-500 text-right border-b border-sage-100">
+								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-right border-b">
 									Qty
 								</Table.Th>
-								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-brand-dark-500 text-right border-b border-sage-100">
+								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-right border-b">
 									Rate
 								</Table.Th>
-								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-brand-dark-500 text-right border-b border-sage-100">
+								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-right border-b">
 									Total
 								</Table.Th>
 							</Table.Tr>
@@ -91,13 +91,13 @@ export const InvoiceSummary = memo(
 								item.subitems.map((sub) => (
 									<Table.Tr
 										key={sub.id}
-										className="border-b border-forest-50 last:border-0"
+										className="border-b last:border-0"
 									>
 										<Table.Td>
-											<Text size="sm" fw={700} c="forest.9">
+											<Text size="sm" fw={700} >
 												{sub.label || item.name}
 											</Text>
-											<Text size="xs" c="brand-dark.5" mt={2}>
+											<Text size="xs" c="dimmed" mt={2}>
 												{sub.scriptName}
 											</Text>
 										</Table.Td>
@@ -115,7 +115,7 @@ export const InvoiceSummary = memo(
 											<Text
 												size="sm"
 												fw={800}
-												c="forest.9"
+												
 												className="tabular-nums"
 											>
 												${sub.amount.toFixed(2)}
@@ -127,7 +127,7 @@ export const InvoiceSummary = memo(
 							{items.length === 0 && (
 								<Table.Tr>
 									<Table.Td colSpan={4} py={48}>
-										<Text size="sm" c="sage.3" ta="center" className="italic">
+										<Text size="sm" c="dimmed" ta="center" className="italic">
 											No items added to invoice yet.
 										</Text>
 									</Table.Td>
@@ -139,22 +139,22 @@ export const InvoiceSummary = memo(
 					{/* Totals Section */}
 					<Stack gap="xs" align="flex-end" mt="xl">
 						<Group gap={48}>
-							<Text size="xs" fw={800} c="brand-dark.5" tt="uppercase" lts={1.5}>
+							<Text size="xs" fw={800} c="dimmed" tt="uppercase" lts={1.5}>
 								Subtotal
 							</Text>
 							<Text size="sm" fw={700} className="tabular-nums">
 								${totalAmount.toFixed(2)}
 							</Text>
 						</Group>
-						<Box className="h-px w-[150px] bg-sage-100 my-4" />
+						<Box className="h-px w-[150px] my-4" />
 						<Group gap={48}>
-							<Text size="sm" fw={800} c="forest.9" tt="uppercase" lts={1.5}>
+							<Text size="sm" fw={800} tt="uppercase" lts={1.5}>
 								Total Due
 							</Text>
 							<Text
 								size={isLivePreview ? "24px" : "32px"}
 								fw={900}
-								c="forest.9"
+								
 								className="tabular-nums tracking-tighter"
 							>
 								${totalAmount.toFixed(2)}
@@ -163,8 +163,8 @@ export const InvoiceSummary = memo(
 					</Stack>
 
 					{/* Footer Note */}
-					<Box mt={64} className="border-t border-sage-100 pt-6">
-						<Text size="xs" c="brand-dark.5" fw={500} ta="center" lts={0.5}>
+					<Box mt={64} className="border-t pt-6">
+						<Text size="xs" c="dimmed" fw={500} ta="center" lts={0.5}>
 							Thank you for your business. Please remit payment within 30 days.
 						</Text>
 					</Box>

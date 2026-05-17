@@ -86,13 +86,13 @@ export function EditValueModal({
 				<Group justify="flex-end">
 					<Button
 						variant="subtle"
-						color="brand-dark.5"
+						color="gray"
 						onClick={onClose}
 					>
 						Cancel
 					</Button>
 					<Button
-						color="studio"
+						color="blue"
 						onClick={handleConfirm}
 						disabled={value === ""}
 					>

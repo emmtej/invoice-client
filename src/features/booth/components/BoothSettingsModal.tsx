@@ -43,7 +43,7 @@ export function BoothSettingsModal() {
 		<>
 			<Button
 				variant="light"
-				color="brand-dark.5"
+				color="gray"
 				onClick={open}
 				leftSection={<Settings2 size={16} />}
 				size="xs"
@@ -53,7 +53,7 @@ export function BoothSettingsModal() {
 
 			<AppModal opened={opened} onClose={close} title="Booth Settings" centered>
 				<Stack gap="lg">
-					<Text size="sm" c="brand-dark.4">
+					<Text size="sm" c="dimmed">
 						Configure your default rate and display options for recording
 						sessions.
 					</Text>
@@ -87,10 +87,10 @@ export function BoothSettingsModal() {
 									{ label: "Scene by Scene", value: "scene" },
 								]}
 								fullWidth
-								color="wave"
+								color="blue"
 								size="sm"
 							/>
-							<Text size="xs" c="brand-dark.4" mt={4}>
+							<Text size="xs" c="dimmed" mt={4}>
 								{trackingMode === "line"
 									? "Check off individual lines as you record."
 									: "Check off entire scenes at once."}
@@ -106,7 +106,7 @@ export function BoothSettingsModal() {
 							onChange={(event) =>
 								setShowCurrentEarnings(event.currentTarget.checked)
 							}
-							color="wave"
+							color="blue"
 						/>
 
 						<Checkbox
@@ -116,12 +116,12 @@ export function BoothSettingsModal() {
 							onChange={(event) =>
 								setShowRealizedHourly(event.currentTarget.checked)
 							}
-							color="wave"
+							color="blue"
 						/>
 					</Stack>
 
 					<Group justify="flex-end" mt="md">
-						<Button variant="filled" color="wave" onClick={close}>
+						<Button variant="filled" color="blue" onClick={close}>
 							Done
 						</Button>
 					</Group>

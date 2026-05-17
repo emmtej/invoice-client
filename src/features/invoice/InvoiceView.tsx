@@ -2,7 +2,6 @@ import { Box, Button, Flex, Group, Stack, Text } from "@mantine/core";
 import { FileText } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { motion } from "framer-motion";
 import { useInvoiceStore } from "@/features/invoice/store/invoiceStore";
 import { notify } from "@/utils/notifications";
 import { BentoCard } from "@/components/ui/card/BentoCard";
@@ -53,19 +52,13 @@ export default function InvoiceView() {
 	return (
 		<Box className="min-h-[100dvh] pb-12">
 			<Stack gap={12} mb={64}>
-				<motion.div
-					initial={{ opacity: 0, y: 10 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6 }}
-				>
-					<Text className="text-5xl md:text-7xl font-sans font-semibold tracking-tighter leading-none" c="forest.9">
-						New <span className="italic font-serif">Invoice</span>
-					</Text>
-					<Text className="text-lg md:text-xl text-brand-dark-4 mt-6 max-w-[65ch] leading-relaxed">
-						Create a professional billing document for your voice-over projects.
-						Everything is saved locally as you type.
-					</Text>
-				</motion.div>
+				<Text className="text-5xl md:text-7xl font-sans font-semibold tracking-tighter leading-none">
+					New <span className="italic font-serif">Invoice</span>
+				</Text>
+				<Text className="text-lg md:text-xl mt-6 max-w-[65ch] leading-relaxed" c="dimmed">
+					Create a professional billing document for your voice-over projects.
+					Everything is saved locally as you type.
+				</Text>
 			</Stack>
 
 			<Flex
@@ -80,10 +73,10 @@ export default function InvoiceView() {
 						<Box>
 							<Stack gap="xl">
 								<Group gap="xs" className="px-4">
-									<Text className="font-mono text-sm uppercase tracking-widest text-forest-9 opacity-40">01</Text>
+									<Text className="font-mono text-sm uppercase tracking-widest opacity-40">01</Text>
 									<Text className="font-sans font-semibold text-lg tracking-tight">Sender Profile</Text>
 								</Group>
-								<BentoCard index={1} className="hover:shadow-lg transition-shadow">
+								<BentoCard>
 									<ProfileSection {...profileManager} />
 								</BentoCard>
 							</Stack>
@@ -93,10 +86,10 @@ export default function InvoiceView() {
 						<Box>
 							<Stack gap="xl">
 								<Group gap="xs" className="px-4">
-									<Text className="font-mono text-sm uppercase tracking-widest text-forest-9 opacity-40">02</Text>
+									<Text className="font-mono text-sm uppercase tracking-widest opacity-40">02</Text>
 									<Text className="font-sans font-semibold text-lg tracking-tight">Invoice Details</Text>
 								</Group>
-								<BentoCard index={2} className="hover:shadow-lg transition-shadow">
+								<BentoCard>
 									<InvoiceDetailsSection
 										invoiceTitle={invoiceTitle}
 										setInvoiceTitle={setInvoiceTitle}
@@ -111,10 +104,10 @@ export default function InvoiceView() {
 						<Box>
 							<Stack gap="xl">
 								<Group gap="xs" className="px-4">
-									<Text className="font-mono text-sm uppercase tracking-widest text-forest-9 opacity-40">03</Text>
+									<Text className="font-mono text-sm uppercase tracking-widest opacity-40">03</Text>
 									<Text className="font-sans font-semibold text-lg tracking-tight">Line Items</Text>
 								</Group>
-								<BentoCard index={3} className="hover:shadow-lg transition-shadow">
+								<BentoCard>
 									<Stack gap={48}>
 										<InvoiceItemAdder
 											newItemName={newItemName}
@@ -138,44 +131,39 @@ export default function InvoiceView() {
 					<Stack gap={32}>
 						<Stack gap="md">
 							<Text
-								className="text-[10px] font-mono uppercase tracking-[0.2em] text-brand-dark-4 text-center"
+								className="text-[10px] font-mono uppercase tracking-[0.2em] text-center"
 							>
 								Live Document Preview
 							</Text>
-							<motion.div
-								initial={{ opacity: 0, scale: 0.98 }}
-								animate={{ opacity: 1, scale: 1 }}
-								transition={{ delay: 0.4 }}
-								className="bg-white shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] min-h-[640px] rounded-[2px] border border-slate-100"
-							>
+							<Box className="min-h-[640px] rounded border shadow-sm">
 								<InvoiceSummary
 									profile={profileManager.activeProfileForSummary}
 									invoiceTitle={invoiceTitle}
 									invoiceDate={invoiceDate}
 									isLivePreview
 								/>
-							</motion.div>
+							</Box>
 						</Stack>
 
 						<Group grow gap="md">
 							<Button
 								variant="outline"
-								color="forest"
+								color="blue"
 								size="lg"
 								radius="xl"
 								disabled={!hasItems}
-								className="h-14 border-slate-200 text-forest-9 hover:bg-slate-50 transition-all active:scale-[0.98]"
+								className="h-14 active:scale-[0.98]"
 							>
 								Preview Full
 							</Button>
 							<Button
 								variant="filled"
-								color="forest"
+								color="blue"
 								size="lg"
 								radius="xl"
 								leftSection={<FileText size={20} />}
 								disabled={!hasItems}
-								className="h-14 bg-forest-9 shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
+								className="h-14 shadow-lg transition-shadow hover:shadow-xl active:scale-[0.98]"
 							>
 								Export PDF
 							</Button>

@@ -27,7 +27,7 @@ export function MultiSelectToolbar({
 				<Paper
 					shadow="md"
 					p="xs"
-					bg="studio.9"
+					bg="blue.0"
 					radius="md"
 					style={{
 						...styles,
@@ -80,7 +80,7 @@ export function MultiSelectToolbar({
 						</Button>
 						<Button
 							variant="subtle"
-							color="on-air-red.2"
+							color="red"
 							size="sm"
 							onClick={onDelete}
 							leftSection={<Trash2 size={16} />}

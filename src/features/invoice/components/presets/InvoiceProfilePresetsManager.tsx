@@ -81,7 +81,7 @@ export function InvoiceProfilePresetsManager() {
 												</Text>
 												{profile.isDefault && (
 													<Badge
-														color="studio"
+														color="blue"
 														variant="light"
 														leftSection={<Star size={12} />}
 													>
@@ -89,7 +89,7 @@ export function InvoiceProfilePresetsManager() {
 													</Badge>
 												)}
 											</Group>
-											<Text size="sm" c="brand-dark.4">
+											<Text size="sm" c="dimmed">
 												{profile.profile.firstName} {profile.profile.lastName} •{" "}
 												{profile.profile.email}
 											</Text>
@@ -101,7 +101,7 @@ export function InvoiceProfilePresetsManager() {
 											<Tooltip label="Set as default">
 												<ActionIcon
 													variant="subtle"
-													color="brand-dark.5"
+													color="gray"
 													onClick={() => setDefaultProfile(profile.id)}
 												>
 													<Star size={18} />
@@ -111,7 +111,7 @@ export function InvoiceProfilePresetsManager() {
 										<Tooltip label="Edit profile">
 											<ActionIcon
 												variant="subtle"
-												color="brand-dark.5"
+												color="gray"
 												onClick={() => handleOpenEdit(profile)}
 											>
 												<Pencil size={18} />
@@ -120,7 +120,7 @@ export function InvoiceProfilePresetsManager() {
 										<Tooltip label="Delete profile">
 											<ActionIcon
 												variant="subtle"
-												color="on-air-red"
+												color="red"
 												onClick={() => handleDelete(profile.id)}
 												disabled={
 													profile.isDefault && profilePresets.length > 1
@@ -222,11 +222,11 @@ function ProfileModal({
 				{/* In a more advanced version, we could add address, phone, etc. here */}
 
 				<Group justify="flex-end" mt="xl">
-					<Button variant="subtle" color="brand-dark.5" onClick={onClose}>
+					<Button variant="subtle" color="gray" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button
-						color="studio"
+						color="blue"
 						onClick={() =>
 							onSave({ firstName, lastName, email }, { isDefault })
 						}

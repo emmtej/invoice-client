@@ -110,12 +110,12 @@ export function ScriptsModals({
 					<Group justify="flex-end">
 						<Button
 							variant="subtle"
-							color="brand-dark.5"
+							color="gray"
 							onClick={() => setDeleteItemsOpened(false)}
 						>
 							Cancel
 						</Button>
-						<Button color="on-air-red" onClick={onConfirmDeleteSelected}>
+						<Button color="red" onClick={onConfirmDeleteSelected}>
 							Delete
 						</Button>
 					</Group>

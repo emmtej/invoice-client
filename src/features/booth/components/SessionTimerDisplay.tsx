@@ -25,7 +25,7 @@ export function SessionTimerDisplay({
 				ff="monospace"
 				fz={56}
 				fw={800}
-				c={isRunning ? "brand-dark.8" : "brand-dark.4"}
+				c="dimmed"
 				lh={1}
 			>
 				{formatTime(elapsedMs)}
@@ -49,7 +49,7 @@ export function SessionTimerDisplay({
 					<ActionIcon
 						size={64}
 						radius="xl"
-						color="wave"
+						color="blue"
 						variant="filled"
 						onClick={onResume}
 						aria-label="Resume session"
@@ -62,7 +62,7 @@ export function SessionTimerDisplay({
 					<ActionIcon
 						size={64}
 						radius="xl"
-						color="studio"
+						color="blue"
 						variant="light"
 						onClick={onStop}
 						aria-label="Stop session"
@@ -79,7 +79,7 @@ export function SessionTimerDisplay({
 					</Badge>
 				)}
 				{isRunning && (
-					<Badge color="wave" variant="light" size="lg" radius="sm">
+					<Badge color="blue" variant="light" size="lg" radius="sm">
 						Recording
 					</Badge>
 				)}

@@ -30,16 +30,16 @@ export function SessionStatsDisplay({
 			<Divider label="Session Stats" labelPosition="center" />
 			{formattedStartedAt && (
 				<Group justify="space-between">
-					<Text size="xs" fw={700} c="brand-dark.4" tt="uppercase">
+					<Text size="xs" fw={700} c="dimmed" tt="uppercase">
 						Started
 					</Text>
-					<Text size="xs" fw={600} c="brand-dark.5">
+					<Text size="xs" fw={600} c="dimmed">
 						{formattedStartedAt}
 					</Text>
 				</Group>
 			)}
 			<Group justify="space-between">
-				<Text size="xs" fw={700} c="brand-dark.4" tt="uppercase">
+				<Text size="xs" fw={700} c="dimmed" tt="uppercase">
 					Lines Completed
 				</Text>
 				<Text size="sm" fw={600}>
@@ -47,7 +47,7 @@ export function SessionStatsDisplay({
 				</Text>
 			</Group>
 			<Group justify="space-between">
-				<Text size="xs" fw={700} c="brand-dark.4" tt="uppercase">
+				<Text size="xs" fw={700} c="dimmed" tt="uppercase">
 					Avg Time / Line
 				</Text>
 				<Text size="sm" fw={600}>
@@ -55,7 +55,7 @@ export function SessionStatsDisplay({
 				</Text>
 			</Group>
 			<Group justify="space-between">
-				<Text size="xs" fw={700} c="brand-dark.4" tt="uppercase">
+				<Text size="xs" fw={700} c="dimmed" tt="uppercase">
 					Avg Words / Min
 				</Text>
 				<Text size="sm" fw={600}>
@@ -69,10 +69,10 @@ export function SessionStatsDisplay({
 
 			{showCurrentEarnings && (
 				<Group justify="space-between">
-					<Text size="xs" fw={700} c="wave.6" tt="uppercase">
+					<Text size="xs" fw={700} c="blue" tt="uppercase">
 						Current Earnings
 					</Text>
-					<Text size="sm" fw={800} c="wave.8">
+					<Text size="sm" fw={800} c="blue">
 						$
 						{currentEarnings.toLocaleString(undefined, {
 							minimumFractionDigits: 2,
@@ -84,10 +84,10 @@ export function SessionStatsDisplay({
 
 			{showRealizedHourly && (
 				<Group justify="space-between">
-					<Text size="xs" fw={700} c="studio.6" tt="uppercase">
+					<Text size="xs" fw={700} tt="uppercase">
 						Realized Hourly
 					</Text>
-					<Text size="sm" fw={800} c="studio.8">
+					<Text size="sm" fw={800} >
 						${Math.round(hourlyRate).toLocaleString()}/hr
 					</Text>
 				</Group>
@@ -98,7 +98,7 @@ export function SessionStatsDisplay({
 			<Stack gap="xs">
 				<Button
 					variant="subtle"
-					color="studio"
+					color="blue"
 					leftSection={<RotateCcw size={16} />}
 					onClick={onReset}
 					fullWidth

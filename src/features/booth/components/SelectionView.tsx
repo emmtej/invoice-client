@@ -45,7 +45,7 @@ export function SelectionView({ header }: SelectionViewProps) {
 
 				{ongoingSession && (
 					<Stack gap="sm">
-						<Text fw={700} size="sm" c="brand-dark.4" tt="uppercase" lts={0.5}>
+						<Text fw={700} size="sm" c="dimmed" tt="uppercase" lts={0.5}>
 							Ongoing Session
 						</Text>
 						<OngoingSessionCard session={ongoingSession} />
@@ -61,8 +61,8 @@ export function SelectionView({ header }: SelectionViewProps) {
 			{isInitialLoading && (
 				<Center flex={1}>
 					<Stack align="center" gap="xs">
-						<Loader color="wave" size="sm" />
-						<Text size="sm" c="brand-dark.5" fw={500}>
+						<Loader color="blue" size="sm" />
+						<Text size="sm" c="dimmed" fw={500}>
 							Loading...
 						</Text>
 					</Stack>
@@ -73,7 +73,7 @@ export function SelectionView({ header }: SelectionViewProps) {
 				<Box
 					w={{ base: "100%", lg: 320 }}
 					style={{ flexShrink: 0 }}
-					className="lg:border-l border-stone"
+					className="lg:border-l"
 					pl={{ base: 0, lg: 48 }}
 				>
 					<SelectionSidebar isInitialLoading={isInitialLoading} />

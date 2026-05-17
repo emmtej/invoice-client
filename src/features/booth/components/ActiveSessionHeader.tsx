@@ -28,7 +28,7 @@ export function ActiveSessionHeader() {
 			<Text
 				fw={900}
 				fz={{ base: 24, md: 32 }}
-				c="brand-dark.7"
+				
 				lh={1.1}
 				ta="left"
 			>
@@ -36,7 +36,7 @@ export function ActiveSessionHeader() {
 			</Text>
 			<Button
 				variant="subtle"
-				color="wave"
+				color="blue"
 				size="sm"
 				radius="xl"
 				leftSection={<PenSquare size={16} />}

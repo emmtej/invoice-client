@@ -53,13 +53,13 @@ export function ScriptSelectionPanel({
 	return (
 		<Stack gap="lg">
 			<Group justify="space-between" align="center">
-				<Text fw={700} size="sm" c="brand-dark.4" tt="uppercase" lts={0.5}>
+				<Text fw={700} size="sm" c="dimmed" tt="uppercase" lts={0.5}>
 					{status === "selecting" ? "Selected Script" : "Start New Session"}
 				</Text>
 				{status === "selecting" && (
 					<Button
 						variant="subtle"
-						color="brand-dark.5"
+						color="gray"
 						size="xs"
 						radius="xl"
 						onClick={resetSession}
@@ -82,18 +82,18 @@ export function ScriptSelectionPanel({
 				<Stack gap="xl">
 					<SurfaceCard
 						p={0}
-						radius="3xl"
+						
 						withBorder
-						className="border-stone bg-white shadow-sm overflow-hidden"
+						className="bg-white shadow-sm overflow-hidden"
 					>
 						<Stack gap={0}>
-							<Box p="xl" className="bg-brand-dark-50 border-b border-stone">
+							<Box p="xl" className="border-b">
 								<Group wrap="nowrap" align="center" gap="xl">
 									<ThemeIcon
 										size={56}
 										radius="lg"
 										variant="filled"
-										color="studio"
+										color="blue"
 									>
 										<FileText size={30} />
 									</ThemeIcon>
@@ -101,19 +101,19 @@ export function ScriptSelectionPanel({
 										<Text
 											fw={800}
 											size="24px"
-											c="brand-dark.7"
+											
 											lh={1.1}
 											lts={-0.5}
 										>
 											{script.name}
 										</Text>
-										<Text size="sm" c="brand-dark.5" mt={6} fw={500}>
+										<Text size="sm" c="dimmed" mt={6} fw={500}>
 											Imported on{" "}
 											{new Date(script.createdAt).toLocaleDateString()}
 										</Text>
 									</Box>
 									<Button
-										color="wave"
+										color="blue"
 										size="lg"
 										radius="xl"
 										onClick={() => useBoothStore.getState().startSession()}
@@ -146,7 +146,7 @@ export function ScriptSelectionPanel({
 										<Box>
 											<Text
 												size="xs"
-												c="brand-dark.4"
+												c="dimmed"
 												fw={700}
 												tt="uppercase"
 												lts={1}
@@ -154,7 +154,7 @@ export function ScriptSelectionPanel({
 											>
 												Estimated Value
 											</Text>
-											<Text fw={800} size="28px" c="wave.7" lts={-0.5}>
+											<Text fw={800} size="28px" c="blue" lts={-0.5}>
 												$
 												{estimatedValue.toLocaleString(undefined, {
 													minimumFractionDigits: 2,
@@ -164,7 +164,7 @@ export function ScriptSelectionPanel({
 										</Box>
 									</Group>
 
-									<Divider className="border-brand-dark-50" />
+									<Divider />
 
 									<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing={32}>
 										<Group gap="md">
@@ -179,14 +179,14 @@ export function ScriptSelectionPanel({
 											<Box>
 												<Text
 													size="xs"
-													c="brand-dark.4"
+													c="dimmed"
 													fw={700}
 													tt="uppercase"
 													lts={1}
 												>
 													Word Count
 												</Text>
-												<Text fw={800} size="xl" c="brand-dark.7">
+												<Text fw={800} size="xl" >
 													{totalWords.toLocaleString()}
 												</Text>
 											</Box>
@@ -204,14 +204,14 @@ export function ScriptSelectionPanel({
 											<Box>
 												<Text
 													size="xs"
-													c="brand-dark.4"
+													c="dimmed"
 													fw={700}
 													tt="uppercase"
 													lts={1}
 												>
 													Billable Lines
 												</Text>
-												<Text fw={800} size="xl" c="brand-dark.7">
+												<Text fw={800} size="xl" >
 													{billableLines.toLocaleString()}
 												</Text>
 											</Box>
@@ -233,7 +233,7 @@ export function ScriptSelectionPanel({
 											<Box>
 												<Text
 													size="xs"
-													c="brand-dark.4"
+													c="dimmed"
 													fw={700}
 													tt="uppercase"
 													lts={1}

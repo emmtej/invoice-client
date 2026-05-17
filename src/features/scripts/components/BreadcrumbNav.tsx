@@ -14,7 +14,6 @@ export function BreadcrumbNav({ breadcrumb, onNavigate }: BreadcrumbNavProps) {
 					<ChevronRight
 						size={14}
 						strokeWidth={2.5}
-						className="text-brand-dark-200"
 					/>
 				}
 				separatorMargin="sm"
@@ -22,21 +21,21 @@ export function BreadcrumbNav({ breadcrumb, onNavigate }: BreadcrumbNavProps) {
 				<UnstyledButton
 					onClick={() => onNavigate(null)}
 					aria-label="All scripts"
-					className="flex items-center text-brand-dark-500 hover:text-brand-dark-700 transition-colors"
+					className="flex items-center hover:opacity-80 transition-colors"
 				>
 					<Home size={16} />
 				</UnstyledButton>
 				{breadcrumb.map((segment, index) => {
 					const isLast = index === breadcrumb.length - 1;
 					return isLast ? (
-						<Text key={segment.id} size="sm" fw={700} c="brand-dark.7">
+						<Text key={segment.id} size="sm" fw={700} >
 							{segment.name}
 						</Text>
 					) : (
 						<UnstyledButton
 							key={segment.id}
 							onClick={() => onNavigate(segment.id)}
-							className="text-brand-dark-500 hover:text-brand-dark-700 transition-colors"
+							className="hover:opacity-80 transition-colors"
 						>
 							<Text size="sm" fw={500}>
 								{segment.name}

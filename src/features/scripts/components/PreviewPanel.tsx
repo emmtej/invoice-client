@@ -23,11 +23,11 @@ interface PreviewPanelProps {
 
 function LinePreview({ line, index }: { line: ParsedLine; index: number }) {
 	return (
-		<Box py={4} px="xs" className="border-b border-brand-dark-50 last:border-0">
+		<Box py={4} px="xs" className="border-b last:border-0">
 			<Flex gap="xs" align="flex-start">
 				<Text
 					size="xs"
-					c="brand-dark.4"
+					c="dimmed"
 					className="tabular-nums opacity-50 text-right w-6 flex-shrink-0"
 				>
 					{index + 1}
@@ -35,31 +35,31 @@ function LinePreview({ line, index }: { line: ParsedLine; index: number }) {
 				<Box className="flex-1 min-w-0">
 					{line.type === "dialogue" ? (
 						<>
-							<Text size="xs" fw={600} c="brand-dark.7" truncate>
+							<Text size="xs" fw={600} truncate>
 								{line.speakers.join(", ")}
 							</Text>
-							<Text size="xs" c="brand-dark.4" lineClamp={1}>
+							<Text size="xs" c="dimmed" lineClamp={1}>
 								{line.content}
 							</Text>
 						</>
 					) : line.type === "action" ? (
-						<Text size="xs" c="brand-dark.4" className="italic" lineClamp={1}>
+						<Text size="xs" c="dimmed" className="italic" lineClamp={1}>
 							{line.notes?.join(" ") || line.source}
 						</Text>
 					) : line.type === "invalid" || line.type === "malformed" ? (
 						<Flex align="center" gap={4}>
 							<AlertCircle
 								size={12}
-								className="text-on-air-500 flex-shrink-0"
+								className="flex-shrink-0"
 							/>
-							<Text size="xs" c="on-air-red.5" lineClamp={1}>
+							<Text size="xs" c="red" lineClamp={1}>
 								{line.type === "malformed"
 									? line.message
 									: line.source || "Invalid line"}
 							</Text>
 						</Flex>
 					) : (
-						<Text size="xs" c="brand-dark.4" lineClamp={1}>
+						<Text size="xs" c="dimmed" lineClamp={1}>
 							{line.source}
 						</Text>
 					)}
@@ -85,21 +85,21 @@ export function PreviewPanel({
 	return (
 		<Box
 			w={{ base: "100%", md: "min(380px, 35vw)" }}
-			className="border-l border-stone flex-shrink-0 flex h-full"
+			className="border-l flex-shrink-0 flex h-full"
 		>
 			<Flex direction="column" h="100%" w="100%">
 				{isLoading ? (
 					<Center flex={1}>
-						<Loader color="studio" size="sm" />
+						<Loader color="blue" size="sm" />
 					</Center>
 				) : script ? (
 					<>
-						<Box p="md" className="border-b border-stone">
+						<Box p="md" className="border-b">
 							<Flex justify="space-between" align="flex-start" mb="sm">
 								<Text
 									size="md"
 									fw={700}
-									c="brand-dark.7"
+									
 									className="flex-1"
 									lineClamp={2}
 								>
@@ -107,7 +107,7 @@ export function PreviewPanel({
 								</Text>
 								<ActionIcon
 									variant="subtle"
-									color="brand-dark.5"
+									color="gray"
 									size="sm"
 									onClick={onClose}
 									className="ml-2"
@@ -116,16 +116,16 @@ export function PreviewPanel({
 								</ActionIcon>
 							</Flex>
 							<Flex gap="xs" wrap="wrap">
-								<Badge variant="light" color="studio" size="sm" radius="md">
+								<Badge variant="light" color="blue" size="sm" radius="md">
 									{script.overview.wordCount.toLocaleString()} words
 								</Badge>
-								<Badge variant="light" color="brand-dark.5" size="sm" radius="md">
+								<Badge variant="light" color="gray" size="sm" radius="md">
 									{script.overview.totalLines} lines
 								</Badge>
 								{script.overview.invalidLines.length > 0 && (
 									<Badge
 										variant="light"
-										color="on-air-red"
+										color="red"
 										size="sm"
 										radius="md"
 									>
@@ -145,16 +145,16 @@ export function PreviewPanel({
 									/>
 								))}
 								{script.lines.length > 30 && (
-									<Text size="xs" c="brand-dark.4" ta="center" py="xs">
+									<Text size="xs" c="dimmed" ta="center" py="xs">
 										… {script.lines.length - 30} more lines
 									</Text>
 								)}
 							</Stack>
 						</ScrollArea>
 
-						<Box p="md" className="border-t border-stone bg-brand-dark-50">
+						<Box p="md" className="border-t">
 							<Button
-								color="studio"
+								color="blue"
 								fullWidth
 								radius="xl"
 								leftSection={<ExternalLink size={16} />}

@@ -6,12 +6,12 @@ import type { ParsedLine } from "@/types/Script";
 const TYPE_CONFIG = {
 	dialogue: {
 		icon: MessageSquare,
-		color: "wave",
+		color: "blue",
 		label: "Dialogue",
 	},
 	action: {
 		icon: Zap,
-		color: "sage",
+		color: "gray",
 		label: "Action",
 	},
 	marker: {
@@ -26,7 +26,7 @@ const TYPE_CONFIG = {
 	},
 	invalid: {
 		icon: AlertCircle,
-		color: "on-air-red",
+		color: "red",
 		label: "Invalid",
 	},
 } as const;
@@ -46,7 +46,7 @@ export const TypeBadge = memo(({ type }: { type: ParsedLine["type"] }) => {
 			>
 				<Icon size={14} strokeWidth={2.5} />
 			</ThemeIcon>
-			<Text size="xs" fw={600} c="brand-dark.4" tt="uppercase" lts="0.05em">
+			<Text size="xs" fw={600} c="dimmed" tt="uppercase" lts="0.05em">
 				{config.label}
 			</Text>
 		</Group>
@@ -55,7 +55,7 @@ export const TypeBadge = memo(({ type }: { type: ParsedLine["type"] }) => {
 
 export const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 	return (
-		<Table.Tr className="transition-colors hover:bg-brand-dark-50/50">
+		<Table.Tr className="transition-colors hover:bg-gray-0">
 			<Table.Td py="md" w={180}>
 				<TypeBadge type={line.type} />
 			</Table.Td>
@@ -63,7 +63,7 @@ export const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 				<Group justify="space-between" wrap="nowrap" align="center" gap="xl">
 					<Text
 						size="md"
-						c="brand-dark.8"
+						c="dimmed"
 						fw={500}
 						className="leading-relaxed flex-1"
 					>
@@ -72,13 +72,13 @@ export const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
 					{line.type === "dialogue" && (
 						<Badge
 							variant="outline"
-							color="brand-dark.5"
+							color="gray"
 							size="sm"
 							radius="xl"
 							className="border-dashed bg-white flex-shrink-0"
 							styles={{
 								label: {
-									color: "var(--mantine-color-brand-dark-4)",
+									color: "var(--mantine-color-gray-6)",
 									fontWeight: 700,
 								},
 							}}

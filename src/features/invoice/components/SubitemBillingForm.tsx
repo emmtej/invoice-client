@@ -51,7 +51,7 @@ export function SubitemBillingForm({
 				onChange={(val) =>
 					onBillingTypeChange(val as "word-count" | "fixed-rate")
 				}
-				color="studio"
+				color="blue"
 				data={[
 					{ label: "Word Count", value: "word-count" },
 					{ label: "Fixed Rate", value: "fixed-rate" },
@@ -93,7 +93,7 @@ export function SubitemBillingForm({
 				label="Save as Preset"
 				checked={saveAsPreset}
 				onChange={(e) => onSaveAsPresetChange(e.currentTarget.checked)}
-				color="studio"
+				color="blue"
 			/>
 		</Stack>
 	);

@@ -64,11 +64,11 @@ export function MoveToFolderModal({
 					allowDeselect={false}
 				/>
 				<Group justify="flex-end" mt="md">
-					<Button variant="subtle" color="brand-dark.5" onClick={onClose}>
+					<Button variant="subtle" color="gray" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button
-						color="studio"
+						color="blue"
 						onClick={() =>
 							onConfirm(selectedFolderId === "root" ? null : selectedFolderId)
 						}

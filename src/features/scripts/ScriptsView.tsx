@@ -86,7 +86,7 @@ export default function ScriptsView() {
 
 			{isLoading ? (
 				<Center flex={1}>
-					<Loader color="studio" size="sm" />
+					<Loader color="blue" size="sm" />
 				</Center>
 			) : isEmpty ? (
 				<Box flex={1} px="md">

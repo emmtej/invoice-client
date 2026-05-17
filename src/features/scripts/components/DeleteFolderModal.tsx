@@ -28,9 +28,9 @@ export function DeleteFolderModal({
 
 	return (
 		<AppModal opened={opened} onClose={onClose} title="Delete Folder">
-			<Text size="sm" c="brand-dark.4" mb="md">
+			<Text size="sm" c="dimmed" mb="md">
 				Are you sure you want to delete{" "}
-				<Text span fw={600} c="brand-dark.7">
+				<Text span fw={600} >
 					{folderName}
 				</Text>
 				? All scripts and subfolders inside this folder will be permanently
@@ -39,13 +39,13 @@ export function DeleteFolderModal({
 			<Flex justify="flex-end" gap="sm">
 				<Button
 					variant="subtle"
-					color="brand-dark.5"
+					color="gray"
 					onClick={onClose}
 					disabled={isDeleting}
 				>
 					Cancel
 				</Button>
-				<Button color="on-air-red" onClick={handleConfirm} loading={isDeleting}>
+				<Button color="red" onClick={handleConfirm} loading={isDeleting}>
 					Delete
 				</Button>
 			</Flex>

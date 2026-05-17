@@ -22,7 +22,7 @@ export function FolderCardGrid({
 
 	return (
 		<Card
-			bg={isSelected ? "var(--mantine-color-studio-0)" : "white"}
+			bg={isSelected ? "blue.0" : "white"}
 			shadow={hovered ? "md" : "sm"}
 			p="md"
 			withBorder
@@ -34,13 +34,11 @@ export function FolderCardGrid({
 				root: {
 					cursor: "pointer",
 					borderColor: isSelected
-						? "var(--mantine-color-studio-5)"
-						: "color-mix(in srgb, var(--mantine-color-forest-9) 5%, transparent)",
-					transition: "all 150ms ease",
+						? "var(--mantine-color-blue-4)"
+						: "var(--mantine-color-gray-3)",
+					transition: "border-color 150ms ease",
 					"&:hover": {
-						borderColor: isSelected
-							? "var(--mantine-color-studio-6)"
-							: "var(--mantine-color-studio-3)",
+						borderColor: "var(--mantine-color-blue-4)",
 					},
 				},
 			}}
@@ -52,14 +50,14 @@ export function FolderCardGrid({
 						justify="center"
 						w={40}
 						h={40}
-						bg="studio.0"
+						bg="blue.0"
 						style={{ borderRadius: "var(--mantine-radius-md)" }}
 					>
-						<FolderIcon size={20} color="var(--mantine-color-studio-6)" />
+						<FolderIcon size={20} color="var(--mantine-color-blue-6)" />
 					</Flex>
 					<ActionIcon
 						variant="subtle"
-						color="brand-dark.5"
+						color="gray"
 						size="sm"
 						onClick={(e: React.MouseEvent) => {
 							e.stopPropagation();
@@ -70,8 +68,8 @@ export function FolderCardGrid({
 							opacity: hovered ? 1 : 0,
 							transition: "opacity 150ms ease",
 							"&:hover": {
-								color: "var(--mantine-color-on-air-red-6)",
-								backgroundColor: "var(--mantine-color-on-air-red-0)",
+								color: "var(--mantine-color-red-6)",
+								backgroundColor: "var(--mantine-color-red-0)",
 							},
 						}}
 					>
@@ -80,11 +78,11 @@ export function FolderCardGrid({
 				</Group>
 
 				<Box>
-					<Text size="sm" fw={600} c="brand-dark.7" truncate mb={4}>
+					<Text size="sm" fw={600} truncate mb={4}>
 						{folder.name}
 					</Text>
 					{itemCount > 0 ? (
-						<Text size="xs" c="brand-dark.4" className="tabular-nums">
+						<Text size="xs" c="dimmed" className="tabular-nums">
 							{itemCount === 1 ? "1 item" : `${itemCount} items`}
 						</Text>
 					) : (
@@ -92,10 +90,10 @@ export function FolderCardGrid({
 							<FolderOpen
 								size={14}
 								strokeWidth={2}
-								color="color-mix(in srgb, var(--mantine-color-forest-9) 20%, transparent)"
+								color="color-mix(in srgb, var(--mantine-color-dark-9) 20%, transparent)"
 								aria-hidden
 							/>
-							<Text size="xs" c="brand-dark.4">
+							<Text size="xs" c="dimmed">
 								Empty
 							</Text>
 						</Flex>

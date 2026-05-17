@@ -10,7 +10,7 @@ import {
 import { ChevronRight, Folder as FolderIcon } from "lucide-react";
 import type { FolderListRow } from "../utils/buildFolderRows";
 
-const STUDIO_ICON = "var(--mantine-color-studio-5)";
+const FOLDER_ICON_COLOR = "var(--mantine-color-gray-6)";
 
 interface SaveToLibraryFolderListProps {
 	loading: boolean;
@@ -41,7 +41,7 @@ export function SaveToLibraryFolderList({
 	if (loading) {
 		return (
 			<Box py="xl" style={{ display: "flex", justifyContent: "center" }}>
-				<Loader color="wave" size="sm" />
+				<Loader color="blue" size="sm" />
 			</Box>
 		);
 	}
@@ -61,18 +61,14 @@ export function SaveToLibraryFolderList({
 							key={row.isRoot ? "root" : row.id}
 							id={row.isRoot ? "folder-root" : `folder-${row.id}`}
 							onClick={() => onSelect(row.isRoot ? null : row.id)}
-							className={`w-full px-3 py-2 text-left transition-colors border-l-4 ${
-								selected
-									? "bg-wave-50 border-wave-500"
-									: "hover:bg-brand-dark-50 border-transparent"
-							}`}
+							className={`w-full px-3 py-2 text-left transition-colors border-l-4 ${selected ? "border-blue-5 bg-blue-0" : "border-transparent hover:bg-gray-0"}`}
 						>
 							<Group gap="xs" wrap="nowrap">
 								{row.isRoot ? (
 									<Text
 										size="sm"
 										fw={selected ? 700 : 500}
-										c={selected ? "wave.7" : "brand-dark.7"}
+										c={selected ? "blue" : "dimmed"}
 									>
 										{row.label}
 									</Text>
@@ -87,21 +83,21 @@ export function SaveToLibraryFolderList({
 										{row.depth > 0 && !searchQuery && (
 											<ChevronRight
 												size={14}
-												className="flex-shrink-0 text-brand-dark-300"
+												className="flex-shrink-0"
 											/>
 										)}
 										<FolderIcon
 											size={16}
 											color={
-												selected ? "var(--mantine-color-wave-5)" : STUDIO_ICON
+												selected ? "var(--mantine-color-blue-6)" : FOLDER_ICON_COLOR
 											}
 											style={{ flexShrink: 0 }}
-											fill={selected ? "var(--mantine-color-wave-1)" : "none"}
+											fill={selected ? "var(--mantine-color-blue-6)" : "none"}
 										/>
 										<Text
 											size="sm"
 											fw={selected ? 700 : 500}
-											c={selected ? "wave.7" : "brand-dark.7"}
+											c={selected ? "blue" : "dimmed"}
 											truncate
 										>
 											{row.label}
@@ -110,7 +106,7 @@ export function SaveToLibraryFolderList({
 								)}
 								<Text
 									size="xs"
-									c={selected ? "wave.4" : "brand-dark.4"}
+									c={selected ? "blue" : "dimmed"}
 									ml="auto"
 									fw={500}
 								>
@@ -122,7 +118,7 @@ export function SaveToLibraryFolderList({
 				})}
 				{rows.length === 0 && (
 					<Box p="md" style={{ textAlign: "center" }}>
-						<Text size="sm" c="brand-dark.4" fs="italic">
+						<Text size="sm" c="dimmed" fs="italic">
 							No folders found
 						</Text>
 					</Box>

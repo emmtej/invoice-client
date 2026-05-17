@@ -28,9 +28,9 @@ function statusColor(status: BoothSession["status"]) {
 		case "completed":
 			return "green";
 		case "in_progress":
-			return "wave";
+			return "blue";
 		case "abandoned":
-			return "studio";
+			return "blue";
 	}
 }
 
@@ -61,7 +61,7 @@ export function SessionHistory({
 				</Text>
 			),
 			labels: { confirm: "Delete", cancel: "Cancel" },
-			confirmProps: { color: "on-air-red" },
+			confirmProps: { color: "red" },
 			onConfirm: () => onDelete(id),
 		});
 	};
@@ -69,7 +69,7 @@ export function SessionHistory({
 	if (isLoading && !hideLoader) {
 		return (
 			<Center py="xl">
-				<Loader color="wave" size="sm" />
+				<Loader color="blue" size="sm" />
 			</Center>
 		);
 	}
@@ -85,15 +85,15 @@ export function SessionHistory({
 					<Box
 						key={i}
 						p="md"
-						className={`border border-dashed border-stone rounded-md opacity-${100 - i * 20}`}
+						className={`border border-dashed rounded-md opacity-${100 - i * 20}`}
 					>
 						<Stack gap="xs">
-							<Box h={10} bg="brand-dark.1" w="60%" className="rounded-full" />
-							<Box h={8} bg="color-mix(in srgb, var(--mantine-color-forest-9) 5%, transparent)" w="40%" className="rounded-full" />
+							<Box h={10} bg="gray.0" w="60%" className="rounded-full" />
+							<Box h={8} bg="color-mix(in srgb, var(--mantine-color-dark-9) 5%, transparent)" w="40%" className="rounded-full" />
 						</Stack>
 					</Box>
 				))}
-				<Text size="xs" c="brand-dark.5" ta="center" fw={500} mt="xs">
+				<Text size="xs" c="dimmed" ta="center" fw={500} mt="xs">
 					Completed sessions will appear here.
 				</Text>
 			</Stack>
@@ -107,14 +107,7 @@ export function SessionHistory({
 					key={s.id}
 					p="md"
 					radius="md"
-					className={`
-						transition-all duration-150 border
-						${
-							s.status === "in_progress"
-								? "border-wave-200 bg-wave-50"
-								: "border-stone bg-white hover:border-wave-200"
-						}
-					`}
+					className={`transition-all duration-150 border ${s.status === "in_progress" ? "border-blue-3" : "bg-white hover:bg-gray-0"}`}
 				>
 					<Stack gap={4}>
 						<Group justify="space-between" wrap="nowrap" align="flex-start">
@@ -126,36 +119,36 @@ export function SessionHistory({
 								}}
 								className={`flex-1 ${s.status === "in_progress" ? "cursor-pointer" : "cursor-default"}`}
 							>
-								<Text size="sm" fw={700} truncate="end" c="brand-dark.7">
+								<Text size="sm" fw={700} truncate="end" >
 									{s.scriptName}
 								</Text>
 							</UnstyledButton>
 							<ActionIcon
 								size="sm"
 								variant="subtle"
-								color="brand-dark.5"
+								color="gray"
 								radius="md"
 								onClick={() => handleDelete(s.id)}
 								aria-label="Delete session"
-								className="hover:text-red-600 hover:bg-red-50"
+								className="hover:text-red-600 hover:bg-red-60"
 							>
 								<Trash2 size={14} />
 							</ActionIcon>
 						</Group>
 
-						<Text size="xs" c="brand-dark.5" fw={500}>
+						<Text size="xs" c="dimmed" fw={500}>
 							{formatDate(s.startedAt)}
 						</Text>
 
 						<Group justify="space-between" mt={8}>
 							<Group gap={8}>
-								<Text size="xs" ff="monospace" fw={700} c="studio.7">
+								<Text size="xs" ff="monospace" fw={700} >
 									{formatTime(s.elapsedMs)}
 								</Text>
-								<Text size="xs" c="brand-dark.5">
+								<Text size="xs" c="dimmed">
 									•
 								</Text>
-								<Text size="xs" c="brand-dark.5" fw={600}>
+								<Text size="xs" c="dimmed" fw={600}>
 									{s.completedLines}/{s.totalLines} lines
 								</Text>
 							</Group>

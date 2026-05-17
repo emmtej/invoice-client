@@ -17,12 +17,12 @@ export function InvoiceItemTable({
 		<Table verticalSpacing="md" horizontalSpacing="sm">
 			<Table.Thead>
 				<Table.Tr>
-					<Table.Th className="text-brand-dark-300">
+					<Table.Th>
 						Line Item / Description
 					</Table.Th>
-					<Table.Th className="text-brand-dark-300 text-right">Qty</Table.Th>
-					<Table.Th className="text-brand-dark-300 text-right">Rate</Table.Th>
-					<Table.Th className="text-brand-dark-300 text-right">Total</Table.Th>
+					<Table.Th className="text-right">Qty</Table.Th>
+					<Table.Th className="text-right">Rate</Table.Th>
+					<Table.Th className="text-right">Total</Table.Th>
 					<Table.Th w={50} />
 				</Table.Tr>
 			</Table.Thead>
@@ -30,17 +30,17 @@ export function InvoiceItemTable({
 				{subitems.map((sub) => (
 					<Table.Tr
 						key={sub.id}
-						className="border-b border-sage-50 last:border-0"
+						className="border-b last:border-0"
 					>
 						<Table.Td>
 							<Stack gap={2}>
 								<Group gap={6}>
-									<Text size="sm" fw={700} c="brand-dark.7">
+									<Text size="sm" fw={700} >
 										{sub.label || "Service Item"}
 									</Text>
 									<ActionIcon
 										variant="subtle"
-										color="brand-dark.5"
+										color="gray"
 										size="xs"
 										radius="md"
 										onClick={() => onEditSubitem(sub, "label")}
@@ -49,7 +49,7 @@ export function InvoiceItemTable({
 										<Pencil size={12} />
 									</ActionIcon>
 								</Group>
-								<Text size="xs" c="brand-dark.5" fw={500}>
+								<Text size="xs" c="dimmed" fw={500}>
 									{sub.scriptName}
 								</Text>
 							</Stack>
@@ -59,7 +59,7 @@ export function InvoiceItemTable({
 								size="sm"
 								fw={600}
 								className="tabular-nums"
-								c="brand-dark.6"
+								c="dimmed"
 							>
 								{sub.wordCount.toLocaleString()}
 							</Text>
@@ -70,13 +70,13 @@ export function InvoiceItemTable({
 									size="sm"
 									fw={600}
 									className="tabular-nums"
-									c="brand-dark.6"
+									c="dimmed"
 								>
 									${sub.ratePerWord.toFixed(2)}
 								</Text>
 								<ActionIcon
 									variant="subtle"
-									color="brand-dark.5"
+									color="gray"
 									size="xs"
 									radius="md"
 									onClick={() => onEditSubitem(sub, "rate")}
@@ -87,14 +87,14 @@ export function InvoiceItemTable({
 							</Group>
 						</Table.Td>
 						<Table.Td className="text-right">
-							<Text size="sm" fw={800} c="forest.9" className="tabular-nums">
+							<Text size="sm" fw={800} className="tabular-nums">
 								${sub.amount.toFixed(2)}
 							</Text>
 						</Table.Td>
 						<Table.Td className="text-right">
 							<ActionIcon
 								variant="subtle"
-								color="terracotta"
+								color="blue"
 								radius="md"
 								onClick={() => onDeleteSubitem(sub.id)}
 								size="sm"

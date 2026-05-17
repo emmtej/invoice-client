@@ -9,13 +9,13 @@ export function PresetsView() {
 		<Stack gap="xl">
 			<Box>
 				<PageTitle>Invoice Presets</PageTitle>
-				<Text c="brand-dark.4">
+				<Text c="dimmed">
 					Manage your billing rates, invoice profiles, and common titles for
 					faster invoicing.
 				</Text>
 			</Box>
 
-			<Tabs defaultValue="rates" variant="outline" radius="md" color="studio">
+			<Tabs defaultValue="rates" variant="outline" radius="md" color="blue">
 				<Tabs.List>
 					<Tabs.Tab value="rates">Billing Rates</Tabs.Tab>
 					<Tabs.Tab value="profiles">Invoice Profiles</Tabs.Tab>

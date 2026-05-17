@@ -8,7 +8,7 @@ export function BoothHeader() {
 			<Group justify="space-between" align="center" wrap="nowrap">
 				<Box>
 					<PageTitle>Booth</PageTitle>
-					<Text fz="md" c="brand-dark.4" mt={4} className="page-subtitle">
+					<Text fz="md" c="dimmed" mt={4}>
 						Track your recording sessions line by line
 					</Text>
 				</Box>

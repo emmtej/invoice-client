@@ -177,11 +177,11 @@ export function SubitemModal({
 				/>
 
 				<Group justify="flex-end" mt="xl">
-					<Button variant="subtle" color="brand-dark.5" onClick={onClose}>
+					<Button variant="subtle" color="gray" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button
-						color="studio"
+						color="blue"
 						onClick={handleAdd}
 						disabled={!subitemLabel || currentScripts.length === 0}
 					>

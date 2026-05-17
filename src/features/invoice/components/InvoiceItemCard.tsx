@@ -81,23 +81,23 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 	};
 
 	return (
-		<Box className="bg-white border border-stone rounded-3xl overflow-hidden shadow-sm">
+		<Box className="bg-white border rounded-3xl overflow-hidden shadow-sm">
 			<Stack gap={0}>
 				{/* Section Header */}
 				<Group
 					justify="space-between"
-					bg="sage.0"
+					bg="gray.0"
 					px="xl"
 					py="md"
-					className="border-b border-stone"
+					className="border-b"
 				>
 					<Group gap="xs">
-						<Text fw={800} size="md" c="forest.9" lts={-0.2}>
+						<Text fw={800} size="md"  lts={-0.2}>
 							{item.name}
 						</Text>
 						<ActionIcon
 							variant="subtle"
-							color="brand-dark.5"
+							color="gray"
 							onClick={() =>
 								setEditConfig({
 									field: "name",
@@ -116,13 +116,12 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 
 					<Button
 						variant="subtle"
-						color="terracotta"
+						color="blue"
 						onClick={() => removeItem(item.id)}
 						size="xs"
 						radius="xl"
 						leftSection={<Trash2 size={14} />}
 						fw={700}
-						className="hover:bg-terracotta-50"
 					>
 						Delete Category
 					</Button>
@@ -140,9 +139,9 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 						<Box
 							py="xl"
 							ta="center"
-							className="border-2 border-dashed border-stone rounded-xl"
+							className="border-2 border-dashed rounded-xl"
 						>
-							<Text size="sm" c="brand-dark.5" fw={500}>
+							<Text size="sm" c="dimmed" fw={500}>
 								No line items added to this category yet.
 							</Text>
 						</Box>
@@ -152,7 +151,7 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 						<Button
 							leftSection={<Plus size={16} />}
 							variant="light"
-							color="forest"
+							color="blue"
 							radius="xl"
 							onClick={() => setSubitemModalOpened(true)}
 							size="sm"
