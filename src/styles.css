@@ -5,226 +5,40 @@
 @import "@fontsource/playfair-display/500.css";
 @import "@fontsource/playfair-display/600.css";
 
-@import "@mantine/core/styles.css";
-@import "@mantine/dropzone/styles.css";
-@import "@mantine/notifications/styles.css";
-@import "@mantine/tiptap/styles.css";
+@layer mantine, theme, base, components, utilities, app;
+
+@import "@mantine/core/styles.css" layer(mantine);
+@import "@mantine/dropzone/styles.css" layer(mantine);
+@import "@mantine/notifications/styles.css" layer(mantine);
+@import "@mantine/tiptap/styles.css" layer(mantine);
 @import "tailwindcss";
 
 @theme {
 	--font-sans: "Geist Sans", sans-serif;
 	--font-display: "Playfair Display", serif;
-
-	/* Semantic aliases */
-	--charcoal: var(--mantine-color-brand-dark-7);
-	--color-charcoal: var(--charcoal);
-
-	/* Color Palette */
-	--color-forest-50: var(--mantine-color-forest-0);
-	--color-forest-100: var(--mantine-color-forest-1);
-	--color-forest-200: var(--mantine-color-forest-2);
-	--color-forest-300: var(--mantine-color-forest-3);
-	--color-forest-400: var(--mantine-color-forest-4);
-	--color-forest-500: var(--mantine-color-forest-5);
-	--color-forest-600: var(--mantine-color-forest-6);
-	--color-forest-700: var(--mantine-color-forest-7);
-	--color-forest-800: var(--mantine-color-forest-8);
-	--color-forest-900: var(--mantine-color-forest-9);
-
-	--color-sage-50: var(--mantine-color-sage-0);
-	--color-sage-100: var(--mantine-color-sage-1);
-	--color-sage-200: var(--mantine-color-sage-2);
-	--color-sage-300: var(--mantine-color-sage-3);
-	--color-sage-400: var(--mantine-color-sage-4);
-	--color-sage-500: var(--mantine-color-sage-5);
-	--color-sage-600: var(--mantine-color-sage-6);
-	--color-sage-700: var(--mantine-color-sage-7);
-	--color-sage-800: var(--mantine-color-sage-8);
-	--color-sage-900: var(--mantine-color-sage-9);
-
-	--color-terracotta-50: var(--mantine-color-terracotta-0);
-	--color-terracotta-100: var(--mantine-color-terracotta-1);
-	--color-terracotta-200: var(--mantine-color-terracotta-2);
-	--color-terracotta-300: var(--mantine-color-terracotta-3);
-	--color-terracotta-400: var(--mantine-color-terracotta-4);
-	--color-terracotta-500: var(--mantine-color-terracotta-5);
-	--color-terracotta-600: var(--mantine-color-terracotta-6);
-	--color-terracotta-700: var(--mantine-color-terracotta-7);
-	--color-terracotta-800: var(--mantine-color-terracotta-8);
-	--color-terracotta-900: var(--mantine-color-terracotta-9);
-
-	--color-wave-50: var(--mantine-color-wave-0);
-	--color-wave-100: var(--mantine-color-wave-1);
-	--color-wave-200: var(--mantine-color-wave-2);
-	--color-wave-300: var(--mantine-color-wave-3);
-	--color-wave-400: var(--mantine-color-wave-4);
-	--color-wave-500: var(--mantine-color-wave-5);
-	--color-wave-600: var(--mantine-color-wave-6);
-	--color-wave-700: var(--mantine-color-wave-7);
-	--color-wave-800: var(--mantine-color-wave-8);
-	--color-wave-900: var(--mantine-color-wave-9);
-
-	--color-studio-50: var(--mantine-color-studio-0);
-	--color-studio-100: var(--mantine-color-studio-1);
-	--color-studio-200: var(--mantine-color-studio-2);
-	--color-studio-300: var(--mantine-color-studio-3);
-	--color-studio-400: var(--mantine-color-studio-4);
-	--color-studio-500: var(--mantine-color-studio-5);
-	--color-studio-600: var(--mantine-color-studio-6);
-	--color-studio-700: var(--mantine-color-studio-7);
-	--color-studio-800: var(--mantine-color-studio-8);
-	--color-studio-900: var(--mantine-color-studio-9);
-
-	--color-on-air-50: var(--mantine-color-on-air-red-0);
-	--color-on-air-100: var(--mantine-color-on-air-red-1);
-	--color-on-air-200: var(--mantine-color-on-air-red-2);
-	--color-on-air-300: var(--mantine-color-on-air-red-3);
-	--color-on-air-400: var(--mantine-color-on-air-red-4);
-	--color-on-air-500: var(--mantine-color-on-air-red-5);
-	--color-on-air-600: var(--mantine-color-on-air-red-6);
-	--color-on-air-700: var(--mantine-color-on-air-red-7);
-	--color-on-air-800: var(--mantine-color-on-air-red-8);
-	--color-on-air-900: var(--mantine-color-on-air-red-9);
-
-	--color-brand-dark-50: var(--mantine-color-brand-dark-0);
-	--color-brand-dark-100: var(--mantine-color-brand-dark-1);
-	--color-brand-dark-200: var(--mantine-color-brand-dark-2);
-	--color-brand-dark-300: var(--mantine-color-brand-dark-3);
-	--color-brand-dark-400: var(--mantine-color-brand-dark-4);
-	--color-brand-dark-500: var(--mantine-color-brand-dark-5);
-	--color-brand-dark-600: var(--mantine-color-brand-dark-6);
-	--color-brand-dark-700: var(--mantine-color-brand-dark-7);
-	--color-brand-dark-800: var(--mantine-color-brand-dark-8);
-	--color-brand-dark-900: var(--mantine-color-brand-dark-9);
-
-	--color-forest: #2d3a31;
-	--color-sage: #8c9a84;
-	--color-terracotta: #c27b66;
-	--color-alabaster: #f9f8f4;
-	--color-stone: #e6e2da;
-	--color-surface: #faf9f5;
-
-	--radius-3xl: 24px;
-	--app-bg: var(--color-alabaster);
-	--motion-ease-out: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-html,
-body {
-	background-color: var(--app-bg);
-	color: var(--color-forest);
-	min-height: 100dvh;
-	font-family: var(--font-sans);
-	font-weight: 400;
-	-webkit-font-smoothing: antialiased;
-	position: relative;
-}
-
-/* Paper Grain Overlay */
-body::before {
-	content: "";
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	pointer-events: none;
-	opacity: 0.015;
-	z-index: 9999;
-	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-/* Tiptap Placeholder */
-.tiptap p.is-editor-empty:first-child::before {
-	color: var(--mantine-color-sage-4);
-	content: attr(data-placeholder);
-	float: left;
-	height: 0;
-	pointer-events: none;
-	font-family: var(--font-display);
-	font-style: italic;
-}
-
-.tabular-nums {
-	font-variant-numeric: tabular-nums;
-}
-
-.text-balance {
-	text-wrap: balance;
-}
-
-.text-pretty {
-	text-wrap: pretty;
-}
-
-.page-title {
-	font-family: var(--font-display);
-	font-weight: 500;
-	letter-spacing: -0.01em;
-	line-height: 1.1;
-	color: var(--charcoal);
-}
-
-.page-subtitle {
-	color: color-mix(in srgb, var(--charcoal) 70%, transparent);
-	text-wrap: pretty;
-	font-size: 1.125rem;
-}
-
-@media print {
+@layer base {
 	html,
 	body {
-		background: white !important;
-		background-image: none !important;
-	}
-	body::before {
-		display: none;
+		min-height: 100dvh;
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
 	}
 }
 
-/* Redesigned rich text editor toolbar */
-.rich-text-editor-toolbar {
-	padding: var(--mantine-spacing-sm);
-	border-bottom: 1px solid color-mix(in srgb, var(--color-forest) 8%, transparent);
-	gap: var(--mantine-spacing-xs);
-	align-items: center;
-	background-color: color-mix(in srgb, var(--color-forest) 3%, var(--color-alabaster));
-}
-
-.rich-text-editor-toolbar .editor-additional-menu {
-	display: flex;
-	align-items: center;
-	gap: var(--mantine-spacing-xs);
-	margin-left: auto;
-}
-
-/* Custom soft component styles */
-.mantine-Button-root {
-	box-shadow: 0 2px 4px color-mix(in srgb, var(--color-forest) 8%, transparent);
-}
-
-.mantine-Paper-root.interactive-card {
-	transition:
-		transform 200ms var(--motion-ease-out),
-		box-shadow 200ms var(--motion-ease-out);
-}
-
-.mantine-Paper-root.interactive-card:hover {
-	transform: translateY(-2px);
-	box-shadow: var(--mantine-shadow-md);
-}
-
-@keyframes fadeUp {
-	from {
-		opacity: 0;
-		transform: translateY(8px);
+@layer components {
+	.tiptap p.is-editor-empty:first-child::before {
+		color: var(--mantine-color-gray-5);
+		content: attr(data-placeholder);
+		float: left;
+		height: 0;
+		pointer-events: none;
+		font-family: var(--font-display);
+		font-style: italic;
 	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
 
-.fade-up {
-	animation: fadeUp 200ms var(--motion-ease-out) forwards;
+	.tabular-nums {
+		font-variant-numeric: tabular-nums;
+	}
 }

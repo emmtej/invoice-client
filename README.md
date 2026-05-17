@@ -8,7 +8,7 @@ A modern web application for voiceover professionals to manage scripts and gener
 *   **Main Technologies:**
     *   **Framework:** React 19 with TypeScript.
     *   **Build Tool:** Vite.
-    *   **UI Library:** Mantine UI (v8) with custom "Studio" (terracotta) and "Wave" (teal) design tokens.
+    *   **UI Library:** Mantine UI (v8) with Geist Sans + Playfair Display fonts (Mantine defaults for colors until redesign).
     *   **Styling:** Tailwind CSS (v4) for utility-first styling.
     *   **Routing:** TanStack Router (v1) for type-safe navigation.
     *   **State Management:** Zustand for lightweight, decoupled feature state.
@@ -113,7 +113,7 @@ This project can be containerized using Docker for easy deployment and sharing.
 *   **Styling:**
     *   Use Mantine components as the foundation.
     *   Use Tailwind CSS for custom layouts and minor adjustments.
-    *   Follow the design tokens defined in `src/theme.ts`.
+    *   See [DESIGN.md](DESIGN.md) and [STYLING.md](STYLING.md); `src/theme.ts` currently defines fonts only.
 *   **Validation:** Use Zod schemas for API responses and form validation to ensure type safety at runtime.
 *   **Testing:** Add unit tests for utility functions and integration tests for complex components using Vitest.
 

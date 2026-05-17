@@ -29,7 +29,7 @@ export const notify = {
 		notifications.show({
 			title,
 			message,
-			color: "wave",
+			color: "blue",
 			icon: <Check size={18} />,
 			autoClose: 4000,
 		});
@@ -73,7 +73,7 @@ export const notify = {
 			id,
 			title,
 			message,
-			color: "wave",
+			color: "blue",
 			loading: true,
 			autoClose: false,
 			withCloseButton: false,
@@ -86,7 +86,7 @@ export const notify = {
 			id,
 			title,
 			message,
-			color: isSuccess ? "wave" : "red",
+			color: isSuccess ? "blue" : "red",
 			icon: isSuccess ? <Check size={18} /> : <AlertCircle size={18} />,
 			loading: false,
 			autoClose: isSuccess ? 4000 : 6000,
