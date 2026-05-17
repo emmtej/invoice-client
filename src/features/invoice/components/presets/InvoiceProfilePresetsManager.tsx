@@ -89,7 +89,7 @@ export function InvoiceProfilePresetsManager() {
 													</Badge>
 												)}
 											</Group>
-											<Text size="sm" c="dimmed">
+											<Text size="sm" c="brand-dark.4">
 												{profile.profile.firstName} {profile.profile.lastName} •{" "}
 												{profile.profile.email}
 											</Text>
@@ -101,7 +101,7 @@ export function InvoiceProfilePresetsManager() {
 											<Tooltip label="Set as default">
 												<ActionIcon
 													variant="subtle"
-													color="gray"
+													color="brand-dark.5"
 													onClick={() => setDefaultProfile(profile.id)}
 												>
 													<Star size={18} />
@@ -111,7 +111,7 @@ export function InvoiceProfilePresetsManager() {
 										<Tooltip label="Edit profile">
 											<ActionIcon
 												variant="subtle"
-												color="gray"
+												color="brand-dark.5"
 												onClick={() => handleOpenEdit(profile)}
 											>
 												<Pencil size={18} />
@@ -222,7 +222,7 @@ function ProfileModal({
 				{/* In a more advanced version, we could add address, phone, etc. here */}
 
 				<Group justify="flex-end" mt="xl">
-					<Button variant="subtle" color="gray" onClick={onClose}>
+					<Button variant="subtle" color="brand-dark.5" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button

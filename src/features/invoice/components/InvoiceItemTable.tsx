@@ -40,15 +40,16 @@ export function InvoiceItemTable({
 									</Text>
 									<ActionIcon
 										variant="subtle"
-										color="sage"
+										color="brand-dark.5"
 										size="xs"
 										radius="md"
 										onClick={() => onEditSubitem(sub, "label")}
+										aria-label="Edit description"
 									>
 										<Pencil size={12} />
 									</ActionIcon>
 								</Group>
-								<Text size="xs" c="sage.6" fw={500}>
+								<Text size="xs" c="brand-dark.5" fw={500}>
 									{sub.scriptName}
 								</Text>
 							</Stack>
@@ -75,10 +76,11 @@ export function InvoiceItemTable({
 								</Text>
 								<ActionIcon
 									variant="subtle"
-									color="sage"
+									color="brand-dark.5"
 									size="xs"
 									radius="md"
 									onClick={() => onEditSubitem(sub, "rate")}
+									aria-label="Edit rate"
 								>
 									<Pencil size={12} />
 								</ActionIcon>
@@ -96,6 +98,7 @@ export function InvoiceItemTable({
 								radius="md"
 								onClick={() => onDeleteSubitem(sub.id)}
 								size="sm"
+								aria-label="Delete line item"
 							>
 								<Trash2 size={14} />
 							</ActionIcon>

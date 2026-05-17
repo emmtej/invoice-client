@@ -81,7 +81,7 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 	};
 
 	return (
-		<Box className="bg-white border border-sage-100 rounded-3xl overflow-hidden shadow-sm">
+		<Box className="bg-white border border-stone rounded-3xl overflow-hidden shadow-sm">
 			<Stack gap={0}>
 				{/* Section Header */}
 				<Group
@@ -89,7 +89,7 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 					bg="sage.0"
 					px="xl"
 					py="md"
-					className="border-b border-sage-100"
+					className="border-b border-stone"
 				>
 					<Group gap="xs">
 						<Text fw={800} size="md" c="forest.9" lts={-0.2}>
@@ -97,7 +97,7 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 						</Text>
 						<ActionIcon
 							variant="subtle"
-							color="sage"
+							color="brand-dark.5"
 							onClick={() =>
 								setEditConfig({
 									field: "name",
@@ -140,9 +140,9 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 						<Box
 							py="xl"
 							ta="center"
-							className="border-2 border-dashed border-sage-100 rounded-xl"
+							className="border-2 border-dashed border-stone rounded-xl"
 						>
-							<Text size="sm" c="sage.4" fw={500}>
+							<Text size="sm" c="brand-dark.5" fw={500}>
 								No line items added to this category yet.
 							</Text>
 						</Box>

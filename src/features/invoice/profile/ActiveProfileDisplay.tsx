@@ -57,7 +57,7 @@ export function ActiveProfileDisplay({ profile }: ActiveProfileDisplayProps) {
 					{profile.email?.trim() && (
 						<Group gap="xs">
 							<AtSign size={14} className="text-sage-400" strokeWidth={2} />
-							<Text size="xs" c="sage.6">
+							<Text size="xs" c="brand-dark.5">
 								{profile.email}
 							</Text>
 						</Group>

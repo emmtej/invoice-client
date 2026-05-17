@@ -44,7 +44,7 @@ export function SubitemSourceSelector({
 					</DocxUploadButton>
 					{uploadedScripts.length > 0 && (
 						<Stack gap={4}>
-							<Text size="xs" fw={700} c="dimmed">
+							<Text size="xs" fw={700} c="brand-dark.5">
 								UPLOADED DOCUMENTS:
 							</Text>
 							{uploadedScripts.map((s) => (

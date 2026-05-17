@@ -97,7 +97,7 @@ export function BillingRatePresetsManager() {
 												<Tooltip label="Edit preset">
 													<ActionIcon
 														variant="subtle"
-														color="gray"
+														color="brand-dark.5"
 														onClick={() => handleOpenEdit(preset)}
 													>
 														<Pencil size={16} />
@@ -207,7 +207,7 @@ function RatePresetModal({
 				</Group>
 
 				<Group justify="flex-end" mt="xl">
-					<Button variant="subtle" color="gray" onClick={onClose}>
+					<Button variant="subtle" color="brand-dark.5" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button

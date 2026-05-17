@@ -84,10 +84,18 @@ export function EditValueModal({
 					/>
 				)}
 				<Group justify="flex-end">
-					<Button variant="default" onClick={onClose}>
+					<Button
+						variant="subtle"
+						color="brand-dark.5"
+						onClick={onClose}
+					>
 						Cancel
 					</Button>
-					<Button onClick={handleConfirm} disabled={value === ""}>
+					<Button
+						color="studio"
+						onClick={handleConfirm}
+						disabled={value === ""}
+					>
 						Save
 					</Button>
 				</Group>

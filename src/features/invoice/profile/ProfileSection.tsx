@@ -59,7 +59,7 @@ export function ProfileSection({
 	return (
 		<Stack gap="xl">
 			<Group justify="space-between" align="center">
-				<Text size="xs" fw={700} c="sage.6" tt="uppercase" lts={1}>
+				<Text size="xs" fw={700} c="brand-dark.5" tt="uppercase" lts={1}>
 					SENDER PROFILE
 				</Text>
 				{hasProfiles && !isEditingProfile && (
@@ -86,7 +86,7 @@ export function ProfileSection({
 			{(!hasProfiles || isEditingProfile) && (
 				<Stack gap="xl">
 					{!hasProfiles && (
-						<Text size="sm" c="gray.7" fw={500}>
+						<Text size="sm" c="brand-dark.5" fw={500}>
 							Create your first invoice profile. It will be saved and can be
 							reused later.
 						</Text>
@@ -143,7 +143,7 @@ export function ProfileSection({
 							<Button
 								onClick={handleCancelEdit}
 								variant="subtle"
-								color="gray"
+								color="brand-dark.5"
 								fw={700}
 							>
 								Cancel

@@ -81,7 +81,7 @@ export function InvoiceTitlePresetsManager() {
 												<Tooltip label="Edit title">
 													<ActionIcon
 														variant="subtle"
-														color="gray"
+														color="brand-dark.5"
 														onClick={() => handleOpenEdit(preset)}
 													>
 														<Pencil size={16} />
@@ -164,7 +164,7 @@ function TitlePresetModal({
 				/>
 
 				<Group justify="flex-end" mt="xl">
-					<Button variant="subtle" color="gray" onClick={onClose}>
+					<Button variant="subtle" color="brand-dark.5" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button

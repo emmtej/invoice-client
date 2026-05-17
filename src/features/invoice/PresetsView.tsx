@@ -9,7 +9,7 @@ export function PresetsView() {
 		<Stack gap="xl">
 			<Box>
 				<PageTitle>Invoice Presets</PageTitle>
-				<Text c="dimmed">
+				<Text c="brand-dark.4">
 					Manage your billing rates, invoice profiles, and common titles for
 					faster invoicing.
 				</Text>

@@ -18,7 +18,7 @@ export function InvoiceItemAdder({
 				<Text fw={800} size="lg" c="forest.9">
 					Add Project Category
 				</Text>
-				<Text size="sm" c="gray.7" mt={4}>
+				<Text size="sm" c="brand-dark.5" mt={4}>
 					Group your scripts into categories like "Commercials", "E-learning",
 					or by Episode.
 				</Text>
