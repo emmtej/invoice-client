@@ -43,7 +43,7 @@ export function BoothSettingsModal() {
 		<>
 			<Button
 				variant="light"
-				color="gray"
+				color="brand-dark.5"
 				onClick={open}
 				leftSection={<Settings2 size={16} />}
 				size="xs"
@@ -53,7 +53,7 @@ export function BoothSettingsModal() {
 
 			<AppModal opened={opened} onClose={close} title="Booth Settings" centered>
 				<Stack gap="lg">
-					<Text size="sm" c="gray.6">
+					<Text size="sm" c="brand-dark.4">
 						Configure your default rate and display options for recording
 						sessions.
 					</Text>
@@ -90,7 +90,7 @@ export function BoothSettingsModal() {
 								color="wave"
 								size="sm"
 							/>
-							<Text size="xs" c="gray.5" mt={4}>
+							<Text size="xs" c="brand-dark.4" mt={4}>
 								{trackingMode === "line"
 									? "Check off individual lines as you record."
 									: "Check off entire scenes at once."}

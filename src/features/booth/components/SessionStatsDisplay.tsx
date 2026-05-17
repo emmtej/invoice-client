@@ -30,16 +30,16 @@ export function SessionStatsDisplay({
 			<Divider label="Session Stats" labelPosition="center" />
 			{formattedStartedAt && (
 				<Group justify="space-between">
-					<Text size="xs" fw={700} c="gray.5" tt="uppercase">
+					<Text size="xs" fw={700} c="brand-dark.4" tt="uppercase">
 						Started
 					</Text>
-					<Text size="xs" fw={600} c="gray.7">
+					<Text size="xs" fw={600} c="brand-dark.5">
 						{formattedStartedAt}
 					</Text>
 				</Group>
 			)}
 			<Group justify="space-between">
-				<Text size="xs" fw={700} c="gray.5" tt="uppercase">
+				<Text size="xs" fw={700} c="brand-dark.4" tt="uppercase">
 					Lines Completed
 				</Text>
 				<Text size="sm" fw={600}>
@@ -47,7 +47,7 @@ export function SessionStatsDisplay({
 				</Text>
 			</Group>
 			<Group justify="space-between">
-				<Text size="xs" fw={700} c="gray.5" tt="uppercase">
+				<Text size="xs" fw={700} c="brand-dark.4" tt="uppercase">
 					Avg Time / Line
 				</Text>
 				<Text size="sm" fw={600}>
@@ -55,7 +55,7 @@ export function SessionStatsDisplay({
 				</Text>
 			</Group>
 			<Group justify="space-between">
-				<Text size="xs" fw={700} c="gray.5" tt="uppercase">
+				<Text size="xs" fw={700} c="brand-dark.4" tt="uppercase">
 					Avg Words / Min
 				</Text>
 				<Text size="sm" fw={600}>

@@ -15,10 +15,10 @@ function StatCard({
 	value: string;
 }) {
 	return (
-		<SurfaceCard radius="3xl" withBorder className="border-gray-50 shadow-sm">
+		<SurfaceCard radius="3xl" withBorder className="border-stone shadow-sm">
 			<Stack gap={4} align="center">
 				{icon}
-				<Text size="xs" c="brand-dark.3" fw={500} tt="uppercase" lts={1}>
+				<Text size="xs" c="brand-dark.5" fw={500} tt="uppercase" lts={1}>
 					{label}
 				</Text>
 				<Text fw={800} size="xl" c="brand-dark.7">
@@ -56,7 +56,7 @@ export function SessionSummary() {
 				</Text>
 
 				{script && (
-					<Text size="sm" c="brand-dark.3" ta="center" fw={500}>
+					<Text size="sm" c="brand-dark.5" ta="center" fw={500}>
 						{script.name}
 					</Text>
 				)}

@@ -55,7 +55,7 @@ export function TeleprompterLine({
 				px="md"
 				bg={isCurrent && isSceneMode ? "wave.0" : "transparent"}
 				className={`
-					border-b border-dashed border-gray-200 transition-colors duration-150
+					border-b border-dashed border-brand-dark-200 transition-colors duration-150
 					${
 						isCurrent && isSceneMode
 							? "border-l-[3px] border-l-wave-500"
@@ -154,9 +154,10 @@ export function TeleprompterLine({
 						<ActionIcon
 							size="sm"
 							variant="subtle"
-							color="gray"
+							color="brand-dark.5"
 							radius="md"
 							onClick={cancelEdit}
+							aria-label="Cancel editing"
 						>
 							<X size={14} />
 						</ActionIcon>
@@ -178,7 +179,7 @@ export function TeleprompterLine({
 					<ActionIcon
 						size="sm"
 						variant="subtle"
-						color="gray"
+						color="brand-dark.5"
 						radius="md"
 						onClick={startEditing}
 						aria-label="Edit line"

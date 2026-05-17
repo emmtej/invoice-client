@@ -59,7 +59,7 @@ export function ScriptSelectionPanel({
 				{status === "selecting" && (
 					<Button
 						variant="subtle"
-						color="gray"
+						color="brand-dark.5"
 						size="xs"
 						radius="xl"
 						onClick={resetSession}
@@ -84,10 +84,10 @@ export function ScriptSelectionPanel({
 						p={0}
 						radius="3xl"
 						withBorder
-						className="border-gray-100 bg-white shadow-sm overflow-hidden"
+						className="border-stone bg-white shadow-sm overflow-hidden"
 					>
 						<Stack gap={0}>
-							<Box p="xl" className="bg-gray-50 border-b border-gray-100">
+							<Box p="xl" className="bg-brand-dark-50 border-b border-stone">
 								<Group wrap="nowrap" align="center" gap="xl">
 									<ThemeIcon
 										size={56}
@@ -107,7 +107,7 @@ export function ScriptSelectionPanel({
 										>
 											{script.name}
 										</Text>
-										<Text size="sm" c="brand-dark.3" mt={6} fw={500}>
+										<Text size="sm" c="brand-dark.5" mt={6} fw={500}>
 											Imported on{" "}
 											{new Date(script.createdAt).toLocaleDateString()}
 										</Text>
@@ -164,7 +164,7 @@ export function ScriptSelectionPanel({
 										</Box>
 									</Group>
 
-									<Divider className="border-gray-50" />
+									<Divider className="border-brand-dark-50" />
 
 									<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing={32}>
 										<Group gap="md">

@@ -25,7 +25,7 @@ export function SessionTimerDisplay({
 				ff="monospace"
 				fz={56}
 				fw={800}
-				c={isRunning ? "gray.9" : "gray.5"}
+				c={isRunning ? "brand-dark.8" : "brand-dark.4"}
 				lh={1}
 			>
 				{formatTime(elapsedMs)}

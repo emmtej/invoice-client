@@ -101,10 +101,10 @@ export function ScriptSelector({
 		<Stack gap={48}>
 			<Group justify="space-between" align="center">
 				<Box>
-					<Text fw={800} size="xl" c="gray.9" lts={-0.2}>
+					<Text fw={800} size="xl" c="brand-dark.8" lts={-0.2}>
 						Select a Script
 					</Text>
-					<Text size="sm" c="gray.7" mt={2} fw={500}>
+					<Text size="sm" c="brand-dark.5" mt={2} fw={500}>
 						Choose from your library or import a new document to begin.
 					</Text>
 				</Box>
@@ -140,18 +140,18 @@ export function ScriptSelector({
 					style={{
 						borderStyle: "dashed",
 						borderWidth: 2,
-						borderColor: "var(--mantine-color-gray-2)",
+						borderColor: "var(--color-stone)",
 					}}
 				>
 					<Stack align="center" gap="lg" py="xl">
-						<ThemeIcon size={64} radius="xl" variant="light" color="gray">
+						<ThemeIcon size={64} radius="xl" variant="light" color="brand-dark.5">
 							<FileText size={32} strokeWidth={1.5} />
 						</ThemeIcon>
 						<Stack gap={4} align="center">
-							<Text fw={800} size="lg" c="gray.9">
+							<Text fw={800} size="lg" c="brand-dark.8">
 								Your script library is empty
 							</Text>
-							<Text size="sm" c="gray.7" ta="center" maw={400}>
+							<Text size="sm" c="brand-dark.5" ta="center" maw={400}>
 								Upload a Word document to automatically extract dialogue lines
 								and start your first recording session.
 							</Text>
@@ -188,16 +188,16 @@ export function ScriptSelector({
 										border:
 											loadingScriptId === s.id
 												? "2px solid var(--mantine-color-wave-4)"
-												: "1px solid var(--mantine-color-gray-1)",
+												: "1px solid var(--color-stone)",
 									}}
 									className="group-hover:border-[var(--mantine-color-wave-3)] group-hover:shadow-lg group-hover:-translate-y-1 group-active:scale-[0.98]"
 								>
 									<Stack gap="md">
 										<Group gap="sm" wrap="nowrap">
-											<ThemeIcon variant="light" color="gray" size="md">
+											<ThemeIcon variant="light" color="brand-dark.5" size="md">
 												<FileText size={18} />
 											</ThemeIcon>
-											<Text fw={700} size="sm" truncate="end" c="gray.8">
+											<Text fw={700} size="sm" truncate="end" c="brand-dark.7">
 												{s.name}
 											</Text>
 										</Group>
@@ -213,7 +213,7 @@ export function ScriptSelector({
 											{loadingScriptId === s.id ? (
 												<Loader size={14} color="wave" />
 											) : (
-												<Text size="xs" c="gray.4" fw={600} tt="uppercase">
+												<Text size="xs" c="brand-dark.5" fw={600} tt="uppercase">
 													Select
 												</Text>
 											)}
@@ -228,7 +228,7 @@ export function ScriptSelector({
 						<Center pt="md">
 							<Button
 								variant="subtle"
-								color="gray"
+								color="brand-dark.5"
 								onClick={handleLoadMore}
 								loading={isFetchingNextPage}
 								size="sm"

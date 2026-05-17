@@ -62,7 +62,7 @@ export function SelectionView({ header }: SelectionViewProps) {
 				<Center flex={1}>
 					<Stack align="center" gap="xs">
 						<Loader color="wave" size="sm" />
-						<Text size="sm" c="brand-dark.3" fw={500}>
+						<Text size="sm" c="brand-dark.5" fw={500}>
 							Loading...
 						</Text>
 					</Stack>
@@ -73,7 +73,7 @@ export function SelectionView({ header }: SelectionViewProps) {
 				<Box
 					w={{ base: "100%", lg: 320 }}
 					style={{ flexShrink: 0 }}
-					className="lg:border-l border-gray-100"
+					className="lg:border-l border-stone"
 					pl={{ base: 0, lg: 48 }}
 				>
 					<SelectionSidebar isInitialLoading={isInitialLoading} />

@@ -61,7 +61,7 @@ export function SessionHistory({
 				</Text>
 			),
 			labels: { confirm: "Delete", cancel: "Cancel" },
-			confirmProps: { color: "red" },
+			confirmProps: { color: "on-air-red" },
 			onConfirm: () => onDelete(id),
 		});
 	};
@@ -85,15 +85,15 @@ export function SessionHistory({
 					<Box
 						key={i}
 						p="md"
-						className={`border border-dashed border-gray-100 rounded-md opacity-${100 - i * 20}`}
+						className={`border border-dashed border-stone rounded-md opacity-${100 - i * 20}`}
 					>
 						<Stack gap="xs">
-							<Box h={10} bg="gray.1" w="60%" className="rounded-full" />
-							<Box h={8} bg="gray.0" w="40%" className="rounded-full" />
+							<Box h={10} bg="brand-dark.1" w="60%" className="rounded-full" />
+							<Box h={8} bg="color-mix(in srgb, var(--mantine-color-forest-9) 5%, transparent)" w="40%" className="rounded-full" />
 						</Stack>
 					</Box>
 				))}
-				<Text size="xs" c="brand-dark.3" ta="center" fw={500} mt="xs">
+				<Text size="xs" c="brand-dark.5" ta="center" fw={500} mt="xs">
 					Completed sessions will appear here.
 				</Text>
 			</Stack>
@@ -112,7 +112,7 @@ export function SessionHistory({
 						${
 							s.status === "in_progress"
 								? "border-wave-200 bg-wave-50"
-								: "border-gray-100 bg-white hover:border-wave-200"
+								: "border-stone bg-white hover:border-wave-200"
 						}
 					`}
 				>
@@ -133,7 +133,7 @@ export function SessionHistory({
 							<ActionIcon
 								size="sm"
 								variant="subtle"
-								color="gray"
+								color="brand-dark.5"
 								radius="md"
 								onClick={() => handleDelete(s.id)}
 								aria-label="Delete session"
@@ -143,7 +143,7 @@ export function SessionHistory({
 							</ActionIcon>
 						</Group>
 
-						<Text size="xs" c="brand-dark.3" fw={500}>
+						<Text size="xs" c="brand-dark.5" fw={500}>
 							{formatDate(s.startedAt)}
 						</Text>
 
@@ -152,10 +152,10 @@ export function SessionHistory({
 								<Text size="xs" ff="monospace" fw={700} c="studio.7">
 									{formatTime(s.elapsedMs)}
 								</Text>
-								<Text size="xs" c="gray.3">
+								<Text size="xs" c="brand-dark.5">
 									•
 								</Text>
-								<Text size="xs" c="brand-dark.4" fw={600}>
+								<Text size="xs" c="brand-dark.5" fw={600}>
 									{s.completedLines}/{s.totalLines} lines
 								</Text>
 							</Group>

@@ -7,7 +7,7 @@ export function BoothHeader() {
 		<Box flex="0 0 auto">
 			<Group justify="space-between" align="center" wrap="nowrap">
 				<Box>
-					<PageTitle size="42px">Booth</PageTitle>
+					<PageTitle>Booth</PageTitle>
 					<Text fz="md" c="brand-dark.4" mt={4} className="page-subtitle">
 						Track your recording sessions line by line
 					</Text>
