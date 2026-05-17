@@ -1,6 +1,6 @@
 import { Divider, type DividerProps, Group } from "@mantine/core";
 import type { ReactNode } from "react";
-import { SectionLabel } from "../text/SectionLabel";
+import { SectionLabel } from "./SectionLabel";
 
 interface SectionDividerProps extends Omit<DividerProps, "label"> {
 	icon: ReactNode;

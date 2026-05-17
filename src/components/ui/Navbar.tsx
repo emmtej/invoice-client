@@ -7,9 +7,9 @@ import {
 	UnstyledButton,
 } from "@mantine/core";
 import { Link, useLocation } from "@tanstack/react-router";
-import { useUserStore } from "@/features/user/store/userStore";
-import { LinkButton } from "../button/ButtonLink";
-import { APP_SHELL_HEADER_HEIGHT } from "../layout/layout-constants";
+import { useUserStore } from "@/features/user/userStore";
+import { LinkButton } from "./AppButtonLink";
+import { APP_SHELL_HEADER_HEIGHT } from "./layout-constants";
 
 const links: { link: string; label: string }[] = [];
 

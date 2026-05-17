@@ -2,8 +2,8 @@ import { AppShell, Box, Burger, Container, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useMatches } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { Navbar } from "../navbar/Navbar";
-import { Sidebar } from "../sidebar/Sidebar";
+import { Navbar } from "./Navbar";
+import { Sidebar } from "./Sidebar";
 import { AppFooter } from "./AppFooter";
 import {
 	APP_CONTENT_MAX_WIDTH,
@@ -38,7 +38,7 @@ function useIsSidebarHidden() {
 	);
 }
 
-export function Layout({ children }: LayoutProps) {
+export function AppLayout({ children }: LayoutProps) {
 	const [opened, { toggle, close }] = useDisclosure();
 	const isFlushLayout = useIsFlushLayout();
 	const isSidebarHidden = useIsSidebarHidden();

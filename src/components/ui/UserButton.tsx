@@ -1,6 +1,6 @@
 import { Avatar, Box, Group, Text, UnstyledButton } from "@mantine/core";
 import { ChevronRight } from "lucide-react";
-import type { UserProfile } from "@/features/user/store/userStore";
+import type { UserProfile } from "@/features/user/userStore";
 
 interface UserButtonProps {
 	user: UserProfile;

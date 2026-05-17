@@ -1,7 +1,7 @@
 import { Box, Button, Group, Stack, Text } from "@mantine/core";
 import { Plus } from "lucide-react";
 import type { ReactNode } from "react";
-import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
+import { SurfaceCard } from "@/components/ui/SurfaceCard";
 
 interface PresetManagerProps<T> {
 	title: string;
