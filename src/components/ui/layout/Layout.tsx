@@ -18,12 +18,30 @@ interface LayoutProps {
 
 function useIsFlushLayout() {
 	const matches = useMatches();
-	return matches.some((match) => match.staticData?.layoutMode === "flush");
+	return (
+		matches
+			.slice()
+			.reverse()
+			.find((match) => match.staticData?.layoutMode !== undefined)?.staticData
+			?.layoutMode === "flush"
+	);
+}
+
+function useIsSidebarHidden() {
+	const matches = useMatches();
+	return (
+		matches
+			.slice()
+			.reverse()
+			.find((match) => match.staticData?.hideSidebar !== undefined)?.staticData
+			?.hideSidebar ?? false
+	);
 }
 
 export function Layout({ children }: LayoutProps) {
 	const [opened, { toggle, close }] = useDisclosure();
 	const isFlushLayout = useIsFlushLayout();
+	const isSidebarHidden = useIsSidebarHidden();
 
 	return (
 		<AppShell
@@ -32,39 +50,38 @@ export function Layout({ children }: LayoutProps) {
 			header={{
 				height: APP_SHELL_HEADER_HEIGHT,
 			}}
-			navbar={{
-				width: {
-					base: "75%",
-					[APP_SHELL_MOBILE_BREAKPOINT]: APP_SHELL_NAVBAR_WIDTH,
-				},
-				breakpoint: APP_SHELL_MOBILE_BREAKPOINT,
-				collapsed: { mobile: !opened },
-			}}
-			styles={{
-				main: {
-					backgroundColor: "var(--app-bg)",
-				},
-				header: {
-					backgroundColor: "var(--mantine-color-white)",
-					borderBottom: "1px solid var(--color-stone)",
-				},
-			}}
+			navbar={
+				isSidebarHidden
+					? undefined
+					: {
+							width: {
+								base: "75%",
+								[APP_SHELL_MOBILE_BREAKPOINT]: APP_SHELL_NAVBAR_WIDTH,
+							},
+							breakpoint: APP_SHELL_MOBILE_BREAKPOINT,
+							collapsed: { mobile: !opened },
+						}
+			}
 		>
 			<AppShell.Header>
 				<Group h="100%" px="md" gap="sm" wrap="nowrap">
-					<Burger
-						opened={opened}
-						onClick={toggle}
-						hiddenFrom={APP_SHELL_MOBILE_BREAKPOINT}
-						size="md"
-						aria-label={opened ? "Close navigation" : "Open navigation"}
-					/>
+					{!isSidebarHidden && (
+						<Burger
+							opened={opened}
+							onClick={toggle}
+							hiddenFrom={APP_SHELL_MOBILE_BREAKPOINT}
+							size="md"
+							aria-label={opened ? "Close navigation" : "Open navigation"}
+						/>
+					)}
 					<Navbar />
 				</Group>
 			</AppShell.Header>
-			<AppShell.Navbar p={0}>
-				<Sidebar onNavigate={close} />
-			</AppShell.Navbar>
+			{!isSidebarHidden && (
+				<AppShell.Navbar p={0}>
+					<Sidebar onNavigate={close} />
+				</AppShell.Navbar>
+			)}
 
 			<AppShell.Main className="flex flex-col min-h-dvh">
 				{isFlushLayout ? (
@@ -82,12 +99,7 @@ export function Layout({ children }: LayoutProps) {
 						{children}
 					</Container>
 				)}
-				<Box
-					component="footer"
-					py="xl"
-					bg="var(--app-bg)"
-					className="border-t border-stone"
-				>
+				<Box component="footer" py="xl" className="border-t">
 					<Container maw={APP_CONTENT_MAX_WIDTH} w="100%" px="md">
 						<AppFooter />
 					</Container>

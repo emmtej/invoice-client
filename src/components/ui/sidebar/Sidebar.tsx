@@ -4,8 +4,6 @@ import { MENU } from "@/config/menu";
 import { useUserStore } from "@/features/user/store/userStore";
 import { LinksGroup } from "./NavLinksGroup";
 import { UserButton } from "./UserButton";
-import { StaggeredList } from "../motion/StaggeredList";
-import { MagneticWrapper } from "../motion/MagneticWrapper";
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 	const user = useUserStore((store) => store.user);
@@ -28,23 +26,14 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 	));
 
 	return (
-		<Box
-			bg="white"
-			h="100%"
-			w="100%"
-			px="xl"
-			py="md"
-			className="flex flex-col border-r border-slate-200/50 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.02)]"
-		>
+		<Box bg="white" h="100%" w="100%" px="xl" py="md" className="flex flex-col border-r">
 			<ScrollArea flex={1} className="py-4">
-				<StaggeredList stagger={0.08}>{links}</StaggeredList>
+				{links}
 			</ScrollArea>
 
 			{user && (
-				<Box pt="md" className="border-t border-slate-100/80">
-					<MagneticWrapper strength={15}>
-						<UserButton user={user} />
-					</MagneticWrapper>
+				<Box pt="md" className="border-t">
+					<UserButton user={user} />
 				</Box>
 			)}
 		</Box>

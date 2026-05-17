@@ -17,15 +17,15 @@ export function EmptyState({
 	return (
 		<Paper py="xl" px="md" bg="transparent">
 			<Stack gap="md" align="center">
-				<Box p="sm" bg="color-mix(in srgb, var(--mantine-color-forest-9) 3%, transparent)" c="brand-dark.3">
+				<Box p="sm" bg="gray.0" c="dimmed">
 					{icon}
 				</Box>
 				<Stack gap={4} ta="center">
-					<Text fw={600} size="sm" c="brand-dark.6">
+					<Text fw={600} size="sm">
 						{title}
 					</Text>
 					{description && (
-						<Text size="xs" c="brand-dark.4" maw={maxDescriptionWidth}>
+						<Text size="xs" c="dimmed" maw={maxDescriptionWidth}>
 							{description}
 						</Text>
 					)}

@@ -29,11 +29,7 @@ export function Navbar() {
 				px="sm"
 				fz="sm"
 				fw={600}
-				className={`rounded-md transition-colors duration-200 ${
-					isActive
-						? "text-wave-800 bg-wave-50"
-						: "text-brand-dark-500 hover:bg-brand-dark-50 hover:text-brand-dark-700"
-				}`}
+				className={`rounded-md transition-colors duration-200 ${ isActive ? "bg-blue-0 text-blue-8" : "hover:bg-gray-0" }`}
 			>
 				{link.label}
 			</UnstyledButton>
@@ -53,18 +49,12 @@ export function Navbar() {
 				to="/"
 				className="flex items-center no-underline text-inherit"
 			>
-				<Title
-					order={3}
-					c="forest.9"
-					className="flex items-baseline leading-none"
-				>
+				<Title order={3} className="flex items-baseline leading-none">
 					<span className="font-black tracking-tighter">In</span>
-					<span
-						className="italic font-black text-wave-800 text-[1.4em] -mx-[0.04em] relative top-[0.02em] z-[1]"
-					>
+					<span className="italic font-black text-[1.4em] -mx-[0.04em] relative top-[0.02em] z-[1]">
 						V
 					</span>
-					<span className="font-normal tracking-widest text-brand-dark-400 text-[0.85em] font-sans">
+					<span className="font-normal tracking-widest text-[0.85em] font-sans">
 						oice
 					</span>
 				</Title>

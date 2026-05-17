@@ -5,18 +5,9 @@ interface SurfaceCardProps extends PaperProps {
 	children: ReactNode;
 }
 
-export function SurfaceCard({
-	children,
-	className,
-	...rest
-}: SurfaceCardProps) {
+export function SurfaceCard({ children, ...rest }: SurfaceCardProps) {
 	return (
-		<Paper
-			p="xl"
-			radius="3xl"
-			className={`transition-all duration-150 ${className ?? ""}`}
-			{...rest}
-		>
+		<Paper p="xl" {...rest}>
 			{children}
 		</Paper>
 	);

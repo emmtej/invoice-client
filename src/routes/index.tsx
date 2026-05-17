@@ -5,5 +5,6 @@ export const Route = createFileRoute("/")({
 	component: HomeView,
 	staticData: {
 		layoutMode: "flush",
+		hideSidebar: true,
 	},
 });

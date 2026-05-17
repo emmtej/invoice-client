@@ -35,7 +35,7 @@ export function DocxUploadDropzone({
 			disabled={disabled}
 			radius="md"
 			variant="light"
-			acceptColor="wave"
+			acceptColor="blue"
 			rejectColor="red"
 			style={{ width: "100%" }}
 		>
@@ -51,10 +51,10 @@ export function DocxUploadDropzone({
 			>
 				<Dropzone.Accept>
 					<Group gap="sm" wrap="nowrap">
-						<ThemeIcon variant="light" color="wave" size="lg" radius="md">
+						<ThemeIcon variant="light" color="blue" size="lg" radius="md">
 							<FileUp size={iconSize} strokeWidth={2} />
 						</ThemeIcon>
-						<Text size="sm" fw={600} c="wave.8">
+						<Text size="sm" fw={600} c="blue">
 							Drop to upload
 						</Text>
 					</Group>
@@ -66,17 +66,17 @@ export function DocxUploadDropzone({
 				</Dropzone.Reject>
 				<Dropzone.Idle>
 					<Group gap="sm" wrap="nowrap" align="center">
-						<ThemeIcon variant="light" color="wave" size="lg" radius="md">
+						<ThemeIcon variant="light" color="blue" size="lg" radius="md">
 							<FileUp size={iconSize} strokeWidth={2} />
 						</ThemeIcon>
 						<Stack gap={2}>
-							<Text size="sm" fw={600} c="brand-dark.7">
+							<Text size="sm" fw={600} >
 								{isCompact
 									? "Drop Word documents here or click to browse"
 									: "Drop Word documents here"}
 							</Text>
 							{!isCompact && (
-								<Text size="xs" c="brand-dark.4">
+								<Text size="xs" c="dimmed">
 									.docx only — or click to choose files
 								</Text>
 							)}

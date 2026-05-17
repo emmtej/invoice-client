@@ -29,11 +29,11 @@ export function PresetManager<T>({
 					<Text fw={700} size="lg">
 						{title}
 					</Text>
-					<Text size="sm" c="brand-dark.5">
+					<Text size="sm" c="dimmed">
 						{description}
 					</Text>
 				</Box>
-				<Button leftSection={<Plus size={16} />} color="studio" onClick={onAdd}>
+				<Button leftSection={<Plus size={16} />} color="blue" onClick={onAdd}>
 					{addLabel}
 				</Button>
 			</Group>
@@ -43,12 +43,12 @@ export function PresetManager<T>({
 			) : (
 				<SurfaceCard p="xl">
 					<Stack align="center" gap="xs">
-						<Text c="brand-dark.5" fs="italic">
+						<Text c="dimmed" fs="italic">
 							{emptyMessage}
 						</Text>
 						<Button
 							variant="subtle"
-							color="studio"
+							color="blue"
 							onClick={onAdd}
 							leftSection={<Plus size={16} />}
 						>

@@ -9,6 +9,7 @@ declare module "@tanstack/react-router" {
 
 	interface StaticDataRouteOption {
 		layoutMode?: AppLayoutMode;
+		hideSidebar?: boolean;
 	}
 }
 

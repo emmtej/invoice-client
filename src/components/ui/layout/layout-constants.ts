@@ -8,4 +8,7 @@ export const APP_SHELL_MOBILE_BREAKPOINT = "md";
  */
 export const APP_CONTENT_MAX_WIDTH = 1400;
 
+/** Shared horizontal inset for flush marketing pages (matches app shell `px="md"`). */
+export const APP_CONTENT_INSET_X = "mx-auto w-full max-w-[1400px] px-4 md:px-6";
+
 export type AppLayoutMode = "default" | "flush";

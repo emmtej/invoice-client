@@ -10,7 +10,6 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { initDb } from "@/features/storage/pgliteClient";
-import { MagneticWrapper } from "../motion/MagneticWrapper";
 
 function normalizePath(path: string) {
 	return path.replace(/\/$/, "") || "/";
@@ -46,15 +45,13 @@ interface LinksGroupProps {
 
 const linkBase =
 	"block w-full py-2.5 px-3 text-sm font-medium transition-all rounded-xl relative overflow-hidden group";
-const linkActive = "text-wave-800 bg-wave-50/50 shadow-sm font-semibold";
-const linkInactive =
-	"text-brand-dark-500 hover:bg-brand-dark-50/50 hover:text-brand-dark-700 active:scale-[0.98]";
+const linkActive = "text-blue-8 bg-blue-0 font-semibold";
+const linkInactive = "hover:bg-gray-0 active:scale-[0.98]";
 
 const childLinkBase =
 	"block w-full py-2 px-4 ml-6 text-sm transition-all rounded-lg";
-const childLinkActive = "text-wave-700 font-semibold bg-wave-50/30";
-const childLinkInactive =
-	"text-brand-dark-400 hover:text-brand-dark-700 hover:bg-brand-dark-50/50 active:scale-[0.97]";
+const childLinkActive = "text-blue-7 font-semibold bg-blue-0";
+const childLinkInactive = "hover:bg-gray-0 active:scale-[0.97]";
 
 export function LinksGroup({
 	icon: Icon,
@@ -103,12 +100,7 @@ export function LinksGroup({
 	const content = (
 		<Group justify="space-between" gap="xs">
 			<Flex align="center">
-				<ThemeIcon
-					variant="light"
-					size={32}
-					color="wave"
-					className="rounded-lg transition-transform group-hover:scale-110"
-				>
+				<ThemeIcon variant="light" size={32} color="blue" className="rounded-lg">
 					<Icon size={18} />
 				</ThemeIcon>
 				<Box ml="md" className="tracking-tight">
@@ -119,7 +111,7 @@ export function LinksGroup({
 				<ChevronRight
 					strokeWidth={1.5}
 					size={16}
-					className={`transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${opened ? "rotate-90" : ""}`}
+					className={`transition-transform duration-300 ${opened ? "rotate-90" : ""}`}
 				/>
 			)}
 		</Group>
@@ -129,25 +121,23 @@ export function LinksGroup({
 
 	return (
 		<Box mb={4}>
-			<MagneticWrapper strength={12}>
-				{isDirectLink ? (
-					<UnstyledButton
-						component={Link}
-						to={href || ""}
-						onClick={onNavigate}
-						onMouseEnter={() => initDb()}
-						className={controlClasses}
-					>
-						{content}
-					</UnstyledButton>
-				) : (
-					<UnstyledButton onClick={handleToggle} className={controlClasses}>
-						{content}
-					</UnstyledButton>
-				)}
-			</MagneticWrapper>
+			{isDirectLink ? (
+				<UnstyledButton
+					component={Link}
+					to={href || ""}
+					onClick={onNavigate}
+					onMouseEnter={() => initDb()}
+					className={controlClasses}
+				>
+					{content}
+				</UnstyledButton>
+			) : (
+				<UnstyledButton onClick={handleToggle} className={controlClasses}>
+					{content}
+				</UnstyledButton>
+			)}
 			{hasLinks ? (
-				<Collapse in={opened} transitionDuration={400} transitionTimingFunction="cubic-bezier(0.34,1.56,0.64,1)">
+				<Collapse in={opened}>
 					<div className="pt-1">{items}</div>
 				</Collapse>
 			) : null}

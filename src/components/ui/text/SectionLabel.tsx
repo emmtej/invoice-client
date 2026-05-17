@@ -6,20 +6,9 @@ interface SectionLabelProps extends Omit<TextProps, "children"> {
 	letterSpacing?: string | number;
 }
 
-export function SectionLabel({
-	children,
-	letterSpacing = "0.05em",
-	...rest
-}: SectionLabelProps) {
+export function SectionLabel({ children, letterSpacing, ...rest }: SectionLabelProps) {
 	return (
-		<Text
-			size="sm"
-			fw={600}
-			c="brand-dark.5"
-			tt="uppercase"
-			lts={letterSpacing}
-			{...rest}
-		>
+		<Text size="sm" fw={600} lts={letterSpacing} {...rest}>
 			{children}
 		</Text>
 	);

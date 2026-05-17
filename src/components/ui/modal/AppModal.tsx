@@ -8,12 +8,7 @@ interface AppModalProps extends Omit<ModalProps, "title"> {
 export function AppModal({ title, children, ...rest }: AppModalProps) {
 	const titleContent =
 		typeof title === "string" ? (
-			<Text
-				fw={800}
-				size="xl"
-				c="brand-dark.7"
-				className="tracking-tight text-balance"
-			>
+			<Text fw={800} size="xl">
 				{title}
 			</Text>
 		) : (
@@ -21,7 +16,7 @@ export function AppModal({ title, children, ...rest }: AppModalProps) {
 		);
 
 	return (
-		<Modal title={titleContent} radius="3xl" {...rest}>
+		<Modal title={titleContent} {...rest}>
 			{children}
 		</Modal>
 	);
