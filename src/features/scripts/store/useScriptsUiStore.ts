@@ -1,6 +1,6 @@
 import { create } from "zustand";
+import { scriptRepository } from "@/features/storage/repository/scriptRepository";
 import type { Script } from "@/types/Script";
-import { scriptsQueries } from "./scriptsQueries";
 
 interface ScriptsUiState {
 	currentFolderId: string | null;
@@ -45,10 +45,10 @@ export const useScriptsUiStore = create<ScriptsUiStore>()((set, get) => ({
 	selectScript: async (scriptId) => {
 		set({ isPreviewLoading: true });
 		try {
-			const script = await scriptsQueries.getScriptById(scriptId);
+			const script = await scriptRepository.getScriptById(scriptId);
 			set({ selectedScript: script, isPreviewLoading: false });
 			if (script) {
-				void scriptsQueries.touchScript(scriptId);
+				void scriptRepository.touchScript(scriptId);
 			}
 		} catch (error) {
 			console.error("Failed to load script preview:", error);

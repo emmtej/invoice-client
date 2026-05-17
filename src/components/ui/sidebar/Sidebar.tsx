@@ -26,28 +26,13 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 	));
 
 	return (
-		<Box
-			bg="white"
-			h="100%"
-			w="100%"
-			px="xl"
-			py="md"
-			display="flex"
-			style={{
-				flexDirection: "column",
-			}}
-		>
+		<Box bg="white" h="100%" w="100%" px="xl" py="md" className="flex flex-col">
 			<ScrollArea flex={1}>
 				<div>{links}</div>
 			</ScrollArea>
 
 			{user && (
-				<Box
-					pt="md"
-					style={{
-						borderTop: "1px solid var(--mantine-color-gray-3)",
-					}}
-				>
+				<Box pt="md" className="border-t border-sage-200">
 					<UserButton user={user} />
 				</Box>
 			)}

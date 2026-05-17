@@ -25,13 +25,20 @@ export function ActiveSessionHeader() {
 
 	return (
 		<Group justify="space-between" align="center" flex="0 0 auto">
-			<Text fw={900} fz={{ base: 24, md: 32 }} c="gray.8" lh={1.1} ta="left">
+			<Text
+				fw={900}
+				fz={{ base: 24, md: 32 }}
+				c="brand-dark.7"
+				lh={1.1}
+				ta="left"
+			>
 				{script.name}
 			</Text>
 			<Button
 				variant="subtle"
 				color="wave"
 				size="sm"
+				radius="xl"
 				leftSection={<PenSquare size={16} />}
 				onClick={handleOpenScriptEditor}
 			>

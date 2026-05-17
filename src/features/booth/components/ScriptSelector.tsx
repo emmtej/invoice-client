@@ -22,7 +22,7 @@ import {
 	scriptKeys,
 	useRecentScriptsInfinite,
 } from "@/features/scripts/hooks/useScriptsQuery";
-import { scriptsQueries } from "@/features/scripts/store/scriptsQueries";
+import { scriptRepository } from "@/features/storage/repository/scriptRepository";
 import type { Script } from "@/types/Script";
 
 interface ScriptSelectorProps {
@@ -53,7 +53,7 @@ export function ScriptSelector({
 		onSuccess: async (docFiles) => {
 			const processed = await processDocuments(docFiles);
 			if (processed.length > 0) {
-				await scriptsQueries.saveScripts(processed);
+				await scriptRepository.saveScripts(processed);
 				await queryClient.invalidateQueries({ queryKey: scriptKeys.all });
 				if (processed.length === 1) {
 					onSelect(processed[0]);
@@ -70,10 +70,10 @@ export function ScriptSelector({
 	const handleScriptClick = async (id: string) => {
 		setLoadingScriptId(id);
 		try {
-			const script = await scriptsQueries.getScriptById(id);
+			const script = await scriptRepository.getScriptById(id);
 			if (script) {
 				onSelect(script);
-				await scriptsQueries.touchScript(id);
+				await scriptRepository.touchScript(id);
 				await queryClient.invalidateQueries({ queryKey: scriptKeys.all });
 			}
 		} finally {

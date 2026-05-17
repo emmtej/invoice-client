@@ -53,7 +53,7 @@ export function ScriptSelectionPanel({
 	return (
 		<Stack gap="lg">
 			<Group justify="space-between" align="center">
-				<Text fw={700} size="sm" c="gray.7" tt="uppercase" lts={0.5}>
+				<Text fw={700} size="sm" c="brand-dark.4" tt="uppercase" lts={0.5}>
 					{status === "selecting" ? "Selected Script" : "Start New Session"}
 				</Text>
 				{status === "selecting" && (
@@ -61,6 +61,7 @@ export function ScriptSelectionPanel({
 						variant="subtle"
 						color="gray"
 						size="xs"
+						radius="xl"
 						onClick={resetSession}
 						fw={700}
 					>
@@ -81,14 +82,12 @@ export function ScriptSelectionPanel({
 				<Stack gap="xl">
 					<SurfaceCard
 						p={0}
-						style={{
-							border: "1px solid var(--mantine-color-gray-1)",
-							backgroundColor: "white",
-						}}
-						className="shadow-md"
+						radius="3xl"
+						withBorder
+						className="border-gray-100 bg-white shadow-sm overflow-hidden"
 					>
 						<Stack gap={0}>
-							<Box p="xl" bg="gray.0">
+							<Box p="xl" className="bg-gray-50 border-b border-gray-100">
 								<Group wrap="nowrap" align="center" gap="xl">
 									<ThemeIcon
 										size={56}
@@ -98,11 +97,17 @@ export function ScriptSelectionPanel({
 									>
 										<FileText size={30} />
 									</ThemeIcon>
-									<Box flex={1}>
-										<Text fw={800} size="24px" c="gray.9" lh={1.1} lts={-0.5}>
+									<Box className="flex-1">
+										<Text
+											fw={800}
+											size="24px"
+											c="brand-dark.7"
+											lh={1.1}
+											lts={-0.5}
+										>
 											{script.name}
 										</Text>
-										<Text size="sm" c="gray.7" mt={6} fw={500}>
+										<Text size="sm" c="brand-dark.3" mt={6} fw={500}>
 											Imported on{" "}
 											{new Date(script.createdAt).toLocaleDateString()}
 										</Text>
@@ -110,9 +115,9 @@ export function ScriptSelectionPanel({
 									<Button
 										color="wave"
 										size="lg"
-										radius="md"
+										radius="xl"
 										onClick={() => useBoothStore.getState().startSession()}
-										className="shadow-md px-10"
+										className="shadow-sm px-10 transition-transform active:scale-95"
 										fw={800}
 									>
 										Start Session
@@ -136,11 +141,12 @@ export function ScriptSelectionPanel({
 											w={140}
 											size="md"
 											fw={700}
+											radius="md"
 										/>
 										<Box>
 											<Text
 												size="xs"
-												c="gray.7"
+												c="brand-dark.4"
 												fw={700}
 												tt="uppercase"
 												lts={1}
@@ -158,7 +164,7 @@ export function ScriptSelectionPanel({
 										</Box>
 									</Group>
 
-									<Divider color="gray.1" />
+									<Divider className="border-gray-50" />
 
 									<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing={32}>
 										<Group gap="md">
@@ -173,14 +179,14 @@ export function ScriptSelectionPanel({
 											<Box>
 												<Text
 													size="xs"
-													c="gray.7"
+													c="brand-dark.4"
 													fw={700}
 													tt="uppercase"
 													lts={1}
 												>
 													Word Count
 												</Text>
-												<Text fw={800} size="xl" c="gray.9">
+												<Text fw={800} size="xl" c="brand-dark.7">
 													{totalWords.toLocaleString()}
 												</Text>
 											</Box>
@@ -198,14 +204,14 @@ export function ScriptSelectionPanel({
 											<Box>
 												<Text
 													size="xs"
-													c="gray.7"
+													c="brand-dark.4"
 													fw={700}
 													tt="uppercase"
 													lts={1}
 												>
 													Billable Lines
 												</Text>
-												<Text fw={800} size="xl" c="gray.9">
+												<Text fw={800} size="xl" c="brand-dark.7">
 													{billableLines.toLocaleString()}
 												</Text>
 											</Box>
@@ -227,7 +233,7 @@ export function ScriptSelectionPanel({
 											<Box>
 												<Text
 													size="xs"
-													c="gray.7"
+													c="brand-dark.4"
 													fw={700}
 													tt="uppercase"
 													lts={1}
@@ -257,6 +263,7 @@ export function ScriptSelectionPanel({
 										variant="light"
 										title="Parsing Issues Detected"
 										radius="md"
+										className="border border-orange-100"
 										styles={{
 											title: { fontWeight: 800 },
 										}}

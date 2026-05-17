@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { boothQueries } from "../store/boothQueries";
+import { boothRepository } from "@/features/storage/repository/boothRepository";
 import { useBoothStore } from "../store/useBoothStore";
 import { useBoothKeyboard } from "./useBoothKeyboard";
 import { useTimer } from "./useTimer";
@@ -13,7 +13,7 @@ export function useBoothInitialization() {
 
 	// Load initial sessions
 	useEffect(() => {
-		loadSessions();
+		void loadSessions();
 	}, [loadSessions]);
 
 	// Handle browser close/refresh for active sessions
@@ -37,7 +37,7 @@ export function useBoothInitialization() {
 		// On mount, check if there was an abandoned session
 		const abandonedId = localStorage.getItem("booth-abandoned-session");
 		if (abandonedId) {
-			void boothQueries.abandonSession(abandonedId).then(() => {
+			void boothRepository.abandonSession(abandonedId).then(() => {
 				localStorage.removeItem("booth-abandoned-session");
 				void loadSessions();
 			});

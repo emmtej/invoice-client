@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { reparseHtmlToScript } from "@/features/editor/utils/documentParser";
+import { scriptRepository } from "@/features/storage/repository/scriptRepository";
 import type { Script, ScriptMetadata } from "@/types/Script";
-import { pgliteStore } from "./pgliteStore";
 
 interface ScriptStoreState {
 	scripts: ScriptMetadata[];
@@ -48,8 +48,8 @@ export const useScriptStore = create<ScriptStore>((set, get) => ({
 	init: async () => {
 		set({ isLoading: true });
 		try {
-			await pgliteStore.cleanExpiredDrafts();
-			const drafts = await pgliteStore.getAllDraftScripts();
+			await scriptRepository.cleanExpiredDrafts();
+			const drafts = await scriptRepository.getAllDrafts();
 			set({
 				scripts: drafts,
 				isLoading: false,
@@ -57,7 +57,7 @@ export const useScriptStore = create<ScriptStore>((set, get) => ({
 
 			const { activeScriptId } = get();
 			if (activeScriptId) {
-				const script = await pgliteStore.getScriptFull(activeScriptId);
+				const script = await scriptRepository.getScriptById(activeScriptId);
 				if (script) {
 					set({ activeScript: script });
 				} else {
@@ -78,7 +78,9 @@ export const useScriptStore = create<ScriptStore>((set, get) => ({
 		if (uniqueNewScripts.length === 0) return;
 
 		try {
-			await pgliteStore.saveDraftScripts(uniqueNewScripts);
+			for (const s of uniqueNewScripts) {
+				await scriptRepository.saveDraft(s);
+			}
 			const newMetadata: ScriptMetadata[] = uniqueNewScripts.map((s) => ({
 				id: s.id,
 				name: s.name,
@@ -97,7 +99,7 @@ export const useScriptStore = create<ScriptStore>((set, get) => ({
 	loadScript: async (id) => {
 		set({ activeScriptId: id, isLoading: true });
 		try {
-			const script = await pgliteStore.getScriptFull(id);
+			const script = await scriptRepository.getScriptById(id);
 			set({ activeScript: script, isLoading: false });
 		} catch (error) {
 			console.error("Failed to load script:", error);
@@ -123,7 +125,7 @@ export const useScriptStore = create<ScriptStore>((set, get) => ({
 
 	removeScript: async (id) => {
 		try {
-			await pgliteStore.deleteDraftScripts([id]);
+			await scriptRepository.deleteDrafts([id]);
 			set((state) => ({
 				scripts: state.scripts.filter((s) => s.id !== id),
 				activeScriptId:
@@ -139,7 +141,7 @@ export const useScriptStore = create<ScriptStore>((set, get) => ({
 
 	removeScripts: async (ids) => {
 		try {
-			await pgliteStore.deleteDraftScripts(ids);
+			await scriptRepository.deleteDrafts(ids);
 			const idSet = new Set(ids);
 			set((state) => ({
 				scripts: state.scripts.filter((s) => !idSet.has(s.id)),
@@ -164,7 +166,7 @@ export const useScriptStore = create<ScriptStore>((set, get) => ({
 	promoteScriptsToLibrary: async (ids, folderId) => {
 		set({ isLoading: true });
 		try {
-			await pgliteStore.promoteDraftsToScripts(ids, folderId);
+			await scriptRepository.promoteDrafts(ids, folderId);
 			const idSet = new Set(ids);
 			set((state) => ({
 				scripts: state.scripts.filter((s) => !idSet.has(s.id)),
@@ -201,7 +203,7 @@ export const useScriptStore = create<ScriptStore>((set, get) => ({
 		if (!activeScript) return;
 
 		try {
-			await pgliteStore.saveDraftScript(activeScript);
+			await scriptRepository.saveDraft(activeScript);
 		} catch (error) {
 			console.error("Failed to save active script:", error);
 		}
@@ -228,7 +230,10 @@ export const useScriptStore = create<ScriptStore>((set, get) => ({
 		set({ activeScript: updatedScript });
 
 		if (save) {
-			await pgliteStore.saveDraftScript(updatedScript);
+			await scriptRepository.saveDraft(updatedScript);
 		}
 	},
 }));
+
+// Backward compatibility or named export if needed
+export const scriptEditorStore = useScriptStore;

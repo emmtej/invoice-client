@@ -15,13 +15,13 @@ function StatCard({
 	value: string;
 }) {
 	return (
-		<SurfaceCard>
+		<SurfaceCard radius="3xl" withBorder className="border-gray-50 shadow-sm">
 			<Stack gap={4} align="center">
 				{icon}
-				<Text size="xs" c="gray.5" fw={500}>
+				<Text size="xs" c="brand-dark.3" fw={500} tt="uppercase" lts={1}>
 					{label}
 				</Text>
-				<Text fw={700} size="lg" c="gray.8">
+				<Text fw={800} size="xl" c="brand-dark.7">
 					{value}
 				</Text>
 			</Stack>
@@ -49,41 +49,46 @@ export function SessionSummary() {
 			: 0;
 
 	return (
-		<Stack gap="lg" py="md">
-			<Text fw={800} size="xl" c="gray.8" ta="center">
-				Session Complete
-			</Text>
-
-			{script && (
-				<Text size="sm" c="gray.5" ta="center">
-					{script.name}
+		<Stack gap="xl" py="md">
+			<Stack gap={4}>
+				<Text fw={900} size="28px" c="brand-dark.7" ta="center">
+					Session Complete
 				</Text>
-			)}
+
+				{script && (
+					<Text size="sm" c="brand-dark.3" ta="center" fw={500}>
+						{script.name}
+					</Text>
+				)}
+			</Stack>
 
 			<SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
 				<StatCard
-					icon={<Clock size={20} color="var(--mantine-color-wave-5)" />}
+					icon={<Clock size={20} className="text-wave-500" />}
 					label="Total Time"
 					value={formatTime(elapsedMs)}
 				/>
 				<StatCard
-					icon={<Hash size={20} color="var(--mantine-color-wave-5)" />}
+					icon={<Hash size={20} className="text-wave-500" />}
 					label="Lines Read"
 					value={totalLines.toString()}
 				/>
 				<StatCard
-					icon={<Timer size={20} color="var(--mantine-color-wave-5)" />}
+					icon={<Timer size={20} className="text-wave-500" />}
 					label="Avg per Line"
 					value={formatTime(avgMs)}
 				/>
 			</SimpleGrid>
 
-			<Group justify="center">
+			<Group justify="center" mt="xl">
 				<Button
 					variant="light"
 					color="wave"
+					radius="xl"
+					size="md"
 					leftSection={<ArrowLeft size={16} />}
 					onClick={resetSession}
+					className="px-8 shadow-sm transition-transform active:scale-95"
 				>
 					Back to Scripts
 				</Button>

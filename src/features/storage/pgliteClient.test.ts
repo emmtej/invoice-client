@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockCreate } = vi.hoisted(() => ({
+const { mockCreate, mockRunMigrations } = vi.hoisted(() => ({
 	mockCreate: vi.fn(),
+	mockRunMigrations: vi.fn().mockResolvedValue(undefined),
 }));
 
 vi.mock("@electric-sql/pglite", () => ({
@@ -9,18 +10,20 @@ vi.mock("@electric-sql/pglite", () => ({
 }));
 
 vi.mock("./runMigrations", () => ({
-	runMigrations: vi.fn().mockResolvedValue(undefined),
+	runMigrations: mockRunMigrations,
 }));
 
 import { getDb, getDrizzleDb, initDb, resetDb } from "./pgliteClient";
+import { usePgliteStore } from "./store/usePgliteStore";
 
 describe("pgliteClient", () => {
 	beforeEach(() => {
 		resetDb();
 		vi.clearAllMocks();
+		usePgliteStore.getState().setStatus("initializing");
 	});
 
-	it("initDb returns a PGlite instance", async () => {
+	it("initDb returns a PGlite instance and runs migrations", async () => {
 		const fakeDb = { query: vi.fn(), exec: vi.fn().mockResolvedValue({}) };
 		mockCreate.mockResolvedValue(fakeDb);
 
@@ -30,6 +33,15 @@ describe("pgliteClient", () => {
 		expect(mockCreate).toHaveBeenCalledWith({
 			dataDir: "idb://invoice-editor-db",
 		});
+		expect(mockRunMigrations).toHaveBeenCalledTimes(1);
+		expect(usePgliteStore.getState().status).toBe("ready");
+	});
+
+	it("initDb sets error status on failure", async () => {
+		mockCreate.mockRejectedValue(new Error("Init failed"));
+
+		await expect(initDb()).rejects.toThrow("Init failed");
+		expect(usePgliteStore.getState().status).toBe("error");
 	});
 
 	it("subsequent initDb calls return the same instance without re-creating", async () => {

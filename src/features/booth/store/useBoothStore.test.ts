@@ -3,9 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 import type { Script } from "@/types/Script";
 import { useBoothStore } from "./useBoothStore";
 
-vi.mock("./boothQueries", () => ({
-	boothQueries: {
-		init: vi.fn().mockResolvedValue(undefined),
+vi.mock("@/features/storage/repository/boothRepository", () => ({
+	boothRepository: {
 		createSession: vi.fn().mockResolvedValue(undefined),
 		updateSession: vi.fn().mockResolvedValue(undefined),
 		completeSession: vi.fn().mockResolvedValue(undefined),
@@ -15,10 +14,11 @@ vi.mock("./boothQueries", () => ({
 	},
 }));
 
-vi.mock("@/features/scripts/store/scriptsQueries", () => ({
-	scriptsQueries: {
+vi.mock("@/features/storage/repository/scriptRepository", () => ({
+	scriptRepository: {
 		getScriptById: vi.fn().mockResolvedValue(null),
 		touchScript: vi.fn().mockResolvedValue(undefined),
+		saveScript: vi.fn().mockResolvedValue(undefined),
 	},
 }));
 

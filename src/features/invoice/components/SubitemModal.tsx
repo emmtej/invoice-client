@@ -1,25 +1,13 @@
-import {
-	Button,
-	Checkbox,
-	Group,
-	MultiSelect,
-	NumberInput,
-	SegmentedControl,
-	Select,
-	Stack,
-	Tabs,
-	Text,
-	TextInput,
-} from "@mantine/core";
-import { FileUp, Library } from "lucide-react";
+import { Button, Group, Select, Stack } from "@mantine/core";
 import { useMemo, useState } from "react";
-import { DocxUploadButton } from "@/components/ui/button/DocxUploadButton";
 import { AppModal } from "@/components/ui/modal/AppModal";
 import { useFileUpload } from "@/features/editor/hooks/useFileUpload";
 import { processDocuments } from "@/features/editor/utils/documentParser";
 import { useAllScripts } from "@/features/scripts/hooks/useScriptsQuery";
 import { useSubitemPresets } from "../presets/useSubitemPresets";
 import { type ScriptForInvoice, useInvoiceStore } from "../store/invoiceStore";
+import { SubitemBillingForm } from "./SubitemBillingForm";
+import { SubitemSourceSelector } from "./SubitemSourceSelector";
 
 interface SubitemModalProps {
 	opened: boolean;
@@ -52,11 +40,13 @@ export function SubitemModal({
 	// Scripts from library
 	const { data: scriptsData } = useAllScripts();
 	const libraryScripts = useMemo(() => {
-		return (scriptsData ?? []).map((s) => ({
-			id: s.id,
-			name: s.name,
-			overview: { wordCount: s.wordCount },
-		}));
+		return (scriptsData ?? []).map(
+			(s: { id: string; name: string; wordCount: number }) => ({
+				id: s.id,
+				name: s.name,
+				overview: { wordCount: s.wordCount },
+			}),
+		);
 	}, [scriptsData]);
 
 	const [selectedLibraryScriptIds, setSelectedLibraryScriptIds] = useState<
@@ -97,16 +87,18 @@ export function SubitemModal({
 	// Calculate total word count of selected/uploaded scripts
 	const currentScripts =
 		activeTab === "library"
-			? libraryScripts.filter((s) => selectedLibraryScriptIds.includes(s.id))
+			? libraryScripts.filter((s: ScriptForInvoice) =>
+					selectedLibraryScriptIds.includes(s.id),
+				)
 			: uploadedScripts;
 
 	const totalWordCount = currentScripts.reduce(
-		(sum, s) => sum + s.overview.wordCount,
+		(sum: number, s: ScriptForInvoice) => sum + s.overview.wordCount,
 		0,
 	);
 
 	const handleAdd = () => {
-		const scriptIds = currentScripts.map((s) => s.id);
+		const scriptIds = currentScripts.map((s: ScriptForInvoice) => s.id);
 
 		let finalRate = rate;
 		let finalPerWords = perWords;
@@ -149,7 +141,6 @@ export function SubitemModal({
 			size="md"
 		>
 			<Stack gap="md">
-				{/* Top Section: Presets */}
 				<Select
 					label="Quick Presets"
 					placeholder="Select a billing preset"
@@ -160,118 +151,30 @@ export function SubitemModal({
 					clearable
 				/>
 
-				{/* Middle Section: Source Selection */}
-				<Tabs
-					value={activeTab}
-					onChange={(val) => setActiveTab(val as "upload" | "library")}
-					color="studio"
-				>
-					<Tabs.List grow>
-						<Tabs.Tab value="upload" leftSection={<FileUp size={16} />}>
-							Upload New
-						</Tabs.Tab>
-						<Tabs.Tab value="library" leftSection={<Library size={16} />}>
-							Select from Library
-						</Tabs.Tab>
-					</Tabs.List>
+				<SubitemSourceSelector
+					activeTab={activeTab}
+					onTabChange={setActiveTab}
+					onFileUpload={handleFileChange}
+					uploadedScripts={uploadedScripts}
+					libraryScripts={libraryScripts}
+					selectedLibraryScriptIds={selectedLibraryScriptIds}
+					onLibrarySelectionChange={setSelectedLibraryScriptIds}
+				/>
 
-					<Tabs.Panel value="upload" pt="md">
-						<Stack gap="sm">
-							<DocxUploadButton onChange={handleFileChange} multiple>
-								Upload Script(s)
-							</DocxUploadButton>
-							{uploadedScripts.length > 0 && (
-								<Stack gap={4}>
-									<Text size="xs" fw={700} c="dimmed">
-										UPLOADED DOCUMENTS:
-									</Text>
-									{uploadedScripts.map((s) => (
-										<Text key={s.id} size="sm">
-											• {s.name} ({s.overview.wordCount} words)
-										</Text>
-									))}
-								</Stack>
-							)}
-						</Stack>
-					</Tabs.Panel>
-
-					<Tabs.Panel value="library" pt="md">
-						<MultiSelect
-							label="Library Scripts"
-							placeholder="Search and select scripts"
-							data={libraryScripts.map((s) => ({
-								value: s.id,
-								label: `${s.name} (${s.overview.wordCount} words)`,
-							}))}
-							value={selectedLibraryScriptIds}
-							onChange={setSelectedLibraryScriptIds}
-							searchable
-							clearable
-							nothingFoundMessage="No scripts found"
-						/>
-					</Tabs.Panel>
-				</Tabs>
-
-				{/* Bottom Section: Billing Configuration */}
-				<Stack gap="sm" mt="md">
-					<TextInput
-						label="Sub-item Label"
-						placeholder="e.g. Translation, Pickup, etc."
-						value={subitemLabel}
-						onChange={(e) => setSubitemLabel(e.currentTarget.value)}
-						required
-					/>
-
-					<SegmentedControl
-						value={billingType}
-						onChange={(val) =>
-							setBillingType(val as "word-count" | "fixed-rate")
-						}
-						color="studio"
-						data={[
-							{ label: "Word Count", value: "word-count" },
-							{ label: "Fixed Rate", value: "fixed-rate" },
-						]}
-					/>
-
-					{billingType === "word-count" ? (
-						<Group grow>
-							<NumberInput
-								label="Rate ($)"
-								placeholder="0.10"
-								value={rate}
-								onChange={(v) => setRate(Number(v))}
-								decimalScale={4}
-								fixedDecimalScale
-								prefix="$"
-							/>
-							<NumberInput
-								label="per [X] words"
-								placeholder="1"
-								value={perWords}
-								onChange={(v) => setPerWords(Number(v))}
-								min={1}
-							/>
-						</Group>
-					) : (
-						<NumberInput
-							label="Total Amount ($)"
-							placeholder="50.00"
-							value={fixedAmount}
-							onChange={(v) => setFixedAmount(Number(v))}
-							decimalScale={2}
-							fixedDecimalScale
-							prefix="$"
-						/>
-					)}
-
-					<Checkbox
-						label="Save as Preset"
-						checked={saveAsPreset}
-						onChange={(e) => setSaveAsPreset(e.currentTarget.checked)}
-						color="studio"
-					/>
-				</Stack>
+				<SubitemBillingForm
+					subitemLabel={subitemLabel}
+					onLabelChange={setSubitemLabel}
+					billingType={billingType}
+					onBillingTypeChange={setBillingType}
+					rate={rate}
+					onRateChange={setRate}
+					perWords={perWords}
+					onPerWordsChange={setPerWords}
+					fixedAmount={fixedAmount}
+					onFixedAmountChange={setFixedAmount}
+					saveAsPreset={saveAsPreset}
+					onSaveAsPresetChange={setSaveAsPreset}
+				/>
 
 				<Group justify="flex-end" mt="xl">
 					<Button variant="subtle" color="gray" onClick={onClose}>

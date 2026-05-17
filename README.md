@@ -21,42 +21,66 @@ A modern web application for voiceover professionals to manage scripts and gener
 
 The project follows a feature-based directory structure within `src/features/`:
 
-*   `auth/`: Authentication logic, providers, and login/register components.
-*   `editor/`: Script parsing and rich text editing components/hooks.
-*   `invoice/`: Invoice generation, item management, and summary components.
-*   `ui/`: Shared, generic UI components (layouts, navbars, sidebars).
+*   **`auth/`**: Authentication logic, providers, and login/register components.
+*   **`booth/`**: Voiceover booth session management, teleprompter, and recording settings.
+*   **`editor/`**: Script parsing, folder management, and rich text editing components/hooks.
+*   **`home/`**: Public landing page and marketing components.
+*   **`invoice/`**: Invoice generation, item management, and summary components.
+*   **`scripts/`**: Script management, file list, and parsing utilities.
+*   **`storage/`**: PGLite/Drizzle database client, schema, and repository layer.
+*   **`user/`**: Dashboard and user profile management.
 
-Global state is managed via Zustand stores found in `src/store/` (e.g., `userStore`) or within specific feature directories (e.g., `invoiceStore`).
+Shared, generic UI components are located in **`src/components/ui/`** (layouts, navbars, sidebars, modals).
+
+State management is decentralized into **per-feature stores** (e.g., `src/features/user/store/userStore.ts`). 
+
+Routing is file-based using TanStack Router, located in **`src/routes/`**. The `src/routeTree.gen.ts` file is automatically generated.
 
 ## Data Privacy & Storage
 
 This application is designed to be **local-first** and privacy-preserving:
 *   **No Server Database:** All user data, including uploaded scripts, parsed content, and invoice profiles, are stored locally on your device.
-*   **Storage Mechanisms:** We use PGLite (Postgres-in-WASM) via IndexedDB for script storage, and `localStorage` for profile/auth persistence.
-*   **Retention:** Data persists as long as your browser keeps the local storage data. You can manually clear this data through your browser settings or by using the app's reset options.
+*   **Local Persistence Map:**
+
+| Data | Mechanism | Path |
+|------|-----------|------|
+| Scripts, folders, contents, drafts, booth sessions | PGLite (IndexedDB `idb://invoice-editor-db`) | `src/features/storage/` |
+| User session / profile | Zustand `persist` → `localStorage` | `src/features/user/store/userStore.ts` |
+| Invoice workspace | Zustand `persist` → `localStorage` | `src/features/invoice/store/invoiceStore.ts` |
+| Invoice presets | Zustand `persist` → `localStorage` | `src/features/invoice/store/invoicePresetsStore.ts` |
+| Booth settings | Zustand `persist` → `localStorage` | `src/features/booth/store/useBoothSettingsStore.ts` |
+
+*   **Retention:** Data persists as long as your browser keeps the local storage/IndexedDB data. You can manually clear this data through your browser settings or by using the app's reset options.
 *   **Note:** Because data stays local, clearing browser data or using incognito mode means your data will not be saved across sessions. Please export any important invoices or scripts manually.
 
 ## Building and Running
 
 ### Prerequisites
 *   Node.js (latest LTS recommended)
-*   npm
+*   **pnpm** (standardized package manager)
 
 ### Environment Setup
-Create a `.env.local` file in the root directory based on `.env.example`. A `CLIENT_PORT` is required to run the development server.
+Create a `.env.local` file in the root directory based on `.env.example`.
 ```bash
 cp .env.example .env.local
 ```
+Key variables:
+*   `CLIENT_PORT`: Required for the development server.
+*   `VITE_DEMO_MODE=true`: Enables local login/register bypass (matches CI).
 
 ### Commands
-*   **Install dependencies:** `npm install`
-*   **Start development server:** `npm run dev`
-*   **Build for production:** `npm run build`
-*   **Run tests:** `npm run test`
+*   **Install dependencies:** `pnpm install`
+*   **Start development server:** `pnpm run dev`
+*   **Build for production:** `pnpm run build`
+*   **Preview production build:** `pnpm run preview`
+*   **Analyze bundle size:** `pnpm run analyze`
+*   **Run tests:** `pnpm run test`
+*   **Type check:** `pnpm run typecheck`
 *   **Linting & Formatting:**
-    *   `npm run lint`: Run Biome linter.
-    *   `npm run format`: Run Biome formatter.
-    *   `npm run check`: Run both linting and formatting checks.
+    *   `pnpm run lint`: Run Biome linter.
+    *   `pnpm run format`: Run Biome formatter.
+    *   `pnpm run check`: Run both linting and formatting checks.
+*   **Setup:** `pnpm run prepare` (installs husky hooks)
 
 ### Running with Docker
 

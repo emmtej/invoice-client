@@ -16,22 +16,14 @@ export interface BoothSession {
 	completedAt: string | null;
 }
 
-async function initBoothSchema(): Promise<void> {
-	await initDb();
-}
-
-export const boothQueries = {
-	async init(): Promise<void> {
-		await initBoothSchema();
-	},
-
+export const boothRepository = {
 	async createSession(
 		session: Pick<
 			BoothSession,
 			"id" | "scriptId" | "scriptName" | "totalLines"
 		>,
 	): Promise<void> {
-		await initBoothSchema();
+		await initDb();
 		const db = await getDrizzleDb();
 		await db.insert(boothSessions).values({
 			id: session.id,
@@ -51,7 +43,7 @@ export const boothQueries = {
 			lineTimings: LineTimingEntry[];
 		},
 	): Promise<void> {
-		await initBoothSchema();
+		await initDb();
 		const db = await getDrizzleDb();
 		await db
 			.update(boothSessions)
@@ -71,7 +63,7 @@ export const boothQueries = {
 			lineTimings: LineTimingEntry[];
 		},
 	): Promise<void> {
-		await initBoothSchema();
+		await initDb();
 		const db = await getDrizzleDb();
 		await db
 			.update(boothSessions)
@@ -86,7 +78,7 @@ export const boothQueries = {
 	},
 
 	async abandonSession(id: string): Promise<void> {
-		await initBoothSchema();
+		await initDb();
 		const db = await getDrizzleDb();
 		await db
 			.update(boothSessions)
@@ -98,7 +90,7 @@ export const boothQueries = {
 	},
 
 	async getAllSessions(): Promise<BoothSession[]> {
-		await initBoothSchema();
+		await initDb();
 		const db = await getDrizzleDb();
 		const result = await db
 			.select()
@@ -113,6 +105,7 @@ export const boothQueries = {
 	},
 
 	async deleteSession(id: string): Promise<void> {
+		await initDb();
 		const db = await getDrizzleDb();
 		await db.delete(boothSessions).where(eq(boothSessions.id, id));
 	},

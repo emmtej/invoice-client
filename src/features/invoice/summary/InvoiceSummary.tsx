@@ -36,11 +36,7 @@ export const InvoiceSummary = memo(
 			<Box
 				p={padding}
 				bg="white"
-				style={{
-					height: "100%",
-					color: "var(--mantine-color-gray-9)",
-					fontFamily: "var(--mantine-font-family)",
-				}}
+				className="h-full text-brand-dark-900 font-sans"
 			>
 				<Stack gap={48}>
 					{/* Header */}
@@ -48,11 +44,7 @@ export const InvoiceSummary = memo(
 						<Stack gap="xs">
 							<Title
 								order={1}
-								style={{
-									fontFamily: "var(--font-display)",
-									fontSize: isLivePreview ? "32px" : "48px",
-									color: "var(--mantine-color-forest-9)",
-								}}
+								className={`font-display text-forest-900 ${isLivePreview ? "text-3xl" : "text-5xl"}`}
 							>
 								{invoiceTitle || "Invoice"}
 							</Title>
@@ -76,59 +68,20 @@ export const InvoiceSummary = memo(
 					<Table
 						verticalSpacing="md"
 						horizontalSpacing="0"
-						style={{ borderTop: "1px solid var(--mantine-color-sage-2)" }}
+						className="border-t border-sage-100"
 					>
 						<Table.Thead>
 							<Table.Tr>
-								<Table.Th
-									style={{
-										color: "var(--mantine-color-sage-6)",
-										fontSize: "10px",
-										fontWeight: 800,
-										textTransform: "uppercase",
-										letterSpacing: "1.5px",
-										borderBottom: "1px solid var(--mantine-color-sage-2)",
-									}}
-								>
+								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-sage-600 border-b border-sage-100">
 									Description
 								</Table.Th>
-								<Table.Th
-									style={{
-										color: "var(--mantine-color-sage-6)",
-										fontSize: "10px",
-										fontWeight: 800,
-										textTransform: "uppercase",
-										letterSpacing: "1.5px",
-										textAlign: "right",
-										borderBottom: "1px solid var(--mantine-color-sage-2)",
-									}}
-								>
+								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-sage-600 text-right border-b border-sage-100">
 									Qty
 								</Table.Th>
-								<Table.Th
-									style={{
-										color: "var(--mantine-color-sage-6)",
-										fontSize: "10px",
-										fontWeight: 800,
-										textTransform: "uppercase",
-										letterSpacing: "1.5px",
-										textAlign: "right",
-										borderBottom: "1px solid var(--mantine-color-sage-2)",
-									}}
-								>
+								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-sage-600 text-right border-b border-sage-100">
 									Rate
 								</Table.Th>
-								<Table.Th
-									style={{
-										color: "var(--mantine-color-sage-6)",
-										fontSize: "10px",
-										fontWeight: 800,
-										textTransform: "uppercase",
-										letterSpacing: "1.5px",
-										textAlign: "right",
-										borderBottom: "1px solid var(--mantine-color-sage-2)",
-									}}
-								>
+								<Table.Th className="text-[10px] font-extrabold uppercase tracking-widest text-sage-600 text-right border-b border-sage-100">
 									Total
 								</Table.Th>
 							</Table.Tr>
@@ -138,9 +91,7 @@ export const InvoiceSummary = memo(
 								item.subitems.map((sub) => (
 									<Table.Tr
 										key={sub.id}
-										style={{
-											borderBottom: "1px solid var(--mantine-color-forest-0)",
-										}}
+										className="border-b border-forest-50 last:border-0"
 									>
 										<Table.Td>
 											<Text size="sm" fw={700} c="forest.9">
@@ -150,17 +101,17 @@ export const InvoiceSummary = memo(
 												{sub.scriptName}
 											</Text>
 										</Table.Td>
-										<Table.Td style={{ textAlign: "right" }}>
+										<Table.Td className="text-right">
 											<Text size="sm" fw={600} className="tabular-nums">
 												{sub.wordCount.toLocaleString()}
 											</Text>
 										</Table.Td>
-										<Table.Td style={{ textAlign: "right" }}>
+										<Table.Td className="text-right">
 											<Text size="sm" fw={600} className="tabular-nums">
 												${sub.ratePerWord.toFixed(2)}
 											</Text>
 										</Table.Td>
-										<Table.Td style={{ textAlign: "right" }}>
+										<Table.Td className="text-right">
 											<Text
 												size="sm"
 												fw={800}
@@ -176,7 +127,7 @@ export const InvoiceSummary = memo(
 							{items.length === 0 && (
 								<Table.Tr>
 									<Table.Td colSpan={4} py={48}>
-										<Text size="sm" c="sage.3" ta="center" fs="italic">
+										<Text size="sm" c="sage.3" ta="center" className="italic">
 											No items added to invoice yet.
 										</Text>
 									</Table.Td>
@@ -195,7 +146,7 @@ export const InvoiceSummary = memo(
 								${totalAmount.toFixed(2)}
 							</Text>
 						</Group>
-						<Box h={1} w={150} bg="sage.1" my="sm" />
+						<Box className="h-px w-[150px] bg-sage-100 my-4" />
 						<Group gap={48}>
 							<Text size="sm" fw={800} c="forest.9" tt="uppercase" lts={1.5}>
 								Total Due
@@ -212,13 +163,7 @@ export const InvoiceSummary = memo(
 					</Stack>
 
 					{/* Footer Note */}
-					<Box
-						mt={64}
-						style={{
-							borderTop: "1px solid var(--mantine-color-sage-1)",
-							paddingTop: "24px",
-						}}
-					>
+					<Box mt={64} className="border-t border-sage-100 pt-6">
 						<Text size="xs" c="sage.4" fw={500} ta="center" lts={0.5}>
 							Thank you for your business. Please remit payment within 30 days.
 						</Text>

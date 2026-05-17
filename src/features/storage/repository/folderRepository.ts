@@ -1,10 +1,11 @@
 import { desc, eq, inArray, isNull, sql } from "drizzle-orm";
-import { getDrizzleDb } from "./pgliteClient";
-import { folders, scripts } from "./schema";
-import type { Folder } from "./types";
+import { getDrizzleDb, initDb } from "../pgliteClient";
+import { folders, scripts } from "../schema";
+import type { Folder } from "../types";
 
-export const folderQueries = {
+export const folderRepository = {
 	async getAllFolders(): Promise<Folder[]> {
+		await initDb();
 		const db = await getDrizzleDb();
 		const result = await db
 			.select()
@@ -23,6 +24,7 @@ export const folderQueries = {
 		parentId: string | null = null,
 		limit = 10,
 	): Promise<Folder[]> {
+		await initDb();
 		const db = await getDrizzleDb();
 		const result = await db
 			.select()
@@ -42,6 +44,7 @@ export const folderQueries = {
 	},
 
 	async getFolderById(id: string): Promise<Folder | null> {
+		await initDb();
 		const db = await getDrizzleDb();
 		const result = await db.select().from(folders).where(eq(folders.id, id));
 
@@ -74,6 +77,7 @@ export const folderQueries = {
 		name: string,
 		parentId: string | null = null,
 	): Promise<void> {
+		await initDb();
 		const db = await getDrizzleDb();
 		await db.insert(folders).values({
 			id,
@@ -83,14 +87,14 @@ export const folderQueries = {
 	},
 
 	async updateFolder(id: string, name: string): Promise<void> {
+		await initDb();
 		const db = await getDrizzleDb();
 		await db.update(folders).set({ name }).where(eq(folders.id, id));
 	},
 
 	async deleteFolder(id: string): Promise<void> {
+		await initDb();
 		const db = await getDrizzleDb();
-		// Note: We might want to move scripts to root or delete them.
-		// For now, let's just delete the folder (Drizzle/DB might handle FKs if set).
 		await db.delete(folders).where(eq(folders.id, id));
 	},
 
@@ -98,6 +102,7 @@ export const folderQueries = {
 		folderIds: string[],
 	): Promise<Record<string, number>> {
 		if (folderIds.length === 0) return {};
+		await initDb();
 		const db = await getDrizzleDb();
 
 		const result = await db
@@ -112,33 +117,22 @@ export const folderQueries = {
 		const counts: Record<string, number> = {};
 		for (const row of result) {
 			if (row.folderId) {
-				counts[row.folderId] = row.count;
+				counts[row.folderId] = Number(row.count);
 			}
 		}
 		return counts;
 	},
+
+	async getScriptCountInFolder(folderId: string | null): Promise<number> {
+		await initDb();
+		const db = await getDrizzleDb();
+		const result = await db
+			.select({ count: sql<number>`count(*)` })
+			.from(scripts)
+			.where(
+				folderId ? eq(scripts.folderId, folderId) : isNull(scripts.folderId),
+			);
+
+		return Number(result[0]?.count ?? 0);
+	},
 };
-
-export const {
-	createFolder,
-	deleteFolder,
-	getAllFolders,
-	getChildItemCountsForFolders,
-	getFolderBreadcrumb,
-	getFolderById,
-	getRecentFolders,
-} = folderQueries;
-
-export async function getScriptCountInFolder(
-	folderId: string | null,
-): Promise<number> {
-	const db = await getDrizzleDb();
-	const result = await db
-		.select({ count: sql<number>`count(*)` })
-		.from(scripts)
-		.where(
-			folderId ? eq(scripts.folderId, folderId) : isNull(scripts.folderId),
-		);
-
-	return result[0]?.count ?? 0;
-}

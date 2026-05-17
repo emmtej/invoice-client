@@ -1,21 +1,15 @@
-import { Button, Stack, Text } from "@mantine/core";
 import { createFileRoute } from "@tanstack/react-router";
-import { Suspense } from "react";
 import { ProfileView } from "@/features/user";
-import { RouteFallback } from "@/routes/components/RouteFallback";
+import { AuthenticatedRouteError } from "@/routes/components/AuthenticatedRouteError";
+import { AuthenticatedRouteShell } from "@/routes/components/AuthenticatedRouteShell";
 
 export const Route = createFileRoute("/_authenticated/profile")({
 	errorComponent: ({ reset }) => (
-		<Stack p="xl" align="center">
-			<Text c="red">Failed to load Profile</Text>
-			<Button onClick={reset} color="red">
-				Retry
-			</Button>
-		</Stack>
+		<AuthenticatedRouteError reset={reset} label="Profile" />
 	),
 	component: () => (
-		<Suspense fallback={<RouteFallback label="profile" />}>
+		<AuthenticatedRouteShell label="profile">
 			<ProfileView />
-		</Suspense>
+		</AuthenticatedRouteShell>
 	),
 });

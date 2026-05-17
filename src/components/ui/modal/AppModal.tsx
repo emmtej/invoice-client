@@ -11,7 +11,7 @@ export function AppModal({ title, children, ...rest }: AppModalProps) {
 			<Text
 				fw={800}
 				size="xl"
-				c="gray.8"
+				c="brand-dark.7"
 				className="tracking-tight text-balance"
 			>
 				{title}
@@ -21,7 +21,7 @@ export function AppModal({ title, children, ...rest }: AppModalProps) {
 		);
 
 	return (
-		<Modal title={titleContent} {...rest}>
+		<Modal title={titleContent} radius="3xl" {...rest}>
 			{children}
 		</Modal>
 	);

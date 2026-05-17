@@ -2,8 +2,8 @@ import { Badge, Box, Button, Group, Text } from "@mantine/core";
 import { Clock } from "lucide-react";
 import { useCallback } from "react";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
-import { scriptsQueries } from "@/features/scripts/store/scriptsQueries";
-import type { BoothSession } from "../store/boothQueries";
+import type { BoothSession } from "@/features/storage/repository/boothRepository";
+import { scriptRepository } from "@/features/storage/repository/scriptRepository";
 import { useBoothStore } from "../store/useBoothStore";
 
 interface OngoingSessionCardProps {
@@ -15,7 +15,7 @@ export function OngoingSessionCard({ session }: OngoingSessionCardProps) {
 
 	const handleSelectSession = useCallback(async () => {
 		if (session.status !== "in_progress") return;
-		const scriptForSession = await scriptsQueries.getScriptById(
+		const scriptForSession = await scriptRepository.getScriptById(
 			session.scriptId,
 		);
 		if (!scriptForSession) return;
@@ -23,19 +23,13 @@ export function OngoingSessionCard({ session }: OngoingSessionCardProps) {
 	}, [session, restoreSession]);
 
 	return (
-		<SurfaceCard
-			style={{
-				border: "2px solid var(--mantine-color-wave-3)",
-				backgroundColor: "var(--mantine-color-wave-0)",
-				boxShadow: "0 4px 12px rgba(0, 150, 136, 0.08)",
-			}}
-		>
+		<SurfaceCard className="border-2 border-wave-300 bg-wave-50 shadow-sm">
 			<Group justify="space-between" align="center">
 				<Box>
-					<Text fw={800} size="xl" c="gray.9" lts={-0.2}>
+					<Text fw={800} size="xl" c="brand-dark.7" lts={-0.2}>
 						{session.scriptName}
 					</Text>
-					<Text size="sm" c="gray.7" fw={500}>
+					<Text size="sm" c="brand-dark.4" fw={500}>
 						Started {new Date(session.startedAt).toLocaleString()}
 					</Text>
 					<Group gap="md" mt={12}>
@@ -43,13 +37,14 @@ export function OngoingSessionCard({ session }: OngoingSessionCardProps) {
 							variant="filled"
 							color="wave"
 							size="md"
+							radius="xl"
 							className="font-bold"
 						>
 							{session.completedLines} / {session.totalLines} lines
 						</Badge>
 						<Group gap="xs">
-							<Clock size={16} color="var(--mantine-color-gray-6)" />
-							<Text size="sm" c="gray.7" ff="monospace" fw={700}>
+							<Clock size={16} className="text-brand-dark-300" />
+							<Text size="sm" c="brand-dark.4" ff="monospace" fw={700}>
 								{Math.floor(session.elapsedMs / 1000 / 60)}m{" "}
 								{Math.floor((session.elapsedMs / 1000) % 60)
 									.toString()
@@ -62,12 +57,10 @@ export function OngoingSessionCard({ session }: OngoingSessionCardProps) {
 				<Button
 					color="wave"
 					size="lg"
+					radius="xl"
 					onClick={handleSelectSession}
 					leftSection={<Clock size={20} />}
-					style={{
-						transition: "transform 150ms ease",
-					}}
-					className="hover:scale-105 active:scale-95"
+					className="shadow-sm transition-transform hover:scale-105 active:scale-95"
 				>
 					Resume Session
 				</Button>

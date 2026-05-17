@@ -54,10 +54,7 @@ export function Layout({ children }: LayoutProps) {
 				<Sidebar onNavigate={close} />
 			</AppShell.Navbar>
 
-			<AppShell.Main
-				display="flex"
-				style={{ flexDirection: "column", minHeight: "100dvh" }}
-			>
+			<AppShell.Main className="flex flex-col min-h-dvh">
 				<Container
 					maw={APP_CONTENT_MAX_WIDTH}
 					w="100%"
@@ -71,7 +68,7 @@ export function Layout({ children }: LayoutProps) {
 					component="footer"
 					py="xl"
 					bg="var(--app-bg)"
-					style={{ borderTop: "1px solid var(--mantine-color-sage-2)" }}
+					className="border-t border-sage-200"
 				>
 					<Container maw={APP_CONTENT_MAX_WIDTH} w="100%" px="md">
 						<AppFooter />

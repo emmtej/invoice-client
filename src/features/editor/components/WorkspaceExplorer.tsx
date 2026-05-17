@@ -47,12 +47,7 @@ export const WorkspaceExplorer = memo(
 				w={300}
 				bg="gray.0"
 				visibleFrom="md"
-				style={{
-					borderLeft: "1px solid var(--mantine-color-gray-2)",
-					display: "flex",
-					flexDirection: "column",
-					height: "100%",
-				}}
+				className="flex flex-col h-full border-l border-gray-200"
 			>
 				<Box p="lg" pb={0}>
 					<Group gap="sm" mb="xs">
@@ -61,9 +56,7 @@ export const WorkspaceExplorer = memo(
 					</Group>
 					<Box
 						p="md"
-						bg="wave.0"
-						style={{ border: "1px solid var(--mantine-color-wave-2)" }}
-						mb="xl"
+						className="bg-wave-50 border border-wave-200 mb-6 rounded-md"
 					>
 						<Stack gap={4}>
 							<Text
@@ -117,15 +110,15 @@ export const WorkspaceExplorer = memo(
 								key={script.id}
 								onClick={() => onSelect(script.id)}
 								className={`
-								group flex items-center justify-between p-3 cursor-pointer transition-all border
+								group flex items-center justify-between p-3 cursor-pointer transition-all border rounded-md
 								${
 									activeScriptId === script.id
-										? "bg-wave-50 border-wave-200"
-										: "bg-white border-transparent hover:bg-gray-50"
+										? "bg-wave-100 border-wave-300 shadow-sm"
+										: "bg-white border-transparent hover:bg-gray-50 hover:border-gray-100"
 								}
 							`}
 							>
-								<Box style={{ flex: 1, minWidth: 0 }}>
+								<Box className="flex-1 min-w-0">
 									<Text
 										size="sm"
 										fw={700}
@@ -140,7 +133,7 @@ export const WorkspaceExplorer = memo(
 										{script.overview.wordCount}
 									</Text>
 									{script.overview.invalidLines.length > 0 && (
-										<AlertCircle size={14} className="text-studio-6" />
+										<AlertCircle size={14} className="text-on-air-red-6" />
 									)}
 									<ActionIcon
 										variant="subtle"
@@ -160,20 +153,14 @@ export const WorkspaceExplorer = memo(
 					</Stack>
 				</ScrollArea>
 
-				<Box
-					p="lg"
-					style={{
-						borderTop: "1px solid var(--mantine-color-gray-2)",
-						background: "var(--mantine-color-gray-0)",
-					}}
-				>
+				<Box p="lg" className="border-t border-gray-200 bg-gray-50">
 					<Button
 						fullWidth
 						color="wave"
 						size="md"
 						onClick={onOpenSaveModal}
 						disabled={scripts.length === 0}
-						className="shadow-md"
+						className="shadow-sm"
 					>
 						Save to Library
 					</Button>

@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { folderQueries } from "@/features/storage/folderQueries";
+import { folderRepository } from "@/features/storage/repository/folderRepository";
+import { scriptRepository } from "@/features/storage/repository/scriptRepository";
 import { generateId } from "@/utils/id";
-import { scriptsQueries } from "./scriptsQueries";
 
 interface ScriptsDataState {
 	breadcrumb: { id: string; name: string }[];
@@ -22,15 +22,15 @@ export const useScriptsDataStore = create<ScriptsDataStore>()((_set, _get) => ({
 
 	createFolder: async (name, parentId) => {
 		const id = generateId();
-		await folderQueries.createFolder(id, name, parentId);
+		await folderRepository.createFolder(id, name, parentId);
 	},
 
 	deleteFolder: async (folderId) => {
-		await folderQueries.deleteFolder(folderId);
+		await folderRepository.deleteFolder(folderId);
 	},
 
 	deleteScript: async (scriptId) => {
-		await scriptsQueries.deleteScripts([scriptId]);
+		await scriptRepository.deleteScripts([scriptId]);
 	},
 
 	moveItems: async (_ids, _targetFolderId) => {

@@ -3,7 +3,6 @@ import {
 	Checkbox,
 	Divider,
 	Group,
-	Modal,
 	NumberInput,
 	SegmentedControl,
 	Stack,
@@ -12,6 +11,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { Settings2 } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
+import { AppModal } from "@/components/ui/modal/AppModal";
 import { useBoothSettingsStore } from "../store/useBoothSettingsStore";
 
 export function BoothSettingsModal() {
@@ -51,17 +51,7 @@ export function BoothSettingsModal() {
 				Booth Settings
 			</Button>
 
-			<Modal
-				opened={opened}
-				onClose={close}
-				title={
-					<Text fw={700} size="lg">
-						Booth Settings
-					</Text>
-				}
-				centered
-				radius="md"
-			>
+			<AppModal opened={opened} onClose={close} title="Booth Settings" centered>
 				<Stack gap="lg">
 					<Text size="sm" c="gray.6">
 						Configure your default rate and display options for recording
@@ -136,7 +126,7 @@ export function BoothSettingsModal() {
 						</Button>
 					</Group>
 				</Stack>
-			</Modal>
+			</AppModal>
 		</>
 	);
 }

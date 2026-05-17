@@ -9,116 +9,14 @@ import {
 	Stack,
 	Table,
 	Text,
-	ThemeIcon,
 	Title,
 } from "@mantine/core";
-import {
-	AlertCircle,
-	Edit3,
-	Filter,
-	MessageSquare,
-	Search,
-	Tag,
-	Zap,
-} from "lucide-react";
+import { Edit3, Filter, MessageSquare, Search, Zap } from "lucide-react";
 import { memo, useMemo, useState } from "react";
 import { EmptyState } from "@/components/ui/feedback/EmptyState";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
-import type { ParsedLine, Script } from "@/types/Script";
-
-const TYPE_CONFIG = {
-	dialogue: {
-		icon: MessageSquare,
-		color: "indigo",
-		label: "Dialogue",
-		bg: "var(--mantine-color-indigo-0)",
-		border: "var(--mantine-color-indigo-2)",
-	},
-	action: {
-		icon: Zap,
-		color: "teal",
-		label: "Action",
-		bg: "var(--mantine-color-teal-0)",
-		border: "var(--mantine-color-teal-2)",
-	},
-	marker: {
-		icon: Tag,
-		color: "gray",
-		label: "Marker",
-		bg: "var(--mantine-color-gray-0)",
-		border: "var(--mantine-color-gray-2)",
-	},
-	malformed: {
-		icon: AlertCircle,
-		color: "orange",
-		label: "Malformed",
-		bg: "var(--mantine-color-orange-0)",
-		border: "var(--mantine-color-orange-2)",
-	},
-	invalid: {
-		icon: AlertCircle,
-		color: "red",
-		label: "Invalid",
-		bg: "var(--mantine-color-red-0)",
-		border: "var(--mantine-color-red-2)",
-	},
-} as const;
-
-const TypeBadge = memo(({ type }: { type: ParsedLine["type"] }) => {
-	const config =
-		TYPE_CONFIG[type as keyof typeof TYPE_CONFIG] || TYPE_CONFIG.marker;
-	const Icon = config.icon;
-
-	return (
-		<Group gap={8} wrap="nowrap">
-			<ThemeIcon variant="transparent" color={config.color} size="sm">
-				<Icon size={14} strokeWidth={2.5} />
-			</ThemeIcon>
-			<Text size="xs" fw={600} c="gray.5" tt="uppercase" lts="0.05em">
-				{config.label}
-			</Text>
-		</Group>
-	);
-});
-
-const ScriptLineRow = memo(({ line }: { line: ParsedLine }) => {
-	return (
-		<Table.Tr className="transition-colors hover:bg-gray-50/70">
-			<Table.Td py="sm" w={180}>
-				<TypeBadge type={line.type} />
-			</Table.Td>
-			<Table.Td py="sm">
-				<Group justify="space-between" wrap="nowrap" align="center" gap="xl">
-					<Text
-						size="md"
-						c="gray.8"
-						fw={500}
-						className="leading-relaxed"
-						style={{ flex: 1 }}
-					>
-						{line.source}
-					</Text>
-					{line.type === "dialogue" && (
-						<Badge
-							variant="outline"
-							color="gray"
-							size="sm"
-							className="border-dashed bg-white shrink-0"
-							styles={{
-								label: {
-									color: "var(--mantine-color-gray-6)",
-									fontWeight: 700,
-								},
-							}}
-						>
-							{line.metadata.wordCount} words
-						</Badge>
-					)}
-				</Group>
-			</Table.Td>
-		</Table.Tr>
-	);
-});
+import type { Script } from "@/types/Script";
+import { ScriptLineRow } from "./ScriptOverviewItems";
 
 function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 	const { overview } = script;
@@ -137,34 +35,21 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 		return script.lines.filter((line) => line.type === typeFilter);
 	}, [script.lines, typeFilter]);
 
-	const headerStickyStyle = {
-		borderBottom: "1px solid var(--mantine-color-gray-2)",
-		position: "sticky" as const,
-		top: 0,
-		zIndex: 20,
-	};
-	const tableHeadStickyStyle = {
-		position: "sticky" as const,
-		top: 0,
-		zIndex: 10,
-		backgroundColor: "var(--mantine-color-white)",
-	};
-	const tableThBorderStyle = {
-		borderBottom: "1px solid var(--mantine-color-gray-2)",
-	} as const;
-
 	return (
-		<Stack gap={0} h="100%" bg="white" style={{ overflow: "hidden" }}>
+		<Stack gap={0} h="100%" bg="white" className="overflow-hidden">
 			{/* Modern Dashboard Header */}
-			<Box p="lg" bg="white" style={headerStickyStyle}>
+			<Box
+				p="lg"
+				bg="white"
+				className="border-b border-gray-100 sticky top-0 z-[20]"
+			>
 				<Flex justify="space-between" align="center" mb={16} gap="xl">
 					<Group gap={20}>
 						<Stack gap={4}>
 							<Group gap="sm">
 								<Title
 									order={1}
-									size="42px"
-									className="tracking-tight text-balance"
+									className="tracking-tight text-balance text-4xl"
 								>
 									{script.name}
 								</Title>
@@ -173,6 +58,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 										variant="dot"
 										color="wave"
 										size="sm"
+										radius="xl"
 										className="border-wave-100 bg-wave-50 text-wave-700"
 									>
 										Verified
@@ -180,7 +66,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 								)}
 							</Group>
 							<Group gap="xs">
-								<Badge variant="dot" color="wave" size="sm">
+								<Badge variant="dot" color="wave" size="sm" radius="xl">
 									{overview.totalLines} Lines
 								</Badge>
 							</Group>
@@ -192,7 +78,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						<Group gap={8} wrap="nowrap">
 							<Box
 								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
-								c="gray.5"
+								c="brand-dark.4"
 							>
 								<MessageSquare size={12} strokeWidth={2.5} />
 								<span>Words</span>
@@ -205,12 +91,12 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						<Group gap={8} wrap="nowrap">
 							<Box
 								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
-								c="gray.5"
+								c="brand-dark.4"
 							>
 								<Zap size={12} strokeWidth={2.5} />
 								<span>Valid</span>
 							</Box>
-							<Text fw={600} size="sm" c="gray.8">
+							<Text fw={600} size="sm" c="brand-dark.7">
 								{overview.validLines.length}
 							</Text>
 						</Group>
@@ -218,14 +104,14 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						<Group gap={8} wrap="nowrap">
 							<Box
 								className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px]"
-								c="gray.5"
+								c="brand-dark.4"
 							>
 								<Search size={12} strokeWidth={2.5} />
 								<span>Health</span>
 							</Box>
 							<Group gap={6}>
 								{overview.invalidLines.length > 0 ? (
-									<Text fw={600} size="sm" color="orange.6">
+									<Text fw={600} size="sm" color="on-air-red.6">
 										{overview.invalidLines.length} Issues
 									</Text>
 								) : (
@@ -247,12 +133,9 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						onChange={setTypeFilter}
 						clearable
 						size="sm"
+						radius="md"
 						leftSection={
-							<Box
-								component="span"
-								c="gray.5"
-								style={{ display: "flex", alignItems: "center" }}
-							>
+							<Box className="flex items-center text-brand-dark-300">
 								<Filter size={14} />
 							</Box>
 						}
@@ -261,7 +144,7 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						styles={{
 							input: {
 								backgroundColor: "var(--mantine-color-gray-0)",
-								border: "1px solid var(--mantine-color-gray-2)",
+								border: "1px solid var(--mantine-color-gray-1)",
 							},
 						}}
 					/>
@@ -270,9 +153,10 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 							variant="filled"
 							color="wave"
 							size="sm"
+							radius="xl"
 							leftSection={<Edit3 size={16} />}
 							onClick={onEdit}
-							className="hover:scale-[1.01] transition-transform"
+							className="hover:scale-[1.01] transition-all shadow-sm active:scale-95"
 						>
 							Edit Script
 						</Button>
@@ -292,16 +176,16 @@ function ScriptOverviewInner({ script, onEdit }: ScriptOverviewProps) {
 						/>
 					) : (
 						<Table
-							verticalSpacing="lg"
+							verticalSpacing="md"
 							horizontalSpacing={32}
 							className="border-separate border-spacing-0"
 						>
-							<Table.Thead bg="white" style={tableHeadStickyStyle}>
+							<Table.Thead bg="white" className="sticky top-0 z-[10]">
 								<Table.Tr>
-									<Table.Th py="lg" style={tableThBorderStyle}>
+									<Table.Th py="md" className="border-b border-gray-100">
 										<SectionLabel letterSpacing={2}>Category</SectionLabel>
 									</Table.Th>
-									<Table.Th py="lg" style={tableThBorderStyle}>
+									<Table.Th py="md" className="border-b border-gray-100">
 										<SectionLabel letterSpacing={2}>
 											Script Content
 										</SectionLabel>

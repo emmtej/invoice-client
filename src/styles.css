@@ -72,7 +72,52 @@
 	--color-terracotta-800: var(--mantine-color-terracotta-8);
 	--color-terracotta-900: var(--mantine-color-terracotta-9);
 
+	--color-wave-50: var(--mantine-color-wave-0);
+	--color-wave-100: var(--mantine-color-wave-1);
+	--color-wave-200: var(--mantine-color-wave-2);
+	--color-wave-300: var(--mantine-color-wave-3);
+	--color-wave-400: var(--mantine-color-wave-4);
+	--color-wave-500: var(--mantine-color-wave-5);
+	--color-wave-600: var(--mantine-color-wave-6);
+	--color-wave-700: var(--mantine-color-wave-7);
+	--color-wave-800: var(--mantine-color-wave-8);
+	--color-wave-900: var(--mantine-color-wave-9);
+
+	--color-studio-50: var(--mantine-color-studio-0);
+	--color-studio-100: var(--mantine-color-studio-1);
+	--color-studio-200: var(--mantine-color-studio-2);
+	--color-studio-300: var(--mantine-color-studio-3);
+	--color-studio-400: var(--mantine-color-studio-4);
+	--color-studio-500: var(--mantine-color-studio-5);
+	--color-studio-600: var(--mantine-color-studio-6);
+	--color-studio-700: var(--mantine-color-studio-7);
+	--color-studio-800: var(--mantine-color-studio-8);
+	--color-studio-900: var(--mantine-color-studio-9);
+
+	--color-on-air-50: var(--mantine-color-on-air-red-0);
+	--color-on-air-100: var(--mantine-color-on-air-red-1);
+	--color-on-air-200: var(--mantine-color-on-air-red-2);
+	--color-on-air-300: var(--mantine-color-on-air-red-3);
+	--color-on-air-400: var(--mantine-color-on-air-red-4);
+	--color-on-air-500: var(--mantine-color-on-air-red-5);
+	--color-on-air-600: var(--mantine-color-on-air-red-6);
+	--color-on-air-700: var(--mantine-color-on-air-red-7);
+	--color-on-air-800: var(--mantine-color-on-air-red-8);
+	--color-on-air-900: var(--mantine-color-on-air-red-9);
+
+	--color-brand-dark-50: var(--mantine-color-brand-dark-0);
+	--color-brand-dark-100: var(--mantine-color-brand-dark-1);
+	--color-brand-dark-200: var(--mantine-color-brand-dark-2);
+	--color-brand-dark-300: var(--mantine-color-brand-dark-3);
+	--color-brand-dark-400: var(--mantine-color-brand-dark-4);
+	--color-brand-dark-500: var(--mantine-color-brand-dark-5);
+	--color-brand-dark-600: var(--mantine-color-brand-dark-6);
+	--color-brand-dark-700: var(--mantine-color-brand-dark-7);
+	--color-brand-dark-800: var(--mantine-color-brand-dark-8);
+	--color-brand-dark-900: var(--mantine-color-brand-dark-9);
+
 	--color-forest: #2d3a31;
+
 	--color-sage: #8c9a84;
 	--color-terracotta: #c27b66;
 	--color-alabaster: #f9f8f4;

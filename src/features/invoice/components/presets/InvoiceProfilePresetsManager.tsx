@@ -1,7 +1,6 @@
 import {
 	ActionIcon,
 	Badge,
-	Box,
 	Button,
 	Group,
 	Stack,
@@ -10,10 +9,11 @@ import {
 	Tooltip,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { Pencil, Plus, Star, Trash2 } from "lucide-react";
+import { Pencil, Star, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
 import { AppModal } from "@/components/ui/modal/AppModal";
+import { PresetManager } from "@/components/ui/presets/PresetManager";
 import type {
 	InvoiceProfile,
 	InvoiceProfileWithMeta,
@@ -59,107 +59,83 @@ export function InvoiceProfilePresetsManager() {
 	};
 
 	return (
-		<Stack gap="md">
-			<Group justify="space-between">
-				<Box>
-					<Text fw={700} size="lg">
-						Invoice Profiles
-					</Text>
-					<Text size="sm" c="dimmed">
-						Manage your business identities and contact information for
-						invoices.
-					</Text>
-				</Box>
-				<Button
-					leftSection={<Plus size={16} />}
-					color="studio"
-					onClick={handleOpenAdd}
-				>
-					Add Profile
-				</Button>
-			</Group>
-
-			{profilePresets.length > 0 ? (
-				<Stack gap="md">
-					{profilePresets.map((profile) => (
-						<SurfaceCard key={profile.id}>
-							<Group justify="space-between">
-								<Group gap="lg">
-									<Stack gap={0}>
-										<Group gap="xs">
-											<Text fw={700} size="md">
-												{profile.label}
+		<>
+			<PresetManager
+				title="Invoice Profiles"
+				description="Manage your business identities and contact information for invoices."
+				items={profilePresets}
+				onAdd={handleOpenAdd}
+				addLabel="Add Profile"
+				emptyMessage="No invoice profiles created yet."
+			>
+				{(items) => (
+					<Stack gap="md">
+						{items.map((profile) => (
+							<SurfaceCard key={profile.id}>
+								<Group justify="space-between">
+									<Group gap="lg">
+										<Stack gap={0}>
+											<Group gap="xs">
+												<Text fw={700} size="md">
+													{profile.label}
+												</Text>
+												{profile.isDefault && (
+													<Badge
+														color="studio"
+														variant="light"
+														leftSection={<Star size={12} />}
+													>
+														Default
+													</Badge>
+												)}
+											</Group>
+											<Text size="sm" c="dimmed">
+												{profile.profile.firstName} {profile.profile.lastName} •{" "}
+												{profile.profile.email}
 											</Text>
-											{profile.isDefault && (
-												<Badge
-													color="studio"
-													variant="light"
-													leftSection={<Star size={12} />}
-												>
-													Default
-												</Badge>
-											)}
-										</Group>
-										<Text size="sm" c="dimmed">
-											{profile.profile.firstName} {profile.profile.lastName} •{" "}
-											{profile.profile.email}
-										</Text>
-									</Stack>
-								</Group>
+										</Stack>
+									</Group>
 
-								<Group gap="xs">
-									{!profile.isDefault && (
-										<Tooltip label="Set as default">
+									<Group gap="xs">
+										{!profile.isDefault && (
+											<Tooltip label="Set as default">
+												<ActionIcon
+													variant="subtle"
+													color="gray"
+													onClick={() => setDefaultProfile(profile.id)}
+												>
+													<Star size={18} />
+												</ActionIcon>
+											</Tooltip>
+										)}
+										<Tooltip label="Edit profile">
 											<ActionIcon
 												variant="subtle"
 												color="gray"
-												onClick={() => setDefaultProfile(profile.id)}
+												onClick={() => handleOpenEdit(profile)}
 											>
-												<Star size={18} />
+												<Pencil size={18} />
 											</ActionIcon>
 										</Tooltip>
-									)}
-									<Tooltip label="Edit profile">
-										<ActionIcon
-											variant="subtle"
-											color="gray"
-											onClick={() => handleOpenEdit(profile)}
-										>
-											<Pencil size={18} />
-										</ActionIcon>
-									</Tooltip>
-									<Tooltip label="Delete profile">
-										<ActionIcon
-											variant="subtle"
-											color="on-air-red"
-											onClick={() => handleDelete(profile.id)}
-											disabled={profile.isDefault && profilePresets.length > 1}
-										>
-											<Trash2 size={18} />
-										</ActionIcon>
-									</Tooltip>
+										<Tooltip label="Delete profile">
+											<ActionIcon
+												variant="subtle"
+												color="on-air-red"
+												onClick={() => handleDelete(profile.id)}
+												disabled={
+													profile.isDefault && profilePresets.length > 1
+												}
+											>
+												<Trash2 size={18} />
+											</ActionIcon>
+										</Tooltip>
+									</Group>
 								</Group>
-							</Group>
-						</SurfaceCard>
-					))}
-				</Stack>
-			) : (
-				<SurfaceCard p="xl">
-					<Stack align="center" gap="xs">
-						<Text c="dimmed" fs="italic">
-							No invoice profiles created yet.
-						</Text>
-						<Button
-							variant="subtle"
-							color="studio"
-							onClick={handleOpenAdd}
-							leftSection={<Plus size={16} />}
-						>
-							Create your first profile
-						</Button>
+							</SurfaceCard>
+						))}
 					</Stack>
-				</SurfaceCard>
-			)}
+				)}
+			</PresetManager>
 
 			<ProfileModal
 				opened={modalOpened}
@@ -174,7 +150,7 @@ export function InvoiceProfilePresetsManager() {
 					setModalOpened(false);
 				}}
 			/>
-		</Stack>
+		</>
 	);
 }
 

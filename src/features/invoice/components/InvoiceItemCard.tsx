@@ -1,16 +1,13 @@
-import {
-	ActionIcon,
-	Box,
-	Button,
-	Group,
-	Stack,
-	Table,
-	Text,
-} from "@mantine/core";
+import { ActionIcon, Box, Button, Group, Stack, Text } from "@mantine/core";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { type InvoiceItem, useInvoiceStore } from "../store/invoiceStore";
+import {
+	type InvoiceItem,
+	type InvoiceSubitem,
+	useInvoiceStore,
+} from "../store/invoiceStore";
 import { EditValueModal } from "./EditValueModal";
+import { InvoiceItemTable } from "./InvoiceItemTable";
 import { SubitemModal } from "./SubitemModal";
 
 interface InvoiceItemCardProps {
@@ -61,26 +58,39 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 		setEditConfig(null);
 	};
 
-	const handleDeleteItem = () => {
-		removeItem(item.id);
-	};
-
-	const handleDeleteSubitem = (subitemId: string) => {
-		removeSubitem(item.id, subitemId);
+	const handleEditSubitem = (sub: InvoiceSubitem, field: "label" | "rate") => {
+		if (field === "label") {
+			setEditConfig({
+				field: "subitemLabel",
+				subitemId: sub.id,
+				initialValue: sub.label || "",
+				title: "Edit Line Label",
+				label: "Description",
+				inputType: "text",
+			});
+		} else {
+			setEditConfig({
+				field: "subitemRate",
+				subitemId: sub.id,
+				initialValue: sub.ratePerWord,
+				title: "Edit Rate",
+				label: "Rate (per word)",
+				inputType: "number",
+			});
+		}
 	};
 
 	return (
-		<Box
-			style={{
-				backgroundColor: "white",
-				border: "1px solid var(--mantine-color-sage-1)",
-				borderRadius: "var(--mantine-radius-md)",
-				overflow: "hidden",
-			}}
-		>
+		<Box className="bg-white border border-sage-100 rounded-3xl overflow-hidden shadow-sm">
 			<Stack gap={0}>
 				{/* Section Header */}
-				<Group justify="space-between" bg="sage.0" px="xl" py="md">
+				<Group
+					justify="space-between"
+					bg="sage.0"
+					px="xl"
+					py="md"
+					className="border-b border-sage-100"
+				>
 					<Group gap="xs">
 						<Text fw={800} size="md" c="forest.9" lts={-0.2}>
 							{item.name}
@@ -98,6 +108,7 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 								})
 							}
 							size="sm"
+							radius="md"
 						>
 							<Pencil size={14} />
 						</ActionIcon>
@@ -106,10 +117,12 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 					<Button
 						variant="subtle"
 						color="terracotta"
-						onClick={handleDeleteItem}
+						onClick={() => removeItem(item.id)}
 						size="xs"
+						radius="xl"
 						leftSection={<Trash2 size={14} />}
 						fw={700}
+						className="hover:bg-terracotta-50"
 					>
 						Delete Category
 					</Button>
@@ -118,124 +131,16 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 				{/* Table Area */}
 				<Box p="xl">
 					{item.subitems.length > 0 ? (
-						<Table verticalSpacing="md" horizontalSpacing="sm">
-							<Table.Thead>
-								<Table.Tr>
-									<Table.Th>Line Item / Description</Table.Th>
-									<Table.Th style={{ textAlign: "right" }}>Qty</Table.Th>
-									<Table.Th style={{ textAlign: "right" }}>Rate</Table.Th>
-									<Table.Th style={{ textAlign: "right" }}>Total</Table.Th>
-									<Table.Th w={50} />
-								</Table.Tr>
-							</Table.Thead>
-							<Table.Tbody>
-								{item.subitems.map((sub) => (
-									<Table.Tr
-										key={sub.id}
-										style={{
-											borderBottom: "1px solid var(--mantine-color-sage-0)",
-										}}
-									>
-										<Table.Td>
-											<Stack gap={2}>
-												<Group gap={6}>
-													<Text size="sm" fw={700} c="forest.9">
-														{sub.label || "Service Item"}
-													</Text>
-													<ActionIcon
-														variant="subtle"
-														color="sage"
-														size="xs"
-														onClick={() =>
-															setEditConfig({
-																field: "subitemLabel",
-																subitemId: sub.id,
-																initialValue: sub.label || "",
-																title: "Edit Line Label",
-																label: "Description",
-																inputType: "text",
-															})
-														}
-													>
-														<Pencil size={12} />
-													</ActionIcon>
-												</Group>
-												<Text size="xs" c="sage.6" fw={500}>
-													{sub.scriptName}
-												</Text>
-											</Stack>
-										</Table.Td>
-										<Table.Td style={{ textAlign: "right" }}>
-											<Text
-												size="sm"
-												fw={600}
-												className="tabular-nums"
-												c="forest.9"
-											>
-												{sub.wordCount.toLocaleString()}
-											</Text>
-										</Table.Td>
-										<Table.Td style={{ textAlign: "right" }}>
-											<Group justify="flex-end" gap={4}>
-												<Text
-													size="sm"
-													fw={600}
-													className="tabular-nums"
-													c="forest.9"
-												>
-													${sub.ratePerWord.toFixed(2)}
-												</Text>
-												<ActionIcon
-													variant="subtle"
-													color="sage"
-													size="xs"
-													onClick={() =>
-														setEditConfig({
-															field: "subitemRate",
-															subitemId: sub.id,
-															initialValue: sub.ratePerWord,
-															title: "Edit Rate",
-															label: "Rate (per word)",
-															inputType: "number",
-														})
-													}
-												>
-													<Pencil size={12} />
-												</ActionIcon>
-											</Group>
-										</Table.Td>
-										<Table.Td style={{ textAlign: "right" }}>
-											<Text
-												size="sm"
-												fw={800}
-												c="forest.9"
-												className="tabular-nums"
-											>
-												${sub.amount.toFixed(2)}
-											</Text>
-										</Table.Td>
-										<Table.Td style={{ textAlign: "right" }}>
-											<ActionIcon
-												variant="subtle"
-												color="terracotta"
-												onClick={() => handleDeleteSubitem(sub.id)}
-												size="sm"
-											>
-												<Trash2 size={14} />
-											</ActionIcon>
-										</Table.Td>
-									</Table.Tr>
-								))}
-							</Table.Tbody>
-						</Table>
+						<InvoiceItemTable
+							subitems={item.subitems}
+							onEditSubitem={handleEditSubitem}
+							onDeleteSubitem={(sid) => removeSubitem(item.id, sid)}
+						/>
 					) : (
 						<Box
 							py="xl"
 							ta="center"
-							style={{
-								border: "2px dashed var(--mantine-color-sage-1)",
-								borderRadius: "var(--mantine-radius-md)",
-							}}
+							className="border-2 border-dashed border-sage-100 rounded-xl"
 						>
 							<Text size="sm" c="sage.4" fw={500}>
 								No line items added to this category yet.
@@ -248,9 +153,11 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 							leftSection={<Plus size={16} />}
 							variant="light"
 							color="forest"
+							radius="xl"
 							onClick={() => setSubitemModalOpened(true)}
 							size="sm"
 							fw={700}
+							className="shadow-sm transition-transform active:scale-95"
 						>
 							Add Line Item
 						</Button>
@@ -258,7 +165,6 @@ export function InvoiceItemCard({ item }: InvoiceItemCardProps) {
 				</Box>
 			</Stack>
 
-			{/* Modals remain the same */}
 			<EditValueModal
 				opened={!!editConfig}
 				onClose={() => setEditConfig(null)}

@@ -1,6 +1,5 @@
 import {
 	ActionIcon,
-	Box,
 	Button,
 	Group,
 	NumberInput,
@@ -11,10 +10,11 @@ import {
 	Tooltip,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
 import { AppModal } from "@/components/ui/modal/AppModal";
+import { PresetManager } from "@/components/ui/presets/PresetManager";
 import type { InvoiceSubitemPreset } from "../../presets/subitemPresets";
 import { useInvoicePresetsStore } from "../../store/invoicePresetsStore";
 
@@ -51,101 +51,76 @@ export function BillingRatePresetsManager() {
 	};
 
 	return (
-		<Stack gap="md">
-			<Group justify="space-between">
-				<Box>
-					<Text fw={700} size="lg">
-						Billing Rates
-					</Text>
-					<Text size="sm" c="dimmed">
-						Standard rates for your services (e.g., Narration, Commercial,
-						Editing).
-					</Text>
-				</Box>
-				<Button
-					leftSection={<Plus size={16} />}
-					color="studio"
-					onClick={handleOpenAdd}
-				>
-					Add Preset
-				</Button>
-			</Group>
-
-			{ratePresets.length > 0 ? (
-				<SurfaceCard p={0}>
-					<Table verticalSpacing="md" horizontalSpacing="lg">
-						<Table.Thead>
-							<Table.Tr>
-								<Table.Th>Label</Table.Th>
-								<Table.Th style={{ textAlign: "right" }}>Rate ($)</Table.Th>
-								<Table.Th style={{ textAlign: "right" }}>Unit (Words)</Table.Th>
-								<Table.Th style={{ textAlign: "right" }}>Actions</Table.Th>
-							</Table.Tr>
-						</Table.Thead>
-						<Table.Tbody>
-							{ratePresets.map((preset) => (
-								<Table.Tr key={preset.id}>
-									<Table.Td>
-										<Text fw={600}>{preset.subitemLabel}</Text>
-									</Table.Td>
-									<Table.Td style={{ textAlign: "right" }}>
-										<Text className="tabular-nums">
-											$
-											{preset.rateAmount.toLocaleString(undefined, {
-												minimumFractionDigits: 2,
-												maximumFractionDigits: 4,
-											})}
-										</Text>
-									</Table.Td>
-									<Table.Td style={{ textAlign: "right" }}>
-										<Text className="tabular-nums">
-											{preset.ratePerWords.toLocaleString()} words
-										</Text>
-									</Table.Td>
-									<Table.Td>
-										<Group justify="flex-end" gap="xs">
-											<Tooltip label="Edit preset">
-												<ActionIcon
-													variant="subtle"
-													color="gray"
-													onClick={() => handleOpenEdit(preset)}
-												>
-													<Pencil size={16} />
-												</ActionIcon>
-											</Tooltip>
-											<Tooltip label="Delete preset">
-												<ActionIcon
-													variant="subtle"
-													color="on-air-red"
-													onClick={() => handleDelete(preset.id)}
-												>
-													<Trash2 size={16} />
-												</ActionIcon>
-											</Tooltip>
-										</Group>
-									</Table.Td>
+		<>
+			<PresetManager
+				title="Billing Rates"
+				description="Standard rates for your services (e.g., Narration, Commercial, Editing)."
+				items={ratePresets}
+				onAdd={handleOpenAdd}
+				emptyMessage="No billing rate presets created yet."
+			>
+				{(items) => (
+					<SurfaceCard p={0}>
+						<Table verticalSpacing="md" horizontalSpacing="lg">
+							<Table.Thead>
+								<Table.Tr>
+									<Table.Th>Label</Table.Th>
+									<Table.Th style={{ textAlign: "right" }}>Rate ($)</Table.Th>
+									<Table.Th style={{ textAlign: "right" }}>
+										Unit (Words)
+									</Table.Th>
+									<Table.Th style={{ textAlign: "right" }}>Actions</Table.Th>
 								</Table.Tr>
-							))}
-						</Table.Tbody>
-					</Table>
-				</SurfaceCard>
-			) : (
-				<SurfaceCard p="xl">
-					<Stack align="center" gap="xs">
-						<Text c="dimmed" fs="italic">
-							No billing rate presets created yet.
-						</Text>
-						<Button
-							variant="subtle"
-							color="studio"
-							onClick={handleOpenAdd}
-							leftSection={<Plus size={16} />}
-						>
-							Create your first preset
-						</Button>
-					</Stack>
-				</SurfaceCard>
-			)}
+							</Table.Thead>
+							<Table.Tbody>
+								{items.map((preset) => (
+									<Table.Tr key={preset.id}>
+										<Table.Td>
+											<Text fw={600}>{preset.subitemLabel}</Text>
+										</Table.Td>
+										<Table.Td style={{ textAlign: "right" }}>
+											<Text className="tabular-nums">
+												$
+												{preset.rateAmount.toLocaleString(undefined, {
+													minimumFractionDigits: 2,
+													maximumFractionDigits: 4,
+												})}
+											</Text>
+										</Table.Td>
+										<Table.Td style={{ textAlign: "right" }}>
+											<Text className="tabular-nums">
+												{preset.ratePerWords.toLocaleString()} words
+											</Text>
+										</Table.Td>
+										<Table.Td>
+											<Group justify="flex-end" gap="xs">
+												<Tooltip label="Edit preset">
+													<ActionIcon
+														variant="subtle"
+														color="gray"
+														onClick={() => handleOpenEdit(preset)}
+													>
+														<Pencil size={16} />
+													</ActionIcon>
+												</Tooltip>
+												<Tooltip label="Delete preset">
+													<ActionIcon
+														variant="subtle"
+														color="on-air-red"
+														onClick={() => handleDelete(preset.id)}
+													>
+														<Trash2 size={16} />
+													</ActionIcon>
+												</Tooltip>
+											</Group>
+										</Table.Td>
+									</Table.Tr>
+								))}
+							</Table.Tbody>
+						</Table>
+					</SurfaceCard>
+				)}
+			</PresetManager>
 
 			<RatePresetModal
 				opened={modalOpened}
@@ -160,7 +135,7 @@ export function BillingRatePresetsManager() {
 					setModalOpened(false);
 				}}
 			/>
-		</Stack>
+		</>
 	);
 }
 

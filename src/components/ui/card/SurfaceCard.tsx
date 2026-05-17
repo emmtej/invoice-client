@@ -1,30 +1,22 @@
-import { type MantineTheme, Paper, type PaperProps } from "@mantine/core";
-import type { CSSProperties, ReactNode } from "react";
-
-const surfaceStyle = {
-	transition: "transform 150ms ease, box-shadow 150ms ease",
-};
+import { Paper, type PaperProps } from "@mantine/core";
+import type { ReactNode } from "react";
 
 interface SurfaceCardProps extends PaperProps {
 	children: ReactNode;
 }
 
-function isStyleFunction(
-	style: PaperProps["style"],
-): style is (theme: MantineTheme) => CSSProperties {
-	return typeof style === "function";
-}
-
-export function SurfaceCard({ children, style, ...rest }: SurfaceCardProps) {
-	const mergedStyle = isStyleFunction(style)
-		? (theme: MantineTheme) => ({
-				...surfaceStyle,
-				...style(theme),
-			})
-		: { ...surfaceStyle, ...(style ?? {}) };
-
+export function SurfaceCard({
+	children,
+	className,
+	...rest
+}: SurfaceCardProps) {
 	return (
-		<Paper p="xl" style={mergedStyle} {...rest}>
+		<Paper
+			p="xl"
+			radius="3xl"
+			className={`transition-all duration-150 ${className ?? ""}`}
+			{...rest}
+		>
 			{children}
 		</Paper>
 	);

@@ -19,7 +19,7 @@ const getWordCount = (text: string) =>
 	text.trim().split(/\s+/).filter(Boolean).length;
 
 export const documentLineParser = (line: string): ParsedLine | null => {
-	if (!line || !line.trim()) return null;
+	if (!line?.trim()) return null;
 
 	let cleanLine = line;
 	let notes: string[] | undefined;

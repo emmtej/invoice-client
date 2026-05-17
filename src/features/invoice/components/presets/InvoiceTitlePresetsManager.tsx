@@ -1,6 +1,5 @@
 import {
 	ActionIcon,
-	Box,
 	Button,
 	Group,
 	Stack,
@@ -10,10 +9,11 @@ import {
 	Tooltip,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SurfaceCard } from "@/components/ui/card/SurfaceCard";
 import { AppModal } from "@/components/ui/modal/AppModal";
+import { PresetManager } from "@/components/ui/presets/PresetManager";
 import {
 	type InvoiceTitlePreset,
 	useInvoicePresetsStore,
@@ -53,85 +53,58 @@ export function InvoiceTitlePresetsManager() {
 	};
 
 	return (
-		<Stack gap="md">
-			<Group justify="space-between">
-				<Box>
-					<Text fw={700} size="lg">
-						Invoice Titles
-					</Text>
-					<Text size="sm" c="dimmed">
-						Commonly used titles for your invoices (e.g. Session Invoice,
-						Project Fee).
-					</Text>
-				</Box>
-				<Button
-					leftSection={<Plus size={16} />}
-					color="studio"
-					onClick={handleOpenAdd}
-				>
-					Add Title
-				</Button>
-			</Group>
-
-			{titlePresets.length > 0 ? (
-				<SurfaceCard p={0}>
-					<Table verticalSpacing="md" horizontalSpacing="lg">
-						<Table.Thead>
-							<Table.Tr>
-								<Table.Th>Invoice Title</Table.Th>
-								<Table.Th style={{ textAlign: "right" }}>Actions</Table.Th>
-							</Table.Tr>
-						</Table.Thead>
-						<Table.Tbody>
-							{titlePresets.map((preset) => (
-								<Table.Tr key={preset.id}>
-									<Table.Td>
-										<Text fw={600}>{preset.title}</Text>
-									</Table.Td>
-									<Table.Td>
-										<Group justify="flex-end" gap="xs">
-											<Tooltip label="Edit title">
-												<ActionIcon
-													variant="subtle"
-													color="gray"
-													onClick={() => handleOpenEdit(preset)}
-												>
-													<Pencil size={16} />
-												</ActionIcon>
-											</Tooltip>
-											<Tooltip label="Delete title">
-												<ActionIcon
-													variant="subtle"
-													color="on-air-red"
-													onClick={() => handleDelete(preset.id)}
-												>
-													<Trash2 size={16} />
-												</ActionIcon>
-											</Tooltip>
-										</Group>
-									</Table.Td>
+		<>
+			<PresetManager
+				title="Invoice Titles"
+				description="Commonly used titles for your invoices (e.g. Session Invoice, Project Fee)."
+				items={titlePresets}
+				onAdd={handleOpenAdd}
+				emptyMessage="No invoice title presets created yet."
+			>
+				{(items) => (
+					<SurfaceCard p={0}>
+						<Table verticalSpacing="md" horizontalSpacing="lg">
+							<Table.Thead>
+								<Table.Tr>
+									<Table.Th>Invoice Title</Table.Th>
+									<Table.Th style={{ textAlign: "right" }}>Actions</Table.Th>
 								</Table.Tr>
-							))}
-						</Table.Tbody>
-					</Table>
-				</SurfaceCard>
-			) : (
-				<SurfaceCard p="xl">
-					<Stack align="center" gap="xs">
-						<Text c="dimmed" fs="italic">
-							No invoice title presets created yet.
-						</Text>
-						<Button
-							variant="subtle"
-							color="studio"
-							onClick={handleOpenAdd}
-							leftSection={<Plus size={16} />}
-						>
-							Create your first title preset
-						</Button>
-					</Stack>
-				</SurfaceCard>
-			)}
+							</Table.Thead>
+							<Table.Tbody>
+								{items.map((preset) => (
+									<Table.Tr key={preset.id}>
+										<Table.Td>
+											<Text fw={600}>{preset.title}</Text>
+										</Table.Td>
+										<Table.Td>
+											<Group justify="flex-end" gap="xs">
+												<Tooltip label="Edit title">
+													<ActionIcon
+														variant="subtle"
+														color="gray"
+														onClick={() => handleOpenEdit(preset)}
+													>
+														<Pencil size={16} />
+													</ActionIcon>
+												</Tooltip>
+												<Tooltip label="Delete title">
+													<ActionIcon
+														variant="subtle"
+														color="on-air-red"
+														onClick={() => handleDelete(preset.id)}
+													>
+														<Trash2 size={16} />
+													</ActionIcon>
+												</Tooltip>
+											</Group>
+										</Table.Td>
+									</Table.Tr>
+								))}
+							</Table.Tbody>
+						</Table>
+					</SurfaceCard>
+				)}
+			</PresetManager>
 
 			<TitlePresetModal
 				opened={modalOpened}
@@ -146,7 +119,7 @@ export function InvoiceTitlePresetsManager() {
 					setModalOpened(false);
 				}}
 			/>
-		</Stack>
+		</>
 	);
 }
 

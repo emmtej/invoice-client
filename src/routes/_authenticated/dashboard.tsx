@@ -1,21 +1,15 @@
-import { Button, Stack, Text } from "@mantine/core";
 import { createFileRoute } from "@tanstack/react-router";
-import { Suspense } from "react";
 import { DashboardView } from "@/features/user";
-import { RouteFallback } from "@/routes/components/RouteFallback";
+import { AuthenticatedRouteError } from "@/routes/components/AuthenticatedRouteError";
+import { AuthenticatedRouteShell } from "@/routes/components/AuthenticatedRouteShell";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
 	errorComponent: ({ reset }) => (
-		<Stack p="xl" align="center">
-			<Text c="red">Failed to load Dashboard</Text>
-			<Button onClick={reset} color="red">
-				Retry
-			</Button>
-		</Stack>
+		<AuthenticatedRouteError reset={reset} label="Dashboard" />
 	),
 	component: () => (
-		<Suspense fallback={<RouteFallback label="dashboard" />}>
+		<AuthenticatedRouteShell label="dashboard">
 			<DashboardView />
-		</Suspense>
+		</AuthenticatedRouteShell>
 	),
 });

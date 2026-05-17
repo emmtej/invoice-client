@@ -16,22 +16,29 @@ export default function DashboardView() {
 		<Stack gap="md">
 			<Box mb="xl">
 				<PageTitle>Dashboard</PageTitle>
-				<Text c="gray.5" size="lg" mt={4} className="page-subtitle">
+				<Text c="brand-dark.4" size="lg" mt={4} className="page-subtitle">
 					Welcome back. Jump into invoicing or review your recent work.
 				</Text>
 			</Box>
 
-			<Paper p="lg" maw={480} bg="white">
+			<Paper
+				radius="3xl"
+				p="lg"
+				maw={480}
+				bg="white"
+				withBorder
+				className="border-gray-100 shadow-sm"
+			>
 				<Stack gap="md">
 					<Group gap="sm">
-						<ThemeIcon size={32} variant="light" color="wave">
+						<ThemeIcon size={32} variant="light" color="wave" radius="md">
 							<Gauge size={18} strokeWidth={1.5} />
 						</ThemeIcon>
 						<div>
-							<Text fw={600} size="sm">
+							<Text fw={600} size="sm" c="brand-dark.7">
 								Get started
 							</Text>
-							<Text size="xs" c="gray.5">
+							<Text size="xs" c="brand-dark.3">
 								Create an invoice from your script line items and word counts.
 							</Text>
 						</div>
@@ -41,7 +48,9 @@ export default function DashboardView() {
 						to="/invoice"
 						color="wave"
 						size="sm"
+						radius="xl"
 						leftSection={<Receipt size={16} />}
+						className="shadow-sm transition-transform active:scale-95"
 					>
 						Create invoice
 					</Button>

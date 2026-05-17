@@ -50,15 +50,15 @@ export default function InvoiceView() {
 	const hasItems = invoice.items.length > 0;
 
 	return (
-		<Box className="fade-up" style={{ minHeight: "100%" }}>
+		<Box className="fade-up h-full">
 			<Stack gap={4} mb="xl" className="fade-up stagger-1">
 				<Box>
 					<PageTitle>
-						New <span style={{ fontStyle: "italic" }}>Invoice</span>
+						New <span className="italic">Invoice</span>
 					</PageTitle>
 				</Box>
 				<Box>
-					<Text size="lg" className="page-subtitle">
+					<Text size="lg" className="page-subtitle" c="brand-dark.4">
 						Create a professional billing document for your voice-over projects.
 					</Text>
 				</Box>
@@ -68,23 +68,28 @@ export default function InvoiceView() {
 				direction={{ base: "column", lg: "row" }}
 				gap={64}
 				align="flex-start"
-				flex={1}
+				className="flex-1"
 			>
 				{/* Left Column: The Form */}
-				<Box flex={1} maw={{ lg: 800 }} w="100%">
+				<Box className="flex-1 max-w-[800px] w-full">
 					<Stack gap={48}>
 						{/* Step 1: Profile */}
 						<Box className="fade-up stagger-2">
 							<Stack gap="xl">
 								<Group gap="xs">
-									<Text fw={800} size="xl" c="sage.6" opacity={0.5}>
+									<Text fw={800} size="xl" c="sage.6" className="opacity-50">
 										01
 									</Text>
-									<Text fw={800} size="xl">
+									<Text fw={800} size="xl" c="brand-dark.7">
 										Sender Profile
 									</Text>
 								</Group>
-								<Paper p="xl">
+								<Paper
+									radius="3xl"
+									p="xl"
+									withBorder
+									className="border-gray-100 shadow-sm"
+								>
 									<ProfileSection {...profileManager} />
 								</Paper>
 							</Stack>
@@ -94,14 +99,19 @@ export default function InvoiceView() {
 						<Box className="fade-up stagger-3">
 							<Stack gap="xl">
 								<Group gap="xs">
-									<Text fw={800} size="xl" c="sage.6" opacity={0.5}>
+									<Text fw={800} size="xl" c="sage.6" className="opacity-50">
 										02
 									</Text>
-									<Text fw={800} size="xl">
+									<Text fw={800} size="xl" c="brand-dark.7">
 										Invoice Details
 									</Text>
 								</Group>
-								<Paper p="xl">
+								<Paper
+									radius="3xl"
+									p="xl"
+									withBorder
+									className="border-gray-100 shadow-sm"
+								>
 									<InvoiceDetailsSection
 										invoiceTitle={invoiceTitle}
 										setInvoiceTitle={setInvoiceTitle}
@@ -116,14 +126,19 @@ export default function InvoiceView() {
 						<Box className="fade-up stagger-4">
 							<Stack gap="xl">
 								<Group gap="xs">
-									<Text fw={800} size="xl" c="sage.6" opacity={0.5}>
+									<Text fw={800} size="xl" c="sage.6" className="opacity-50">
 										03
 									</Text>
-									<Text fw={800} size="xl">
+									<Text fw={800} size="xl" c="brand-dark.7">
 										Line Items
 									</Text>
 								</Group>
-								<Paper p="xl">
+								<Paper
+									radius="3xl"
+									p="xl"
+									withBorder
+									className="border-gray-100 shadow-sm"
+								>
 									<Stack gap="xl">
 										<InvoiceItemAdder
 											newItemName={newItemName}
@@ -143,16 +158,7 @@ export default function InvoiceView() {
 				</Box>
 
 				{/* Right Column: Live Paper Preview */}
-				<Box
-					flex="0 0 450px"
-					visibleFrom="lg"
-					style={{
-						position: "sticky",
-						top: "100px",
-						alignSelf: "flex-start",
-					}}
-					className="fade-up stagger-5"
-				>
+				<Box className="flex-[0_0_450px] hidden lg:block sticky top-[100px] self-start fade-up stagger-5">
 					<Box>
 						<Stack gap="xl">
 							<Stack gap="md">
@@ -166,15 +172,7 @@ export default function InvoiceView() {
 								>
 									Live Preview
 								</Text>
-								<Box
-									bg="white"
-									style={{
-										boxShadow:
-											"0 20px 50px rgba(45, 58, 49, 0.1), 0 10px 20px rgba(45, 58, 49, 0.05), 0 5px 10px rgba(45, 58, 49, 0.02)",
-										minHeight: "600px",
-										borderRadius: "4px",
-									}}
-								>
+								<Box bg="white" className="shadow-2xl min-h-[600px] rounded-sm">
 									<InvoiceSummary
 										profile={profileManager.activeProfileForSummary}
 										invoiceTitle={invoiceTitle}
@@ -189,7 +187,9 @@ export default function InvoiceView() {
 									variant="outline"
 									color="forest"
 									size="lg"
+									radius="xl"
 									disabled={!hasItems}
+									className="transition-transform active:scale-95"
 								>
 									Full Preview
 								</Button>
@@ -197,8 +197,10 @@ export default function InvoiceView() {
 									variant="filled"
 									color="forest"
 									size="lg"
+									radius="xl"
 									leftSection={<FileText size={20} />}
 									disabled={!hasItems}
+									className="shadow-sm transition-transform active:scale-95"
 								>
 									Export PDF
 								</Button>

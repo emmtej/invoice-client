@@ -2,8 +2,8 @@ import { Box } from "@mantine/core";
 import { useCallback } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { SectionLabel } from "@/components/ui/text/SectionLabel";
-import { scriptsQueries } from "@/features/scripts/store/scriptsQueries";
-import type { BoothSession } from "../store/boothQueries";
+import type { BoothSession } from "@/features/storage/repository/boothRepository";
+import { scriptRepository } from "@/features/storage/repository/scriptRepository";
 import { useBoothStore } from "../store/useBoothStore";
 import { SessionHistory } from "./SessionHistory";
 
@@ -27,7 +27,7 @@ export function SelectionSidebar({ isInitialLoading }: SelectionSidebarProps) {
 	const handleSelectSession = useCallback(
 		async (session: BoothSession) => {
 			if (session.status !== "in_progress") return;
-			const scriptForSession = await scriptsQueries.getScriptById(
+			const scriptForSession = await scriptRepository.getScriptById(
 				session.scriptId,
 			);
 			if (!scriptForSession) return;

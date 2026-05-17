@@ -45,7 +45,7 @@ export function SelectionView({ header }: SelectionViewProps) {
 
 				{ongoingSession && (
 					<Stack gap="sm">
-						<Text fw={700} size="sm" c="gray.7" tt="uppercase" lts={0.5}>
+						<Text fw={700} size="sm" c="brand-dark.4" tt="uppercase" lts={0.5}>
 							Ongoing Session
 						</Text>
 						<OngoingSessionCard session={ongoingSession} />
@@ -62,7 +62,7 @@ export function SelectionView({ header }: SelectionViewProps) {
 				<Center flex={1}>
 					<Stack align="center" gap="xs">
 						<Loader color="wave" size="sm" />
-						<Text size="sm" c="gray.6" fw={500}>
+						<Text size="sm" c="brand-dark.3" fw={500}>
 							Loading...
 						</Text>
 					</Stack>

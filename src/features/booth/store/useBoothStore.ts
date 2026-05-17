@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { scriptsQueries } from "@/features/scripts/store/scriptsQueries";
-import { boothQueries } from "./boothQueries";
+import { boothRepository } from "@/features/storage/repository/boothRepository";
+import { scriptRepository } from "@/features/storage/repository/scriptRepository";
 import type { BoothStore } from "./types";
 import { boothMachine, initialBoothState } from "./useBoothMachine";
 import {
@@ -26,7 +26,7 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 
 		const updates = boothMachine.startSession(script);
 		if (!updates.sessionId) return;
-		await boothQueries.createSession({
+		await boothRepository.createSession({
 			id: updates.sessionId,
 			scriptId: script.id,
 			scriptName: script.name,
@@ -49,13 +49,13 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 		const { nextStatus, updates } = boothMachine.stopSession(state);
 
 		if (nextStatus === "completed") {
-			await boothQueries.completeSession(sessionId, {
+			await boothRepository.completeSession(sessionId, {
 				completedLines: completedLineIndices.length,
 				elapsedMs,
 				lineTimings,
 			});
 		} else {
-			await boothQueries.updateSession(sessionId, {
+			await boothRepository.updateSession(sessionId, {
 				completedLines: completedLineIndices.length,
 				elapsedMs,
 				lineTimings,
@@ -78,14 +78,14 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 		if (!sessionId) return;
 
 		if (updates.allDone) {
-			await boothQueries.completeSession(sessionId, {
+			await boothRepository.completeSession(sessionId, {
 				completedLines: completedLineIndices.length,
 				elapsedMs,
 				lineTimings,
 			});
 			await get().loadSessions();
 		} else {
-			await boothQueries.updateSession(sessionId, {
+			await boothRepository.updateSession(sessionId, {
 				completedLines: completedLineIndices.length,
 				elapsedMs,
 				lineTimings,
@@ -105,14 +105,14 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 		if (!sessionId) return;
 
 		if (updates.allDone) {
-			await boothQueries.completeSession(sessionId, {
+			await boothRepository.completeSession(sessionId, {
 				completedLines: completedLineIndices.length,
 				elapsedMs,
 				lineTimings,
 			});
 			await get().loadSessions();
 		} else {
-			await boothQueries.updateSession(sessionId, {
+			await boothRepository.updateSession(sessionId, {
 				completedLines: completedLineIndices.length,
 				elapsedMs,
 				lineTimings,
@@ -127,7 +127,7 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 		const { updatedScript } = boothMachine.editLine(script, lineIndex, content);
 		if (!updatedScript) return;
 
-		await scriptsQueries.saveScript(updatedScript);
+		await scriptRepository.saveScript(updatedScript);
 
 		set((s) => ({
 			script: updatedScript,
@@ -142,11 +142,11 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 		const { sessionId, script } = state;
 		if (!script || !sessionId) return;
 
-		await boothQueries.abandonSession(sessionId);
+		await boothRepository.abandonSession(sessionId);
 
 		const updates = boothMachine.restartSession(state, resetTimer);
 		if (!updates.sessionId) return;
-		await boothQueries.createSession({
+		await boothRepository.createSession({
 			id: updates.sessionId,
 			scriptId: script.id,
 			scriptName: script.name,
@@ -166,8 +166,7 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 	loadSessions: async () => {
 		set({ isLoadingSessions: true });
 		try {
-			await boothQueries.init();
-			const sessions = await boothQueries.getAllSessions();
+			const sessions = await boothRepository.getAllSessions();
 			set({ sessions, isLoadingSessions: false });
 		} catch {
 			set({ isLoadingSessions: false });
@@ -175,7 +174,7 @@ export const useBoothStore = create<BoothStore>()((set, get) => ({
 	},
 
 	deleteSessionRecord: async (id) => {
-		await boothQueries.deleteSession(id);
+		await boothRepository.deleteSession(id);
 		set((s) => ({
 			sessions: s.sessions.filter((sess) => sess.id !== id),
 		}));

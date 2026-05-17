@@ -34,56 +34,6 @@ function getActiveLinkPath(
 	return best;
 }
 
-const controlStyles = {
-	root: {
-		fontWeight: 600,
-		display: "block",
-		width: "100%",
-		padding: "var(--mantine-spacing-sm) var(--mantine-spacing-md)",
-		color: "var(--mantine-color-gray-6)",
-		fontSize: "var(--mantine-font-size-sm)",
-		transition: "all 150ms ease",
-		"&:hover": {
-			backgroundColor: "var(--mantine-color-gray-0)",
-			color: "var(--mantine-color-gray-8)",
-		},
-	},
-} as const;
-
-const linkBaseStyles = {
-	fontWeight: 500,
-	display: "block",
-	textDecoration: "none",
-	padding: "var(--mantine-spacing-sm) var(--mantine-spacing-md)",
-	paddingLeft: "var(--mantine-spacing-lg)",
-	marginLeft: "var(--mantine-spacing-xl)",
-	fontSize: "var(--mantine-font-size-sm)",
-	color: "var(--mantine-color-gray-5)",
-	transition: "all 150ms ease",
-	"&:hover": {
-		backgroundColor:
-			"color-mix(in srgb, var(--mantine-color-wave-8) 5%, white)",
-		color: "var(--mantine-color-wave-8)",
-	},
-} as const;
-
-const linkActiveStyles = {
-	...linkBaseStyles,
-	color: "var(--mantine-color-wave-8)",
-	backgroundColor: "color-mix(in srgb, var(--mantine-color-wave-8) 8%, white)",
-	fontWeight: 600,
-} as const;
-
-const controlActiveStyles = {
-	root: {
-		...controlStyles.root,
-		color: "var(--mantine-color-wave-8)",
-		backgroundColor:
-			"color-mix(in srgb, var(--mantine-color-wave-8) 8%, white)",
-		fontWeight: 700,
-	},
-} as const;
-
 interface LinksGroupProps {
 	icon: LucideIcon;
 	label: string;
@@ -110,14 +60,6 @@ export function LinksGroup({
 		if (hasLinks) setOpened((o) => !o);
 	}, [hasLinks]);
 
-	const chevronStyle = useMemo(
-		() => ({
-			transform: opened ? "rotate(-90deg)" : "none",
-			transition: "transform 200ms ease",
-		}),
-		[opened],
-	);
-
 	const activePath = useMemo(
 		() => (hasLinks && links ? getActiveLinkPath(pathname, links) : null),
 		[hasLinks, links, pathname],
@@ -138,7 +80,11 @@ export function LinksGroup({
 				to={link.link}
 				onClick={onNavigate}
 				onMouseEnter={() => initDb()}
-				style={isActive ? linkActiveStyles : linkBaseStyles}
+				className={`block w-full py-2 px-4 ml-8 text-sm transition-colors border-l border-transparent ${
+					isActive
+						? "text-wave-700 font-semibold bg-wave-50 border-wave-500"
+						: "text-gray-500 hover:text-gray-800 hover:bg-gray-50"
+				}`}
 			>
 				{link.label}
 			</UnstyledButton>
@@ -154,10 +100,20 @@ export function LinksGroup({
 				<Box ml="md">{label}</Box>
 			</Flex>
 			{hasLinks && (
-				<ChevronRight strokeWidth={1.5} size={16} style={chevronStyle} />
+				<ChevronRight
+					strokeWidth={1.5}
+					size={16}
+					className={`transition-transform duration-200 ${opened ? "rotate-90" : ""}`}
+				/>
 			)}
 		</Group>
 	);
+
+	const controlClasses = `block w-full py-2 px-3 text-sm font-semibold transition-colors rounded-md ${
+		isHrefActive
+			? "text-wave-800 bg-wave-50"
+			: "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
+	}`;
 
 	return (
 		<>
@@ -167,12 +123,12 @@ export function LinksGroup({
 					to={href || ""}
 					onClick={onNavigate}
 					onMouseEnter={() => initDb()}
-					styles={isHrefActive ? controlActiveStyles : controlStyles}
+					className={controlClasses}
 				>
 					{content}
 				</UnstyledButton>
 			) : (
-				<UnstyledButton onClick={handleToggle} styles={controlStyles}>
+				<UnstyledButton onClick={handleToggle} className={controlClasses}>
 					{content}
 				</UnstyledButton>
 			)}

@@ -3,10 +3,10 @@ import {
 	getScriptOverview,
 } from "@/features/editor/utils/documentParser";
 import { generateHtmlFromScript } from "@/features/editor/utils/formatParsedLines";
+import type { BoothSession } from "@/features/storage/repository/boothRepository";
 import type { LineTimingEntry } from "@/features/storage/types";
 import type { Script } from "@/types/Script";
 import { generateId } from "@/utils/id";
-import type { BoothSession } from "./boothQueries";
 import type { BoothState, BoothStatus } from "./types";
 import {
 	findNextUncompletedLine,

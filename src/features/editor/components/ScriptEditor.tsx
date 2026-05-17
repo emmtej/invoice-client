@@ -75,6 +75,7 @@ function ScriptEditorInner({ script }: ScriptEditorProps) {
 							variant="subtle"
 							color="gray"
 							size="xs"
+							radius="xl"
 							leftSection={<ArrowLeft size={14} />}
 							onClick={() => setEditingScriptId(null)}
 						>
@@ -84,6 +85,7 @@ function ScriptEditorInner({ script }: ScriptEditorProps) {
 							variant="subtle"
 							color="terracotta"
 							size="xs"
+							radius="xl"
 							leftSection={<RotateCcw size={14} />}
 							onClick={handleReset}
 						>
@@ -92,9 +94,11 @@ function ScriptEditorInner({ script }: ScriptEditorProps) {
 						<Button
 							size="xs"
 							color="forest"
+							radius="xl"
 							variant="filled"
 							leftSection={<Check size={14} />}
 							onClick={handleSubmit}
+							className="shadow-sm"
 						>
 							Finish Editing
 						</Button>

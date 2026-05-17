@@ -1,6 +1,6 @@
+import type { BoothSession } from "@/features/storage/repository/boothRepository";
 import type { LineTimingEntry } from "@/features/storage/types";
 import type { Script } from "@/types/Script";
-import type { BoothSession } from "./boothQueries";
 
 export type BoothStatus =
 	| "idle"

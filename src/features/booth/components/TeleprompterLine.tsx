@@ -54,14 +54,14 @@ export function TeleprompterLine({
 				py="md"
 				px="md"
 				bg={isCurrent && isSceneMode ? "wave.0" : "transparent"}
-				style={{
-					borderBottom: "1px dashed var(--mantine-color-gray-3)",
-					borderLeft:
+				className={`
+					border-b border-dashed border-gray-200 transition-colors duration-150
+					${
 						isCurrent && isSceneMode
-							? "3px solid var(--mantine-color-wave-5)"
-							: "3px solid transparent",
-					transition: "background-color 150ms ease",
-				}}
+							? "border-l-[3px] border-l-wave-500"
+							: "border-l-[3px] border-l-transparent"
+					}
+				`}
 			>
 				<Group gap="sm" wrap="nowrap">
 					{isSceneMode && (
@@ -70,16 +70,16 @@ export function TeleprompterLine({
 							onChange={() => onCompleteScene(lineIndex)}
 							disabled={!isSessionRunning || isCompleted}
 							color="wave"
-							style={{ flexShrink: 0 }}
+							className="flex-shrink-0"
 						/>
 					)}
 					<Text
 						size="xs"
 						fw={800}
-						c={isCompleted ? "gray.5" : "gray.6"}
+						c={isCompleted ? "brand-dark.2" : "brand-dark.4"}
 						tt="uppercase"
 						lts={1}
-						flex={1}
+						className="flex-1"
 					>
 						{content}
 					</Text>
@@ -114,14 +114,15 @@ export function TeleprompterLine({
 			px="md"
 			align="flex-start"
 			bg={isCurrent && !isSceneMode ? "wave.0" : "transparent"}
-			opacity={isCompleted ? 0.45 : 1}
-			style={{
-				borderLeft:
+			className={`
+				transition-all duration-150
+				${isCompleted ? "opacity-40" : "opacity-100"}
+				${
 					isCurrent && !isSceneMode
-						? "3px solid var(--mantine-color-wave-5)"
-						: "3px solid transparent",
-				transition: "background-color 150ms ease, opacity 150ms ease",
-			}}
+						? "border-l-[3px] border-l-wave-500"
+						: "border-l-[3px] border-l-transparent"
+				}
+			`}
 		>
 			{!isSceneMode && (
 				<Checkbox
@@ -130,11 +131,11 @@ export function TeleprompterLine({
 					disabled={!isSessionRunning || isCompleted}
 					mt={4}
 					color="wave"
-					style={{ flexShrink: 0 }}
+					className="flex-shrink-0"
 				/>
 			)}
 
-			<Box flex={1} miw={0} ml={isSceneMode ? "md" : 0}>
+			<Box className={`flex-1 min-w-0 ${isSceneMode ? "ml-8" : "ml-0"}`}>
 				{isEditing ? (
 					<Group gap="xs" wrap="nowrap">
 						<TextInput
@@ -147,12 +148,14 @@ export function TeleprompterLine({
 							}}
 							onBlur={saveEdit}
 							size="sm"
-							flex={1}
+							className="flex-1"
+							radius="md"
 						/>
 						<ActionIcon
 							size="sm"
 							variant="subtle"
 							color="gray"
+							radius="md"
 							onClick={cancelEdit}
 						>
 							<X size={14} />
@@ -162,8 +165,8 @@ export function TeleprompterLine({
 					<Text
 						size="md"
 						fw={500}
-						c={isCompleted ? "gray.5" : "gray.8"}
-						td={isCompleted ? "line-through" : undefined}
+						c={isCompleted ? "brand-dark.2" : "brand-dark.7"}
+						className={isCompleted ? "line-through" : ""}
 					>
 						{content}
 					</Text>
@@ -171,11 +174,12 @@ export function TeleprompterLine({
 			</Box>
 
 			{!isEditing && !isCompleted && (
-				<Group gap={4} style={{ flexShrink: 0 }} mt={2}>
+				<Group gap={4} className="flex-shrink-0 mt-0.5">
 					<ActionIcon
 						size="sm"
 						variant="subtle"
 						color="gray"
+						radius="md"
 						onClick={startEditing}
 						aria-label="Edit line"
 					>
