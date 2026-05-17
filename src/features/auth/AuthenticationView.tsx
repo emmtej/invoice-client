@@ -30,18 +30,15 @@ function AuthenticationView() {
 	return (
 		<Flex justify="center" align="center" py="xl" flex={1}>
 			<Paper
+				radius="3xl"
 				bg="white"
-				display="flex"
-				style={{ overflow: "hidden", minHeight: 650 }}
-				w="100%"
-				maw={1000}
+				className="flex overflow-hidden min-h-[650px] w-full max-w-[1000px] border border-gray-100 shadow-xl"
 			>
 				{/* Left Form Column */}
 				<Box
 					p={{ base: "xl", md: 60 }}
 					w={{ base: "100%", md: "50%" }}
-					display="flex"
-					style={{ flexDirection: "column", justifyContent: "center" }}
+					className="flex flex-col justify-center"
 				>
 					{import.meta.env.VITE_DEMO_MODE === "true" && (
 						<Alert
@@ -50,6 +47,8 @@ function AuthenticationView() {
 							color="wave"
 							variant="light"
 							mb="xl"
+							radius="md"
+							className="border border-wave-100"
 						>
 							Use{" "}
 							<Text span fw={700}>
@@ -60,7 +59,7 @@ function AuthenticationView() {
 					)}
 					<Box mb={40}>
 						<PageTitle size="42px">Get Started with InVoice</PageTitle>
-						<Text c="gray.5" mt="sm" size="lg" className="page-subtitle">
+						<Text c="brand-dark.4" mt="sm" size="lg" className="page-subtitle">
 							Professional script management and word-count based invoicing for
 							voice artists.
 						</Text>
@@ -76,60 +75,62 @@ function AuthenticationView() {
 						fullWidth
 						mb="xl"
 						size="md"
+						radius="xl"
+						color="studio"
 					/>
 					<AuthForm mode={isRegistering ? "register" : "login"} />
 					<Box py="xs" mt="sm">
 						<Anchor
 							component={Link}
 							to={isRegistering ? "/login" : "/register"}
-							display="block"
-							size="sm"
-							c="wave.7"
+							className="block text-sm text-wave-700 font-semibold"
 						>
 							{isRegistering
 								? "Already have an account? Login"
 								: "Don't have an account? Sign up"}
 						</Anchor>
 					</Box>
-					<Divider my="md" label="Or continue with" />
+					<Divider
+						my="md"
+						label="Or continue with"
+						className="border-gray-50"
+					/>
 					<OAuthProviders />
 				</Box>
 
 				{/* Right Image Column */}
 				<Box
 					w={{ base: "0%", md: "50%" }}
-					display={{ base: "none", md: "block" }}
-					style={{ position: "relative" }}
+					className="hidden md:block relative bg-brand-dark-50/30 border-l border-gray-100"
 				>
 					<Flex
 						h="100%"
 						w="100%"
-						bg="gray.0"
 						direction="column"
 						align="center"
 						justify="center"
-						style={{ color: "var(--mantine-color-gray-4)" }}
+						className="text-brand-dark-200"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
-							width="48"
-							height="48"
+							width="64"
+							height="64"
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							strokeWidth="2"
+							strokeWidth="1.5"
 							strokeLinecap="round"
 							strokeLinejoin="round"
-							style={{ marginBottom: "1rem" }}
+							className="mb-4"
 							role="img"
 						>
 							<title>Image Placeholder</title>
-							<rect width="18" height="18" x="3" y="3" rx="0" ry="0" />{" "}
+							<rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
 							<circle cx="9" cy="9" r="2" />
 							<path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
 						</svg>
-						<Text size="lg" fw={600} c="gray.5">
-							Image Placeholder
+						<Text size="lg" fw={700} c="brand-dark.3">
+							Professional Studio Interface
 						</Text>
 					</Flex>
 				</Box>
@@ -137,5 +138,4 @@ function AuthenticationView() {
 		</Flex>
 	);
 }
-
 export default AuthenticationView;

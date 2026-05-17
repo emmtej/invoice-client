@@ -23,51 +23,38 @@ export function LandingHero() {
 				{/* Large card on the left with image on right */}
 				<Grid.Col span={{ base: 12, lg: 8 }}>
 					<Paper
-						radius="2xl"
+						radius="3xl"
 						p={0}
 						withBorder
-						style={{
-							overflow: "hidden",
-							height: "500px",
-							position: "relative",
-							backgroundColor: "#1A1B1E", // Dark studio foam base
-						}}
+						bg="brand-dark.9"
+						className="relative h-[500px] overflow-hidden border-brand-dark-800"
 					>
 						{/* Image container positioned to the right */}
-						<Box
-							pos="absolute"
-							top={0}
-							right={0}
-							bottom={0}
-							w="70%"
-							style={{ zIndex: 1 }}
-						>
+						<Box className="absolute inset-y-0 right-0 w-[70%] z-[1]">
 							<BackgroundImage src={invoice1} h="100%" />
 						</Box>
 
 						{/* Overlay for text contrast - matching dark foam color */}
 						<Overlay
-							gradient="linear-gradient(90deg, rgba(26, 27, 30, 1) 0%, rgba(26, 27, 30, 0.9) 40%, rgba(26, 27, 30, 0) 100%)"
+							gradient="linear-gradient(90deg, var(--mantine-color-brand-dark-9) 0%, rgba(26, 27, 30, 0.9) 40%, rgba(26, 27, 30, 0) 100%)"
 							zIndex={2}
 						/>
 
 						{/* Content container */}
-						<Box p={40} h="100%" pos="relative" style={{ zIndex: 3 }}>
+						<Box p={40} h="100%" className="relative z-[3]">
 							<Stack gap="xl" maw={420} h="100%" justify="center">
 								<div>
 									<Title
 										order={1}
 										size={44}
-										style={{ lineHeight: 1.1 }}
-										fw={600}
-										c="white"
+										className="leading-[1.1] font-semibold text-white"
 									>
 										From Script to
 										<br />
 										Professional Invoice
 									</Title>
 								</div>
-								<Text c="white" size="md" fw={400} style={{ opacity: 0.9 }}>
+								<Text c="white" size="md" fw={400} className="opacity-90">
 									InVoice handles the word counts so you can focus on the
 									performance. Automated parsing for DOCX and text scripts.
 								</Text>
@@ -76,7 +63,7 @@ export function LandingHero() {
 										component={Link}
 										to="/register"
 										size="md"
-										radius="sm"
+										radius="xl"
 										variant="filled"
 										color="studio"
 										onMouseEnter={() => initDb()}
@@ -87,7 +74,7 @@ export function LandingHero() {
 										component={Link}
 										to="/editor"
 										size="md"
-										radius="sm"
+										radius="xl"
 										variant="outline"
 										onMouseEnter={() => initDb()}
 										styles={{
@@ -111,13 +98,13 @@ export function LandingHero() {
 				{/* Stacked cards on the right */}
 				<Grid.Col span={{ base: 12, lg: 4 }}>
 					<Stack gap="md" h="100%">
-						<Paper radius="2xl" p="xl" bg="studio.0" withBorder flex={1}>
+						<Paper radius="3xl" p="xl" bg="studio.0" withBorder flex={1}>
 							<Stack h="100%" justify="space-between">
 								<ThemeIcon variant="light" color="studio" size="lg" radius="md">
 									<Mic size={20} />
 								</ThemeIcon>
 								<div>
-									<Text fw={700} size="lg">
+									<Text fw={700} size="lg" c="brand-dark.6">
 										Booth Mode
 									</Text>
 									<Text size="sm" c="gray.6">
@@ -127,13 +114,13 @@ export function LandingHero() {
 								</div>
 							</Stack>
 						</Paper>
-						<Paper radius="2xl" p="xl" bg="wave.0" withBorder flex={1}>
+						<Paper radius="3xl" p="xl" bg="wave.0" withBorder flex={1}>
 							<Stack h="100%" justify="space-between">
 								<ThemeIcon variant="light" color="wave" size="lg" radius="md">
 									<Receipt size={20} />
 								</ThemeIcon>
 								<div>
-									<Text fw={700} size="lg">
+									<Text fw={700} size="lg" c="brand-dark.6">
 										Smart Billing
 									</Text>
 									<Text size="sm" c="gray.6">

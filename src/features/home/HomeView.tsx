@@ -115,11 +115,7 @@ export default function HomeView() {
 			withBorder
 			p="lg"
 			onMouseEnter={() => initDb()}
-			className="interactive-card"
-			style={{
-				textDecoration: "none",
-				color: "inherit",
-			}}
+			className="interactive-card no-underline text-inherit"
 		>
 			<Group wrap="nowrap">
 				<ThemeIcon color={tool.color} variant="light" size="xl">
