@@ -12,22 +12,31 @@ export function UserButton({ user }: UserButtonProps) {
 			w="100%"
 			p="md"
 			display="block"
-			className="transition-colors hover:bg-gray-50"
+			className="transition-all hover:bg-brand-dark-50/50 rounded-2xl active:scale-[0.98] group"
 			style={{
 				color: "var(--mantine-color-black)",
 			}}
 		>
-			<Group>
-				<Avatar src={user.profileImgUrl} color="wave" />
-				<Box flex={1}>
-					<Text size="sm" fw={600} c="gray.8">
+			<Group wrap="nowrap">
+				<Avatar
+					src={user.profileImgUrl}
+					color="wave"
+					radius="xl"
+					className="ring-2 ring-white shadow-sm transition-transform group-hover:scale-105"
+				/>
+				<Box flex={1} style={{ overflow: "hidden" }}>
+					<Text size="sm" fw={600} c="brand-dark.7" className="truncate tracking-tight">
 						{user.firstname} {user.lastname}
 					</Text>
-					<Text c="gray.5" size="xs">
+					<Text c="brand-dark.4" size="xs" className="truncate opacity-80">
 						{user.email}
 					</Text>
 				</Box>
-				<ChevronRight size={14} strokeWidth={1.5} className="text-gray-400" />
+				<ChevronRight
+					size={14}
+					strokeWidth={2}
+					className="text-brand-dark-300 transition-transform group-hover:translate-x-0.5"
+				/>
 			</Group>
 		</UnstyledButton>
 	);

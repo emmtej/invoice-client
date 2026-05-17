@@ -32,15 +32,15 @@ export function AppFooter() {
 							strokeWidth={2}
 							style={{ color: "var(--mantine-color-studio-8)" }}
 						/>
-						<Text size="xl" fw={800} c="gray.8" className="tracking-tighter">
+						<Text size="xl" fw={800} c="brand-dark.7" className="tracking-tighter">
 							InVoice
 						</Text>
 					</Group>
-					<Text size="sm" c="gray.5" maw="18.75rem" mb="xl">
+					<Text size="sm" c="brand-dark.4" maw="18.75rem" mb="xl">
 						Billing and script tools for voice actors—soft on the eyes, sharp on
 						the details.
 					</Text>
-					<Text size="xs" c="gray.5">
+					<Text size="xs" c="brand-dark.4">
 						© 2026 InVoice Platform. All rights reserved.
 					</Text>
 				</Grid.Col>
@@ -57,7 +57,7 @@ export function AppFooter() {
 										component={Link}
 										to={link.to}
 										size="sm"
-										c="gray.5"
+										c="brand-dark.4"
 										underline="hover"
 									>
 										{link.label}

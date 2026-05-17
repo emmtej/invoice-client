@@ -29,23 +29,11 @@ export function Navbar() {
 				px="sm"
 				fz="sm"
 				fw={600}
-				style={{
-					color: isActive
-						? "var(--mantine-color-wave-8)"
-						: "var(--mantine-color-gray-6)",
-					backgroundColor: isActive
-						? "color-mix(in srgb, var(--mantine-color-wave-8) 8%, white)"
-						: "transparent",
-					transition: "all 150ms ease",
-					"&:hover": {
-						backgroundColor: isActive
-							? "color-mix(in srgb, var(--mantine-color-wave-8) 12%, white)"
-							: "var(--mantine-color-gray-0)",
-						color: isActive
-							? "var(--mantine-color-wave-9)"
-							: "var(--mantine-color-gray-8)",
-					},
-				}}
+				className={`rounded-md transition-colors duration-200 ${
+					isActive
+						? "text-wave-800 bg-wave-50"
+						: "text-brand-dark-500 hover:bg-brand-dark-50 hover:text-brand-dark-700"
+				}`}
 			>
 				{link.label}
 			</UnstyledButton>
@@ -63,53 +51,20 @@ export function Navbar() {
 			<UnstyledButton
 				component={Link}
 				to="/"
-				style={{
-					display: "flex",
-					alignItems: "center",
-					textDecoration: "none",
-					color: "inherit",
-				}}
+				className="flex items-center no-underline text-inherit"
 			>
 				<Title
 					order={3}
 					c="forest.9"
-					style={{
-						display: "flex",
-						alignItems: "baseline",
-						lineHeight: 1,
-					}}
+					className="flex items-baseline leading-none"
 				>
+					<span className="font-black tracking-tighter">In</span>
 					<span
-						style={{
-							fontWeight: 900,
-							letterSpacing: "-0.08em",
-						}}
-					>
-						In
-					</span>
-					<span
-						style={{
-							fontStyle: "italic",
-							fontWeight: 900,
-							color: "var(--mantine-color-wave-8)",
-							fontSize: "1.4em",
-							margin: "0 -0.04em",
-							position: "relative",
-							top: "0.02em",
-							zIndex: 1,
-						}}
+						className="italic font-black text-wave-800 text-[1.4em] -mx-[0.04em] relative top-[0.02em] z-[1]"
 					>
 						V
 					</span>
-					<span
-						style={{
-							fontWeight: 400,
-							letterSpacing: "0.12em",
-							fontFamily: "var(--mantine-font-family)",
-							color: "var(--mantine-color-gray-6)",
-							fontSize: "0.85em",
-						}}
-					>
+					<span className="font-normal tracking-widest text-brand-dark-400 text-[0.85em] font-sans">
 						oice
 					</span>
 				</Title>

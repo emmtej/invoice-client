@@ -7,3 +7,5 @@ export const APP_SHELL_MOBILE_BREAKPOINT = "md";
  * It provides a comfortable reading measure and aligns with common 1140–1280px shell practices.
  */
 export const APP_CONTENT_MAX_WIDTH = 1400;
+
+export type AppLayoutMode = "default" | "flush";

@@ -10,6 +10,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { initDb } from "@/features/storage/pgliteClient";
+import { MagneticWrapper } from "../motion/MagneticWrapper";
 
 function normalizePath(path: string) {
 	return path.replace(/\/$/, "") || "/";
@@ -42,6 +43,18 @@ interface LinksGroupProps {
 	href?: string;
 	onNavigate?: () => void;
 }
+
+const linkBase =
+	"block w-full py-2.5 px-3 text-sm font-medium transition-all rounded-xl relative overflow-hidden group";
+const linkActive = "text-wave-800 bg-wave-50/50 shadow-sm font-semibold";
+const linkInactive =
+	"text-brand-dark-500 hover:bg-brand-dark-50/50 hover:text-brand-dark-700 active:scale-[0.98]";
+
+const childLinkBase =
+	"block w-full py-2 px-4 ml-6 text-sm transition-all rounded-lg";
+const childLinkActive = "text-wave-700 font-semibold bg-wave-50/30";
+const childLinkInactive =
+	"text-brand-dark-400 hover:text-brand-dark-700 hover:bg-brand-dark-50/50 active:scale-[0.97]";
 
 export function LinksGroup({
 	icon: Icon,
@@ -80,11 +93,7 @@ export function LinksGroup({
 				to={link.link}
 				onClick={onNavigate}
 				onMouseEnter={() => initDb()}
-				className={`block w-full py-2 px-4 ml-8 text-sm transition-colors border-l border-transparent ${
-					isActive
-						? "text-wave-700 font-semibold bg-wave-50 border-wave-500"
-						: "text-gray-500 hover:text-gray-800 hover:bg-gray-50"
-				}`}
+				className={`${childLinkBase} ${isActive ? childLinkActive : childLinkInactive}`}
 			>
 				{link.label}
 			</UnstyledButton>
@@ -94,45 +103,54 @@ export function LinksGroup({
 	const content = (
 		<Group justify="space-between" gap="xs">
 			<Flex align="center">
-				<ThemeIcon variant="light" size={30} color="wave">
+				<ThemeIcon
+					variant="light"
+					size={32}
+					color="wave"
+					className="rounded-lg transition-transform group-hover:scale-110"
+				>
 					<Icon size={18} />
 				</ThemeIcon>
-				<Box ml="md">{label}</Box>
+				<Box ml="md" className="tracking-tight">
+					{label}
+				</Box>
 			</Flex>
 			{hasLinks && (
 				<ChevronRight
 					strokeWidth={1.5}
 					size={16}
-					className={`transition-transform duration-200 ${opened ? "rotate-90" : ""}`}
+					className={`transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${opened ? "rotate-90" : ""}`}
 				/>
 			)}
 		</Group>
 	);
 
-	const controlClasses = `block w-full py-2 px-3 text-sm font-semibold transition-colors rounded-md ${
-		isHrefActive
-			? "text-wave-800 bg-wave-50"
-			: "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
-	}`;
+	const controlClasses = `${linkBase} ${isHrefActive ? linkActive : linkInactive}`;
 
 	return (
-		<>
-			{isDirectLink ? (
-				<UnstyledButton
-					component={Link}
-					to={href || ""}
-					onClick={onNavigate}
-					onMouseEnter={() => initDb()}
-					className={controlClasses}
-				>
-					{content}
-				</UnstyledButton>
-			) : (
-				<UnstyledButton onClick={handleToggle} className={controlClasses}>
-					{content}
-				</UnstyledButton>
-			)}
-			{hasLinks ? <Collapse in={opened}>{items}</Collapse> : null}
-		</>
+		<Box mb={4}>
+			<MagneticWrapper strength={12}>
+				{isDirectLink ? (
+					<UnstyledButton
+						component={Link}
+						to={href || ""}
+						onClick={onNavigate}
+						onMouseEnter={() => initDb()}
+						className={controlClasses}
+					>
+						{content}
+					</UnstyledButton>
+				) : (
+					<UnstyledButton onClick={handleToggle} className={controlClasses}>
+						{content}
+					</UnstyledButton>
+				)}
+			</MagneticWrapper>
+			{hasLinks ? (
+				<Collapse in={opened} transitionDuration={400} transitionTimingFunction="cubic-bezier(0.34,1.56,0.64,1)">
+					<div className="pt-1">{items}</div>
+				</Collapse>
+			) : null}
+		</Box>
 	);
 }

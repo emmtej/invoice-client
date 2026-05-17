@@ -29,7 +29,7 @@ export function PresetManager<T>({
 					<Text fw={700} size="lg">
 						{title}
 					</Text>
-					<Text size="sm" c="dimmed">
+					<Text size="sm" c="brand-dark.5">
 						{description}
 					</Text>
 				</Box>
@@ -43,7 +43,7 @@ export function PresetManager<T>({
 			) : (
 				<SurfaceCard p="xl">
 					<Stack align="center" gap="xs">
-						<Text c="dimmed" fs="italic">
+						<Text c="brand-dark.5" fs="italic">
 							{emptyMessage}
 						</Text>
 						<Button
