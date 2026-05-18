@@ -50,7 +50,7 @@ export function CapabilitiesSection() {
 									gap="md"
 									className={`max-w-[42ch] ${reverse ? "md:order-2" : "md:order-1"}`}
 								>
-									<ThemeIcon size={48} variant="light" color="blue" radius="xl">
+									<ThemeIcon size={48} variant="light" color="blue" radius={0}>
 										<Icon size={22} strokeWidth={1.5} />
 									</ThemeIcon>
 									<h3 className="font-sans text-2xl font-semibold tracking-tight md:text-3xl">
@@ -67,9 +67,9 @@ export function CapabilitiesSection() {
 									</div>
 								) : (
 									<div
-										className={`rounded-[2rem] p-1.5 ring-1 ring-gray-3 ${ reverse ? "md:order-1" : "md:order-2" }`}
+										className={`rounded-none p-1.5 ring-1 ring-gray-3 ${ reverse ? "md:order-1" : "md:order-2" }`}
 									>
-										<div className="rounded-[calc(2rem-0.375rem)] border p-4">
+										<div className="rounded-none border p-4">
 											<CapabilityMock id={row.id} />
 										</div>
 									</div>

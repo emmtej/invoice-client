@@ -6,6 +6,7 @@ const fontDisplay = '"Playfair Display", serif';
 
 export const appTheme = createTheme({
 	fontFamily: fontSans,
+	defaultRadius: 0,
 	headings: {
 		fontFamily: fontDisplay,
 	},

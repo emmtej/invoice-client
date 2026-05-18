@@ -33,7 +33,6 @@ export function DocxUploadDropzone({
 			multiple={multiple}
 			loading={loading}
 			disabled={disabled}
-			radius="md"
 			variant="light"
 			acceptColor="blue"
 			rejectColor="red"
@@ -51,7 +50,7 @@ export function DocxUploadDropzone({
 			>
 				<Dropzone.Accept>
 					<Group gap="sm" wrap="nowrap">
-						<ThemeIcon variant="light" color="blue" size="lg" radius="md">
+						<ThemeIcon variant="light" color="blue" size="lg">
 							<FileUp size={iconSize} strokeWidth={2} />
 						</ThemeIcon>
 						<Text size="sm" fw={600} c="blue">
@@ -66,7 +65,7 @@ export function DocxUploadDropzone({
 				</Dropzone.Reject>
 				<Dropzone.Idle>
 					<Group gap="sm" wrap="nowrap" align="center">
-						<ThemeIcon variant="light" color="blue" size="lg" radius="md">
+						<ThemeIcon variant="light" color="blue" size="lg">
 							<FileUp size={iconSize} strokeWidth={2} />
 						</ThemeIcon>
 						<Stack gap={2}>

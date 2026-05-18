@@ -6,13 +6,13 @@ import { memo } from "react";
 
 export const ExportPreviewMock = memo(function ExportPreviewMock() {
 	return (
-		<div className="rounded-3xl border p-6">
+		<div className="rounded-none border p-6">
 			<Stack gap="md">
 				<Group justify="space-between" align="center">
 					<Text size="xs" fw={700} className="uppercase tracking-[0.14em]">
 						Session summary
 					</Text>
-					<span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]">
+					<span className="inline-flex items-center gap-2 rounded-none border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]">
 						<FileDown size={12} strokeWidth={1.5} />
 						PDF summary
 					</span>

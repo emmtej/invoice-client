@@ -16,90 +16,79 @@ interface LayoutProps {
 	children: ReactNode;
 }
 
-function useIsFlushLayout() {
+function useLayoutConfig() {
 	const matches = useMatches();
-	return (
-		matches
-			.slice()
-			.reverse()
-			.find((match) => match.staticData?.layoutMode !== undefined)?.staticData
-			?.layoutMode === "flush"
-	);
-}
+	const config = matches
+		.slice()
+		.reverse()
+		.find(
+			(match) =>
+				match.staticData?.layoutMode !== undefined ||
+				match.staticData?.hideSidebar !== undefined,
+		)?.staticData;
 
-function useIsSidebarHidden() {
-	const matches = useMatches();
-	return (
-		matches
-			.slice()
-			.reverse()
-			.find((match) => match.staticData?.hideSidebar !== undefined)?.staticData
-			?.hideSidebar ?? false
-	);
+	return {
+		isFlush: config?.layoutMode === "flush",
+		hideSidebar: config?.hideSidebar ?? false,
+	};
 }
 
 export function AppLayout({ children }: LayoutProps) {
 	const [opened, { toggle, close }] = useDisclosure();
-	const isFlushLayout = useIsFlushLayout();
-	const isSidebarHidden = useIsSidebarHidden();
+	const { isFlush, hideSidebar } = useLayoutConfig();
+
+	const navbarConfig = hideSidebar
+		? undefined
+		: {
+				width: APP_SHELL_NAVBAR_WIDTH,
+				breakpoint: APP_SHELL_MOBILE_BREAKPOINT,
+				collapsed: { mobile: !opened },
+			};
+
+	const headerContent = (
+		<Group h="100%" px="md" gap="sm" wrap="nowrap">
+			{!hideSidebar && (
+				<Burger
+					opened={opened}
+					onClick={toggle}
+					hiddenFrom={APP_SHELL_MOBILE_BREAKPOINT}
+					size="md"
+					aria-label={opened ? "Close navigation" : "Open navigation"}
+				/>
+			)}
+			<Navbar />
+		</Group>
+	);
+
+	const mainContent = isFlush ? (
+		children
+	) : (
+		<Container maw={APP_CONTENT_MAX_WIDTH} w="100%" py="xl" px="md">
+			{children}
+		</Container>
+	);
 
 	return (
 		<AppShell
-			padding={0}
 			zIndex={100}
-			header={{
-				height: APP_SHELL_HEADER_HEIGHT,
-			}}
-			navbar={
-				isSidebarHidden
-					? undefined
-					: {
-							width: {
-								base: "75%",
-								[APP_SHELL_MOBILE_BREAKPOINT]: APP_SHELL_NAVBAR_WIDTH,
-							},
-							breakpoint: APP_SHELL_MOBILE_BREAKPOINT,
-							collapsed: { mobile: !opened },
-						}
-			}
+			header={{ height: APP_SHELL_HEADER_HEIGHT }}
+			navbar={navbarConfig}
+			padding={isFlush ? 0 : "md"}
 		>
-			<AppShell.Header>
-				<Group h="100%" px="md" gap="sm" wrap="nowrap">
-					{!isSidebarHidden && (
-						<Burger
-							opened={opened}
-							onClick={toggle}
-							hiddenFrom={APP_SHELL_MOBILE_BREAKPOINT}
-							size="md"
-							aria-label={opened ? "Close navigation" : "Open navigation"}
-						/>
-					)}
-					<Navbar />
-				</Group>
-			</AppShell.Header>
-			{!isSidebarHidden && (
+			<AppShell.Header>{headerContent}</AppShell.Header>
+
+			{!hideSidebar && (
 				<AppShell.Navbar p={0}>
 					<Sidebar onNavigate={close} />
 				</AppShell.Navbar>
 			)}
 
 			<AppShell.Main className="flex flex-col min-h-dvh">
-				{isFlushLayout ? (
-					<Box flex={1} w="100%">
-						{children}
-					</Box>
-				) : (
-					<Container
-						maw={APP_CONTENT_MAX_WIDTH}
-						w="100%"
-						py="xl"
-						px="md"
-						flex={1}
-					>
-						{children}
-					</Container>
-				)}
-				<Box component="footer" py="xl" className="border-t">
+				<Box component="section" flex={1} w="100%">
+					{mainContent}
+				</Box>
+
+				<Box component="footer" py="xl" className="border-t bg-gray-0/30">
 					<Container maw={APP_CONTENT_MAX_WIDTH} w="100%" px="md">
 						<AppFooter />
 					</Container>

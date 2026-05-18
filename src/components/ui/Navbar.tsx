@@ -6,35 +6,13 @@ import {
 	Title,
 	UnstyledButton,
 } from "@mantine/core";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useUserStore } from "@/features/user/userStore";
 import { LinkButton } from "./AppButtonLink";
 import { APP_SHELL_HEADER_HEIGHT } from "./layout-constants";
 
-const links: { link: string; label: string }[] = [];
-
 export function Navbar() {
 	const user = useUserStore((store) => store.user);
-	const { pathname } = useLocation();
-
-	const items = links.map((link) => {
-		const isActive =
-			pathname === link.link || pathname.startsWith(`${link.link}/`);
-		return (
-			<UnstyledButton
-				key={link.label}
-				component={Link}
-				to={link.link}
-				py="xs"
-				px="sm"
-				fz="sm"
-				fw={600}
-				className={`rounded-md transition-colors duration-200 ${ isActive ? "bg-blue-0 text-blue-8" : "hover:bg-gray-0" }`}
-			>
-				{link.label}
-			</UnstyledButton>
-		);
-	});
 
 	return (
 		<Group
@@ -62,9 +40,6 @@ export function Navbar() {
 
 			{user === null ? (
 				<Group gap="sm">
-					<Group gap="xs" visibleFrom="sm">
-						{items}
-					</Group>
 					<LinkButton to="/login" variant="default">
 						Log in
 					</LinkButton>
@@ -75,7 +50,7 @@ export function Navbar() {
 			) : (
 				<Anchor component={Link} to="/profile">
 					<Group gap="xs">
-						<Avatar />
+						<Avatar radius={0} />
 						<Text size="sm" fw={500}>
 							{user.firstname} {user.lastname}
 						</Text>

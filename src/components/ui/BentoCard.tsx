@@ -8,7 +8,7 @@ interface BentoCardProps extends BoxProps {
 export function BentoCard({ children, className, ...others }: BentoCardProps) {
 	return (
 		<Box
-			className={`bg-white rounded-3xl border p-8 flex flex-col relative overflow-hidden ${className || ""}`}
+			className={`bg-white rounded-none border p-8 flex flex-col relative overflow-hidden ${className || ""}`}
 			{...others}
 		>
 			{children}

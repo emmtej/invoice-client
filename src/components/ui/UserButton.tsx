@@ -12,7 +12,7 @@ export function UserButton({ user }: UserButtonProps) {
 			w="100%"
 			p="md"
 			display="block"
-			className="transition-all hover:bg-gray-0 rounded-2xl active:scale-[0.98] group"
+			className="transition-all hover:bg-gray-0 rounded-none active:scale-[0.98] group"
 			style={{
 				color: "var(--mantine-color-black)",
 			}}
@@ -21,7 +21,7 @@ export function UserButton({ user }: UserButtonProps) {
 				<Avatar
 					src={user.profileImgUrl}
 					color="blue"
-					radius="xl"
+					radius={0}
 					className="ring-2 ring-white shadow-sm transition-transform group-hover:scale-105"
 				/>
 				<Box flex={1} style={{ overflow: "hidden" }}>

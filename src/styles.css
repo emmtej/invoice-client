@@ -5,7 +5,7 @@
 @import "@fontsource/playfair-display/500.css";
 @import "@fontsource/playfair-display/600.css";
 
-@layer mantine, theme, base, components, utilities, app;
+@layer theme, base, mantine, components, utilities, app;
 
 @import "@mantine/core/styles.css" layer(mantine);
 @import "@mantine/dropzone/styles.css" layer(mantine);

@@ -16,10 +16,10 @@ export const ScriptLinesMock = memo(function ScriptLinesMock() {
 			{SCRIPTS.map((script) => (
 				<div
 					key={script.name}
-					className="flex items-center justify-between rounded-2xl border px-4 py-3"
+					className="flex items-center justify-between rounded-none border px-4 py-3"
 				>
 					<Group gap="md">
-						<ThemeIcon variant="light" color="blue" size="md">
+						<ThemeIcon variant="light" color="blue" size="md" radius={0}>
 							<FileText size={16} strokeWidth={1.5} />
 						</ThemeIcon>
 						<Text size="sm" fw={600} className="tracking-tight">
@@ -29,7 +29,7 @@ export const ScriptLinesMock = memo(function ScriptLinesMock() {
 					<Group gap={8}>
 						{script.live ? (
 							<span
-								className="h-2 w-2 rounded-full bg-red-6"
+								className="h-2 w-2 rounded-none bg-red-6"
 								aria-hidden
 							/>
 						) : null}

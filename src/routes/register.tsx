@@ -3,4 +3,7 @@ import AuthenticationView from "@/features/auth/AuthenticationView";
 
 export const Route = createFileRoute("/register")({
 	component: AuthenticationView,
+	staticData: {
+		hideSidebar: true,
+	},
 });

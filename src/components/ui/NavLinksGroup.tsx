@@ -44,12 +44,12 @@ interface LinksGroupProps {
 }
 
 const linkBase =
-	"block w-full py-2.5 px-3 text-sm font-medium transition-all rounded-xl relative overflow-hidden group";
+	"block w-full py-2.5 px-3 text-sm font-medium transition-all rounded-none relative overflow-hidden group";
 const linkActive = "text-blue-8 bg-blue-0 font-semibold";
 const linkInactive = "hover:bg-gray-0 active:scale-[0.98]";
 
 const childLinkBase =
-	"block w-full py-2 px-4 ml-6 text-sm transition-all rounded-lg";
+	"block w-full py-2 px-4 ml-6 text-sm transition-all rounded-none";
 const childLinkActive = "text-blue-7 font-semibold bg-blue-0";
 const childLinkInactive = "hover:bg-gray-0 active:scale-[0.97]";
 
@@ -100,7 +100,7 @@ export function LinksGroup({
 	const content = (
 		<Group justify="space-between" gap="xs">
 			<Flex align="center">
-				<ThemeIcon variant="light" size={32} color="blue" className="rounded-lg">
+				<ThemeIcon variant="light" size={32} color="blue" className="rounded-none">
 					<Icon size={18} />
 				</ThemeIcon>
 				<Box ml="md" className="tracking-tight">
